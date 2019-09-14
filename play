@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ "$1" == "" ]; then
+    echo 'Play which character?'
+    ls ~/.angband/FrogComposband/save | grep 1000.* | sed 's/1000.//'
+else
+    # Why do these reset every time I reboot?
+    xset +fp /usr/share/fonts/truetype/dejavu
+    xset +fp /usr/share/fonts/truetype/liberation
+    xset fp rehash
+
+
+    export ASAN_SYMBOLIZER_PATH='/usr/bin/llvm-symbolizer'
+
+   #Dejavu has a problem with the 'R' character ... it leaves a ghost pixel when you type over or scroll!
+   #export ANGBAND_X11_FONT_0='-misc-dejavu sans mono-medium-r-normal--20-0-0-0-m-0-iso8859-1'
+    export ANGBAND_X11_FONT_0='-misc-liberation mono-medium-r-normal--22-0-0-0-m-0-iso8859-1'
+    #export ANGBAND_X11_AT_X_0=0
+    #export ANGBAND_X11_AT_Y_0=0
+    #export ANGBAND_X11_ROWS_0=150
+    #export ANGBAND_X11_COLS_0=200
+    export ANGBAND_X11_AT_X_0=610
+    export ANGBAND_X11_AT_Y_0=0
+    export ANGBAND_X11_ROWS_0=150
+    export ANGBAND_X11_COLS_0=82
+
+    export ANGBAND_X11_FONT_1='-misc-liberation mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
+    export ANGBAND_X11_AT_X_1=0
+    export ANGBAND_X11_AT_Y_1=0
+    export ANGBAND_X11_ROWS_1=30
+    export ANGBAND_X11_COLS_1=55
+
+    export ANGBAND_X11_FONT_2='-misc-liberation mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
+    export ANGBAND_X11_AT_X_2=0
+    export ANGBAND_X11_AT_Y_2=630
+    export ANGBAND_X11_ROWS_2=19
+    export ANGBAND_X11_COLS_2=55
+
+    #export ANGBAND_X11_GAMMA=185
+
+    ./frogcomposband -g -mx11 -u$1 -- -n3
+    #./frogcomposband -g -mx11 -u$1 -- -n1
+fi
