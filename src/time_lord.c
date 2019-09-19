@@ -888,7 +888,7 @@ class_t *time_lord_get_class(void)
         me.stats[A_WIS] =  3;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.base_skills = bs;
         me.extra_skills = xs;

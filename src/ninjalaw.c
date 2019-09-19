@@ -218,7 +218,7 @@ class_t *ninja_lawyer_get_class(void)
         me.stats[A_WIS] =  0;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] =  0;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 99;

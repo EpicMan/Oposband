@@ -53,7 +53,7 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.which_stat = A_CHR;
+        me.which_stat = A_INT;
         me.encumbrance.max_wgt = 40;
         me.encumbrance.weapon_pct = 100;
         me.encumbrance.enc_wgt = 900;
@@ -101,11 +101,11 @@ class_t *sorcerer_get_class(void)
                     "wands, staves or rods.";
 
         me.stats[A_STR] = -5;
-        me.stats[A_INT] =  0;
+        me.stats[A_INT] =  6;
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  6;
+        me.stats[A_CHR] =  -2;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 65;

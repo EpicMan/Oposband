@@ -685,7 +685,7 @@ static personality_ptr _get_pious_personality(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis = -5;
         me.skills.dev =  1;
@@ -745,7 +745,7 @@ static personality_ptr _get_sexy_personality(void)
         me.stats[A_WIS] = 1;
         me.stats[A_DEX] = 1;
         me.stats[A_CON] = 1;
-        me.stats[A_CHR] = 1;
+        me.stats[A_CHR] = 3;
 
         me.skills.dis = 10;
         me.skills.dev =  5;
@@ -843,7 +843,7 @@ static personality_ptr _get_sneaky_personality(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis =  5;
         me.skills.dev =  0;

@@ -44,7 +44,7 @@ race_t *klackon_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = 10;
         me.skills.dev = -2;
@@ -175,7 +175,7 @@ race_t *kutar_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] =  3;
 
         me.skills.dis = -2;
         me.skills.dev = 3;
@@ -249,7 +249,7 @@ race_t *mindflayer_get_race(void)
         me.stats[A_WIS] =  4;
         me.stats[A_DEX] =  0;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = 10;
         me.skills.dev = 11;
@@ -377,7 +377,7 @@ race_t *shadow_fairy_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] = -3;
+        me.stats[A_CHR] =  0;
 
         me.skills.dis =  7;
         me.skills.dev =  6;
@@ -460,7 +460,7 @@ race_t *skeleton_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  0;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  -2;
 
         me.skills.dis = -5;
         me.skills.dev = 0;
@@ -719,7 +719,7 @@ race_t *sprite_get_race(void)
         me.stats[A_WIS] =  3;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis = 10;
         me.skills.dev =  6;
@@ -912,7 +912,7 @@ race_t *tonberry_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -4;
         me.stats[A_CON] =  5;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  -1;
 
         me.skills.dis = -5;
         me.skills.dev = -3;
@@ -1054,7 +1054,7 @@ race_t *wood_elf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis = 5;
         me.skills.dev = 4;

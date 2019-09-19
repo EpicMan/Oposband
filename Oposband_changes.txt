@@ -1,0 +1,22 @@
+-Forked from FrogComposband 7.1.Chocolate
+-Changed variant name to Oposband and version to 0.1.0
+-Removed many unnessary if_savefile_older_than calls as we won't be converting those
+-Removed 18/* notation for stats. Old 18/10 is now just 19, 18/100 is 28, 18/*** is 40, etc
+-Adjust many Charisma values to pre-PosChengband values
+-Fear saves now work off of best of Strength and Charisma, to make strong but poor CHR monsters like zombies and balrogs better at fear.
+-Identify acts as *Identify* and the latter is being phased out
+-Psuedo-ID items on walkover, and Average/Good items IDed on walkover.
+-Sorceror reverted to using INT for casting. CHR was thrown in because DND sorceror's are CHR-casters, but they are a completely different creature from the Zangband sorceror, who is just an uber-mage. Sorceror INT now +6 and CHR now -2
+-Added Hexblade and Chaos Mage from Composbad
+-Removed Chaotic personality, chaos patrons are reserved for the two chaos classes.
+-Many monsters are more affected by doors than before: felines, dragon flies, canines, snakes, and ants
+-Reversed pack AI settings for animals and sentient beings, so the latter will try to lure healthy players into rooms while the latter will hunt you down. Idea from Sil
+
+TODO
+-Add Blue Mage from Hengband, but add in the Imitator's ability to do observed things for the past 3 observed monster spells.
+-Add elemental lord from Portralis
+-Merge Weaponmaster's ranged weapon specialties into Archer class, and melee/shield specialties into Warrior.
+-Add or merge vanilla's new necromancer into poschangeband necromancer.
+-Add Vanilla's new Druid and shapeshifting class?
+-Change stealth mechanic to affect monster awareness of the player. So high stealth players would appear and disappear to monsters, making taking on a group more manageable as more distant ones are less likely to be able to see you to engage.
+-Should speed just be move speed?s

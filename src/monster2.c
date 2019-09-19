@@ -660,7 +660,7 @@ void pack_choose_ai(int m_idx)
             switch(randint1(10))
             {
             case 1: case 2: case 3:
-                pack_ptr->ai = AI_SEEK;
+                pack_ptr->ai = AI_LURE;
                 break;
             case 4:
                 if ((r_ptr->spells) && (r_ptr->spells->freq))
@@ -669,7 +669,7 @@ void pack_choose_ai(int m_idx)
                     pack_ptr->ai = AI_LURE;
                 break;
             default:
-                pack_ptr->ai = AI_LURE;
+                pack_ptr->ai = AI_SEEK;
                 break;
             }
         }
@@ -677,11 +677,11 @@ void pack_choose_ai(int m_idx)
         {
             switch(randint1(10))
             {
-            case 1: case 2: case 3: case 4: case 5: case 6:
-                pack_ptr->ai = AI_SEEK;
-                break;
-            case 7: case 8:
+            case 1: case 2: case 3: case 4: case 5:
                 pack_ptr->ai = AI_LURE;
+                break;
+			case 6: case 7: case 8:
+                pack_ptr->ai = AI_SEEK;
                 break;
             case 9:
                 if (pack_ptr->leader_idx)

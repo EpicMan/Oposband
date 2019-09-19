@@ -833,7 +833,7 @@ class_t *rogue_get_class(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 100;

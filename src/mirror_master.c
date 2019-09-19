@@ -870,7 +870,7 @@ class_t *mirror_master_get_class(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] = 1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 100;

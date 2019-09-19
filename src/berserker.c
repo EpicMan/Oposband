@@ -224,7 +224,7 @@ class_t *berserker_get_class(void)
         me.stats[A_WIS] = -20;
         me.stats[A_DEX] =   4;
         me.stats[A_CON] =   4;
-        me.stats[A_CHR] =   4;
+        me.stats[A_CHR] =   -5;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 200;

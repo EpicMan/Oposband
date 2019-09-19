@@ -3866,7 +3866,7 @@ class_t *weaponmaster_get_class(int subclass)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
     }
     if (0 <= subclass && subclass < WEAPONMASTER_MAX)
     {
