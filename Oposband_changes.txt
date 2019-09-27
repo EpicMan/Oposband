@@ -11,6 +11,7 @@
 -Removed Chaotic personality, chaos patrons are reserved for the two chaos classes.
 -Many monsters are more affected by doors than before: felines, dragon flies, canines, snakes, and ants
 -Reversed pack AI settings for animals and sentient beings, so the latter will try to lure healthy players into rooms while the latter will hunt you down. Idea from Sil
+-Player now receives full HP and SP restore when levelling up
 
 TODO
 -Add Blue Mage from Hengband, but add in the Imitator's ability to do observed things for the past 3 observed monster spells.

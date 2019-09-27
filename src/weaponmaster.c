@@ -300,7 +300,7 @@ static void _crusaders_strike_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Crusaders Strike");
+        var_set_string(res, "Vitality Strike");
         break;
     case SPELL_DESC:
         var_set_string(res, "Attack an adjacent opponent with a single blow. You regain hp.");
