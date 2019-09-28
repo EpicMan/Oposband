@@ -607,7 +607,6 @@ static void rd_extra(savefile_ptr file)
 
     p_ptr->autopick_autoregister = savefile_read_byte(file) ? TRUE: FALSE;
     p_ptr->action = savefile_read_byte(file);
-    preserve_mode = savefile_read_byte(file);
     p_ptr->wait_report_score = savefile_read_byte(file);
 
     seed_flavor = savefile_read_u32b(file);

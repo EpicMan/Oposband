@@ -3259,7 +3259,6 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
             choices[i].amt = i+1;
 
             if (to_hit && copy.to_h < maxenchant) {copy.to_h++; ok = TRUE; v = MAX(v, copy.to_h);}
-            if (to_dam && copy.to_d < maxenchant) {copy.to_d++; ok = TRUE; v = MAX(v, copy.to_d);}
             if (to_ac && copy.to_a < maxenchant) {copy.to_a++; ok = TRUE; v = MAX(v, copy.to_a);}
 
             if (v > 10)
@@ -3340,16 +3339,6 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
         if (prompt.obj->to_h < maxenchant)
         {
             if (enchant(prompt.obj, 1, (ENCH_TOHIT | ENCH_FORCE)))
-                okay = TRUE;
-        }
-    }
-
-    /* Enchant to damage */
-    for (i = 0; i < to_dam; i++)
-    {
-        if (prompt.obj->to_d < maxenchant)
-        {
-            if (enchant(prompt.obj, 1, (ENCH_TODAM | ENCH_FORCE)))
                 okay = TRUE;
         }
     }

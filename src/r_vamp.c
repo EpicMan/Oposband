@@ -41,7 +41,7 @@ static void _birth(void)
     /* Encourage shapeshifting! */
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 4;
+    forge.to_h = 4;
     py_birth_obj(&forge);
 }
 

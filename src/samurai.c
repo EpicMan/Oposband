@@ -547,7 +547,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 if (!o_ptr) continue;
 
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
-                damage = o_ptr->to_d * 100;
+                damage = o_ptr->to_h * 100;
                 
                 obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, OF_VORPAL2))
@@ -826,7 +826,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 if (!o_ptr) continue;
 
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
-                damage = o_ptr->to_d * 100;
+                damage = o_ptr->to_h * 100;
                 
                 obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, OF_VORPAL2))

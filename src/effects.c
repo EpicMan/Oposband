@@ -5289,7 +5289,7 @@ bool inc_stat(int stat)
  */
 bool dec_stat(int stat, int amount, int permanent)
 {
-    int cur, max, loss, same, res = FALSE;
+    int cur, max, same, res = FALSE;
 
 
     /* Acquire current value */

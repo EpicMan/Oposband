@@ -1511,7 +1511,7 @@ void do_cmd_debug(void)
 
     /* Hack -- Generate Spoilers */
     case '"':
-        do_cmd_spoilers();
+	    do_cmd_spoilers();
         break;
 
 #endif /* ALLOW_SPOILERS */

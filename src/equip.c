@@ -63,7 +63,7 @@ static bool _object_is_combat_ring(obj_ptr obj)
     obj_flags_known(obj, flags);
     if ((obj->name2 == EGO_RING_ARCHERY) || (obj->name2 == EGO_RING_WIZARDRY)) return FALSE;
     else if (have_flag(flags, OF_WEAPONMASTERY)) return TRUE;
-    else if ((object_is_known(obj)) && ((obj->to_h) || (obj->to_d))) return TRUE;
+    else if ((object_is_known(obj)) && (obj->to_h)) return TRUE;
     else if (have_flag(flags, OF_BRAND_FIRE)) return TRUE;
     else if (have_flag(flags, OF_BRAND_ELEC)) return TRUE;
     else if (have_flag(flags, OF_BRAND_COLD)) return TRUE;
@@ -1630,11 +1630,11 @@ void equip_calc_bonuses(void)
         if (obj->name2 == EGO_GLOVES_SNIPER || obj->name2 == EGO_RING_ARCHERY)
         {
             p_ptr->shooter_info.to_h += obj->to_h;
-            p_ptr->shooter_info.to_d += obj->to_d;
+            p_ptr->shooter_info.to_d += obj->to_h;
             if (object_is_known(obj))
             {
                 p_ptr->shooter_info.dis_to_h += obj->to_h;
-                p_ptr->shooter_info.dis_to_d += obj->to_d;
+                p_ptr->shooter_info.dis_to_d += obj->to_h;
             }
             continue;
         }
@@ -1643,7 +1643,7 @@ void equip_calc_bonuses(void)
           || obj->name2 == EGO_AMULET_MAGI
           || obj->name2 == EGO_CROWN_MAGI )
         {
-            p_ptr->to_d_spell += obj->to_d;
+            p_ptr->to_d_spell += obj->to_h;
             continue;
         }
 
@@ -1670,21 +1670,19 @@ void equip_calc_bonuses(void)
                && obj->name1 != ART_HAMMERHAND )
         {
             p_ptr->shooter_info.to_h += obj->to_h;
-            p_ptr->shooter_info.to_d += obj->to_d;
+            p_ptr->shooter_info.to_d += obj->to_h;
             if (object_is_known(obj))
             {
                 p_ptr->shooter_info.dis_to_h += obj->to_h;
-                p_ptr->shooter_info.dis_to_d += obj->to_d;
+                p_ptr->shooter_info.dis_to_d += obj->to_h;
             }
         }
 
-        bonus_to_h = obj->to_h;
-        bonus_to_d = obj->to_d;
+        bonus_to_h = bonus_to_d = obj->to_h;
 
         if (player_is_ninja)
         {
-            if (obj->to_h > 0) bonus_to_h = (obj->to_h+1)/2;
-            if (obj->to_d > 0) bonus_to_d = (obj->to_d+1)/2;
+            if (obj->to_h > 0) bonus_to_h = bonus_to_d = (obj->to_h+1)/2;
         }
 
         p_ptr->to_h_m += bonus_to_h;

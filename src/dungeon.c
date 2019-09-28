@@ -51,7 +51,7 @@ byte value_check_aux1(object_type *o_ptr)
 
     if (o_ptr->to_a > 0) return FEEL_GOOD;
     if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
-    if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_GOOD;
+    if (o_ptr->to_h > 0) return FEEL_GOOD;
 
     return FEEL_AVERAGE;
 }
@@ -89,7 +89,7 @@ static byte value_check_aux2(object_type *o_ptr)
     if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
 
     /* Good weapon bonuses */
-    if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_ENCHANTED;
+    if (o_ptr->to_h) return FEEL_ENCHANTED;
 
     return FEEL_AVERAGE;
 }
@@ -2621,8 +2621,7 @@ static byte get_dungeon_feeling(void)
         if (object_is_artifact(o_ptr))
             return 1;
 
-        if ( object_is_artifact(o_ptr)
-          || object_is_ego(o_ptr)
+        if ( object_is_ego(o_ptr)
           || o_ptr->tval == TV_DRAG_ARMOR
           || object_is_dragon_armor(o_ptr) )
         {
@@ -2632,9 +2631,6 @@ static byte get_dungeon_feeling(void)
             if (cost > 10000L) delta += 10 * base;
             if (cost > 50000L) delta += 10 * base;
             if (cost > 100000L) delta += 10 * base;
-
-            if (!preserve_mode && object_is_artifact(o_ptr))
-                return 1;
         }
 
         /* Out-of-depth objects */
@@ -3277,15 +3273,6 @@ static void _dispatch_command(int old_now_turn)
         }
 
 #endif /* ALLOW_WIZARD */
-
-
-#ifdef ALLOW_SPOILERS
-		case KTRL('Z'):
-			/*  v~~~ ^Z(d|D) is useful info for game design ... */
-			if (0 || allow_spoilers)
-				do_cmd_spoilers();
-			break;
-#endif /* ALLOW_SPOILERS */
 		
         /*** Inventory Commands ***/
 
@@ -5507,9 +5494,6 @@ void play_game(bool new_game)
     /* Suppress extra pantheons */
     if (single_pantheon) _suppress_extra_pantheons();
 
-    /* Empty lore */
-    if ((new_game) && (empty_lore)) empty_lore_wipe();
-
     creating_savefile = FALSE;
 
     p_ptr->teleport_town = FALSE;
@@ -5673,7 +5657,7 @@ void play_game(bool new_game)
             py_birth_food();
             py_birth_light();
         }
-        if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) py_birth_obj_aux(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL, (game_mode == GAME_MODE_BEGINNER) ? 10 : 1);
+        if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) py_birth_obj_aux(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL, 1);
         if (thrall_mode)
         {
             if (p_ptr->pclass == CLASS_BERSERKER)

@@ -6,11 +6,7 @@
 /************************************************************************
  * Give birth to a new player.
  *
- * For reference, there are 3 possible game modes:
- * [1] Beginner: Limited Races and Classes
- *               No Wilderness
- *               No Personality
- *               No Birth Options
+ * For reference, there are 2 possible game modes:
  * [2] Normal:   Standard Game with All Races/Classes/etc.
  * [3] Monster:  Monster Races
  *               No Class (CLASS_MONSTER is a bunch of zeros!)
@@ -226,19 +222,14 @@ static int _welcome_ui(void)
         );
 
         doc_insert(_doc,
-            "First, you must decide what type of game to play. <color:keyword>Beginner Mode</color> "
-            "limits the options available, simplifying things for new players.\n\n "
+            "First, you must create a characer, so press \"n\" to begin.\n\n "
         );
 
-        doc_insert(_doc, "<color:G>Choose the Type of Game to Play</color>\n");
-        doc_insert(_doc, "  <color:y>b</color>) Beginner\n");
-        doc_insert(_doc, "  <color:y>n</color>) Normal\n");
-        doc_insert(_doc, "  <color:y>m</color>) Monster\n");
-        doc_newline(_doc);
+        doc_insert(_doc, "<color:G>Create a character</color>\n");
+        doc_insert(_doc, "  <color:y>n</color>) Create a new character\n");
         if (previous_char.quick_ok)
-            doc_insert(_doc, "  <color:y>q</color>) Quick Start\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-            doc_insert(_doc, "  <color:y>=</color>) Options\n");
+            doc_insert(_doc, "  <color:y>q</color>) Quick Start (based on old character)\n");
+        doc_insert(_doc, "  <color:y>=</color>) Options\n");
         doc_insert(_doc, "  <color:y>?</color>) Help\n");
         doc_insert(_doc, "  <color:y>s</color>) View Scores\n");
         doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
@@ -247,8 +238,8 @@ static int _welcome_ui(void)
         doc_newline(_doc);
         doc_insert(_doc, "<color:G>Tip:</color> <indent>You can often get specific "
                          "help by entering the uppercase letter for a command. For "
-                         "example, type <color:keypress>B</color> on this screen "
-                         "to receive help on Beginner Mode.</indent>");
+                         "example, type <color:keypress>N</color> on this screen "
+                         "to receive help on Normal Mode.</indent>");
         _sync_term(_doc);
         cmd = _inkey();
         if (cmd == '?')
@@ -282,14 +273,6 @@ static int _welcome_ui(void)
         }
         else if (cmd == 'Q' && previous_char.quick_ok)
             doc_display_help("birth.txt", "QuickStart");
-        else if (cmd == 'b')
-        {
-            _set_mode(GAME_MODE_BEGINNER);
-            if (_race_class_ui() == UI_OK)
-                return UI_OK;
-        }
-        else if (cmd == 'B')
-            doc_display_help("birth.txt", "BeginnerMode");
         else if (cmd == 'n')
         {
             _set_mode(GAME_MODE_NORMAL);
@@ -298,14 +281,6 @@ static int _welcome_ui(void)
         }
         else if (cmd == 'N')
             doc_display_help("birth.txt", "NormalMode");
-        else if (cmd == 'm')
-        {
-            _set_mode(GAME_MODE_MONSTER);
-            if (_race_class_ui() == UI_OK)
-                return UI_OK;
-        }
-        else if (cmd == 'M')
-            doc_display_help("birth.txt", "MonsterMode");
         else if (cmd == 's')
         {
             vec_ptr scores = scores_load(NULL);
@@ -320,30 +295,16 @@ static void _stats_init(void);
 static void _set_mode(int mode)
 {
     static bool first = TRUE;
-    if (mode == GAME_MODE_BEGINNER)
-    {
-        if (first || game_mode != mode)
-        {
-            p_ptr->prace = RACE_HOBBIT;
-            p_ptr->psubrace = 0;
-            p_ptr->pclass = CLASS_ROGUE;
-            p_ptr->psubclass = 0;
-            p_ptr->realm1 = REALM_BURGLARY;
-            p_ptr->realm2 = REALM_NONE;
-            p_ptr->dragon_realm = DRAGON_REALM_NONE;
-            p_ptr->personality = PERS_ORDINARY;
-            _stats_init();
-        }
-    }
-    else if (mode == GAME_MODE_NORMAL)
+    if (mode == GAME_MODE_NORMAL)
     {
         if (first || game_mode == GAME_MODE_MONSTER)
         {
-            p_ptr->prace = RACE_HOBBIT;
+			p_ptr->psex = SEX_MALE;
+            p_ptr->prace = RACE_HALF_TROLL;
             p_ptr->psubrace = 0;
-            p_ptr->pclass = CLASS_ROGUE;
+            p_ptr->pclass = CLASS_WARRIOR;
             p_ptr->psubclass = 0;
-            p_ptr->realm1 = REALM_BURGLARY;
+            p_ptr->realm1 = REALM_NONE;
             p_ptr->realm2 = REALM_NONE;
             p_ptr->dragon_realm = DRAGON_REALM_NONE;
             p_ptr->personality = PERS_ORDINARY;
@@ -431,8 +392,7 @@ static int _race_class_ui(void)
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
         doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-            doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
+        doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
         if (game_mode == GAME_MODE_MONSTER)
         {
@@ -446,10 +406,14 @@ static int _race_class_ui(void)
                 doc_insert(cols[0], "  <color:y>m</color>) Change Magic\n");
         }
 
+		if (game_mode == GAME_MODE_NORMAL)
+			doc_insert(cols[0], "  <color:y>g</color>) Monster Game Mode\n");
+		else
+			doc_insert(cols[0], "  <color:y>g</color>) Normal Game Mode\n");
+
         doc_insert(cols[1], "<color:y>  *</color>) Random Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-            doc_insert(cols[1], "<color:y>  =</color>) Options\n");
+        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_insert(cols[1], "<color:y>RET</color>) Next Screen\n");
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
@@ -508,9 +472,7 @@ static int _race_class_ui(void)
             doc_display_help("birth.txt", "CharacterName");
             break;
         case 'r':
-            if (game_mode == GAME_MODE_BEGINNER)
-                _race_ui(_beginner_races);
-            else if (game_mode == GAME_MODE_MONSTER)
+            if (game_mode == GAME_MODE_MONSTER)
                 _mon_race_group_ui();
             else
                 _race_group_ui();
@@ -533,9 +495,7 @@ static int _race_class_ui(void)
             break;
         }
         case 'c':
-            if (game_mode == GAME_MODE_BEGINNER)
-                _class_ui(_beginner_classes);
-            else if (game_mode != GAME_MODE_MONSTER)
+            if (game_mode != GAME_MODE_MONSTER)
                 _class_group_ui();
             break;
         case 'C':
@@ -548,16 +508,12 @@ static int _race_class_ui(void)
             break;
         }
         case 'p':
-            if (game_mode != GAME_MODE_BEGINNER)
-                _pers_ui();
+            _pers_ui();
             break;
         case 'P':
         {
-            if (game_mode != GAME_MODE_BEGINNER)
-            {
-                personality_ptr pers_ptr = get_personality();
-                doc_display_help("Personalities.txt", pers_ptr->name);
-            }
+            personality_ptr pers_ptr = get_personality();
+            doc_display_help("Personalities.txt", pers_ptr->name);
             break;
         }
         case 'm':
@@ -578,6 +534,18 @@ static int _race_class_ui(void)
             else
                 p_ptr->psex = SEX_MALE;
             break;
+		case 'G':
+			if (game_mode == GAME_MODE_NORMAL)
+				doc_display_help("birth.txt", "MonsterMode");
+			else
+				doc_display_help("birth.txt", "NormalMode"); 
+			break;
+		case 'g':
+			if (game_mode == GAME_MODE_NORMAL)
+				_set_mode(GAME_MODE_MONSTER);
+			else
+				_set_mode(GAME_MODE_NORMAL);
+			break;
         }
     }
 }
@@ -682,7 +650,7 @@ static vec_ptr _get_races_aux(int ids[]);
 static bool _is_valid_race_class(int race_id, int class_id);
 
 #define _MAX_RACES_PER_GROUP 23
-#define _MAX_RACE_GROUPS      9
+#define _MAX_RACE_GROUPS     9
 typedef struct _race_group_s {
     cptr name;
     int ids[_MAX_RACES_PER_GROUP];
@@ -738,8 +706,8 @@ static void _race_group_ui(void)
             _race_group_ptr g_ptr = vec_get(groups, i);
             doc_printf(_doc, "  <color:y>%c</color>) %s\n", I2A(i), g_ptr->name);
         }
-        doc_insert(_doc, "  <color:y>*</color>) Random\n");
-        _sync_term(_doc);
+		doc_insert(_doc, "  <color:y>*</color>) Random\n");
+		_sync_term(_doc);
 
         cmd = _inkey();
 
@@ -749,12 +717,14 @@ static void _race_group_ui(void)
         else if (cmd == '?') doc_display_help("Races.txt", NULL);
         else
         {
-            if (cmd == '*') i = randint0(vec_length(groups));
+			if (cmd == '*') i = randint0(vec_length(groups));
+			
             else i = A2I(cmd);
+
             if (0 <= i && i < vec_length(groups))
             {
-                _race_group_ptr g_ptr = vec_get(groups, i);
-                if (_race_ui(g_ptr->ids) == UI_OK) break;
+				_race_group_ptr g_ptr = vec_get(groups, i);
+				if (_race_ui(g_ptr->ids) == UI_OK) break;
             }
         }
     }
@@ -990,7 +960,7 @@ static vec_ptr _get_classes_aux(int ids[])
 }
 
 #define _MAX_CLASSES_PER_GROUP 20
-#define _MAX_CLASS_GROUPS      11
+#define _MAX_CLASS_GROUPS      10
 typedef struct _class_group_s {
     cptr name;
     int ids[_MAX_CLASSES_PER_GROUP];
@@ -1001,10 +971,9 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
                     CLASS_WEAPONSMITH, -1} },
     { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
-    { "Magic", {CLASS_BLOOD_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
-                    CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, CLASS_CHAOS_MAGE, -1} },
+    { "Magic", {CLASS_BLOOD_MAGE, CLASS_CHAOS_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
+                    CLASS_NECROMANCER, CLASS_PRIEST, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
     { "Devices", { CLASS_ALCHEMIST, CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
-    { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
                     CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, CLASS_HEXBLADE, -1} },
@@ -1438,9 +1407,10 @@ static int _patron_ui(void)
         }
         else
         {
-            if (cmd == '*') i = RANDOM_PATRON;
             if (cmd == '\r') i = (p_ptr->pclass == CLASS_DISCIPLE) ? DISCIPLE_YEQREZH : RANDOM_PATRON;
-            else i = A2I(cmd) + alku;
+			
+			if (cmd == '*') i = RANDOM_PATRON;
+			else i = A2I(cmd) + alku;
             if ((alku <= i && i < loppu) || (i == RANDOM_PATRON))
             {
                 if (i == RANDOM_PATRON) i = _random_patron();
@@ -1669,7 +1639,7 @@ static void _mon_race_group_ui(void)
         else if (cmd == '\t') _inc_rcp_state();
         else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("MonsterRaces.txt", NULL);
-        else if (isupper(cmd))
+	    else if (isupper(cmd))
         {
             i = A2I(cmd);
             if (0 <= i && i < _MAX_MON_RACE_GROUPS)
@@ -2008,8 +1978,7 @@ static int _stats_ui(void)
         doc_newline(cols[1]);
         doc_insert(cols[1], "<color:y>  n</color>) Change Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-            doc_insert(cols[1], "<color:y>  =</color>) Options\n");
+        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_printf(cols[1], "<color:%c>RET</color>) <color:%c>Begin Play</color>\n",
             score <= _MAX_SCORE ? 'y' : 'D',
@@ -2445,8 +2414,7 @@ static void _magic_line(doc_ptr doc);
 static void _race_class_header(doc_ptr doc)
 {
     _sex_line(doc);
-    if (game_mode != GAME_MODE_BEGINNER)
-        _pers_line(doc);
+    _pers_line(doc);
     _race_line(doc);
     if (game_mode != GAME_MODE_MONSTER)
         _class_line(doc);
@@ -2586,11 +2554,9 @@ static void _race_class_info(doc_ptr doc)
             _stats_add(stats, realm_ptr->stats);
 
         doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-        {
-            _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, pers_ptr->exp);
-        }
+        _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
+        doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, pers_ptr->exp);
+        
         _stats_line(doc, race_ptr->stats, spell_stat, 'G');
         doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, race_ptr->exp);
         if (game_mode != GAME_MODE_MONSTER)
@@ -2660,11 +2626,7 @@ static void _race_class_info(doc_ptr doc)
         {
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Disarming", "Device", "Save", "Stealth");
-            if (game_mode != GAME_MODE_BEGINNER)
-            {
-                doc_printf(doc, "%s %s %s %s\n",
-                    p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
-            }
+			doc_printf(doc, "%s %s %s %s\n", p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
             doc_printf(doc, "%s %s %s %s\n", /* Note: descriptions contain formatting tags, so %-10.10s won't work ... cf skills.c */
                 r_desc.dis, r_desc.dev, r_desc.sav, r_desc.stl);
             if (game_mode != GAME_MODE_MONSTER)
@@ -2684,11 +2646,7 @@ static void _race_class_info(doc_ptr doc)
         {
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Searching", "Perception", "Melee", "Bows");
-            if (game_mode != GAME_MODE_BEGINNER)
-            {
-                doc_printf(doc, "%s %s %s %s\n",
-                    p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
-            }
+            doc_printf(doc, "%s %s %s %s\n", p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
             doc_printf(doc, "%s %s %s %s\n",
                 r_desc.srh, r_desc.fos, r_desc.thn, r_desc.thb);
             if (game_mode != GAME_MODE_MONSTER)
@@ -2746,11 +2704,8 @@ static int _count(int ids[])
 
 static void _birth_options(void)
 {
-    if (game_mode != GAME_MODE_BEGINNER)
-    {
-        Term_load();
-        do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
-    }
+	Term_load();
+	do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
 }
 
 static int _compare_rlvl(mon_race_ptr left, mon_race_ptr right)
@@ -2937,11 +2892,6 @@ static void _birth_finalize(void)
         previous_char.stat_max[i] = p_ptr->stat_max[i];
 
     /* Other Initialization */
-    if (game_mode == GAME_MODE_BEGINNER)
-    {
-        coffee_break = TRUE;
-        effective_speed = TRUE;
-    }
 
     if (coffee_break)
     {
@@ -2952,7 +2902,7 @@ static void _birth_finalize(void)
     }
 
     /* Can't have people sneaking out of R'lyeh by way of nexus attack... */
-    if (thrall_mode) no_chris = TRUE;
+    if (thrall_mode) no_nexus_warp = TRUE;
 
     equip_init();
     pack_init();

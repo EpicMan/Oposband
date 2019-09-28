@@ -127,7 +127,7 @@ int monk_get_attack_idx(void)
     return _get_attack_idx(p_ptr->monk_lvl, p_ptr->special_defense);
 }
 
-static int _calc_damage_per_hit(int dice_dmg, int xtra_dmg, int mult, bool force)
+static int _calc_damage_per_hit(int dice_dmg, int xtra_dmg, int mult, int force)
 {
     if (force)
         mult = mult * 12 / 10 + 5;

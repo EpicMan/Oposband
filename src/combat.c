@@ -607,7 +607,7 @@ void display_weapon_info(doc_ptr doc, int hand)
     ds = o_ptr->ds + p_ptr->weapon_info[hand].to_ds;
     if (object_is_known(o_ptr))
     {
-        to_d = o_ptr->to_d;
+        to_d = o_ptr->to_h;
         to_h = o_ptr->to_h;
     }
 
@@ -660,7 +660,7 @@ void display_weapon_info(doc_ptr doc, int hand)
             to_h = o_ptr->to_a;
             to_d = o_ptr->to_a;
             to_h += 2*o_ptr->to_h;
-            to_d += 2*o_ptr->to_d;
+            to_d += 2*o_ptr->to_h;
         }
     }
 
@@ -1215,14 +1215,13 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     if (object_is_known(bow))
     {
         to_h_bow = bow->to_h;
-        to_d_bow = bow->to_d;
+        to_d_bow = bow->to_h;
     }
     to_h_bow += skills_bow_calc_bonus(bow->sval);
 
     if (object_is_known(arrow))
     {
-        to_h = arrow->to_h;
-        to_d = arrow->to_d;
+        to_h = to_d = arrow->to_h;
     }
 
     if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
@@ -1439,8 +1438,7 @@ void display_shooter_info(doc_ptr doc)
 
     if (object_is_known(bow_ptr))
     {
-        to_h = bow_ptr->to_h;
-        to_d = bow_ptr->to_d;
+        to_d = to_h = bow_ptr->to_h;
     }
     to_h += skills_bow_calc_bonus(bow_ptr->sval);
 

@@ -5338,13 +5338,6 @@ bool craft_enchant(int max, int inc)
                 break_curse(prompt.obj);
             improved = TRUE;
         }
-        if (prompt.obj->to_d < max)
-        {
-            prompt.obj->to_d = MIN(max, prompt.obj->to_d + inc);
-            if (prompt.obj->to_d >= 0)
-                break_curse(prompt.obj);
-            improved = TRUE;
-        }
     }
     else
     {
@@ -8126,11 +8119,6 @@ static cptr do_hex_spell(int spell, int mode)
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
                 {
-                    if (prompt.obj->to_d > 0)
-                    {
-                        prompt.obj->to_d -= randint1(3) % 2;
-                        if (prompt.obj->to_d < 0) prompt.obj->to_d = 0;
-                    }
                     if (prompt.obj->to_h > 0)
                     {
                         prompt.obj->to_h -= randint1(3) % 2;
@@ -8423,11 +8411,6 @@ static cptr do_hex_spell(int spell, int mode)
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
                 {
-                    if (prompt.obj->to_d > 0)
-                    {
-                        prompt.obj->to_d -= randint1(3) % 2;
-                        if (prompt.obj->to_d < 0) prompt.obj->to_d = 0;
-                    }
                     if (prompt.obj->to_h > 0)
                     {
                         prompt.obj->to_h -= randint1(3) % 2;

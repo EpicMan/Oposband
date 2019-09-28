@@ -146,7 +146,6 @@ struct object_kind
     s16b pval;            /* Object extra info */
 
     s16b to_h;            /* Bonus to hit */
-    s16b to_d;            /* Bonus to damage */
     s16b to_a;            /* Bonus to armor */
 
     s16b ac;            /* Base armor */
@@ -214,8 +213,7 @@ struct artifact_type
 
     s16b pval;            /* Artifact extra info */
 
-    s16b to_h;            /* Bonus to hit */
-    s16b to_d;            /* Bonus to damage */
+    s16b to_h;            /* Bonus to hit/damage */
     s16b to_a;            /* Bonus to armor */
 
     s16b ac;            /* Base armor */
@@ -267,7 +265,6 @@ struct ego_type
     byte max_level;       /* Maximum level. 0 => No restriction */
 
     s16b max_to_h;        /* Maximum to-hit bonus */
-    s16b max_to_d;        /* Maximum to-dam bonus */
     s16b max_to_a;        /* Maximum to-ac bonus */
 
     byte max_pval;        /* Maximum pval */
@@ -345,8 +342,7 @@ struct object_type
     s16b xtra4;            /* Extra info: Lights, Capture, Quiver Capacity, Device MaxSP. */
     s32b xtra5;            /* Extra info: Device CSP */
 
-    s16b to_h;            /* Plusses to hit */
-    s16b to_d;            /* Plusses to damage */
+    s16b to_h;            /* Plusses to hit & damage */
     s16b to_a;            /* Plusses to AC */
 
     s16b ac;            /* Normal AC */

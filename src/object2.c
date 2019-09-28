@@ -455,19 +455,16 @@ void wipe_o_list(void)
         if (!o_ptr->k_idx) continue;
 
         /* Mega-Hack -- preserve artifacts */
-        if (!character_dungeon || preserve_mode)
+        /* Hack -- Preserve unknown artifacts */
+        if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
         {
-            /* Hack -- Preserve unknown artifacts */
-            if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
-            {
-                /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name1].generated = FALSE;
-            }
-            if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
-            {
-                /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name3].generated = FALSE;
-            }
+            /* Mega-Hack -- Preserve the artifact */
+            a_info[o_ptr->name1].generated = FALSE;
+        }
+        if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
+        {
+            /* Mega-Hack -- Preserve the artifact */
+            a_info[o_ptr->name3].generated = FALSE;
         }
 
         /* Monster */
@@ -1426,7 +1423,6 @@ void object_prep(object_type *o_ptr, int k_idx)
 
     /* Default magic */
     o_ptr->to_h = k_ptr->to_h;
-    o_ptr->to_d = k_ptr->to_d;
     o_ptr->to_a = k_ptr->to_a;
 
     /* Default power */
@@ -2246,7 +2242,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         o_ptr->ds = a_ptr->ds;
         o_ptr->to_a = a_ptr->to_a;
         o_ptr->to_h = a_ptr->to_h;
-        o_ptr->to_d = a_ptr->to_d;
         o_ptr->weight = a_ptr->weight;
 
         /* Hack -- extract the "broken" flag */
@@ -2595,7 +2590,6 @@ bool kind_is_great(int k_idx)
         case TV_DIGGING:
         {
             if (k_ptr->to_h < 0) return (FALSE);
-            if (k_ptr->to_d < 0) return (FALSE);
             return (TRUE);
         }
 
@@ -2700,7 +2694,6 @@ bool kind_is_good(int k_idx)
         case TV_DIGGING:
         {
             if (k_ptr->to_h < 0) return (FALSE);
-            if (k_ptr->to_d < 0) return (FALSE);
             return (TRUE);
         }
 
@@ -4267,20 +4260,17 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
             if (p_ptr->wizard) msg_print("(no floor space)");
 
             /* Mega-Hack -- preserve artifacts */
-            if (preserve_mode)
+            /* Hack -- Preserve unknown artifacts */
+            if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
             {
-                /* Hack -- Preserve unknown artifacts */
-                if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
-                {
-                    /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name1].generated = FALSE;
-                }
+                /* Mega-Hack -- Preserve the artifact */
+                a_info[j_ptr->name1].generated = FALSE;
+            }
 
-                if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
-                {
-                    /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name3].generated = FALSE;
-                }
+            if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
+            {
+                /* Mega-Hack -- Preserve the artifact */
+                a_info[j_ptr->name3].generated = FALSE;
             }
 
             /* Failure */

@@ -1357,42 +1357,34 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_ENCHANT_ARMOR:
-        if (desc) return "It increases an armour's to-AC when you read it.";
+        if (desc) return "It increases an armour's to-AC by 1 when you read it.";
         if (cast)
         {
-            if (!enchant_spell(0, 0, 1)) return NULL;
+            if (!enchant_spell(0, 1)) return NULL;
             device_noticed = TRUE;
         }
         break;
-    case SV_SCROLL_ENCHANT_WEAPON_TO_HIT:
-        if (desc) return "It increases a weapon's to-hit when you read it.";
+    case SV_SCROLL_ENCHANT_WEAPON:
+        if (desc) return "It increases a weapon's attack bonus by 1 when you read it.";
         if (cast)
         {
-            if (!enchant_spell(1, 0, 0)) return NULL;
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_SCROLL_ENCHANT_WEAPON_TO_DAM:
-        if (desc) return "It increases a weapon's to-dam when you read it.";
-        if (cast)
-        {
-            if (!enchant_spell(0, 1, 0)) return NULL;
+            if (!enchant_spell(1, 0)) return NULL;
             device_noticed = TRUE;
         }
         break;
     case SV_SCROLL_STAR_ENCHANT_ARMOR:
-        if (desc) return "It increases an armour's to-ac powerfully when you read it.";
+        if (desc) return "It increases an armour's to-ac by 3-6 when you read it.";
         if (cast)
         {
-            if (!enchant_spell(0, 0, randint1(3) + 3)) return NULL;
+            if (!enchant_spell(0, randint1(3) + 3)) return NULL;
             device_noticed = TRUE;
         }
         break;
     case SV_SCROLL_STAR_ENCHANT_WEAPON:
-        if (desc) return "It increases a weapon's to-hit and to-dam powerfully when you read it.";
+        if (desc) return "It increases a weapon's attack bonus by 3-6 when you read it.";
         if (cast)
         {
-            if (!enchant_spell(randint1(3) + 3, randint1(3) + 3, 0)) return NULL;
+            if (!enchant_spell(randint1(3) + 3, 0)) return NULL;
             device_noticed = TRUE;
         }
         break;

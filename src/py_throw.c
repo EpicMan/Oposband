@@ -314,7 +314,7 @@ bool _hit_mon(py_throw_ptr context, int m_idx)
                 msg_print(crit.desc);
             }
         }
-        tdam += context->obj->to_d;
+        tdam += context->obj->to_h;
         tdam = tdam * context->mult / 100;
         if (ambush)
             tdam *= 2;
@@ -547,7 +547,7 @@ void py_throw_doc(py_throw_ptr context, doc_ptr doc)
 
     if (object_is_known(context->obj))
     {
-        to_d = context->obj->to_d;
+        to_d = context->obj->to_h;
         to_h = context->obj->to_h;
     }
 

@@ -395,7 +395,6 @@ void chaos_warrior_reward(void)
 
             object_prep(&forge, lookup_kind(dummy, dummy2));
             forge.to_h = 3 + randint1(dun_level) % 10;
-            forge.to_d = 3 + randint1(dun_level) % 10;
             one_resistance(&forge);
             object_origins(&forge, ORIGIN_PATRON);
             forge.name2 = EGO_WEAPON_CHAOS;

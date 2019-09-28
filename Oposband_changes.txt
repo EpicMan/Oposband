@@ -2,7 +2,7 @@
 -Changed variant name to Oposband and version to 0.1.0
 -Removed many unnessary if_savefile_older_than calls as we won't be converting those
 -Removed 18/* notation for stats. Old 18/10 is now just 19, 18/100 is 28, 18/*** is 40, etc
--Adjust many Charisma values to pre-PosChengband values
+-Adjust many Charisma values to pre-PosChengband values.
 -Fear saves now work off of best of Strength and Charisma, to make strong but poor CHR monsters like zombies and balrogs better at fear.
 -Identify acts as *Identify* and the latter is being phased out
 -Psuedo-ID items on walkover, and Average/Good items IDed on walkover.
@@ -12,8 +12,22 @@
 -Many monsters are more affected by doors than before: felines, dragon flies, canines, snakes, and ants
 -Reversed pack AI settings for animals and sentient beings, so the latter will try to lure healthy players into rooms while the latter will hunt you down. Idea from Sil
 -Player now receives full HP and SP restore when levelling up
+-Objects now have a single attack plus instead of split to-hit and to-dam values. Generally to_h was always much less important than to_d to players and having them different (and randomly rolled) just made stacking ammo, etc harder.  Scrolls of enchant to-hit and enchant to-dam have been replaced with a single Enchant Weapon scroll.
+-Somewhat streamlined character creation by removing the first screen. Removed beginner mode and moved normal/monster mode selection to the race/class UI, so you can easily switch between them. 
+-Prayer class group had a single class, Priest, and even when the alternative priest class, Disciple, was added it wasn't put there. So Priest has been moved to the Magic class group and Prayer group has been removed.
+-Orc shamans now have SP like other casters. I see no reason for them to use HP to cast.
+-Needless opaque and polemical no_chris option renamed no_nexus_warp
+-Removed some unneeded options 
+	preserve_artifacts - Artifacts always give a special feeling in FrogComposband, removing main advantage of no_preserve.
+	empty_lore - just use a new savefile. With full monster knowledge no downside other than quickstart.
+	allow_friendly_mons - minor feature that does not need to be allowed. Just attack friendly monsters to make them hostile.
+	allow_hostile_monst - integral feature that does not need to be toggled
+	allow_pets - Integral feature that does not need to be toggled
+	allow_spoilers - moved to debug command z.  
+-Changed the display of weapons bonuses to be more similar to armor displays: From "Dagger (1d5) (+0,+0)" to "Dagger(1d5,+0)."
 
 TODO
+-Buff spells that can be maintained indefinitely (due to low costs and/or non-brokenness, plus not having some issue when they expire, like invulnerability's loss of actions) don't have a duration but instead just reserve mana and stay active. Reserved mana reduces your current max SP, so a lot of buffs mean little to no mana for casting.
 -Add Blue Mage from Hengband, but add in the Imitator's ability to do observed things for the past 3 observed monster spells.
 -Add elemental lord from Portralis
 -Merge Weaponmaster's ranged weapon specialties into Archer class, and melee/shield specialties into Warrior.
@@ -21,3 +35,16 @@ TODO
 -Add Vanilla's new Druid and shapeshifting class?
 -Change stealth mechanic to affect monster awareness of the player. So high stealth players would appear and disappear to monsters, making taking on a group more manageable as more distant ones are less likely to be able to see you to engage.
 -Should speed just be move speed?s
+-Fully restore HP/SP on reaching a new level
+-Re-add Blue Mage. Blue Mage should be able to gain SP from being hit with spells.
+-Re-add Imitator
+-Add Elemental Lord 
+-Add group ID to objects, and make weapon proficiencies based on group. Groups could be as simple as weaponmaster specialties, or more specific.
+-Make beastmasters inability to summon ghosts be a class-specific code, where summoning them always results in hostiles.
+-Change spell proficiency to be book-based.
+-Take away spell learning for most classes. Samurai might need to just become normal book casters, keeping their books.
+-Caster level mechanic (merge into spell power?). 0 for non-casters or non-realms, =level for primary realm, worse for hybrid casters (who count as several levels lower for spell learning), etc
+-Merge rod effects into wands and staves, then rebrand staves rods. Expand the wizardstaff to be like the MageStaff from ToME (extra mana, extra caster level/spell power,decreased mana usage,mana regen, etc)
+-Split HP and SP regeneration (reinvigoration or something).
+-Gray Mages could be changed to be able to learn a certain set of spell books.
+-New class: Druid. A nature caster with a class power to summon animal pets who is good at riding.

@@ -201,7 +201,7 @@ static void _earth_birth(void)
     
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 6;
+    forge.to_h = 6;
     forge.pval = 3;
     add_flag(forge.flags, OF_STR);
     py_birth_obj(&forge);
@@ -803,7 +803,7 @@ static void _water_birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 5;
+    forge.to_h = 5;
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_POLEARM, SV_TRIDENT));

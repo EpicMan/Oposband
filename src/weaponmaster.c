@@ -552,7 +552,7 @@ static int _smash_ground_dam(void)
             ds = o_ptr->ds + p_ptr->weapon_info[hand].to_ds;
 
             damage = dd * (ds + 1) * 50;
-            damage += o_ptr->to_d * 100;
+            damage += o_ptr->to_h * 100;
             damage *= NUM_BLOWS(hand)/100;
             result += damage / 100;
         }
@@ -1398,18 +1398,17 @@ static void _desperation_spell(int cmd, variant *res)
             return;
         }
         o_ptr = equip_obj(slot);
-        ds = o_ptr->to_h + o_ptr->to_d;
+        ds = o_ptr->to_h;
         object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX);
 
         if (ds > 0)
         {
-            hp = damroll(7, ds);
+            hp = damroll(7, 2 * ds);
             hp_player(hp);
 
             if (!object_is_artifact(o_ptr) || one_in_(2))
             {
                 if (o_ptr->to_h > 0) o_ptr->to_h--;
-                if (o_ptr->to_d > 0) o_ptr->to_d--;
                 msg_format("Your %s is disenchanted.", o_name);
             }
             else
@@ -1729,7 +1728,7 @@ bool _design_monkey_clone(void)
             ds = o_ptr->ds + p_ptr->weapon_info[hand].to_ds;
 
             tdam += NUM_BLOWS(hand) *
-                (dd * (ds + 1)/2 + p_ptr->weapon_info[hand].to_d + o_ptr->to_d)/100;
+                (dd * (ds + 1)/2 + p_ptr->weapon_info[hand].to_d + o_ptr->to_h)/100;
 
             blows += NUM_BLOWS(hand)/100;
             acc = hit_chance(hand, o_ptr->to_h, 150);

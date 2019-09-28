@@ -3527,7 +3527,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
 
                         /* The Damage Calculation (Changed) */
                         tdam = damroll(dd, ds);
-                        tdam += arrow.to_d;
+                        tdam += arrow.to_h;
                         if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
                             tdam += 1 + p_ptr->lev/10;
 
@@ -3544,7 +3544,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
 
                         tdam *= tmul;
                         tdam /= 100;
-                        tdam += bow->to_d;
+                        tdam += bow->to_h;
 
                         tdam += p_ptr->shooter_info.to_d;
                         /* End of Damage Calculation (Changed) */

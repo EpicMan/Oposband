@@ -289,7 +289,6 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
         else
         {
             o_ptr->to_h += 3 + randint1(8);
-            o_ptr->to_d += 3 + randint1(8);
         }
         break;
 

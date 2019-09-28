@@ -197,8 +197,6 @@ static bool _absorb(object_type *o_ptr)
         result = TRUE;
     if (_add_essence(target_slot, _ESSENCE_TO_HIT, (o_ptr->to_h - MAX(0, k_ptr->to_h))*mult/div))
         result = TRUE;
-    if (_add_essence(target_slot, _ESSENCE_TO_DAM, (o_ptr->to_d - MAX(0, k_ptr->to_d))*mult/div))
-        result = TRUE;
 
     if (result)
     {
@@ -621,12 +619,12 @@ void armor_calc_obj_bonuses(object_type *o_ptr, bool get_flags)
     if (slot != _GLOVE_SLOT)
     {
         p_ptr->to_h_m += o_ptr->to_h;
-        p_ptr->to_d_m += o_ptr->to_d;
+        p_ptr->to_d_m += o_ptr->to_h;
 
         p_ptr->weapon_info[0].to_h += o_ptr->to_h;
-        p_ptr->weapon_info[0].to_d += o_ptr->to_d;
+        p_ptr->weapon_info[0].to_d += o_ptr->to_h;
         p_ptr->weapon_info[0].dis_to_h += o_ptr->to_h;
-        p_ptr->weapon_info[0].dis_to_d += o_ptr->to_d;
+        p_ptr->weapon_info[0].dis_to_d += o_ptr->to_h;
     }
 }
 
@@ -659,7 +657,6 @@ static void _update_object(int slot)
     o_ptr->to_a = rag_effect_pval(o_ptr, slot, _ESSENCE_AC, FALSE);
     if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_FILTHY_RAG)) o_ptr->to_a--; /* -1 base to-AC */
     o_ptr->to_h = rag_effect_pval(o_ptr, slot, _ESSENCE_TO_HIT, FALSE);
-    o_ptr->to_d = rag_effect_pval(o_ptr, slot, _ESSENCE_TO_DAM, FALSE);
 
     if (slot == _GLOVE_SLOT)
     {

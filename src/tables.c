@@ -2399,9 +2399,6 @@ option_type option_info[] =
 
 	{ &easy_damage,			FALSE, OPT_PAGE_BIRTH, 6, 16,
 	"easy_damage",			"Easy monster health and damage information (*)" },
-
-	{ &allow_spoilers,		FALSE, OPT_PAGE_BIRTH, 6, 29,
-	"allow_spoilers",		"Allow spoilers" },
 	
 	{ &power_tele,			FALSE, OPT_PAGE_BIRTH, 6, 6,
 	"power_tele",			"Use enhanced telepathy" },
@@ -2411,9 +2408,6 @@ option_type option_info[] =
 
 	{ &never_forget,		FALSE, OPT_PAGE_BIRTH, 6, 27,
 	"never_forget",			"Easy Labyrinth and no amnesia" },
-
-	{ &empty_lore,			FALSE, OPT_PAGE_BIRTH, 1, 16,
-	"empty_lore",			"Always forget item lore between games" },
 
     { &smart_learn,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
     "smart_learn",                  "Monsters learn from their mistakes (*)" },
@@ -2444,18 +2438,6 @@ option_type option_info[] =
 
     { &enable_virtues,              FALSE, OPT_PAGE_BIRTH, 6, 13,
     "enable_virtues",               "Enable the virtue system" },
-
-    { &preserve_mode,               TRUE,  OPT_PAGE_BIRTH, 6, 14,
-    "preserve_mode",                "Preserve artifacts (*)" },
-
-    { &allow_friendly_monster,      TRUE, OPT_PAGE_BIRTH, 6, 17,
-    "allow_friendly_monster",       "Allow monsters friendly to player" },
-
-    { &allow_hostile_monster,       TRUE, OPT_PAGE_BIRTH, 6, 19,
-    "allow_hostile_monster",        "Allow monsters hostile to each other" },
-
-    { &allow_pets,                  TRUE, OPT_PAGE_BIRTH, 6, 20,
-    "allow_pets",                   "Allow player to summon/charm monsters" },
 
     { &quest_unique,                TRUE, OPT_PAGE_BIRTH, 6, 21,
     "quest_unique",                 "Random quests for unique monsters only" },
@@ -2490,8 +2472,8 @@ option_type option_info[] =
     { &even_proportions,            FALSE, OPT_PAGE_BIRTH, 4, 16,
     "even_proportions",             "Sometimes reshape very flat \"pipe\" levels" },
 
-    { &no_chris,			FALSE, OPT_PAGE_BIRTH, 6, 12,
-    "no_chris",				"Nexus attacks never teleport to another dungeon" },
+    { &no_nexus_warp,			FALSE, OPT_PAGE_BIRTH, 6, 12,
+    "no_nexus_warp",				"Nexus attacks never teleport to another dungeon" },
 
     { &no_scrambling,			FALSE, OPT_PAGE_BIRTH, 6, 15,
     "no_scrambling",			"Disallow stat scrambling from monster attacks" },

@@ -709,10 +709,9 @@ static bool _weapon_create(obj_ptr obj, u32b mode)
     if (!_create(obj, k_idx, l2, mode)) return FALSE;
     if ((object_is_ammo(obj)) && (p_ptr->lev < 12))
     {
-        if ((obj->to_d > 0) && (!obj->name2) && (!one_in_(3)))
+        if ((obj->to_h > 1) && (!obj->name2) && (!one_in_(3)))
         {
-            obj->to_h = 0;
-            obj->to_d = 0;
+            obj->to_h = 1;
         }
         obj->number -= (obj->number / 3);
     }
@@ -721,7 +720,6 @@ static bool _weapon_create(obj_ptr obj, u32b mode)
 		if (object_is_ammo(obj) && (!obj->name2))
 		{
 			obj->to_h = 0;
-			obj->to_d = 0;
 			obj->curse_flags = 0;
 			obj->known_curse_flags = 0;
 			return TRUE;
@@ -1030,7 +1028,7 @@ static bool _black_market_create(obj_ptr obj, u32b mode)
     if (obj_value(obj) < 10) return FALSE;
     if (object_is_nameless(obj) && !object_is_rare(obj) && object_is_wearable(obj))
     {
-        if (obj->to_a <= 0 && obj->to_h <= 0 && obj->to_d <= 0)
+        if (obj->to_a <= 0 && obj->to_h <= 0)
             return FALSE;
     }
     return TRUE;

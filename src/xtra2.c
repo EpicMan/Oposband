@@ -2075,8 +2075,6 @@ void monster_death(int m_idx, bool drop_item)
                     /* Hack -- Memorize location of artifact in saved floors */
                     if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                 }
-                else if (!preserve_mode)
-                    a_ptr->generated = TRUE;
             }
         }
     }

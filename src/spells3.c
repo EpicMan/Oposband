@@ -1023,7 +1023,7 @@ bool apply_disenchant(int mode)
         u32b            flgs[OF_ARRAY_SIZE];
         int to_h, to_d, to_a, pval;
 
-        if (o_ptr->to_h <= 0 && o_ptr->to_d <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
+        if (o_ptr->to_h <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
             return FALSE;
 
         if (p_ptr->prace == RACE_MON_ARMOR) /* Eat life rating instead */
@@ -1055,17 +1055,12 @@ bool apply_disenchant(int mode)
 
         /* Memorize old value */
         to_h = o_ptr->to_h;
-        to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
         pval = o_ptr->pval;
 
         /* Disenchant tohit */
         if (o_ptr->to_h > 0) o_ptr->to_h--;
         if ((o_ptr->to_h > 5) && (randint0(100) < 20)) o_ptr->to_h--;
-
-        /* Disenchant todam */
-        if (o_ptr->to_d > 0) o_ptr->to_d--;
-        if ((o_ptr->to_d > 5) && (randint0(100) < 20)) o_ptr->to_d--;
 
         /* Disenchant toac */
         if (o_ptr->to_a > 0) o_ptr->to_a--;
@@ -1075,13 +1070,12 @@ bool apply_disenchant(int mode)
         /* Unless called from wild_magic() */
         if ((o_ptr->pval > 1) && one_in_(13) && !(mode & 0x01)) o_ptr->pval--;
 
-        if ((to_h != o_ptr->to_h) || (to_d != o_ptr->to_d) ||
-            (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
+        if ((to_h != o_ptr->to_h) || (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
         {
             msg_format("Your %s was disenchanted!", o_name);
             virtue_add(VIRTUE_HARMONY, 1);
             virtue_add(VIRTUE_ENCHANTMENT, -2);
-            if (o_ptr->insured) cornucopia_item_disenchanted(o_ptr, to_a, to_h, to_d, pval);
+            if (o_ptr->insured) cornucopia_item_disenchanted(o_ptr, to_a, to_h, pval);
 
             p_ptr->update |= (PU_BONUS);
             p_ptr->window |= (PW_EQUIP);
@@ -1206,7 +1200,7 @@ static void _nexus_pick_dungeon(void)
 }
 static void _nexus_travel(void)
 {
-    if (no_chris) return; /* paranoia */
+    if (no_nexus_warp) return; /* paranoia */
     if (!py_on_surface() && !py_in_dungeon())
     {
         msg_print("There is no effect.");
@@ -1275,7 +1269,7 @@ void apply_nexus(monster_type *m_ptr)
                 msg_print("Your body starts to scramble...");
                 wild_talent_scramble();
             }
-            else if (no_wilderness || no_chris || quest_id_current())
+            else if (no_wilderness || no_nexus_warp || quest_id_current())
             {
                 if (!no_scrambling) msg_print("Your body starts to scramble...");
                 mutate_player();
@@ -2185,33 +2179,6 @@ bool enchant(object_type *o_ptr, int n, int eflag)
             }
         }
 
-        /* Enchant to damage */
-        if (eflag & ENCH_TODAM)
-        {
-            int idx = o_ptr->to_d;
-            if (eflag & ENCH_PSI_HACK)
-            {
-                idx -= 2*(psion_enchant_power() - 1);
-            }
-
-            if (idx < 0) chance = 0;
-            else if (idx > 15) chance = 1000;
-            else chance = enchant_table[idx];
-
-            if ((eflag & ENCH_MINOR_HACK) && idx >= minor_limit)
-                chance = 1000;
-
-            if (force || ((randint1(1000) > chance) && (!a || (randint0(100) < 50))))
-            {
-                o_ptr->to_d++;
-                res = TRUE;
-
-                /* only when you get it above -1 -CFT */
-                if (o_ptr->to_d >= 0)
-                    break_curse(o_ptr);
-            }
-        }
-
         /* Enchant to armor class */
         if (eflag & ENCH_TOAC)
         {
@@ -2254,7 +2221,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
  * Note that "num_ac" requires armour, else weapon
  * Returns TRUE if attempted, FALSE if cancelled
  */
-bool enchant_spell(int num_hit, int num_dam, int num_ac)
+bool enchant_spell(int num_hit, int num_ac)
 {
     obj_prompt_t prompt = {0};
     bool         okay = FALSE;
@@ -2281,7 +2248,6 @@ bool enchant_spell(int num_hit, int num_dam, int num_ac)
 
 
     if (enchant(prompt.obj, num_hit, ENCH_TOHIT)) okay = TRUE;
-    if (enchant(prompt.obj, num_dam, ENCH_TODAM)) okay = TRUE;
     if (enchant(prompt.obj, num_ac, ENCH_TOAC)) okay = TRUE;
 
     if (!okay)
@@ -2935,15 +2901,6 @@ bool bless_weapon(void)
         }
 
         if ((prompt.obj->to_h > 5) && (randint0(100) < 33)) prompt.obj->to_h--;
-
-        /* Disenchant todam */
-        if (prompt.obj->to_d > 0)
-        {
-            prompt.obj->to_d--;
-            dis_happened = TRUE;
-        }
-
-        if ((prompt.obj->to_d > 5) && (randint0(100) < 33)) prompt.obj->to_d--;
 
         /* Disenchant toac */
         if (prompt.obj->to_a > 0)
@@ -4053,7 +4010,6 @@ void blast_object(object_type *o_ptr)
     o_ptr->name3 = 0;
     o_ptr->to_a = 0;
     o_ptr->to_h = 0;
-    o_ptr->to_d = 0;
     o_ptr->ac = 0;
     o_ptr->dd = 0;
     o_ptr->ds = 0;
@@ -4064,7 +4020,6 @@ void blast_object(object_type *o_ptr)
     if (is_weapon)
     {
         o_ptr->to_h -= randint1(5) + randint1(5);
-        o_ptr->to_d -= randint1(5) + randint1(5);
     }
 
     for (i = 0; i < OF_ARRAY_SIZE; i++)

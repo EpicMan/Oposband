@@ -148,7 +148,6 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
     q_ptr->pval = 0;
     q_ptr->to_a = 0;
     q_ptr->to_h = 0;
-    q_ptr->to_d = 0;
 
 
     /* Level */
@@ -423,7 +422,6 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
     o_ptr->mult = a_ptr->mult;
     o_ptr->to_a = a_ptr->to_a;
     o_ptr->to_h = a_ptr->to_h;
-    o_ptr->to_d = a_ptr->to_d;
     o_ptr->weight = a_ptr->weight;
 
     /* Success */
@@ -577,7 +575,6 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
                     if (object_is_weapon_ammo(&forge))
                     {
                         forge.to_h = MAX(10, forge.to_h);
-                        forge.to_d = MAX(10, forge.to_d);
                     }
                     if (object_is_armour(&forge))
                     {
@@ -1831,7 +1828,8 @@ static char _effect_color(int which)
 static void _display_device_power(doc_ptr doc, effect_t *effect)
 {
     cptr s = do_effect(effect, SPELL_INFO, 0);
-    int  dd, ds, base, amt;
+    int  dd, ds, base, amt = 0;
+
 
     if (!s || !strlen(s))
     {

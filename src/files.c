@@ -2917,8 +2917,7 @@ long total_points(void)
     u32b point, point_h, point_l;
     int arena_win = MIN(p_ptr->arena_number, MAX_ARENA_MONS);
 
-    if (!preserve_mode) mult += 10;
-    if (!smart_learn) mult -= 20;
+    if (smart_learn) mult += 20;
     if (smart_cheat) mult += 30;
     if (ironman_shops) mult += 50;
     if (ironman_empty_levels) mult += 20;

@@ -1227,7 +1227,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
         case TV_AMULET:
         case TV_RING:
-            if (o_ptr->to_h || o_ptr->to_d)
+            if (o_ptr->to_h)
                 show_weapon = TRUE;
             break;
 
@@ -1809,7 +1809,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (have_flag(flgs, OF_SHOW_MODS)) show_weapon = TRUE;
 
     /* Display the item like a weapon */
-    if (o_ptr->to_h && o_ptr->to_d) show_weapon = TRUE;
+    if (o_ptr->to_h) show_weapon = TRUE;
 
     /* Display the item like armour */
     if (o_ptr->ac) show_armour = TRUE;
@@ -1826,8 +1826,19 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_POLEARM:
     case TV_SWORD:
     case TV_DIGGING:
+		show_weapon = FALSE;
         if (known)
         {
+			char plus[6];
+			if (o_ptr->to_h >= 0)
+			{
+				sprintf(plus, ",+%d", o_ptr->to_h);
+			}
+			else
+			{
+				sprintf(plus, ",%d", o_ptr->to_h);
+			}
+
             int hand = equip_which_hand(o_ptr);
             int dd = o_ptr->dd;
             int ds = o_ptr->ds;
@@ -1846,8 +1857,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             t = object_desc_chr(t, p1);
             t = object_desc_num(t, dd);
             t = object_desc_chr(t, 'd');
-            t = object_desc_num(t, ds);
-            t = object_desc_chr(t, p2);
+			t = object_desc_num(t, ds);
+			t = object_desc_str(t, plus);
+			t = object_desc_chr(t, p2);
         }
         /* All done */
         break;
@@ -1855,7 +1867,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_BOW:
     {
         char tmp[10];
-
+		char plus[4];
+		show_weapon = FALSE;
         if (o_ptr->sval == SV_HARP) break;
         if (o_ptr->sval == SV_CRIMSON) break;
         if (o_ptr->sval == SV_RAILGUN) break;
@@ -1868,10 +1881,19 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         if (equip_is_worn(o_ptr))
             power += p_ptr->shooter_info.to_mult;
 
+		if (o_ptr->to_h >= 0)
+		{
+			sprintf(plus, "+%d", o_ptr->to_h);
+		}
+		else
+		{
+			sprintf(plus, "%d", o_ptr->to_h);
+		}
+
         if (power % 100)
-            sprintf(tmp, "x%d.%2.2d", power / 100, power % 100);
+            sprintf(tmp, "x%d.%2.2d,%s", power / 100, power % 100, plus);
         else
-            sprintf(tmp, "x%d", power / 100);
+            sprintf(tmp, "x%d,%s", power / 100, plus);
 
         /* Append a special "damage" string */
         t = object_desc_chr(t, ' ');
@@ -1904,26 +1926,15 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);
             t = object_desc_int(t, o_ptr->to_h);
-            t = object_desc_chr(t, ',');
-            t = object_desc_int(t, o_ptr->to_d);
             t = object_desc_chr(t, p2);
         }
 
         /* Show the tohit if needed */
-        else if (o_ptr->to_h)
+        else if (o_ptr->to_h && !kind_is_weapon(o_ptr->tval))
         {
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);
             t = object_desc_int(t, o_ptr->to_h);
-            t = object_desc_chr(t, p2);
-        }
-
-        /* Show the todam if needed */
-        else if (o_ptr->to_d)
-        {
-            t = object_desc_chr(t, ' ');
-            t = object_desc_chr(t, p1);
-            t = object_desc_int(t, o_ptr->to_d);
             t = object_desc_chr(t, p2);
         }
     }

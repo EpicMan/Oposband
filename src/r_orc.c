@@ -48,7 +48,6 @@ static void _fighter_birth(void)
     object_prep(&forge, lookup_kind(TV_SHIELD, SV_SMALL_LEATHER_SHIELD));
     forge.name2 = EGO_SHIELD_ORCISH;
     forge.to_h = 2;
-    forge.to_d = 2;
     forge.to_a = 10;
     forge.pval = 1;
     add_flag(forge.flags, OF_VULN_LITE);
@@ -346,7 +345,7 @@ static caster_info * _shaman_caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.options = CASTER_USE_HP;
+        /*me.options = CASTER_USE_HP;*/
         me.which_stat = A_INT;
         init = TRUE;
     }

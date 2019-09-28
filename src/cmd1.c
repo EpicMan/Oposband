@@ -52,7 +52,8 @@ static int _max_vampiric_drain(void)
         switch (randint1(4))
         {
         case 1:
-            if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
+		case 2:
+            if ((r_ptr->level > o_ptr->to_h + 15))
             {
                 if (unique || (o_ptr->to_h < 10 && one_in_(2)) || one_in_(3))
                 {
@@ -60,20 +61,6 @@ static int _max_vampiric_drain(void)
                     {
                         feed = TRUE;
                         o_ptr->to_h++;
-                    }
-                }
-            }
-            break;
-
-        case 2:
-            if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
-            {
-                if (unique || (o_ptr->to_d < 10 && one_in_(2)) || one_in_(3))
-                {
-                    if (o_ptr->to_d < 50 || one_in_(666))
-                    {
-                        feed = TRUE;
-                        o_ptr->to_d++;
                     }
                 }
             }
@@ -368,7 +355,7 @@ void death_scythe_miss(object_type *o_ptr, int hand, int mode)
 
         k *= mult;
     }
-    k += to_d + o_ptr->to_d;
+    k += to_d + o_ptr->to_h;
 
     if (k < 0) k = 0;
 
@@ -2945,22 +2932,19 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             to_h = o_ptr->to_a;
             to_d = o_ptr->to_a;
 
-            to_h += 2*o_ptr->to_h;
-            to_d += 2*o_ptr->to_d;
+            to_d = to_h += 2*o_ptr->to_h;
         }
         else if (p_ptr->prace == RACE_MON_ARMOR)
         {
             dd = 0;
             ds = 0;
-            to_d = o_ptr->to_d;
-            to_h = o_ptr->to_h;
+            to_d = to_h = o_ptr->to_h;
         }
         else
         {
             dd = o_ptr->dd;
             ds = o_ptr->ds;
-            to_h = o_ptr->to_h;
-            to_d = o_ptr->to_d;
+            to_d = to_h = o_ptr->to_h;
         }
         if (o_ptr->name1 == ART_ZANTETSU && r_ptr->d_char == 'j')
             zantetsu_mukou = TRUE;
@@ -4150,22 +4134,16 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (is_human)
                     {
                         int to_h = o_ptr->to_h;
-                        int to_d = o_ptr->to_d;
                         int i, flag;
 
                         flag = 1;
                         for (i = 0; i < to_h + 3; i++) if (one_in_(4)) flag = 0;
                         if (flag) to_h++;
 
-                        flag = 1;
-                        for (i = 0; i < to_d + 3; i++) if (one_in_(4)) flag = 0;
-                        if (flag) to_d++;
-
-                        if (o_ptr->to_h != to_h || o_ptr->to_d != to_d)
+                        if (o_ptr->to_h != to_h)
                         {
                             msg_print("Muramasa sucked blood, and became more powerful!");
                             o_ptr->to_h = to_h;
-                            o_ptr->to_d = to_d;
                         }
                     }
                 }

@@ -160,13 +160,6 @@ static void a_info_reset(bool empty)
     }
 }
 
-void empty_lore_wipe(void)
-{
-    e_info_reset(TRUE);
-    k_info_reset(TRUE);
-    a_info_reset(TRUE);
-}
-
 /*
  * Clear all the global "character" data
  */

@@ -22,9 +22,9 @@
 #define VER_EXTRA 0
 #define VERSION_IS_DEVELOPMENT (FALSE)
 
-#define GAME_MODE_BEGINNER  0
+#define GAME_MODE_XXX  0	/* No more beginner mode */
 #define GAME_MODE_NORMAL    1
-#define GAME_MODE_XXX       2
+/*#define GAME_MODE_XXX       2*/
 #define GAME_MODE_MONSTER   3
 #define GAME_MODE_MAX       4
 
@@ -1956,8 +1956,8 @@ enum {
 #define SV_SCROLL_REMOVE_CURSE          14
 #define SV_SCROLL_STAR_REMOVE_CURSE     15
 #define SV_SCROLL_ENCHANT_ARMOR         16
-#define SV_SCROLL_ENCHANT_WEAPON_TO_HIT 17
-#define SV_SCROLL_ENCHANT_WEAPON_TO_DAM 18
+#define SV_SCROLL_ENCHANT_WEAPON 17
+/*#define SV_SCROLL_ENCHANT_WEAPON_TO_DAM 18*/
 /* xxx enchant missile? */
 #define SV_SCROLL_STAR_ENCHANT_ARMOR    20
 #define SV_SCROLL_STAR_ENCHANT_WEAPON   21

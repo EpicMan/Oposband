@@ -337,9 +337,7 @@ extern bool alert_poison;       /* Alert on poisoning */
 
 extern bool coffee_break;   /* Coffeebreak mode */
 extern bool easy_id;        /* Easy Identify */
-extern bool empty_lore;     /* Always start with empty item lore */
 extern bool easy_damage;    /* Peek into damage and monster health */
-extern bool allow_spoilers;
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
 extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
 extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
@@ -348,10 +346,6 @@ extern bool ironman_shops;    /* Stores are permanently closed (*) */
 extern bool ironman_downward;    /* Disable recall and use of up stairs (*) */
 extern bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) */
 extern bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
-extern bool preserve_mode;    /* Preserve artifacts (*) */
-extern bool allow_friendly_monster; /* Allow monsters friendly to player */
-extern bool allow_hostile_monster; /* Allow monsters hostile to each other */
-extern bool allow_pets; /* Allow pets: Note, this makes some classes unplayable. */
 extern bool quest_unique; /* Random quests for unique monsters only */
 extern bool random_artifacts;
 extern byte random_artifact_pct;
@@ -363,7 +357,7 @@ extern bool no_selling;
 extern bool enable_virtues;
 extern bool easy_thalos;
 extern bool never_forget;
-extern bool no_chris;
+extern bool no_nexus_warp;
 extern bool no_scrambling;
 extern bool comp_mode;
 extern bool reduce_uniques;
@@ -658,7 +652,6 @@ extern bool birth_hack;
 extern void add_history_from_pref_line(cptr t);
 extern cptr birth_get_class_desc(int i);
 extern cptr birth_get_realm_desc(int i);
-extern void empty_lore_wipe(void);
 extern void player_birth(void);
 extern void get_max_stats(void);
 extern int calc_exp_factor(void);
@@ -877,7 +870,7 @@ extern void cornucopia_init(void);
 extern void cornucopia_save(savefile_ptr file);
 extern void cornucopia_load(savefile_ptr file);
 extern int  cornucopia_item_policy(object_type *o_ptr);
-extern void cornucopia_item_disenchanted(object_type *o_ptr, int new_to_a, int new_to_h, int new_to_d, int new_pval);
+extern void cornucopia_item_disenchanted(object_type *o_ptr, int new_to_a, int new_to_h, int new_pval);
 extern void cornucopia_print_stats(doc_ptr doc);
 
 /* devices.c */
@@ -1585,7 +1578,7 @@ extern bool remove_all_curse(void);
 extern bool alchemy(void);
 extern void break_curse(object_type *o_ptr);
 extern bool enchant(object_type *o_ptr, int n, int eflag);
-extern bool enchant_spell(int num_hit, int num_dam, int num_ac);
+extern bool enchant_spell(int num_hit, int num_ac);
 extern bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr);
 extern bool artifact_scroll(void);
 extern bool ident_spell(object_p p);

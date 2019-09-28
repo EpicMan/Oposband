@@ -496,7 +496,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
         to_h = o_ptr->to_h;
-        to_d = o_ptr->to_d;
+        to_d = o_ptr->to_h;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;
@@ -974,7 +974,10 @@ s32b quiver_cost(object_type *o_ptr, int options)
 s32b armor_cost(object_type *o_ptr, int options)
 {
     s32b a, y, q, p;
-    int  to_h = k_info[o_ptr->k_idx].to_h, to_d = k_info[o_ptr->k_idx].to_d, to_a = k_info[o_ptr->k_idx].to_a, pval = 0;
+	int to_h = k_info[o_ptr->k_idx].to_h;
+	int	to_a = k_info[o_ptr->k_idx].to_a; 
+	int pval = 0;
+
     u32b flgs[OF_ARRAY_SIZE];
     char dbg_msg[512];
 
@@ -988,7 +991,6 @@ s32b armor_cost(object_type *o_ptr, int options)
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
         to_h = o_ptr->to_h - MIN(0, k_info[o_ptr->k_idx].to_h);
-        to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;
@@ -1159,24 +1161,24 @@ s32b armor_cost(object_type *o_ptr, int options)
     }
 
     /* (+x,+y) */
-    if (to_h != 0 || to_d != 0)
+    if (to_h != 0)
     {
         int x = to_h * ABS(to_h);
-        int y = to_d * ABS(to_d);
+        int y = x;
 
         p += 250 * to_h + 25 * x;
 
-        if (to_d > 20) /* Master Tonberry, Destroyer */
+        if (to_h > 20) /* Master Tonberry, Destroyer */
         {
             p += 35000; /* +20 damage */
-            p += (to_d - 20) * 1000;
+            p += (to_h - 20) * 1000;
         }
         else
         {
             if (o_ptr->name2 == EGO_CROWN_MAGI)
                 p += 25 * y;
             else /* Note: damage on armor should score fairly high ... e.g. Cambeleg's (+8,+8) */
-                p += 750 * to_d + 50 * y;
+                p += 750 * to_h + 50 * y;
         }
         if (cost_calc_hook)
         {
@@ -1226,8 +1228,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
-        to_h = o_ptr->to_h;
-        to_d = o_ptr->to_d;
+        to_h = to_d = o_ptr->to_h;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;
@@ -1554,8 +1555,7 @@ s32b bow_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
-        to_h = o_ptr->to_h;
-        to_d = o_ptr->to_d;
+		to_d = to_h = o_ptr->to_h;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;
