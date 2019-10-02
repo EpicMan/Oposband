@@ -3645,6 +3645,8 @@ static void _dispatch_command(int old_now_turn)
                     which_power = "psionic powers";
                 else if (p_ptr->pclass == CLASS_SAMURAI)
                     which_power = "hissatsu";
+				else if (p_ptr->pclass == CLASS_IMITATOR)
+					which_power = "imitation";
                 else if (p_ptr->pclass == CLASS_LAWYER || p_ptr->pclass == CLASS_NINJA_LAWYER)
                     which_power = "legal trickery";
                 else if (p_ptr->pclass == CLASS_MIRROR_MASTER)
@@ -3673,12 +3675,16 @@ static void _dispatch_command(int old_now_turn)
                     ring_cast();
                 else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC)
                     possessor_cast();
+				else if (p_ptr->pclass == CLASS_IMITATOR)
+					imitator_cast(FALSE);
                 else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                     magic_eater_cast(0);
                 else if (p_ptr->pclass == CLASS_SKILLMASTER)
                     skillmaster_cast();
                 else if (p_ptr->pclass == CLASS_SAMURAI)
                     do_cmd_hissatsu();
+				else if (p_ptr->pclass == CLASS_BLUE_MAGE)
+					do_cmd_cast_learned();
                 else if (p_ptr->pclass == CLASS_GRAY_MAGE)
                     gray_mage_cast_spell();
                 else if (p_ptr->pclass == CLASS_ALCHEMIST)
@@ -4851,6 +4857,20 @@ static void process_player(void)
                     }
                 }
             }
+			if (p_ptr->pclass == CLASS_IMITATOR)
+			{
+				if (p_ptr->mane_num > (p_ptr->lev > 44 ? 3 : p_ptr->lev > 29 ? 2 : 1))
+				{
+					p_ptr->mane_num--;
+					for (i = 0; i < p_ptr->mane_num; i++)
+					{
+						p_ptr->mane_spell[i] = p_ptr->mane_spell[i + 1];
+						p_ptr->mane_dam[i] = p_ptr->mane_dam[i + 1];
+					}
+				}
+				new_mane = FALSE;
+				p_ptr->redraw |= PR_EFFECTS;
+			}
             if (p_ptr->action == ACTION_LEARN)
             {
                 new_mane = FALSE;

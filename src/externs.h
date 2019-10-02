@@ -106,6 +106,9 @@ extern cptr exp_level_str[5];
 extern cptr silly_attacks[MAX_SILLY_ATTACK];
 extern cptr ident_info[];
 extern byte feature_action_flags[FF_FLAG_MAX];
+extern monster_power monster_powers[MAX_MONSPELLS];
+extern cptr monster_powers_short[MAX_MONSPELLS];
+
 
 /* variable.c */
 extern int game_mode;
@@ -2003,6 +2006,14 @@ extern int  anti_magic_check(void);
 extern bool direct_beam(int y1, int x1, int y2, int x2, monster_type *m_ptr);
 extern bool breath_direct(int y1, int x1, int y2, int x2, int rad, int typ, bool friend);
 extern void get_project_point(int sy, int sx, int *ty, int *tx, int flg);
+
+/* blue_mage.c */
+extern byte blue_mage_mask[MS_MAX];
+
+/* mspells3.c */
+extern bool do_cmd_cast_learned(void);
+extern int get_monspell(byte type, s16b effect);
+extern void learn_monster_spell(int monspell);
 
 /* artifact.c */
 extern int original_score;

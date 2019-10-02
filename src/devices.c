@@ -35,6 +35,7 @@ static bool ang_sort_comp_pet(vptr u, vptr v, int a, int b)
 bool class_uses_spell_scrolls(int mika)
 {
     if (mika == CLASS_WARRIOR ||
+	  mika == CLASS_IMITATOR ||
       mika == CLASS_MINDCRAFTER ||
       mika == CLASS_PSION ||
       mika == CLASS_SORCERER ||
@@ -43,6 +44,7 @@ bool class_uses_spell_scrolls(int mika)
       mika == CLASS_DEVICEMASTER ||
       mika == CLASS_RED_MAGE ||
       mika == CLASS_SAMURAI ||
+      mika == CLASS_BLUE_MAGE ||
       mika == CLASS_CAVALRY ||
       mika == CLASS_BERSERKER ||
       mika == CLASS_WEAPONSMITH ||

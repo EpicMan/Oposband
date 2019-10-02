@@ -1480,6 +1480,19 @@ static void _wiz_stats_gather(int which_dungeon, int level, int reps)
     }
 }
 
+/* debug command for blue mage */
+static void do_cmd_wiz_blue_mage(void)
+{
+
+	int                i = 0;
+	int                j = 0;
+
+	for (int i = 0; i < MS_MAX; i++)
+	{
+		p_ptr->magic_num2[i] = 1;
+	}
+}
+
 /*************************************************************************
  * Handle the ^A wizard commands. Perhaps there should be a UI for this?
  ************************************************************************/
@@ -1572,6 +1585,14 @@ void do_cmd_debug(void)
     case 'e':
         do_cmd_wiz_change();
         break;
+
+	/* Blue Mage Only */
+	case 'E':
+		if (p_ptr->pclass == CLASS_BLUE_MAGE)
+		{
+			do_cmd_wiz_blue_mage();
+		}
+		break;
 
     /* View item info */
     case 'f':
@@ -1953,5 +1974,3 @@ static int i = 0;
 #endif
 
 #endif
-
-

@@ -809,7 +809,7 @@ enum _mimic_types {
 #define CLASS_MINDCRAFTER        9
 #define CLASS_HIGH_MAGE         10
 #define CLASS_TOURIST           11
-#define CLASS_XXX12             12
+#define CLASS_IMITATOR          12
 #define CLASS_BEASTMASTER       13
 #define CLASS_SORCERER          14
 #define CLASS_ARCHER            15
@@ -818,7 +818,7 @@ enum _mimic_types {
 #define CLASS_RED_MAGE          18
 #define CLASS_SAMURAI           19
 #define CLASS_FORCETRAINER      20
-#define CLASS_XXX21             21
+#define CLASS_BLUE_MAGE         21
 #define CLASS_CAVALRY           22
 #define CLASS_BERSERKER         23
 #define CLASS_WEAPONSMITH       24
@@ -4243,7 +4243,7 @@ extern int PlayerUID;
 #define MS_S_AMBERITE     94
 #define MS_S_UNIQUE       95
 #define MS_THROW          96
-
+#define MS_MAX			  97
 
 #define MON_BEGGAR              12
 #define MON_LEPER               13

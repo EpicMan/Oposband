@@ -23701,6 +23701,28 @@ D:perfectly, down to the last molecule on the flaming sword. You wonder
 D:what mad scientist designed this contraption, and whether he was also
 D:responsible for the Cloning Pits...
 
+N:1304:Spooky tree
+G:#:g
+I:100:80d20:20:50:20:350
+W:11:2:60:100:0:0
+B:CRUSH:HURT(1d20)
+S:1_IN_12
+S:CONFUSE
+F:COLD_BLOOD | REGENERATE | NEVER_MOVE
+F:NO_FEAR | NO_CONF | HURT_FIRE | RES_WATE
+F:NO_STUN | NO_SLEEP | WEIRD_MIND
+F:FRIENDS(2d4) | 
+D:An ancient tree that seems to be watching you.
+
+# High hitpoints and armor class
+#name:tree
+#glyph:l
+#pain:9
+#flags:CLEAR_WEB | COLD_BLOOD | REGENERATE
+#flags:NO_FEAR | NO_CONF | HURT_FIRE | RES_WATE
+#desc:Tree/Ent
+
+
 # N: serial number : monster name
 # G: symbol : color
 # I: speed : hit points : vision : armor class : alertness : weight (lbs)
@@ -23716,3 +23738,4 @@ D:responsible for the Cloning Pits...
 # R - Light Red  G - Light Green  B - Light Blue  U - Light Brown
 #
 # vim: filetype=ri :
+

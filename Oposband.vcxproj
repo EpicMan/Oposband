@@ -197,6 +197,7 @@
     <ClCompile Include="src\bldg.c" />
     <ClCompile Include="src\blood_knight.c" />
     <ClCompile Include="src\blood_mage.c" />
+    <ClCompile Include="src\blue_mage.c" />
     <ClCompile Include="src\c-string.c" />
     <ClCompile Include="src\c-vec.c" />
     <ClCompile Include="src\cavalry.c" />
@@ -238,6 +239,7 @@
     <ClCompile Include="src\high_mage.c" />
     <ClCompile Include="src\hissatsu.c" />
     <ClCompile Include="src\home.c" />
+    <ClCompile Include="src\imitator.c" />
     <ClCompile Include="src\init1.c" />
     <ClCompile Include="src\init2.c" />
     <ClCompile Include="src\int-map.c" />
@@ -264,6 +266,7 @@
     <ClCompile Include="src\mon_info.c" />
     <ClCompile Include="src\mspells1.c" />
     <ClCompile Include="src\mspells2.c" />
+    <ClCompile Include="src\mspells3.c" />
     <ClCompile Include="src\mut.c" />
     <ClCompile Include="src\mut_a.c" />
     <ClCompile Include="src\mystic.c" />

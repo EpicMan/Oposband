@@ -620,7 +620,7 @@ void teleport_away_followable(int m_idx)
     {
         bool follow = FALSE;
 
-        if (mut_present(MUT_TELEPORT)) follow = TRUE;
+        if (mut_present(MUT_TELEPORT) || (p_ptr->pclass == CLASS_IMITATOR)) follow = TRUE;
         else if (p_ptr->pclass == CLASS_DUELIST
               && p_ptr->duelist_target_idx == m_idx
               && p_ptr->lev >= 30 )

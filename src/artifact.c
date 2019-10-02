@@ -2170,6 +2170,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_HIGH_MAGE:
             case CLASS_SORCERER:
             case CLASS_MAGIC_EATER:
+			case CLASS_BLUE_MAGE:
             case CLASS_WARLOCK:
             case CLASS_BLOOD_MAGE:
             case CLASS_NECROMANCER:
@@ -2235,6 +2236,10 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_TIME_LORD:
                 warrior_artifact_bias = 20;
                 break;
+			case CLASS_IMITATOR:
+				artifact_bias = BIAS_RANGER;
+				warrior_artifact_bias = 40;
+				break;
             case CLASS_BEASTMASTER:
                 artifact_bias = BIAS_CHR;
                 warrior_artifact_bias = 30;

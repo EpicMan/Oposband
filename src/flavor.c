@@ -1914,23 +1914,17 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if (mode & OD_NAME_AND_DICE) goto object_desc_done;
 
+	/* Don't show pluses for these items */
+	if (o_ptr->tval == TV_BOW && (o_ptr->sval == SV_HARP || o_ptr->sval == SV_CRIMSON || o_ptr->sval == SV_RAILGUN))
+	{
+		show_weapon = FALSE;
+	}
+
     /* Add the weapon bonuses */
     if (known)
     {
-        if (o_ptr->tval == TV_BOW && (o_ptr->sval == SV_HARP || o_ptr->sval == SV_CRIMSON || o_ptr->sval == SV_RAILGUN))
-        {
-        }
         /* Show the tohit/todam on request */
-        else if (show_weapon)
-        {
-            t = object_desc_chr(t, ' ');
-            t = object_desc_chr(t, p1);
-            t = object_desc_int(t, o_ptr->to_h);
-            t = object_desc_chr(t, p2);
-        }
-
-        /* Show the tohit if needed */
-        else if (o_ptr->to_h && !kind_is_weapon(o_ptr->tval))
+        if (show_weapon)
         {
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);
