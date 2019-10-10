@@ -1021,7 +1021,7 @@ bool apply_disenchant(int mode)
         object_type     *o_ptr = equip_obj(slot);
         char            o_name[MAX_NLEN];
         u32b            flgs[OF_ARRAY_SIZE];
-        int to_h, to_d, to_a, pval;
+        int to_h, to_a, pval;
 
         if (o_ptr->to_h <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
             return FALSE;

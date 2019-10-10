@@ -3409,7 +3409,7 @@ static void calc_hitpoints(void)
     class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
-    mmhp = p_ptr->player_hp[p_ptr->lev - 1] * 10 / 100; /* 255 hp total */
+    mmhp = 5 * (p_ptr->lev + 1) * p_ptr->life_rating / 100; /* 255 hp total */
     mmhp += _calc_xtra_hp(300);
 
     mmhp = mmhp * (IS_WRAITH() ? MIN(race_ptr->life, 90) : race_ptr->life) / 100;

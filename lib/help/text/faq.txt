@@ -1,17 +1,17 @@
-FrogComposband FAQ
+Oposband FAQ
 
 Q: I'd like to move one square at a time, but every time I press a key 
 my character moves halfway across the screen. Help!
 
 A: You are somehow triggering the Run command instead of the Walk 
-command. In addition to normal running (with the '.' command), 
-FrogComposband uses preference files to support shiftrunning (running 
-by using the Shift key), which is preferred by some players. This 
-mechanic sometimes leads to unwanted running, especially on the 
-angband.live online server which has some very odd default settings. If 
-you are playing there, see if toggling Num Lock helps you stop running, 
-turn on the online_macros option in the Input Options menu (the '=' 
-key), or else request help in the server chat.
+command. In addition to normal running (with the '.' command), Oposband 
+uses preference files to support shiftrunning (running by using the 
+Shift key), which is preferred by some players. This mechanic sometimes 
+leads to unwanted running, especially on the angband.live online server 
+which has some very odd default settings. If you are playing there, see 
+if toggling Num Lock helps you stop running, turn on the online_macros 
+option in the Input Options menu (the '=' key), or else request help in 
+the server chat.
 
 
 Q: All right, I have a character up and walking. What should I do?
@@ -67,13 +67,6 @@ endgame. Unlike normal forced-descent play, the player is allowed to
 recall back to town, as well as to skip random dungeon quests by 
 recalling (although recalling out of a quest incurs a large fame 
 penalty).
-
-Coffee-break mode is a birth option; it is automatically turned on for 
-players who select the 'Beginner' option at character creation, but can 
-also be selected the normal way by non-beginners. Coffee-break mode is 
-not an easy-mode; it is activated for beginners because it is simpler 
-and allows faster progress, not because it is easy.
-
 
 Q: I can't find any up staircases, only down staircases! Is there any 
 way I can get back to town?
@@ -284,13 +277,13 @@ useful for a ninja.)
 Q: I'm at normal speed (+0). But normal speed monsters sometimes 
 double-move me!
 
-A: In FrogComposband, the amount of energy needed for a move is 
-somewhat randomized (though less so than in its predecessor 
-PosChengband). This method of speed system is an important feature of 
-FrogComposband and simulates real fighting. Usually a monster with the 
-same speed as you will only get one move in, but always prepare for the 
-possibility that they might get two moves! Don't fight when your HP is 
-low unless you have a death wish.
+A: In Oposband, the amount of energy needed for a move is somewhat 
+randomized (though less so than in its predecessor PosChengband). This 
+method of speed system is an important feature of Oposband and 
+simulates real fighting. Usually a monster with the same speed as you 
+will only get one move in, but always prepare for the possibility that 
+they might get two moves! Don't fight when your HP is low unless you 
+have a death wish.
 
 Also, monsters don't always move at their listed speed; watch out in 
 particular for hasted monsters, who receive a temporary +10 speed 
@@ -337,7 +330,7 @@ you wield a single weapon with both hands, both rings will apply to
 it.)
 
 
-Q: How does Free Action work in FrogComposband?
+Q: How does Free Action work in Oposband?
 
 A: Free Action provides protection from paralysis, a potentially lethal 
 condition. One level of Free Action provides partial protection and 
@@ -356,7 +349,7 @@ levels of Free Action.
 In many other Angband variants one source of Free Action is enough to 
 give complete paralysis immunity; if you've played such variants, be 
 careful not to rely too much on a single Free Action source in 
-FrogComposband.
+Oposband.
 
 
 Q: Is there any way to gain paralysis immunity even against the Ancient 
@@ -369,7 +362,7 @@ throw up to this level, but can be inconvenient for characters that
 rely heavily on magic.
 
 
-Q: How does See Invisible work in FrogComposband?
+Q: How does See Invisible work in Oposband?
 
 A: Every level of See Invisible improves your chances of noticing an 
 invisible creature. How good those chances become depends on the level 
@@ -899,26 +892,25 @@ Should I use a TXT dump or an HTML dump?
 A: Use an HTML dump.
 
 
-Q: What is the genesis of FrogComposband?
+Q: What is the genesis of Oposband?
 
-A: FrogComposband is a fork of ComPosband, a fork of PosChengband, 
-which was based on Chengband, which was based on Hengband, which was 
-based on Japanese ZAngband, which was based on regular ZAngband, a fork 
-of Angband, which was based on Moria and Umoria. (Whew!)
+A: Oposband is a fork of FrogComposband, a fork of ComPosband, a fork 
+of PosChengband, which was based on Chengband, which was based on 
+Hengband, which was based on Japanese ZAngband, which was based on 
+regular ZAngband, a fork of Angband, which was based on Moria and 
+Umoria. (Whew!)
 
-In addition to these direct ancestors, FrogComposband and its "family" 
-have been strongly influenced by a number of other Angband variants, 
-like KAngband, Posband, ToME and OAngband. FrogComposband specifically 
-has also inherited quite a bit of content - starting with its name - 
-from Frogspawn, an unpublished fork of vanilla Angband.
+In addition to these direct ancestors, Oposband and its "family" have 
+been strongly influenced by a number of other Angband variants, like 
+KAngband, Posband, ToME and OAngband. Oposband
 
 
-Q: What is the design philosophy of FrogComposband?
+Q: What is the design philosophy of Oposband?
 
-A: Above all else, FrogComposband aims to be 1) fun and 2) challenging. 
-(It also aims to sneakily bring about Armageddon and the ascendancy of 
+A: Above all else, Oposband aims to be 1) fun and 2) challenging. (It 
+also aims to sneakily bring about Armageddon and the ascendancy of 
 hyperintelligent robots.)
-
+[TODO: Update for Oposband]
 The pursuit of a fun game involves quite a few things. The game tries 
 to be fair to the player - unavoidable deaths out of nowhere should be 
 unknown or at least extremely rare, and non-lethal attacks should add 
@@ -992,5 +984,6 @@ Updated    : FrogComposband 7.0.peppermint
 Updated    : FrogComposband 7.0.nougat
 Updated    : FrogComposband 7.1.toffee
 Updated    : FrogComposband 7.1.chocolate
+Updated    : Oposband 0.1.0
 
 

@@ -17,7 +17,7 @@ little in the way of utility. Kill quickly as your life depends on it!
   Wisdom        -2        Save        Poor         
   Dexterity     -1        Stealth     Poor         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  107%       Melee       Superb       
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -36,7 +36,7 @@ somewhat lacking.
   Wisdom        -1        Save        Poor         
   Dexterity     +3        Stealth     Good         
   Constitution  +0        Searching   Poor         
-  Charisma      +1        Perception  Poor         
+  Charisma      -1        Perception  Poor         
   Life Rating  104%       Melee       Poor         
   Base HP       12        Bows        Superb       
   Experience   135%
@@ -54,7 +54,7 @@ crushing blows against your hapless enemies.
   Wisdom        -2        Save        Good         
   Dexterity     -1        Stealth     Poor         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Good         
   Base HP       12        Bows        Poor         
   Experience   135%
@@ -70,7 +70,7 @@ so hard as to knock their opponents backwards!
   Wisdom        -2        Save        Bad          
   Dexterity     +2        Stealth     Fair         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Poor         
   Base HP       12        Bows        Superb       
   Experience   135%
@@ -91,7 +91,7 @@ toss abilities.
   Wisdom        -1        Save        Poor         
   Dexterity     +4        Stealth     Good         
   Constitution  +0        Searching   Fair         
-  Charisma      +1        Perception  Poor         
+  Charisma      -1        Perception  Poor         
   Life Rating  104%       Melee       Good         
   Base HP       12        Bows        Very Good    
   Experience   135%
@@ -107,7 +107,7 @@ opponents.
   Wisdom        -2        Save        Poor         
   Dexterity     +1        Stealth     Poor         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Superb       
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -125,7 +125,7 @@ speciality.
   Wisdom        +0        Save        Good         
   Dexterity     +1        Stealth     Poor         
   Constitution  +3        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Good         
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -142,7 +142,7 @@ break less often.
   Wisdom        +0        Save        Poor         
   Dexterity     +4        Stealth     Good         
   Constitution  +0        Searching   Poor         
-  Charisma      +1        Perception  Poor         
+  Charisma      -1        Perception  Poor         
   Life Rating  104%       Melee       Poor         
   Base HP       12        Bows        Superb       
   Experience   135%
@@ -160,7 +160,7 @@ yourself at great cost.
   Wisdom        -1        Save        Poor         
   Dexterity     +3        Stealth     Fair         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Excellent    
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -175,7 +175,7 @@ your weapon with elemental, vorpal or vampiric powers.
   Wisdom        -2        Save        Poor         
   Dexterity     +2        Stealth     Poor         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Superb       
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -194,7 +194,7 @@ open for those +8 diggers!
   Wisdom        -2        Save        Fair         
   Dexterity     +1        Stealth     Fair         
   Constitution  +2        Searching   Poor         
-  Charisma      +1        Perception  Bad          
+  Charisma      -1        Perception  Bad          
   Life Rating  104%       Melee       Excellent    
   Base HP       12        Bows        Bad          
   Experience   135%
@@ -202,17 +202,17 @@ open for those +8 diggers!
 Table 1 - Weaponmaster Statistic Bonus Table
 
                   STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-Axes               +4   -3   -2   -1   +2   +1  104%  +12  135%
-Bows               +1   -1   -1   +3   +0   +1  104%  +12  135%
-Clubs              +3   -2   -2   -1   +2   +1  104%  +12  135%
-Crossbows          +2   -2   -2   +2   +2   +1  104%  +12  135%
-Daggers            +1   +0   -1   +4   +0   +1  104%  +12  135%
-Polearms           +3   -2   -2   +1   +2   +1  104%  +12  135%
-Shields            +3   -1   +0   +1   +3   +1  104%  +12  135%
-Slings             +0   +0   +0   +4   +0   +1  104%  +12  135%
-Staves             +1   -1   -1   +3   +2   +1  104%  +12  135%
-Swords             +2   -2   -2   +2   +2   +1  104%  +12  135%
-Diggers            +3   -2   -2   +1   +2   +1  104%  +12  135%
+Axes               +4   -3   -2   -1   +2   -1  104%  +12  135%
+Bows               +1   -1   -1   +3   +0   -1  104%  +12  135%
+Clubs              +3   -2   -2   -1   +2   -1  104%  +12  135%
+Crossbows          +2   -2   -2   +2   +2   -1  104%  +12  135%
+Daggers            +1   +0   -1   +4   +0   -1  104%  +12  135%
+Polearms           +3   -2   -2   +1   +2   -1  104%  +12  135%
+Shields            +3   -1   +0   +1   +3   -1  104%  +12  135%
+Slings             +0   +0   +0   +4   +0   -1  104%  +12  135%
+Staves             +1   -1   -1   +3   +2   -1  104%  +12  135%
+Swords             +2   -2   -2   +2   +2   -1  104%  +12  135%
+Diggers            +3   -2   -2   +1   +2   -1  104%  +12  135%
 
 
 Table 2 - Weaponmaster Skill Bonus Table I

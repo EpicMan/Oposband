@@ -3771,39 +3771,40 @@ A:80/3
 P:0:1d1:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:*:[Bugei Shofu]
-G:?:o
-I:106:0:0
-W:10:0:30:30:100
-A:10/1
-P:0:1d1:0:0
-F:TOWN
-M:100:1d3
+#Samurai don't use books in Oposband
+# N:*:[Bugei Shofu]
+# G:?:o
+# I:106:0:0
+# W:10:0:30:30:100
+# A:10/1
+# P:0:1d1:0:0
+# F:TOWN
+# M:100:1d3
 
-N:*:[Yagyuu Bugeichou]
-G:?:o
-I:106:1:0
-W:20:0:50:30:1000
-A:20/1
-P:0:1d1:0:0
-F:TOWN
-M:50:1d2
+# N:*:[Yagyuu Bugeichou]
+# G:?:o
+# I:106:1:0
+# W:20:0:50:30:1000
+# A:20/1
+# P:0:1d1:0:0
+# F:TOWN
+# M:50:1d2
 
-N:*:[Gorinnosho]
-G:?:u
-I:106:2:0
-W:45:0:90:30:15000
-A:45/1
-P:0:1d1:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+# N:*:[Gorinnosho]
+# G:?:u
+# I:106:2:0
+# W:45:0:90:30:15000
+# A:45/1
+# P:0:1d1:0:0
+# F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:*:[Hokusin Ittouryuu Kaiden]
-G:?:u
-I:106:3:0
-W:80:0:0:30:100000
-A:80/3
-P:0:1d1:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+# N:*:[Hokusin Ittouryuu Kaiden]
+# G:?:u
+# I:106:3:0
+# W:80:0:0:30:100000
+# A:80/3
+# P:0:1d1:0:0
+# F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:*:[Handbook of Hex]
 G:?:v

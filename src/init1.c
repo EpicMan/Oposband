@@ -5094,6 +5094,44 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             else if (streq(b+1, "SUBRACE"))
             {
                 v = get_true_race()->subname;
+
+				/*Hack: Code doesn't handle spaces here (i.e. Elemental monsters), so substitute dashes*/
+				if (streq(v, "Water Spirit"))
+				{
+					v = "Water-Spirit";
+				}
+				else if (streq(v, "Water Elemental"))
+				{
+					v = "Water-Elemental";
+				}
+				else if (streq(v, "Air Spirit"))
+				{
+					v = "Air-Spirit";
+				}
+				else if (streq(v, "Air Elemental"))
+				{
+					v = "Air-Elemental";
+				}
+				else if (streq(v, "Earth Spirit"))
+				{
+					v = "Earth-Spirit";
+				}
+				else if (streq(v, "Earth Elemental"))
+				{
+					v = "Earth-Elemental";
+				}
+				else if (streq(v, "Fire Spirit"))
+				{
+					v = "Fire-Spirit";
+				}
+				else if (streq(v, "Fire Elemental"))
+				{
+					v = "Fire-Elemental";
+				}
+				else if (streq(v, "Magma Elemental"))
+				{
+					v = "Magma-Elemental";
+				}
             }
             /* Class */
             else if (streq(b+1, "CLASS"))

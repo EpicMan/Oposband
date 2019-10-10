@@ -1001,6 +1001,13 @@ void do_cmd_spell(void)
         return;
     }
 
+	if (p_ptr->pclass == CLASS_SAMURAI && !equip_find_first(object_is_melee_weapon))
+	{
+		if (flush_failure) flush();
+		msg_print("You need to wield a weapon!");
+		return;
+	}
+
     if (p_ptr->special_defense & KATA_MASK)
     {
         set_action(ACTION_NONE);

@@ -52,7 +52,7 @@ Intelligence  -1        Device      <color:R>Poor         </color>
 Wisdom        +2        Save        <color:y>Good         </color>
 Dexterity     -1        Stealth     <color:r>Bad          </color>
 Constitution  +0        Searching   <color:y>Good         </color>
-Charisma      +0        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:D>Very Bad     </color>
 Experience   100%       Bows        <color:r>Bad          </color>
 </style></indent>
@@ -104,7 +104,7 @@ Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:y>Good         </color>
-Charisma      +1        Perception  <color:o>Fair         </color>
+Charisma      +3        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
 Experience   100%       Bows        <color:g>Superb       </color>
 </style></indent>
@@ -234,7 +234,7 @@ Intelligence  +1        Device      <color:R>Poor         </color>
 Wisdom        +1        Save        <color:R>Poor         </color>
 Dexterity     +2        Stealth     <color:o>Fair         </color>
 Constitution  -1        Searching   <color:y>Good         </color>
-Charisma      +1        Perception  <color:R>Poor         </color>
+Charisma      -1        Perception  <color:R>Poor         </color>
 Life Rating   97%       Melee       <color:R>Poor         </color>
 Experience   100%       Bows        <color:o>Fair         </color>
 </style></indent>
@@ -257,22 +257,21 @@ Experience   110%       Bows        <color:r>Bad          </color>
 Ordinary        +0   +0   +0   +0   +0   +0  100%  100%
 Mighty          +2   -2   -2   +0   +1   +1  102%  100%
 Shrewd          -2   +2   +0   +1   -1   -1   97%  100%
-Pious           +0   -1   +2   -1   +0   +0  100%  100%
+Pious           +0   -1   +2   -1   +0   +1  100%  100%
 Nimble          -1   +1   -1   +2   -1   +0   99%  100%
 Fearless        +1   +0   +0   -1   -1   +1   98%  100%
 Combat          +1   -1   -1   +1   +0   +0  100%  100%
-Sexy            +1   +1   +1   +1   +1   +1  100%  100%
+Sexy            +1   +1   +1   +1   +1   +3  100%  100%
 Lucky           -2   -2   -2   -2   -2   -2   98%  100%
 Patient         -1   -1   +1   -2   +2   +0  102%  100%
 Craven          -1   +1   +1   -1   -1   -2   99%  100%
 Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 Lazy            -2   -2   -2   -2   -2   -2   95%  100%
 Unlucky         +2   +2   +2   +2   +2   +2  104%  100%
-Chaotic         +0   +0   +0   +0   +0   +0   99%  100%
 Mundane         -1   -1   -1   -1   -1   -1   97%  100%
 Munchkin        +3   +3   +3   +3   +3   +3  150%   50%
 Fragile         -3   +0   +1   -1   -3   -2   91%  100%
-Sneaky          -3   +1   +1   +2   -1   +1   97%  100%
+Sneaky          -3   +1   +1   +2   -1   -1   97%  100%
 Noble           +0   +0   +0   -2   -1   +2   99%  110%
 
 </style>
@@ -293,7 +292,6 @@ Craven       <color:y>Good         </color> <color:y>Good         </color> <colo
 Hasty        <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
 Lazy         <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
 Unlucky      <color:D>Very Bad     </color> <color:o>Fair         </color> <color:D>Very Bad     </color> <color:R>Poor         </color>
-Chaotic      <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Mundane      <color:R>Poor         </color> <color:D>Very Bad     </color> <color:g>Superb       </color> <color:R>Poor         </color>
 Munchkin     <color:g>Superb       </color> <color:v>Amber[12]    </color> <color:b>Heroic       </color> <color:y>Good         </color>
 Fragile      <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
@@ -318,7 +316,6 @@ Craven       <color:R>Poor         </color> <color:R>Poor         </color> <colo
 Hasty        <color:D>Very Bad     </color> <color:r>Bad          </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
 Lazy         <color:D>Very Bad     </color> <color:r>Bad          </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Unlucky      <color:R>Poor         </color> <color:y>Good         </color> <color:r>Bad          </color> <color:R>Poor         </color>
-Chaotic      <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color>
 Mundane      <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color>
 Munchkin     <color:v>Amber[15]    </color> <color:v>Amber[15]    </color> <color:v>Amber[62]    </color> <color:v>Amber[27]    </color>
 Fragile      <color:o>Fair         </color> <color:o>Fair         </color> <color:D>Very Bad     </color> <color:r>Bad          </color>

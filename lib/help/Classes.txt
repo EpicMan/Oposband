@@ -16,7 +16,7 @@ Intelligence <color:w>-20</color>        Device      <color:D>Very Bad     </col
 Wisdom       <color:w>-20</color>        Save        <color:D>Very Bad     </color>
 Dexterity    <color:w> +4</color>        Stealth     <color:D>Very Bad     </color>
 Constitution <color:w> +4</color>        Searching   <color:D>Very Bad     </color>
-Charisma     <color:w> +4</color>        Perception  <color:D>Very Bad     </color>
+Charisma     <color:w> -5</color>        Perception  <color:D>Very Bad     </color>
 Life Rating  200%       Melee       <color:v>Amber[20]    </color>
 Base HP       22        Bows        <color:D>Very Bad     </color>
 Experience   160%
@@ -34,7 +34,7 @@ Intelligence <color:w> -2</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -2</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:v> +3</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> -2</color>        Perception  <color:r>Bad          </color>
 Life Rating  120%       Melee       <color:G>Excellent    </color>
 Base HP       20        Bows        <color:R>Poor         </color>
 Experience   150%
@@ -68,7 +68,7 @@ Intelligence <color:w> -2</color>        Device      <color:R>Poor         </col
 Wisdom       <color:w> -2</color>        Save        <color:y>Good         </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +3</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> -1</color>        Perception  <color:r>Bad          </color>
 Life Rating  110%       Melee       <color:g>Superb       </color>
 Base HP       18        Bows        <color:D>Very Bad     </color>
 Experience   120%
@@ -104,7 +104,7 @@ Intelligence <color:w> -2</color>        Device      <color:r>Bad          </col
 Wisdom       <color:v> +1</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  109%       Melee       <color:G>Excellent    </color>
 Base HP       12        Bows        <color:o>Fair         </color>
 Experience   130%
@@ -120,7 +120,7 @@ Intelligence <color:w> -2</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -2</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> -1</color>        Perception  <color:r>Bad          </color>
 Life Rating  115%       Melee       <color:g>Superb       </color>
 Base HP       18        Bows        <color:g>Superb       </color>
 Experience   100%
@@ -136,7 +136,7 @@ Intelligence <color:w> -3</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -2</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> -1</color>        Perception  <color:r>Bad          </color>
 Life Rating  107%       Melee       <color:g>Superb       </color>
 Base HP       12        Bows        <color:r>Bad          </color>
 Experience   135%
@@ -206,7 +206,7 @@ Intelligence <color:w> -1</color>        Device      <color:y>Good         </col
 Wisdom       <color:v> +3</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
-Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
 Base HP        4        Bows        <color:o>Fair         </color>
 Experience   135%
@@ -236,7 +236,7 @@ Intelligence <color:w> -1</color>        Device      <color:y>Good         </col
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +3</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
-Charisma     <color:v> +2</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:v> +1</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:y>Good         </color>
 Base HP        4        Bows        <color:y>Good         </color>
 Experience   130%
@@ -255,6 +255,40 @@ Constitution <color:w> +2</color>        Searching   <color:R>Poor         </col
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  108%       Melee       <color:D>Very Bad     </color>
 Base HP       10        Bows        <color:D>Very Bad     </color>
+Experience   135%
+</style></indent>
+<topic:Blue-Mage><color:o>Blue-Mage</color>
+A Blue-Mage is a spell caster that must live by his wits, as he cannot hope to simply hack his way through the dungeon like a warrior. A major difference between the Mage and the Blue-Mage is the method of learning spells: Blue-Mages may learn spells from monsters. A Blue-Mage's prime statistic is Intelligence as this determines his spell casting ability.
+ 
+A Blue-Mage can learn and cast monster ranged attacks, spells, or summons as their own spells; this technique is called Blue magic. Unlike Imitators, Blue-Mages remember their spells permanently, but they must get hit by a monster's spell while their class power 'Learning' is active to learn spells. Because of this requirement, they do not learn spells, like healing, that affect the monster itself.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -4</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:v> +4</color>        Device      <color:G>Excellent    </color>
+Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Life Rating  100%       Melee       <color:r>Bad          </color>
+Base HP        4        Bows        <color:r>Bad          </color>
+Experience   130%
+</style></indent>
+<topic:Chaos-Mage><color:o>Chaos-Mage</color>
+Chaos Mages are the arcane students of the terrible Demon Lords of Chaos. Every Chaos Mage has a Patron Demon and, when gaining a level, may receive a reward from his Patron. He might be healed or polymorphed, his stats could be increased, or he might be rewarded with an awesome weapon. On the other hand, the Patrons might surround him with monsters, drain his stats or wreck his equipment or they might simply ignore him. The Demon Lords of Chaos are chaotic and unpredictable indeed. The exact type of reward depends on both the Patron Demon (different Demons give different rewards) and chance.
+ 
+Chaos Mages can select a realm from Chaos and Daemon, and one other realm excluding Life and Crusade. A  Chaos Mage's prime statistic is Intelligence as this determines his spell casting ability.
+ 
+Chaos Mages are a little hardier than ordinary mages but less perceptive. They have a class power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -3</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:v> +3</color>        Device      <color:G>Excellent    </color>
+Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Life Rating   95%       Melee       <color:D>Very Bad     </color>
+Base HP        0        Bows        <color:D>Very Bad     </color>
 Experience   135%
 </style></indent>
 <topic:Gray-Mage><color:o>Gray-Mage</color>
@@ -284,7 +318,7 @@ Intelligence <color:v> +4</color>        Device      <color:G>Excellent    </col
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating   94%       Melee       <color:D>Very Bad     </color>
 Base HP        0        Bows        <color:D>Very Bad     </color>
 Experience   130%
@@ -300,10 +334,28 @@ Intelligence <color:v> +3</color>        Device      <color:G>Excellent    </col
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating   95%       Melee       <color:D>Very Bad     </color>
 Base HP        0        Bows        <color:D>Very Bad     </color>
 Experience   130%
+</style></indent>
+<topic:Priest><color:o>Priest</color>
+A Priest is a character devoted to serving a higher power. They explore the dungeon in the service of their God. They are fairly familiar with magical devices which they believe act as foci for divine intervention in the natural order of things.
+ 
+There are two types of priests: Good and Evil. If the priest chooses Life or Crusade as their first realm, then they will follow the path of good. As such, they may not choose an evil realm for their second realm. Also, good priests abhor bloodshed, and therefore are not comfortable with edged weapons. Wielding one will disrupt their ability to concentrate during prayers. Should a priest choose Death or Daemon as their first realm, however, then they will serve an evil god. As such, they actually enjoy shedding blood, and suffer no such weapon restriction. Of course, evil priests abhor good things, and are unable to choose Life or Crusade for their second realm.
+ 
+Good priests have a strong affinity for Life prayers, and learn them very well, even better than a High Mage. Conversely, evil priests favor prayers of Death, and receive strong bonuses when choosing this foul realm. Otherwise, priests learn spells less efficiently than a Mage would. Also, they may not choose which spell to learn, but are granted new prayers by the whim of their deity, presumably in order to serve some greater divine plan of which the priest is not fully cognizant. The priest's primary prayer stat is Wisdom.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:w> -3</color>        Device      <color:o>Fair         </color>
+Wisdom       <color:v> +3</color>        Save        <color:y>Good         </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Life Rating  100%       Melee       <color:R>Poor         </color>
+Base HP        4        Bows        <color:R>Poor         </color>
+Experience   120%
 </style></indent>
 <topic:Necromancer><color:o>Necromancer</color>
 A Necromancer attempts to gain both power and knowledge through communion with the dead. They use powerful necromancy magic to summon aid from the dead, whether directly in terms of undead servitude, or indirectly through other-worldly knowledge. Necromancy also offers myriad foul offensive spells, but all of these require the Necromancer to physically touch his foe. To do so, the Necromancer may wield neither weapon, nor gloves. But a powerful necromancer is truly awe inspiring, and may even kill foes with a single deadly touch! In addition, they forever hunt for the legendary Eye and Hand of Vecna in order to complete their power.
@@ -326,11 +378,11 @@ Sorcerers can cast any spell from any spellbooks of all magic realms with 'Maste
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> -5</color>        Disarming   <color:R>Poor         </color>
-Intelligence <color:w> +0</color>        Device      <color:b>Heroic       </color>
+Intelligence <color:v> +6</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> -2</color>        Save        <color:b>Heroic       </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:v> +6</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating   65%       Melee       <color:D>Very Bad     </color>
 Base HP        0        Bows        <color:D>Very Bad     </color>
 Experience   160%
@@ -350,24 +402,6 @@ Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </col
 Life Rating   95%       Melee       <color:D>Very Bad     </color>
 Base HP        0        Bows        <color:D>Very Bad     </color>
 Experience   130%
-</style></indent>
-<topic:Chaos-Mage><color:o>Chaos-Mage</color>
-Chaos Mages are the arcane students of the terrible Demon Lords of Chaos. Every Chaos Mage has a Patron Demon and, when gaining a level, may receive a reward from his Patron. He might be healed or polymorphed, his stats could be increased, or he might be rewarded with an awesome weapon. On the other hand, the Patrons might surround him with monsters, drain his stats or wreck his equipment or they might simply ignore him. The Demon Lords of Chaos are chaotic and unpredictable indeed. The exact type of reward depends on both the Patron Demon (different Demons give different rewards) and chance.
- 
-Chaos Mages can select a realm from Chaos and Daemon, and one other realm excluding Life and Crusade. A  Chaos Mage's prime statistic is Intelligence as this determines his spell casting ability.
- 
-Chaos Mages are a little hardier than ordinary mages but less perceptive. They have a class power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
-
-  <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> -3</color>        Disarming   <color:R>Poor (23)    </color>
-Intelligence <color:v> +3</color>        Device      <color:g>Superb (65)  </color>
-Wisdom       <color:w> -1</color>        Save        <color:y>Good (28)    </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:y>Good (5)     </color>
-Constitution <color:w> -1</color>        Searching   <color:R>Poor (15)    </color>
-Charisma     <color:w> -2</color>        Perception  <color:o>Fair (20)    </color>
-Life Rating   95%       Melee       <color:D>Very Bad (-5)</color>
-Base HP        0        Bows        <color:D>Very Bad (-5)</color>
-Experience   135%
 </style></indent>
 </indent>
 <style:heading>Devices</style>
@@ -413,30 +447,10 @@ Intelligence <color:w> +2</color>        Device      <color:g>Superb       </col
 Wisdom       <color:w> +1</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  103%       Melee       <color:R>Poor         </color>
 Base HP        6        Bows        <color:R>Poor         </color>
 Experience   130%
-</style></indent>
-</indent>
-<style:heading>Prayer</style>
-  <indent><topic:Priest><color:o>Priest</color>
-A Priest is a character devoted to serving a higher power. They explore the dungeon in the service of their God. They are fairly familiar with magical devices which they believe act as foci for divine intervention in the natural order of things.
- 
-There are two types of priests: Good and Evil. If the priest chooses Life or Crusade as their first realm, then they will follow the path of good. As such, they may not choose an evil realm for their second realm. Also, good priests abhor bloodshed, and therefore are not comfortable with edged weapons. Wielding one will disrupt their ability to concentrate during prayers. Should a priest choose Death or Daemon as their first realm, however, then they will serve an evil god. As such, they actually enjoy shedding blood, and suffer no such weapon restriction. Of course, evil priests abhor good things, and are unable to choose Life or Crusade for their second realm.
- 
-Good priests have a strong affinity for Life prayers, and learn them very well, even better than a High Mage. Conversely, evil priests favor prayers of Death, and receive strong bonuses when choosing this foul realm. Otherwise, priests learn spells less efficiently than a Mage would. Also, they may not choose which spell to learn, but are granted new prayers by the whim of their deity, presumably in order to serve some greater divine plan of which the priest is not fully cognizant. The priest's primary prayer stat is Wisdom.
-
-  <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
-Intelligence <color:w> -3</color>        Device      <color:o>Fair         </color>
-Wisdom       <color:v> +3</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
-Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
-Life Rating  100%       Melee       <color:R>Poor         </color>
-Base HP        4        Bows        <color:R>Poor         </color>
-Experience   120%
 </style></indent>
 </indent>
 <style:heading>Stealth</style>
@@ -451,7 +465,7 @@ Intelligence <color:w> -1</color>        Device      <color:o>Fair         </col
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:v> +3</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +2</color>        Searching   <color:y>Very Good    </color>
-Charisma     <color:w> +2</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:w> -1</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
 Base HP        4        Bows        <color:R>Poor         </color>
 Experience   120%
@@ -467,7 +481,7 @@ Intelligence <color:v> +1</color>        Device      <color:y>Good         </col
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +3</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
-Charisma     <color:w> +1</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:w> -1</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:y>Good         </color>
 Base HP       12        Bows        <color:o>Fair         </color>
 Experience   125%
@@ -499,7 +513,7 @@ Intelligence <color:v> +1</color>        Device      <color:o>Fair         </col
 Wisdom       <color:w> -1</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  111%       Melee       <color:y>Good         </color>
 Base HP       12        Bows        <color:o>Fair         </color>
 Experience   125%
@@ -520,6 +534,20 @@ Life Rating   95%       Melee       <color:o>Fair         </color>
 Base HP       14        Bows        <color:o>Fair         </color>
 Experience   125%
 </style></indent>
+<topic:Hexblade><color:o>Hexblade</color>
+A Hexblade is an evil fighter who employs hex magic.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +2</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:w> +1</color>        Device      <color:o>Fair         </color>
+Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:v> +2</color>        Perception  <color:R>Poor         </color>
+Life Rating  106%       Melee       <color:o>Fair         </color>
+Base HP        8        Bows        <color:o>Fair         </color>
+Experience   140%
+</style></indent>
 <topic:Ninja-Lawyer><color:o>Ninja-Lawyer</color>
 The Ninja-Lawyer moves silently in the night, combining the stealth, agility and offensive power of the ninja with the subtle practical tools of the lawyer. Ninja-Lawyers, like specialist ninjas, prefer light armour and stabbing weapons and acquire the powerful 'Quick Walk' class power. A ninja-lawyer relies on both wisdom and dexterity, requiring the former for legal tricks and the latter for ninjutsu.
 
@@ -529,7 +557,7 @@ Intelligence <color:w> +0</color>        Device      <color:o>Fair         </col
 Wisdom       <color:v> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +0</color>        Searching   <color:y>Good         </color>
-Charisma     <color:w> +2</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
 Life Rating   99%       Melee       <color:y>Very Good    </color>
 Base HP        8        Bows        <color:R>Poor         </color>
 Experience   115%
@@ -561,7 +589,7 @@ Intelligence <color:w> +0</color>        Device      <color:y>Good         </col
 Wisdom       <color:v> +2</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
-Charisma     <color:w> +0</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  106%       Melee       <color:y>Good         </color>
 Base HP        8        Bows        <color:o>Fair         </color>
 Experience   140%
@@ -593,24 +621,9 @@ Intelligence <color:v> +2</color>        Device      <color:y>Good         </col
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +0</color>        Perception  <color:R>Poor         </color>
 Life Rating  106%       Melee       <color:y>Good         </color>
 Base HP        8        Bows        <color:o>Fair         </color>
-Experience   140%
-</style></indent>
-
-<topic:Hexblade><color:o>Hexblade</color>
-A Hexblade is a warrior-mage using Hex magic 
-
-  <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +2</color>        Disarming   <color:o>Fair (25)    </color>
-Intelligence <color:v> +2</color>        Device      <color:y>Good (35)    </color>
-Wisdom       <color:w> +0</color>        Save        <color:o>Fair (21)    </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair (4)     </color>
-Constitution <color:w> +0</color>        Searching   <color:o>Fair (18)    </color>
-Charisma     <color:w> +1</color>        Perception  <color:R>Poor (16)    </color>
-Life Rating  106%       Melee       <color:o>Fair (55)    </color>
-Base HP        8        Bows        <color:y>Good (65)    </color>
 Experience   140%
 </style></indent>
 </indent>
@@ -642,7 +655,7 @@ Intelligence <color:w> -2</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -2</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  111%       Melee       <color:y>Very Good    </color>
 Base HP       10        Bows        <color:g>Superb       </color>
 Experience   120%
@@ -676,7 +689,7 @@ Intelligence <color:v> +3</color>        Device      <color:y>Good         </col
 Wisdom       <color:w> +1</color>        Save        <color:y>Good         </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:D>Very Bad     </color>
 Base HP        4        Bows        <color:r>Bad          </color>
 Experience   130%
@@ -706,7 +719,7 @@ Intelligence <color:w> +0</color>        Device      <color:y>Good         </col
 Wisdom       <color:v> +3</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating   96%       Melee       <color:R>Poor         </color>
 Base HP        0        Bows        <color:R>Poor         </color>
 Experience   125%
@@ -761,6 +774,22 @@ Life Rating  100%       Melee       <color:r>Bad          </color>
 Base HP        4        Bows        <color:r>Bad          </color>
 Experience   140%
 </style></indent>
+<topic:Imitator><color:o>Imitator</color>
+Imitators have enough fighting skills to survive, but rely on their unique technique - 'Imitation' - which imitates monster spells/techniques including their damage and duration. Dexterity determines general imitation ability, but a stat related to the specific action is often also taken into account.
+ 
+To use imitation, Imitators must see monster's spell at first. When a viewable monsters uses a spell, it is added to a temporary spell list which the imitator can choose from. Spells should be imitated quickly, because timing and situation are everything. An imitator can only repeat a spell once each time he observes it. They only have a small long-term memory for spells, which ranges from one to three, depending on their level. When they memorize more spells than this, they will forget the oldest spell in the list. They have a class power - 'Double Revenge' - which allows them to imitate spells at double damage or duration.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +0</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:w> +1</color>        Device      <color:o>Fair         </color>
+Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> -1</color>        Perception  <color:R>Poor         </color>
+Life Rating  108%       Melee       <color:y>Good         </color>
+Base HP       10        Bows        <color:y>Good         </color>
+Experience   110%
+</style></indent>
 <topic:Lawyer><color:o>Lawyer</color>
 Known for his unsurpassed expertise in the mysterious realm of Law, the Lawyer has a comprehensive skillset that allows him to set and detect traps, to slow or mystify his enemies, to quietly escape or avoid dangerous fights, to acquire knowledge about the world around him, and to make friends and influence people. As he relies on his familiarity with Law and with tricks and approaches that have worked in the past, the lawyer uses WIS as his spellcasting stat.
 
@@ -800,7 +829,7 @@ Intelligence <color:w> -2</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -2</color>        Save        <color:G>Excellent    </color>
 Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:w> -1</color>        Perception  <color:r>Bad          </color>
 Life Rating  106%       Melee       <color:o>Fair         </color>
 Base HP        6        Bows        <color:R>Poor         </color>
 Experience   150%
@@ -859,55 +888,57 @@ Experience   110%
 <topic:Tables><style:heading>Table 1 - Class Statistic Bonus Table</style>
 <style:table>
               <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
-Berserker    <color:v>  +8 </color> -20  -20   +4   +4   +4  200%  +22  160%
-Blood-Knight   +2   -2   -2   +0 <color:v>  +3 </color>  +2  120%  +20  150%
+Berserker    <color:v>  +8 </color> -20  -20   +4   +4   -5  200%  +22  160%
+Blood-Knight   +2   -2   -2   +0 <color:v>  +3 </color>  -2  120%  +20  150%
 Duelist        +2   +1   -2 <color:v>  +2 </color>  -3   +2  100%   +4  150%
-Mauler       <color:v>  +5 </color>  -2   -2   -1   +3   +2  110%  +18  120%
+Mauler       <color:v>  +5 </color>  -2   -2   -1   +3   -1  110%  +18  120%
 Rune-Knight    +2 <color:v>  +1 </color>  -1   +1   +0   +1  101%   +7  150%
-Samurai        +3   -2 <color:v>  +1 </color>  +2   +1   +1  109%  +12  130%
-Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
-Weaponmaster <color:v>  +4 </color>  -3   -2   -1   +2   +1  107%  +12  135%
+Samurai        +3   -2 <color:v>  +1 </color>  +2   +1   +0  109%  +12  130%
+Warrior        +4   -2   -2   +2   +2   -1  115%  +18  100%
+Weaponmaster <color:v>  +4 </color>  -3   -2   -1   +2   -1  107%  +12  135%
 Weaponsmith    +3   -1   -1   +1   +0   -1  106%  +12  130%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1 <color:v>  +2 </color>  +1   +0  100%   +4  110%
-Force-Trainer  +0   -1 <color:v>  +3 </color>  +2   +1   +0  100%   +4  135%
+Force-Trainer  +0   -1 <color:v>  +3 </color>  +2   +1   +1  100%   +4  135%
 Monk           +2   -1 <color:v>  +1 </color>  +3   +2   +1  102%  +12  130%
-Mystic         +2   -1   -2   +3   +1 <color:v>  +2 </color> 100%   +4  130%
+Mystic         +2   -1   -2   +3   +1 <color:v>  +1 </color> 100%   +4  130%
 Blood-Mage     -4 <color:v>  +3 </color>  -2   +1   +2   -2  108%  +10  135%
-Gray-Mage      -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
-High-Mage      -4 <color:v>  +4 </color>  +0   +0   -2   -2   94%   +0  130%
-Mage           -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
-Necromancer    -2 <color:v>  +3 </color>  -4   +1   -1   -2   95%   +2  125%
-Sorcerer       -5   +0   -2   +2   +0 <color:v>  +6 </color>  65%   +0  160%
-Yellow-Mage    -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
+Blue-Mage      -4 <color:v>  +4 </color>  -1   +1   -2   -2  100%   +4  130%
 Chaos-Mage     -3 <color:v>  +3 </color>  -1   +0   -1   -2   95%   +0  135%
+Gray-Mage      -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
+High-Mage      -4 <color:v>  +4 </color>  +0   +0   -2   +1   94%   +0  130%
+Mage           -4 <color:v>  +3 </color>  +0   +1   -2   +1   95%   +0  130%
+Priest         -1   -3 <color:v>  +3 </color>  -1   +0   +2  100%   +4  120%
+Necromancer    -2 <color:v>  +3 </color>  -4   +1   -1   -2   95%   +2  125%
+Sorcerer       -5 <color:v>  +6 </color>  -2   +2   +0   -2   65%   +0  160%
+Yellow-Mage    -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0 <color:v>  +2 </color>  -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1 <color:v>  +2 </color>  +1   +2   -2   -2  101%   +6  130%
-Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
-Priest         -1   -3 <color:v>  +3 </color>  -1   +0   +2  100%   +4  120%
-Ninja          +0   -1   -1 <color:v>  +3 </color>  +2   +2  100%   +4  120%
-Rogue          +2 <color:v>  +1 </color>  -1   +3   +1   +1  100%  +12  125%
+Magic-Eater    -1   +2   +1   +2   -2   +1  103%   +6  130%
+Ninja          +0   -1   -1 <color:v>  +3 </color>  +2   -1  100%   +4  120%
+Rogue          +2 <color:v>  +1 </color>  -1   +3   +1   -1  100%  +12  125%
 Scout          +1   -1 <color:v>  +2 </color>  +3   +0   +0  104%   +8  130%
-Chaos-Warrior  +2 <color:v>  +1 </color>  -1   +0   +2   +1  111%  +12  125%
+Chaos-Warrior  +2 <color:v>  +1 </color>  -1   +0   +2   -2  111%  +12  125%
 Disciple       -1 <color:v>  +1 </color>  -1   +0   -1   +1   95%  +14  125%
-Ninja-Lawyer   -1   +0 <color:v>  +0 </color>  +2   +0   +2   99%   +8  115%
+Hexblade       +2   +1   +0   +1   +0 <color:v>  +2 </color> 106%   +8  140%
+Ninja-Lawyer   -1   +0 <color:v>  +0 </color>  +2   +0   +0   99%   +8  115%
 Paladin        +3   -3 <color:v>  +1 </color>  +0   +2   +2  111%  +12  135%
-Ranger         +2   +0 <color:v>  +2 </color>  +1   +1   +0  106%   +8  140%
+Ranger         +2   +0 <color:v>  +2 </color>  +1   +1   +1  106%   +8  140%
 Red-Mage       +2 <color:v>  +2 </color>  -1   +1   +0   -1  106%   +8  140%
-Warrior-Mage   +2 <color:v>  +2 </color>  +0   +1   +0   +1  106%   +8  140%
-Hexblade       +2 <color:v>  +2 </color>  +0   +1   +0   +1  106%   +8  140%
+Warrior-Mage   +2 <color:v>  +2 </color>  +0   +1   +0   +0  106%   +8  140%
 Beastmaster    +1   -1   -1   +1   +0 <color:v>  +2 </color> 103%   +6  120%
-Cavalry        +2   -2   -2   +2   +2   +1  111%  +10  120%
+Cavalry        +2   -2   -2   +2   +2   +0  111%  +10  120%
 Mindcrafter    -1   +0 <color:v>  +3 </color>  -1   -1   +2   99%   +4  125%
-Mirror-Master  -2 <color:v>  +3 </color>  +1   -1   -2   -2  100%   +4  130%
+Mirror-Master  -2 <color:v>  +3 </color>  +1   -1   -2   +1  100%   +4  130%
 Psion          -1   +2   +2   -1   -1   +2   96%   +4  150%
-Time-Lord      -1   +0 <color:v>  +3 </color>  -1   -1   +0   96%   +0  125%
+Time-Lord      -1   +0 <color:v>  +3 </color>  -1   -1   +1   96%   +0  125%
 Warlock        -1   +2   -3   +0   +2 <color:v>  +4 </color> 107%  +15  135%
 Archaeologist  -1   +1 <color:v>  +2 </color>  +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  140%
+Imitator       +0   +1   -1   +2   +0   -1  108%  +10  110%
 Lawyer         -3   +2 <color:v>  +0 </color>  +0   -1   +1  102%  +12  115%
 Politician     -2   +1   +0   -2   +0 <color:v>  +2 </color> 100%   +9  130%
-Rage-Mage    <color:v>  +3 </color>  -2   -2   -2   +2   +1  106%   +6  150%
+Rage-Mage    <color:v>  +3 </color>  -2   -2   -2   +2   -1  106%   +6  150%
 Skillmaster    +0   +0   +0   +0   +0   +0  100%  +10  130%
 Tourist        -2 <color:v>  -1 </color>  -1   -1   -2   -3   94%   +0   70%
 Wild-Talent    -1   +1   +1   +1   -2   +1  100%   +4  110%
@@ -931,22 +962,24 @@ Force-Trainer <color:o>Fair         </color> <color:y>Good         </color> <col
 Monk          <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color>
 Mystic        <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Good         </color>
 Blood-Mage    <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Blue-Mage     <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Chaos-Mage    <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Gray-Mage     <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
 High-Mage     <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Mage          <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Priest        <color:R>Poor         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Necromancer   <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:y>Good         </color>
 Sorcerer      <color:R>Poor         </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:o>Fair         </color>
 Yellow-Mage   <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Chaos-Mage    <color:R>Poor (23)    </color> <color:g>Superb (65)  </color> <color:y>Good (28)    </color> <color:y>Good (5)     </color>
 Alchemist     <color:y>Very Good    </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color>
 Devicemaster  <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Magic-Eater   <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Priest        <color:R>Poor         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Ninja         <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Rogue         <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Good         </color>
 Scout         <color:y>Very Good    </color> <color:y>Good         </color> <color:R>Poor         </color> <color:y>Very Good    </color>
 Chaos-Warrior <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Disciple      <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Hexblade      <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Ninja-Lawyer  <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Paladin       <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Ranger        <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
@@ -961,6 +994,7 @@ Time-Lord     <color:R>Poor         </color> <color:y>Good         </color> <col
 Warlock       <color:R>Poor         </color> <color:G>Excellent    </color> <color:y>Good         </color> <color:y>Good         </color>
 Archaeologist <color:G>Excellent    </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color>
 Bard          <color:R>Poor         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:D>Very Bad     </color>
+Imitator      <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Lawyer        <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Politician    <color:G>Excellent    </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Rage-Mage     <color:r>Bad          </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:r>Bad          </color>
@@ -987,28 +1021,29 @@ Force-Trainer <color:o>Fair         </color> <color:o>Fair         </color> <col
 Monk          <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color>
 Mystic        <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color>
 Blood-Mage    <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
+Blue-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
+Chaos-Mage    <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Gray-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 High-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Mage          <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
+Priest        <color:R>Poor         </color> <color:r>Bad          </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Necromancer   <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Sorcerer      <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Yellow-Mage   <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
-Chaos-Mage    <color:R>Poor (15)    </color> <color:o>Fair (20)    </color> <color:D>Very Bad (-5)</color> <color:D>Very Bad (-5)</color>
 Alchemist     <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color>
 Devicemaster  <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Magic-Eater   <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color>
-Priest        <color:R>Poor         </color> <color:r>Bad          </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Ninja         <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:R>Poor         </color>
 Rogue         <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Scout         <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color> <color:G>Excellent    </color>
 Chaos-Warrior <color:R>Poor         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Disciple      <color:o>Fair         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Hexblade      <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Ninja-Lawyer  <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:R>Poor         </color>
 Paladin       <color:R>Poor         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:o>Fair         </color>
 Ranger        <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Red-Mage      <color:R>Poor         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:r>Bad          </color>
 Warrior-Mage  <color:R>Poor         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color>
-Hexblade      <color:o>Fair (18)    </color> <color:R>Poor (16)    </color> <color:o>Fair (55)    </color> <color:y>Good (65)    </color>
 Beastmaster   <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Cavalry       <color:R>Poor         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:g>Superb       </color>
 Mindcrafter   <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color>
@@ -1018,6 +1053,7 @@ Time-Lord     <color:R>Poor         </color> <color:r>Bad          </color> <col
 Warlock       <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Archaeologist <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color>
 Bard          <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
+Imitator      <color:R>Poor         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:y>Good         </color>
 Lawyer        <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Politician    <color:y>Good         </color> <color:o>Fair         </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
 Rage-Mage     <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>

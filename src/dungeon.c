@@ -3533,12 +3533,10 @@ static void _dispatch_command(int old_now_turn)
         /* Gain new spells/prayers */
         case 'G':
         {
-            if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
+            if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SAMURAI)
                 msg_print("You don't have to learn spells!");
             else if (p_ptr->pclass == CLASS_SKILLMASTER)
                 skillmaster_gain_skill();
-            else if (p_ptr->pclass == CLASS_SAMURAI)
-                do_cmd_gain_hissatsu();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)
                 rage_mage_gain_spell();
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
@@ -3561,8 +3559,10 @@ static void _dispatch_command(int old_now_turn)
                 ring_browse();
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                 magic_eater_browse();
-            else if (p_ptr->pclass == CLASS_RAGE_MAGE)
-                rage_mage_browse_spell();
+			else if (p_ptr->pclass == CLASS_RAGE_MAGE)
+				rage_mage_browse_spell();
+			else if (p_ptr->pclass == CLASS_SAMURAI)
+				samurai_browse_spell();
             else if (p_ptr->pclass == CLASS_SKILLMASTER)
                 skillmaster_browse();
             else if (p_ptr->pclass == CLASS_ALCHEMIST)
@@ -3681,8 +3681,6 @@ static void _dispatch_command(int old_now_turn)
                     magic_eater_cast(0);
                 else if (p_ptr->pclass == CLASS_SKILLMASTER)
                     skillmaster_cast();
-                else if (p_ptr->pclass == CLASS_SAMURAI)
-                    do_cmd_hissatsu();
 				else if (p_ptr->pclass == CLASS_BLUE_MAGE)
 					do_cmd_cast_learned();
                 else if (p_ptr->pclass == CLASS_GRAY_MAGE)
@@ -3704,13 +3702,15 @@ static void _dispatch_command(int old_now_turn)
                             p_ptr->pclass == CLASS_WEAPONMASTER ||
                             p_ptr->pclass == CLASS_DEVICEMASTER ||
                             p_ptr->pclass == CLASS_RAGE_MAGE ||
+							p_ptr->pclass == CLASS_SAMURAI ||
                             p_ptr->pclass == CLASS_SCOUT ||
                             p_ptr->pclass == CLASS_MAULER ||
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
                             p_ptr->pclass == CLASS_SNIPER ||
                             p_ptr->pclass == CLASS_DISCIPLE ||
-                            p_ptr->pclass == CLASS_TIME_LORD )
+                            p_ptr->pclass == CLASS_TIME_LORD ||
+							p_ptr->pclass == CLASS_SAMURAI)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on coverting everything else */

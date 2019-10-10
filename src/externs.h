@@ -855,7 +855,6 @@ extern void do_cmd_use_staff(void);
 extern void do_cmd_zap_rod(void);
 extern void do_cmd_activate(void);
 extern void do_cmd_rerate_aux(void);
-extern int  life_rating(void);
 extern void do_cmd_rerate(bool display);
 extern void ring_of_power(int dir);
 extern bool restore_mana(void);
@@ -2069,12 +2068,6 @@ extern void race_legends(void);
 extern void race_score(int race_num);
 extern void show_highclass(void);
 
-/* hissatsu.c */
-extern void hissatsu_info(char *p, int power);
-extern void do_cmd_hissatsu(void);
-extern void do_cmd_hissatsu_browse(void);
-extern void do_cmd_gain_hissatsu(void);
-
 /* lawyer.c */
 extern byte lawyer_hack(magic_type *s_ptr, int tyyppi);
 extern cptr do_law_spell(int spell, int mode);
@@ -2713,6 +2706,7 @@ extern void     rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS]);
 extern class_t *rune_knight_get_class(void);
 extern int      rune_knight_absorption(int m_idx, int type, int dam);
 
+/* samurai.c */
 extern void     samurai_concentration_spell(int cmd, variant *res);
 extern void     cast_concentration(void);
 extern bool     samurai_can_concentrate(void);
@@ -2721,7 +2715,7 @@ extern void     samurai_posture_spell(int cmd, variant *res);
 extern void     samurai_posture_get_flags(u32b flgs[OF_ARRAY_SIZE]);
 extern void     samurai_posture_calc_stats(s16b stats[MAX_STATS]);
 extern void     samurai_posture_calc_bonuses(void);
-extern cptr     do_hissatsu_spell(int spell, int mode);
+extern void		samurai_browse_spell(void);
 
 extern class_t *skillmaster_get_class(void);
 extern void     skillmaster_gain_skill(void);

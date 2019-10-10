@@ -1269,7 +1269,7 @@ struct player_type
 
     s16b concent;      /* Sniper's concentration level */
 
-    s16b player_hp[PY_MAX_LEVEL];
+    s16b life_rating;	/* Replace old player_hp array with a flat multiplier to the average */
     char died_from[80];         /* What killed the player */
     cptr last_message;        /* Last message on death or retirement */
 
@@ -1522,8 +1522,8 @@ s16b sc;
 
     s16b stat_max[6];        /* Current "maximal" stat values */
 s16b stat_max_max[6];    /* Maximal "maximal" stat values */
-s16b player_hp[PY_MAX_LEVEL]; /* Map (L-1)->Cumulative Percentage of Base HD */
-                              /* See calc_hitpoints() in xtra1.c for details */
+s16b life_rating;		/* Multiplier Percentage of Base HD */
+                        /* See calc_hitpoints() in xtra1.c for details */
 s16b chaos_patron;
 int  mutation;
 
@@ -2118,3 +2118,9 @@ struct pantheon_type
     char short_name[5];
     char plural[20];
 };
+
+
+typedef struct {
+	cptr name;
+	spell_info spells[_SPELLS_PER_BOOK];
+} book_t;

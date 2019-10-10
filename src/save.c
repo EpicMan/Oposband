@@ -1238,10 +1238,7 @@ static bool wr_savefile_new(savefile_ptr file)
 
     wr_extra(file);
 
-    tmp16u = PY_MAX_LEVEL;
-    savefile_write_u16b(file, tmp16u);
-    for (i = 0; i < tmp16u; i++)
-        savefile_write_s16b(file, p_ptr->player_hp[i]);
+    savefile_write_s16b(file, p_ptr->life_rating);
 
     savefile_write_u32b(file, p_ptr->spell_learned1);
     savefile_write_u32b(file, p_ptr->spell_learned2);

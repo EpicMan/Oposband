@@ -1226,15 +1226,8 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     if (arg_fiddle) note("Loaded extra information");
 
-    /* Read the player_hp array */
-    tmp16u = savefile_read_u16b(file);
-    if (tmp16u > PY_MAX_LEVEL)
-    {
-        note(format("Too many (%u) hitpoint entries!", tmp16u));
-        return (25);
-    }
-    for (i = 0; i < tmp16u; i++)
-        p_ptr->player_hp[i] = savefile_read_s16b(file);
+    /* Player life rating */
+	p_ptr->life_rating = savefile_read_s16b(file);
 
     /* Important -- Initialize stuff */
     mp_ptr = &m_info[p_ptr->pclass];

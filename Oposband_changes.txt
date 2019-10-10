@@ -26,8 +26,17 @@
 	allow_spoilers - moved to debug command z.  
 -Changed the display of weapons bonuses to be more similar to armor displays: From "Dagger (1d5) (+0,+0)" to "Dagger(1d5,+0)."
 -Re-Added the Blue Mage and Imitator classes from Hengband, which had been removed with the monster spell revamp in Poschengband 7.0
+-Added many monsters from Vanilla
+-Buffed dragons (hp, ac, and melee) and moved deeper / increased xp, based on Vanilla 4.2.0 levels. Also added great wyrms for the missing elemental types.
+-Added Greater elementals: take earth/air/fire/water elemental, move twice as deep and boost HP/AC/speed and damage.
+-Player elemental characters get a thematic reward from the thieves quest (a magical version of their starting weapon)
+-Player life rating now stored as a number, and player_hp array replaced with a simple hp= 5 + (5 * level * life_rating / 100). Older savefiles will be converted;
+-Samurai gain their spell attacks as they level, and no longer need to learn their spells from books. Books of Kendo nhave been removed
 
 TODO
+-No more spell learning for book casters (mostly). Cast like red mage/sorcerors. 
+-Show physical damage reduction percentage next to armor class in character display
+-Buffs don't have a time limit but reduce max mana while on
 -Elite monsters with random prefix/suffix.
 -Randomized Challenge Dungeons with random alterations (faster monsters, fire damage every turn, darkness, random teleportation, corpses revive, etc)
 -Buff spells that can be maintained indefinitely (due to low costs and/or non-brokenness, plus not having some issue when they expire, like invulnerability's loss of actions) don't have a duration but instead just reserve mana and stay active. Reserved mana reduces your current max SP, so a lot of buffs mean little to no mana for casting.
@@ -52,12 +61,8 @@ TODO
 -Gray Mages could be changed to be able to learn a certain set of spell books.
 -New class: Druid. A nature caster with a class power to summon animal pets who is good at riding.
 
-Add monsters from Vanilla (includes boosting dragons and adding web ability)
-Animals
-cave bear
-disenchanter bat
-werebear
 
+Add monsters from Vanilla (includes boosting dragons and adding web ability):
 Birds
 Blood Falcon
 giant roc
@@ -134,11 +139,6 @@ Orcs
 Orc archer
 Orc tracker
 
-Plants/Trees
-Black-heared huron
-grey mushroom patch
-hasty ent
-old forest tree
 
 People:
 Acolyte

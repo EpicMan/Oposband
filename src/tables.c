@@ -1737,8 +1737,8 @@ s32b realm_choices1[MAX_CLASS] =
     (CH_NONE),                              /* Magic eater */
     (CH_MUSIC),                             /* Bard */
     (CH_NONE),                              /* Red Mage */
-    (CH_HISSATSU),                          /* Samurai */
-    (CH_LIFE | CH_NATURE | CH_DEATH |
+	(CH_HISSATSU),                          /* Samurai */
+	(CH_LIFE | CH_NATURE | CH_DEATH |
      CH_ENCHANT | CH_CRUSADE),                 /* ForceTrainer */
     (CH_NONE),                              /* Blue Mage */
     (CH_NONE),                /* Cavalry */

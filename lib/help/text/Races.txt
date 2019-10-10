@@ -28,7 +28,7 @@ Humans
     Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Superb       
+    Charisma      +2        Perception  Superb       
     Life Rating  100%       Melee       Excellent    
     Base HP       20        Bows        Very Good    
     Experience   190%       Infravision 0'
@@ -46,7 +46,7 @@ Humans
     Wisdom        -1        Save        Poor         
     Dexterity     +1        Stealth     Bad          
     Constitution  +2        Searching   Bad          
-    Charisma      +2        Perception  Good         
+    Charisma      +0        Perception  Good         
     Life Rating  103%       Melee       Very Good    
     Base HP       22        Bows        Good         
     Experience   135%       Infravision 0'
@@ -83,7 +83,7 @@ Humans
     Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Superb       
+    Charisma      +1        Perception  Superb       
     Life Rating  100%       Melee       Excellent    
     Base HP       20        Bows        Very Good    
     Experience   160%       Infravision 0'
@@ -122,7 +122,7 @@ Elves
     Wisdom        +2        Save        Very Good    
     Dexterity     +2        Stealth     Fair         
     Constitution  -2        Searching   Very Good    
-    Charisma      +3        Perception  Superb       
+    Charisma      +1        Perception  Superb       
     Life Rating   97%       Melee       Bad          
     Base HP       18        Bows        Good         
     Experience   155%       Infravision 50'
@@ -141,7 +141,7 @@ Elves
     Wisdom        -1        Save        Very Good    
     Dexterity     +3        Stealth     Good         
     Constitution  +1        Searching   Poor         
-    Charisma      +1        Perception  Heroic       
+    Charisma      +3        Perception  Heroic       
     Life Rating   99%       Melee       Good         
     Base HP       19        Bows        Superb       
     Experience   190%       Infravision 40'
@@ -178,7 +178,7 @@ Elves
     Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  -1        Searching   Very Good    
-    Charisma      +1        Perception  Superb       
+    Charisma      +2        Perception  Superb       
     Life Rating   97%       Melee       Bad          
     Base HP       16        Bows        Excellent    
     Experience   125%       Infravision 30'
@@ -199,7 +199,7 @@ Hobbits/Dwarves
     Wisdom        +2        Save        Fair         
     Dexterity     -2        Stealth     Bad          
     Constitution  +2        Searching   Good         
-    Charisma      +1        Perception  Excellent    
+    Charisma      -1        Perception  Excellent    
     Life Rating  103%       Melee       Excellent    
     Base HP       22        Bows        Fair         
     Experience   135%       Infravision 50'
@@ -279,7 +279,7 @@ Fairies
     Wisdom        +2        Save        Poor         
     Dexterity     +1        Stealth     Very Good    
     Constitution  -1        Searching   Superb       
-    Charisma      -3        Perception  Heroic       
+    Charisma      +0        Perception  Heroic       
     Life Rating   91%       Melee       Very Bad     
     Base HP       13        Bows        Poor         
     Experience   140%       Infravision 40'
@@ -299,7 +299,7 @@ Fairies
     Wisdom        +3        Save        Fair         
     Dexterity     +3        Stealth     Good         
     Constitution  -2        Searching   Excellent    
-    Charisma      -2        Perception  Excellent    
+    Charisma      +2        Perception  Excellent    
     Life Rating   92%       Melee       Very Bad     
     Base HP       14        Bows        Fair         
     Experience   135%       Infravision 40'
@@ -340,7 +340,7 @@ Angels/Demons
     Wisdom       -10        Save        Excellent    
     Dexterity     +2        Stealth     Bad          
     Constitution  +3        Searching   Bad          
-    Charisma      +2        Perception  Very Good    
+    Charisma      -5        Perception  Very Good    
     Life Rating  106%       Melee       Superb       
     Base HP       24        Bows        Fair         
     Experience   180%       Infravision 50'
@@ -378,7 +378,7 @@ Orcs/Trolls/Giants
     Wisdom        -2        Save        Bad          
     Dexterity     -3        Stealth     Bad          
     Constitution  +4        Searching   Very Bad     
-    Charisma      -1        Perception  Fair         
+    Charisma      -3        Perception  Fair         
     Life Rating  108%       Melee       Superb       
     Base HP       24        Bows        Excellent    
     Experience   155%       Infravision 10'
@@ -395,7 +395,7 @@ Orcs/Trolls/Giants
     Wisdom        -2        Save        Bad          
     Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
-    Charisma      +0        Perception  Fair         
+    Charisma      -2        Perception  Fair         
     Life Rating  108%       Melee       Heroic       
     Base HP       26        Bows        Fair         
     Experience   150%       Infravision 30'
@@ -414,7 +414,7 @@ Orcs/Trolls/Giants
     Wisdom        -1        Save        Bad          
     Dexterity     -1        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
-    Charisma      +0        Perception  Fair         
+    Charisma      -2        Perception  Fair         
     Life Rating  106%       Melee       Superb       
     Base HP       23        Bows        Poor         
     Experience   140%       Infravision 0'
@@ -434,7 +434,7 @@ Orcs/Trolls/Giants
     Wisdom        +0        Save        Poor         
     Dexterity     +0        Stealth     Bad          
     Constitution  +1        Searching   Very Bad     
-    Charisma      -1        Perception  Fair         
+    Charisma      -2        Perception  Fair         
     Life Rating  103%       Melee       Superb       
     Base HP       20        Bows        Poor         
     Experience   110%       Infravision 30'
@@ -453,7 +453,7 @@ Orcs/Trolls/Giants
     Wisdom        +2        Save        Poor         
     Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Bad          
-    Charisma      +3        Perception  Very Good    
+    Charisma      +1        Perception  Very Good    
     Life Rating  110%       Melee       Heroic       
     Base HP       28        Bows        Fair         
     Experience   200%       Infravision 0'
@@ -472,7 +472,7 @@ Orcs/Trolls/Giants
     Wisdom        -1        Save        Bad          
     Dexterity     -3        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
-    Charisma      -2        Perception  Fair         
+    Charisma      -3        Perception  Fair         
     Life Rating  107%       Melee       Superb       
     Base HP       25        Bows        Bad          
     Experience   150%       Infravision 30'
@@ -619,7 +619,7 @@ The Undead
     Wisdom        -2        Save        Fair         
     Dexterity     +0        Stealth     Bad          
     Constitution  +1        Searching   Very Bad     
-    Charisma      +1        Perception  Very Good    
+    Charisma      -2        Perception  Very Good    
     Life Rating  100%       Melee       Good         
     Base HP       21        Bows        Fair         
     Experience   115%       Infravision 20'
@@ -709,7 +709,7 @@ Other Races
     Wisdom        -5        Save        Poor         
     Dexterity     +1        Stealth     Bad          
     Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Heroic       
+    Charisma      -2        Perception  Heroic       
     Life Rating  108%       Melee       Superb       
     Base HP       26        Bows        Good         
     Experience   200%       Infravision 0'
@@ -732,7 +732,7 @@ Other Races
     Wisdom        -1        Save        Poor         
     Dexterity     -1        Stealth     Bad          
     Constitution  +2        Searching   Very Bad     
-    Charisma      +1        Perception  Fair         
+    Charisma      -2        Perception  Fair         
     Life Rating  102%       Melee       Very Good    
     Base HP       22        Bows        Good         
     Experience   150%       Infravision 0'
@@ -772,7 +772,7 @@ Other Races
     Wisdom        +1        Save        Poor         
     Dexterity     +2        Stealth     Poor         
     Constitution  +1        Searching   Poor         
-    Charisma      +0        Perception  Fair         
+    Charisma      +1        Perception  Fair         
     Life Rating  103%       Melee       Good         
     Base HP       22        Bows        Very Good    
     Experience   190%       Infravision 0'
@@ -793,7 +793,7 @@ Other Races
     Wisdom        +0        Save        Poor         
     Dexterity     +1        Stealth     Bad          
     Constitution  +2        Searching   Bad          
-    Charisma      +2        Perception  Excellent    
+    Charisma      -1        Perception  Excellent    
     Life Rating  104%       Melee       Excellent    
     Base HP       22        Bows        Fair         
     Experience   190%       Infravision 20'
@@ -836,7 +836,7 @@ Other Races
     Wisdom        -5        Save        Fair         
     Dexterity     -2        Stealth     Bad          
     Constitution  +4        Searching   Very Bad     
-    Charisma      +0        Perception  Very Good    
+    Charisma      -2        Perception  Very Good    
     Life Rating  105%       Melee       Superb       
     Base HP       23        Bows        Fair         
     Experience   185%       Infravision 40'
@@ -855,7 +855,7 @@ Other Races
     Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Poor         
     Constitution  +2        Searching   Very Bad     
-    Charisma      +1        Perception  Excellent    
+    Charisma      -1        Perception  Excellent    
     Life Rating  105%       Melee       Fair         
     Base HP       23        Bows        Good         
     Experience   170%       Infravision 20'
@@ -876,7 +876,7 @@ Other Races
     Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Good         
     Constitution  +2        Searching   Very Bad     
-    Charisma      +2        Perception  Good         
+    Charisma      +3        Perception  Good         
     Life Rating  102%       Melee       Poor         
     Base HP       21        Bows        Poor         
     Experience   175%       Infravision 0'
@@ -896,7 +896,7 @@ Other Races
     Wisdom        +4        Save        Good         
     Dexterity     +0        Stealth     Fair         
     Constitution  -2        Searching   Fair         
-    Charisma      -1        Perception  Superb       
+    Charisma      -3        Perception  Superb       
     Life Rating   97%       Melee       Very Bad     
     Base HP       18        Bows        Poor         
     Experience   150%       Infravision 40'
@@ -917,7 +917,7 @@ Other Races
     Wisdom        -2        Save        Fair         
     Dexterity     -4        Stealth     Poor         
     Constitution  +5        Searching   Very Bad     
-    Charisma      +0        Perception  Fair         
+    Charisma      -1        Perception  Fair         
     Life Rating  108%       Melee       Superb       
     Base HP       26        Bows        Bad          
     Experience   175%       Infravision 20'
@@ -944,51 +944,51 @@ Other Races
 Table 1 - Race Statistic Bonus Table
 
              STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
-Amberite      +1   +2   +2   +2   +3   +0  100%  +20  190%  100%
-Barbarian     +3   -2   -1   +1   +2   +2  103%  +22  135%  120%
+Amberite      +1   +2   +2   +2   +3   +2  100%  +20  190%  100%
+Barbarian     +3   -2   -1   +1   +2   +0  103%  +22  135%  120%
 Demigod       +1   +1   +1   +1   +1   +1  100%  +20  180%  100%
-Dunadan       +1   +2   +2   +2   +3   +0  100%  +20  160%  100%
+Dunadan       +1   +2   +2   +2   +3   +1  100%  +20  160%  100%
 Human         +0   +0   +0   +0   +0   +0  100%  +20  100%  100%
-Dark-Elf      -1   +3   +2   +2   -2   +3   97%  +18  155%  120%
-High-Elf      +1   +3   -1   +3   +1   +1   99%  +19  190%   90%
+Dark-Elf      -1   +3   +2   +2   -2   +1   97%  +18  155%  120%
+High-Elf      +1   +3   -1   +3   +1   +3   99%  +19  190%   90%
 Tomte         -4   +2   +2   +3   -3   +0   94%  +13  150%  100%
-Wood-Elf      -1   +1   +2   +1   -1   +1   97%  +16  125%   95%
-Dwarf         +2   -2   +2   -2   +2   +1  103%  +22  135%  115%
+Wood-Elf      -1   +1   +2   +1   -1   +2   97%  +16  125%   95%
+Dwarf         +2   -2   +2   -2   +2   -1  103%  +22  135%  115%
 Gnome         -1   +2   -1   +2   +1   -1   95%  +16  115%  115%
 Hobbit        -2   +1   +1   +3   +2   +1   92%  +14  120%  100%
 Nibelung      +0   +1   +0   +1   +1   -2  101%  +21  150%  115%
-Shadow-Fairy  -2   +2   +2   +1   -1   -3   91%  +13  140%  110%
-Sprite        -4   +3   +3   +3   -2   -2   92%  +14  135%   90%
+Shadow-Fairy  -2   +2   +2   +1   -1   +0   91%  +13  140%  110%
+Sprite        -4   +3   +3   +3   -2   +2   92%  +14  135%   90%
 Archon        +2   +0   +4   +1   +2   +3  103%  +22  200%   90%
-Balrog        +4   +2  -10   +2   +3   +2  106%  +24  180%  140%
+Balrog        +4   +2  -10   +2   +3   -5  106%  +24  180%  140%
 Imp           +0   -1   -1   +1   +2   -1   99%  +19   90%  120%
-Cyclops       +4   -3   -2   -3   +4   -1  108%  +24  155%  135%
-Half-Giant    +4   -2   -2   -2   +3   +0  108%  +26  150%  125%
-Ogre          +3   +0   -1   -1   +3   +0  106%  +23  140%  125%
-Half-Orc      +2   -1   +0   +0   +1   -1  103%  +20  110%  120%
-Half-Titan    +5   +1   +2   -2   +3   +3  110%  +28  200%   90%
-Half-Troll    +4   -4   -1   -3   +3   -2  107%  +25  150%  135%
+Cyclops       +4   -3   -2   -3   +4   -3  108%  +24  155%  135%
+Half-Giant    +4   -2   -2   -2   +3   -2  108%  +26  150%  125%
+Ogre          +3   +0   -1   -1   +3   -2  106%  +23  140%  125%
+Half-Orc      +2   -1   +0   +0   +1   -2  103%  +20  110%  120%
+Half-Titan    +5   +1   +2   -2   +3   +1  110%  +28  200%   90%
+Half-Troll    +4   -4   -1   -3   +3   -3  107%  +25  150%  135%
 Kobold        +1   -1   +0   +1   +0   -2   98%  +19   90%  120%
 Snotling      -2   -2   -2   -2   -2   -5   85%  +10   45%  125%
 Beorning      +1   +0   +0   -1   +1   -1  104%  +27  140%  105%
 Doppelganger  -3   -3   -3   -3   -3   -3   85%  +12  150%  150%
 Werewolf      +1   +0   +0   +0   +1   +0  103%  +27  140%  100%
 Einheri       +2   +0   +0   +2   +1   +1  113%  +44  160%  100%
-Skeleton      +0   +1   -2   +0   +1   +1  100%  +21  115%  125%
+Skeleton      +0   +1   -2   +0   +1   -2  100%  +21  115%  125%
 Spectre       -5   +4   +2   +2   -2   -3   90%  +13  250%  135%
 Vampire       +3   +3   -1   -1   +1   +2  102%  +22  200%  130%
 Zombie        +2   -6   -6   +1   +4   -3  108%  +24  180%  140%
-Android       +3   -1   -5   +1   +3   +0  108%  +26  200%  120%
-Beastman      +2   -2   -1   -1   +2   +1  102%  +22  150%  130%
+Android       +3   -1   -5   +1   +3   -2  108%  +26  200%  120%
+Beastman      +2   -2   -1   -1   +2   -2  102%  +22  150%  130%
 Boit          -1   -2   -2   -2   +0   -2   95%  +15   80%  105%
-Centaur       +3   -2   +1   +2   +1   +0  103%  +22  190%   95%
-Draconian     +3   +0   +0   +1   +2   +2  104%  +22  190%  115%
+Centaur       +3   -2   +1   +2   +1   +1  103%  +22  190%   95%
+Draconian     +3   +0   +0   +1   +2   -1  104%  +22  190%  115%
 Ent           +2   +0   +2   -3   +2   +0  105%  +25  135%   95%
-Golem         +4   -5   -5   -2   +4   +0  105%  +23  185%  120%
-Klackon       +2   -1   -1   +1   +2   +1  105%  +23  170%  115%
-Kutar         +0   -1   -1   +1   +2   +2  102%  +21  175%   95%
-Mindflayer    -3   +4   +4   +0   -2   -1   97%  +18  150%  115%
-Tonberry      +4   +0   -2   -4   +5   +0  108%  +26  175%  115%
+Golem         +4   -5   -5   -2   +4   -2  105%  +23  185%  120%
+Klackon       +2   -1   -1   +1   +2   -1  105%  +23  170%  115%
+Kutar         +0   -1   -1   +1   +2   +3  102%  +21  175%   95%
+Mindflayer    -3   +4   +4   +0   -2   -3   97%  +18  150%  115%
+Tonberry      +4   +0   -2   -4   +5   -1  108%  +26  175%  115%
 Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
 
 

@@ -140,39 +140,10 @@ void strip_name(char *buf, int k_idx)
     strip_name_aux(buf, k_name + k_info[k_idx].name);
 }
 
-int _life_rating_aux(int lvl)
-{
-    return (p_ptr->player_hp[lvl-1]-100) * 100 / (50*(lvl-1));
-}
-
-int life_rating(void)
-{
-    return _life_rating_aux(PY_MAX_LEVEL);
-}
-
 void do_cmd_rerate_aux(void)
 {
-    for(;;)
-    {
-        int i, pct;
-        p_ptr->player_hp[0] = 100;
-
-        for (i = 1; i < PY_MAX_LEVEL; i++)
-            p_ptr->player_hp[i] = p_ptr->player_hp[i - 1] + randint1(100);
-
-        /* These extra early checks give a slight boost to average life ratings (~102%) */
-        pct = _life_rating_aux(5);
-        if (pct < 87) continue;
-
-        pct = _life_rating_aux(10);
-        if (pct < 87) continue;
-
-        pct = _life_rating_aux(25);
-        if (pct < 87) continue;
-
-        pct = life_rating();
-        if (87 <= pct && pct <= 117) break;
-    }
+	/*Min 87%, max 117%*/
+	p_ptr->life_rating = 87 + randint0(117 +1);
 }
 
 void do_cmd_rerate(bool display)
@@ -185,7 +156,7 @@ void do_cmd_rerate(bool display)
 
     if (display)
     {
-        msg_format("Your life rate is %d/100 now.", life_rating());
+        msg_format("Your life rate is %d/100 now.", p_ptr->life_rating);
         p_ptr->knowledge |= KNOW_HPRATE;
     }
     else
@@ -1633,7 +1604,7 @@ void do_cmd_debug(void)
         for (i = 0; i < 100; i++)
         {
             do_cmd_rerate_aux();
-            r = life_rating();
+            r = p_ptr->life_rating;
             tot += r;
             if (!min) min = r;
             else min = MIN(min, r);

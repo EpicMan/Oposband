@@ -2306,7 +2306,7 @@ static void _build_statistics(doc_ptr doc)
 
     if ((p_ptr->is_dead) || (p_ptr->knowledge & KNOW_HPRATE))
     {
-        doc_printf(doc, "  <color:G>Life Rating</color>:  %d%%\n\n", life_rating());
+        doc_printf(doc, "  <color:G>Life Rating</color>:  %d%%\n\n", p_ptr->life_rating);
     }
 }
 

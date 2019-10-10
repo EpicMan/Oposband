@@ -70,7 +70,7 @@ average, and your stats suitable for priest.
   Wisdom        +2        Save        Good         
   Dexterity     -1        Stealth     Bad          
   Constitution  +0        Searching   Good         
-  Charisma      +0        Perception  Bad          
+  Charisma      +1        Perception  Bad          
   Life Rating  100%       Melee       Very Bad     
   Experience   100%       Bows        Bad          
   
@@ -128,7 +128,7 @@ will aggravate all monsters.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Good         
-  Charisma      +1        Perception  Fair         
+  Charisma      +3        Perception  Fair         
   Life Rating  100%       Melee       Superb       
   Experience   100%       Bows        Superb       
   
@@ -222,22 +222,6 @@ smoothly, and the items they most need never seem to drop...
   Life Rating  104%       Melee       Bad          
   Experience   100%       Bows        Poor         
   
-Chaotic
-Chaotic adventurers are servants of the Demon Lords of Chaos, and often 
-receive a reward - or punishment - from their patrons when they gain a 
-level. Their strengths and weaknesses are unpredictable; even their 
-stat bonuses are subject to change.
-
-  Stats                   Skills
-  Strength      +0        Disarming   Poor         
-  Intelligence  +0        Device      Poor         
-  Wisdom        +0        Save        Poor         
-  Dexterity     +0        Stealth     Poor         
-  Constitution  +0        Searching   Poor         
-  Charisma      +0        Perception  Poor         
-  Life Rating   99%       Melee       Poor         
-  Experience   100%       Bows        Fair         
-  
 Mundane
 Mundane adventurers have few talents to speak of, and are incapable of 
 using spells and not very good with magical devices; but their 
@@ -297,7 +281,7 @@ their strengths.
   Wisdom        +1        Save        Poor         
   Dexterity     +2        Stealth     Fair         
   Constitution  -1        Searching   Good         
-  Charisma      +1        Perception  Poor         
+  Charisma      -1        Perception  Poor         
   Life Rating   97%       Melee       Poor         
   Experience   100%       Bows        Fair         
   
@@ -324,22 +308,21 @@ Table 1 - Personality Statistic Bonus Table
 Ordinary        +0   +0   +0   +0   +0   +0  100%  100%
 Mighty          +2   -2   -2   +0   +1   +1  102%  100%
 Shrewd          -2   +2   +0   +1   -1   -1   97%  100%
-Pious           +0   -1   +2   -1   +0   +0  100%  100%
+Pious           +0   -1   +2   -1   +0   +1  100%  100%
 Nimble          -1   +1   -1   +2   -1   +0   99%  100%
 Fearless        +1   +0   +0   -1   -1   +1   98%  100%
 Combat          +1   -1   -1   +1   +0   +0  100%  100%
-Sexy            +1   +1   +1   +1   +1   +1  100%  100%
+Sexy            +1   +1   +1   +1   +1   +3  100%  100%
 Lucky           -2   -2   -2   -2   -2   -2   98%  100%
 Patient         -1   -1   +1   -2   +2   +0  102%  100%
 Craven          -1   +1   +1   -1   -1   -2   99%  100%
 Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 Lazy            -2   -2   -2   -2   -2   -2   95%  100%
 Unlucky         +2   +2   +2   +2   +2   +2  104%  100%
-Chaotic         +0   +0   +0   +0   +0   +0   99%  100%
 Mundane         -1   -1   -1   -1   -1   -1   97%  100%
 Munchkin        +3   +3   +3   +3   +3   +3  150%   50%
 Fragile         -3   +0   +1   -1   -3   -2   91%  100%
-Sneaky          -3   +1   +1   +2   -1   +1   97%  100%
+Sneaky          -3   +1   +1   +2   -1   -1   97%  100%
 Noble           +0   +0   +0   -2   -1   +2   99%  110%
 
 
@@ -360,7 +343,6 @@ Craven       Good          Good          Bad           Fair
 Hasty        Very Bad      Very Bad      Very Bad      Bad          
 Lazy         Very Bad      Very Bad      Very Bad      Bad          
 Unlucky      Very Bad      Fair          Very Bad      Poor         
-Chaotic      Poor          Poor          Poor          Poor         
 Mundane      Poor          Very Bad      Superb        Poor         
 Munchkin     Superb        Amber[12]     Heroic        Good         
 Fragile      Poor          Poor          Very Bad      Bad          
@@ -385,7 +367,6 @@ Craven       Poor          Poor          Very Bad      Superb
 Hasty        Very Bad      Bad           Very Bad      Bad          
 Lazy         Very Bad      Bad           Very Bad      Very Bad     
 Unlucky      Poor          Good          Bad           Poor         
-Chaotic      Poor          Poor          Poor          Fair         
 Mundane      Poor          Poor          Poor          Fair         
 Munchkin     Amber[15]     Amber[15]     Amber[62]     Amber[27]    
 Fragile      Fair          Fair          Very Bad      Bad          

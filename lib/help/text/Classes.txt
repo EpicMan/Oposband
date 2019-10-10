@@ -38,7 +38,7 @@ Melee
     Wisdom       -20        Save        Very Bad     
     Dexterity     +4        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
-    Charisma      +4        Perception  Very Bad     
+    Charisma      -5        Perception  Very Bad     
     Life Rating  200%       Melee       Amber[20]    
     Base HP       22        Bows        Very Bad     
     Experience   160%
@@ -69,7 +69,7 @@ Melee
     Wisdom        -2        Save        Poor         
     Dexterity     +0        Stealth     Fair         
     Constitution  +3        Searching   Poor         
-    Charisma      +2        Perception  Bad          
+    Charisma      -2        Perception  Bad          
     Life Rating  120%       Melee       Excellent    
     Base HP       20        Bows        Poor         
     Experience   150%
@@ -124,7 +124,7 @@ Melee
     Wisdom        -2        Save        Good         
     Dexterity     -1        Stealth     Poor         
     Constitution  +3        Searching   Poor         
-    Charisma      +2        Perception  Bad          
+    Charisma      -1        Perception  Bad          
     Life Rating  110%       Melee       Superb       
     Base HP       18        Bows        Very Bad     
     Experience   120%
@@ -193,7 +193,7 @@ Melee
     Wisdom        +1        Save        Poor         
     Dexterity     +2        Stealth     Fair         
     Constitution  +1        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      +0        Perception  Bad          
     Life Rating  109%       Melee       Excellent    
     Base HP       12        Bows        Fair         
     Experience   130%
@@ -215,7 +215,7 @@ Melee
     Wisdom        -2        Save        Poor         
     Dexterity     +2        Stealth     Poor         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      -1        Perception  Bad          
     Life Rating  115%       Melee       Superb       
     Base HP       18        Bows        Superb       
     Experience   100%
@@ -234,7 +234,7 @@ Melee
     Wisdom        -2        Save        Poor         
     Dexterity     -1        Stealth     Poor         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      -1        Perception  Bad          
     Life Rating  107%       Melee       Superb       
     Base HP       12        Bows        Bad          
     Experience   135%
@@ -339,7 +339,7 @@ Martial Arts
     Wisdom        +3        Save        Fair         
     Dexterity     +2        Stealth     Good         
     Constitution  +1        Searching   Fair         
-    Charisma      +0        Perception  Fair         
+    Charisma      +1        Perception  Fair         
     Life Rating  100%       Melee       Fair         
     Base HP        4        Bows        Fair         
     Experience   135%
@@ -394,7 +394,7 @@ Martial Arts
     Wisdom        -2        Save        Fair         
     Dexterity     +3        Stealth     Good         
     Constitution  +1        Searching   Fair         
-    Charisma      +2        Perception  Fair         
+    Charisma      +1        Perception  Fair         
     Life Rating  100%       Melee       Good         
     Base HP        4        Bows        Good         
     Experience   130%
@@ -420,6 +420,63 @@ Magic
     Charisma      -2        Perception  Poor         
     Life Rating  108%       Melee       Very Bad     
     Base HP       10        Bows        Very Bad     
+    Experience   135%
+    
+  Blue-Mage
+  A Blue-Mage is a spell caster that must live by his wits, as he 
+  cannot hope to simply hack his way through the dungeon like a 
+  warrior. A major difference between the Mage and the Blue-Mage is the 
+  method of learning spells: Blue-Mages may learn spells from monsters. 
+  A Blue-Mage's prime statistic is Intelligence as this determines his 
+  spell casting ability.
+   
+  A Blue-Mage can learn and cast monster ranged attacks, spells, or 
+  summons as their own spells; this technique is called Blue magic. 
+  Unlike Imitators, Blue-Mages remember their spells permanently, but 
+  they must get hit by a monster's spell while their class power 
+  'Learning' is active to learn spells. Because of this requirement, 
+  they do not learn spells, like healing, that affect the monster 
+  itself.
+  
+    Stats                   Skills
+    Strength      -4        Disarming   Poor         
+    Intelligence  +4        Device      Excellent    
+    Wisdom        -1        Save        Fair         
+    Dexterity     +1        Stealth     Fair         
+    Constitution  -2        Searching   Poor         
+    Charisma      -2        Perception  Poor         
+    Life Rating  100%       Melee       Bad          
+    Base HP        4        Bows        Bad          
+    Experience   130%
+    
+  Chaos-Mage
+  Chaos Mages are the arcane students of the terrible Demon Lords of 
+  Chaos. Every Chaos Mage has a Patron Demon and, when gaining a level, 
+  may receive a reward from his Patron. He might be healed or 
+  polymorphed, his stats could be increased, or he might be rewarded 
+  with an awesome weapon. On the other hand, the Patrons might surround 
+  him with monsters, drain his stats or wreck his equipment or they 
+  might simply ignore him. The Demon Lords of Chaos are chaotic and 
+  unpredictable indeed. The exact type of reward depends on both the 
+  Patron Demon (different Demons give different rewards) and chance.
+   
+  Chaos Mages can select a realm from Chaos and Daemon, and one other 
+  realm excluding Life and Crusade. A  Chaos Mage's prime statistic is 
+  Intelligence as this determines his spell casting ability.
+   
+  Chaos Mages are a little hardier than ordinary mages but less 
+  perceptive. They have a class power - 'Eat Magic' - which absorbs 
+  mana from wands, staves or rods.
+  
+    Stats                   Skills
+    Strength      -3        Disarming   Poor         
+    Intelligence  +3        Device      Excellent    
+    Wisdom        -1        Save        Fair         
+    Dexterity     +0        Stealth     Fair         
+    Constitution  -1        Searching   Poor         
+    Charisma      -2        Perception  Poor         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   135%
     
   Gray-Mage
@@ -471,7 +528,7 @@ Magic
     Wisdom        +0        Save        Fair         
     Dexterity     +0        Stealth     Fair         
     Constitution  -2        Searching   Poor         
-    Charisma      -2        Perception  Poor         
+    Charisma      +1        Perception  Poor         
     Life Rating   94%       Melee       Very Bad     
     Base HP        0        Bows        Very Bad     
     Experience   130%
@@ -500,10 +557,47 @@ Magic
     Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  -2        Searching   Poor         
-    Charisma      -2        Perception  Poor         
+    Charisma      +1        Perception  Poor         
     Life Rating   95%       Melee       Very Bad     
     Base HP        0        Bows        Very Bad     
     Experience   130%
+    
+  Priest
+  A Priest is a character devoted to serving a higher power. They 
+  explore the dungeon in the service of their God. They are fairly 
+  familiar with magical devices which they believe act as foci for 
+  divine intervention in the natural order of things.
+   
+  There are two types of priests: Good and Evil. If the priest chooses 
+  Life or Crusade as their first realm, then they will follow the path 
+  of good. As such, they may not choose an evil realm for their second 
+  realm. Also, good priests abhor bloodshed, and therefore are not 
+  comfortable with edged weapons. Wielding one will disrupt their 
+  ability to concentrate during prayers. Should a priest choose Death 
+  or Daemon as their first realm, however, then they will serve an evil 
+  god. As such, they actually enjoy shedding blood, and suffer no such 
+  weapon restriction. Of course, evil priests abhor good things, and 
+  are unable to choose Life or Crusade for their second realm.
+   
+  Good priests have a strong affinity for Life prayers, and learn them 
+  very well, even better than a High Mage. Conversely, evil priests 
+  favor prayers of Death, and receive strong bonuses when choosing this 
+  foul realm. Otherwise, priests learn spells less efficiently than a 
+  Mage would. Also, they may not choose which spell to learn, but are 
+  granted new prayers by the whim of their deity, presumably in order 
+  to serve some greater divine plan of which the priest is not fully 
+  cognizant. The priest's primary prayer stat is Wisdom.
+  
+    Stats                   Skills
+    Strength      -1        Disarming   Poor         
+    Intelligence  -3        Device      Fair         
+    Wisdom        +3        Save        Good         
+    Dexterity     -1        Stealth     Fair         
+    Constitution  +0        Searching   Poor         
+    Charisma      +2        Perception  Bad          
+    Life Rating  100%       Melee       Poor         
+    Base HP        4        Bows        Poor         
+    Experience   120%
     
   Necromancer
   A Necromancer attempts to gain both power and knowledge through 
@@ -541,11 +635,11 @@ Magic
   
     Stats                   Skills
     Strength      -5        Disarming   Poor         
-    Intelligence  +0        Device      Heroic       
+    Intelligence  +6        Device      Heroic       
     Wisdom        -2        Save        Heroic       
     Dexterity     +2        Stealth     Fair         
     Constitution  +0        Searching   Poor         
-    Charisma      +6        Perception  Poor         
+    Charisma      -2        Perception  Poor         
     Life Rating   65%       Melee       Very Bad     
     Base HP        0        Bows        Very Bad     
     Experience   160%
@@ -657,49 +751,10 @@ Devices
     Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  -2        Searching   Poor         
-    Charisma      -2        Perception  Poor         
+    Charisma      +1        Perception  Poor         
     Life Rating  103%       Melee       Poor         
     Base HP        6        Bows        Poor         
     Experience   130%
-    
-  
-Prayer
-  Priest
-  A Priest is a character devoted to serving a higher power. They 
-  explore the dungeon in the service of their God. They are fairly 
-  familiar with magical devices which they believe act as foci for 
-  divine intervention in the natural order of things.
-   
-  There are two types of priests: Good and Evil. If the priest chooses 
-  Life or Crusade as their first realm, then they will follow the path 
-  of good. As such, they may not choose an evil realm for their second 
-  realm. Also, good priests abhor bloodshed, and therefore are not 
-  comfortable with edged weapons. Wielding one will disrupt their 
-  ability to concentrate during prayers. Should a priest choose Death 
-  or Daemon as their first realm, however, then they will serve an evil 
-  god. As such, they actually enjoy shedding blood, and suffer no such 
-  weapon restriction. Of course, evil priests abhor good things, and 
-  are unable to choose Life or Crusade for their second realm.
-   
-  Good priests have a strong affinity for Life prayers, and learn them 
-  very well, even better than a High Mage. Conversely, evil priests 
-  favor prayers of Death, and receive strong bonuses when choosing this 
-  foul realm. Otherwise, priests learn spells less efficiently than a 
-  Mage would. Also, they may not choose which spell to learn, but are 
-  granted new prayers by the whim of their deity, presumably in order 
-  to serve some greater divine plan of which the priest is not fully 
-  cognizant. The priest's primary prayer stat is Wisdom.
-  
-    Stats                   Skills
-    Strength      -1        Disarming   Poor         
-    Intelligence  -3        Device      Fair         
-    Wisdom        +3        Save        Good         
-    Dexterity     -1        Stealth     Fair         
-    Constitution  +0        Searching   Poor         
-    Charisma      +2        Perception  Bad          
-    Life Rating  100%       Melee       Poor         
-    Base HP        4        Bows        Poor         
-    Experience   120%
     
   
 Stealth
@@ -724,7 +779,7 @@ Stealth
     Wisdom        -1        Save        Fair         
     Dexterity     +3        Stealth     Excellent    
     Constitution  +2        Searching   Very Good    
-    Charisma      +2        Perception  Fair         
+    Charisma      -1        Perception  Fair         
     Life Rating  100%       Melee       Excellent    
     Base HP        4        Bows        Poor         
     Experience   120%
@@ -756,7 +811,7 @@ Stealth
     Wisdom        -1        Save        Fair         
     Dexterity     +3        Stealth     Good         
     Constitution  +1        Searching   Fair         
-    Charisma      +1        Perception  Fair         
+    Charisma      -1        Perception  Fair         
     Life Rating  100%       Melee       Good         
     Base HP       12        Bows        Fair         
     Experience   125%
@@ -805,7 +860,7 @@ Hybrid
     Wisdom        -1        Save        Poor         
     Dexterity     +0        Stealth     Poor         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Poor         
+    Charisma      -2        Perception  Poor         
     Life Rating  111%       Melee       Good         
     Base HP       12        Bows        Fair         
     Experience   125%
@@ -833,6 +888,20 @@ Hybrid
     Base HP       14        Bows        Fair         
     Experience   125%
     
+  Hexblade
+  A Hexblade is an evil fighter who employs hex magic.
+  
+    Stats                   Skills
+    Strength      +2        Disarming   Poor         
+    Intelligence  +1        Device      Fair         
+    Wisdom        +0        Save        Fair         
+    Dexterity     +1        Stealth     Fair         
+    Constitution  +0        Searching   Poor         
+    Charisma      +2        Perception  Poor         
+    Life Rating  106%       Melee       Fair         
+    Base HP        8        Bows        Fair         
+    Experience   140%
+    
   Ninja-Lawyer
   The Ninja-Lawyer moves silently in the night, combining the stealth, 
   agility and offensive power of the ninja with the subtle practical 
@@ -848,7 +917,7 @@ Hybrid
     Wisdom        +0        Save        Fair         
     Dexterity     +2        Stealth     Excellent    
     Constitution  +0        Searching   Good         
-    Charisma      +2        Perception  Fair         
+    Charisma      +0        Perception  Fair         
     Life Rating   99%       Melee       Very Good    
     Base HP        8        Bows        Poor         
     Experience   115%
@@ -904,7 +973,7 @@ Hybrid
     Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  +1        Searching   Fair         
-    Charisma      +0        Perception  Poor         
+    Charisma      +1        Perception  Poor         
     Life Rating  106%       Melee       Good         
     Base HP        8        Bows        Fair         
     Experience   140%
@@ -959,7 +1028,7 @@ Hybrid
     Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  +0        Searching   Poor         
-    Charisma      +1        Perception  Poor         
+    Charisma      +0        Perception  Poor         
     Life Rating  106%       Melee       Good         
     Base HP        8        Bows        Fair         
     Experience   140%
@@ -1008,7 +1077,7 @@ Riding
     Wisdom        -2        Save        Poor         
     Dexterity     +2        Stealth     Poor         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      +0        Perception  Bad          
     Life Rating  111%       Melee       Very Good    
     Base HP       10        Bows        Superb       
     Experience   120%
@@ -1065,7 +1134,7 @@ Mind
     Wisdom        +1        Save        Good         
     Dexterity     -1        Stealth     Fair         
     Constitution  -2        Searching   Poor         
-    Charisma      -2        Perception  Poor         
+    Charisma      +1        Perception  Poor         
     Life Rating  100%       Melee       Very Bad     
     Base HP        4        Bows        Bad          
     Experience   130%
@@ -1118,7 +1187,7 @@ Mind
     Wisdom        +3        Save        Fair         
     Dexterity     -1        Stealth     Fair         
     Constitution  -1        Searching   Poor         
-    Charisma      +0        Perception  Bad          
+    Charisma      +1        Perception  Bad          
     Life Rating   96%       Melee       Poor         
     Base HP        0        Bows        Poor         
     Experience   125%
@@ -1206,6 +1275,35 @@ Other
     Base HP        4        Bows        Bad          
     Experience   140%
     
+  Imitator
+  Imitators have enough fighting skills to survive, but rely on their 
+  unique technique - 'Imitation' - which imitates monster 
+  spells/techniques including their damage and duration. Dexterity 
+  determines general imitation ability, but a stat related to the 
+  specific action is often also taken into account.
+   
+  To use imitation, Imitators must see monster's spell at first. When a 
+  viewable monsters uses a spell, it is added to a temporary spell list 
+  which the imitator can choose from. Spells should be imitated 
+  quickly, because timing and situation are everything. An imitator can 
+  only repeat a spell once each time he observes it. They only have a 
+  small long-term memory for spells, which ranges from one to three, 
+  depending on their level. When they memorize more spells than this, 
+  they will forget the oldest spell in the list. They have a class 
+  power - 'Double Revenge' - which allows them to imitate spells at 
+  double damage or duration.
+  
+    Stats                   Skills
+    Strength      +0        Disarming   Poor         
+    Intelligence  +1        Device      Fair         
+    Wisdom        -1        Save        Fair         
+    Dexterity     +2        Stealth     Fair         
+    Constitution  +0        Searching   Poor         
+    Charisma      -1        Perception  Poor         
+    Life Rating  108%       Melee       Good         
+    Base HP       10        Bows        Good         
+    Experience   110%
+    
   Lawyer
   Known for his unsurpassed expertise in the mysterious realm of Law, 
   the Lawyer has a comprehensive skillset that allows him to set and 
@@ -1274,7 +1372,7 @@ Other
     Wisdom        -2        Save        Excellent    
     Dexterity     -2        Stealth     Bad          
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      -1        Perception  Bad          
     Life Rating  106%       Melee       Fair         
     Base HP        6        Bows        Poor         
     Experience   150%
@@ -1361,53 +1459,57 @@ Other
 Table 1 - Class Statistic Bonus Table
 
               STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-Berserker      +8  -20  -20   +4   +4   +4  200%  +22  160%
-Blood-Knight   +2   -2   -2   +0   +3   +2  120%  +20  150%
+Berserker      +8  -20  -20   +4   +4   -5  200%  +22  160%
+Blood-Knight   +2   -2   -2   +0   +3   -2  120%  +20  150%
 Duelist        +2   +1   -2   +2   -3   +2  100%   +4  150%
-Mauler         +5   -2   -2   -1   +3   +2  110%  +18  120%
+Mauler         +5   -2   -2   -1   +3   -1  110%  +18  120%
 Rune-Knight    +2   +1   -1   +1   +0   +1  101%   +7  150%
-Samurai        +3   -2   +1   +2   +1   +1  109%  +12  130%
-Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
-Weaponmaster   +4   -3   -2   -1   +2   +1  107%  +12  135%
+Samurai        +3   -2   +1   +2   +1   +0  109%  +12  130%
+Warrior        +4   -2   -2   +2   +2   -1  115%  +18  100%
+Weaponmaster   +4   -3   -2   -1   +2   -1  107%  +12  135%
 Weaponsmith    +3   -1   -1   +1   +0   -1  106%  +12  130%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
-Force-Trainer  +0   -1   +3   +2   +1   +0  100%   +4  135%
+Force-Trainer  +0   -1   +3   +2   +1   +1  100%   +4  135%
 Monk           +2   -1   +1   +3   +2   +1  102%  +12  130%
-Mystic         +2   -1   -2   +3   +1   +2  100%   +4  130%
+Mystic         +2   -1   -2   +3   +1   +1  100%   +4  130%
 Blood-Mage     -4   +3   -2   +1   +2   -2  108%  +10  135%
+Blue-Mage      -4   +4   -1   +1   -2   -2  100%   +4  130%
+Chaos-Mage     -3   +3   -1   +0   -1   -2   95%   +0  135%
 Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
-High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
-Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
+High-Mage      -4   +4   +0   +0   -2   +1   94%   +0  130%
+Mage           -4   +3   +0   +1   -2   +1   95%   +0  130%
+Priest         -1   -3   +3   -1   +0   +2  100%   +4  120%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
-Sorcerer       -5   +0   -2   +2   +0   +6   65%   +0  160%
+Sorcerer       -5   +6   -2   +2   +0   -2   65%   +0  160%
 Yellow-Mage    -4   +3   +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0   +2   -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%
-Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
-Priest         -1   -3   +3   -1   +0   +2  100%   +4  120%
-Ninja          +0   -1   -1   +3   +2   +2  100%   +4  120%
-Rogue          +2   +1   -1   +3   +1   +1  100%  +12  125%
+Magic-Eater    -1   +2   +1   +2   -2   +1  103%   +6  130%
+Ninja          +0   -1   -1   +3   +2   -1  100%   +4  120%
+Rogue          +2   +1   -1   +3   +1   -1  100%  +12  125%
 Scout          +1   -1   +2   +3   +0   +0  104%   +8  130%
-Chaos-Warrior  +2   +1   -1   +0   +2   +1  111%  +12  125%
+Chaos-Warrior  +2   +1   -1   +0   +2   -2  111%  +12  125%
 Disciple       -1   +1   -1   +0   -1   +1   95%  +14  125%
-Ninja-Lawyer   -1   +0   +0   +2   +0   +2   99%   +8  115%
+Hexblade       +2   +1   +0   +1   +0   +2  106%   +8  140%
+Ninja-Lawyer   -1   +0   +0   +2   +0   +0   99%   +8  115%
 Paladin        +3   -3   +1   +0   +2   +2  111%  +12  135%
-Ranger         +2   +0   +2   +1   +1   +0  106%   +8  140%
+Ranger         +2   +0   +2   +1   +1   +1  106%   +8  140%
 Red-Mage       +2   +2   -1   +1   +0   -1  106%   +8  140%
-Warrior-Mage   +2   +2   +0   +1   +0   +1  106%   +8  140%
+Warrior-Mage   +2   +2   +0   +1   +0   +0  106%   +8  140%
 Beastmaster    +1   -1   -1   +1   +0   +2  103%   +6  120%
-Cavalry        +2   -2   -2   +2   +2   +1  111%  +10  120%
+Cavalry        +2   -2   -2   +2   +2   +0  111%  +10  120%
 Mindcrafter    -1   +0   +3   -1   -1   +2   99%   +4  125%
-Mirror-Master  -2   +3   +1   -1   -2   -2  100%   +4  130%
+Mirror-Master  -2   +3   +1   -1   -2   +1  100%   +4  130%
 Psion          -1   +2   +2   -1   -1   +2   96%   +4  150%
-Time-Lord      -1   +0   +3   -1   -1   +0   96%   +0  125%
+Time-Lord      -1   +0   +3   -1   -1   +1   96%   +0  125%
 Warlock        -1   +2   -3   +0   +2   +4  107%  +15  135%
 Archaeologist  -1   +1   +2   +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2   +4  100%   +4  140%
+Imitator       +0   +1   -1   +2   +0   -1  108%  +10  110%
 Lawyer         -3   +2   +0   +0   -1   +1  102%  +12  115%
 Politician     -2   +1   +0   -2   +0   +2  100%   +9  130%
-Rage-Mage      +3   -2   -2   -2   +2   +1  106%   +6  150%
+Rage-Mage      +3   -2   -2   -2   +2   -1  106%   +6  150%
 Skillmaster    +0   +0   +0   +0   +0   +0  100%  +10  130%
 Tourist        -2   -1   -1   -1   -2   -3   94%   +0   70%
 Wild-Talent    -1   +1   +1   +1   -2   +1  100%   +4  110%
@@ -1431,21 +1533,24 @@ Force-Trainer Fair          Good          Fair          Good
 Monk          Excellent     Fair          Fair          Good         
 Mystic        Excellent     Good          Fair          Good         
 Blood-Mage    Poor          Excellent     Fair          Fair         
+Blue-Mage     Poor          Excellent     Fair          Fair         
+Chaos-Mage    Poor          Excellent     Fair          Fair         
 Gray-Mage     Poor          Excellent     Fair          Fair         
 High-Mage     Poor          Excellent     Fair          Fair         
 Mage          Poor          Excellent     Fair          Fair         
+Priest        Poor          Fair          Good          Fair         
 Necromancer   Poor          Excellent     Fair          Good         
 Sorcerer      Poor          Heroic        Heroic        Fair         
 Yellow-Mage   Poor          Excellent     Fair          Fair         
 Alchemist     Very Good     Fair          Poor          Very Good    
 Devicemaster  Poor          Excellent     Fair          Fair         
 Magic-Eater   Poor          Superb        Fair          Fair         
-Priest        Poor          Fair          Good          Fair         
 Ninja         Excellent     Fair          Fair          Excellent    
 Rogue         Excellent     Good          Fair          Good         
 Scout         Very Good     Good          Poor          Very Good    
 Chaos-Warrior Bad           Fair          Poor          Poor         
 Disciple      Poor          Good          Fair          Fair         
+Hexblade      Poor          Fair          Fair          Fair         
 Ninja-Lawyer  Excellent     Fair          Fair          Excellent    
 Paladin       Bad           Fair          Fair          Poor         
 Ranger        Poor          Good          Fair          Fair         
@@ -1460,6 +1565,7 @@ Time-Lord     Poor          Good          Fair          Fair
 Warlock       Poor          Excellent     Good          Good         
 Archaeologist Excellent     Very Good     Fair          Good         
 Bard          Poor          Very Good     Fair          Very Bad     
+Imitator      Poor          Fair          Fair          Fair         
 Lawyer        Excellent     Good          Fair          Fair         
 Politician    Excellent     Poor          Fair          Excellent    
 Rage-Mage     Bad           Bad           Excellent     Bad          
@@ -1486,21 +1592,24 @@ Force-Trainer Fair          Fair          Fair          Fair
 Monk          Fair          Fair          Good          Good         
 Mystic        Fair          Fair          Good          Good         
 Blood-Mage    Poor          Poor          Very Bad      Very Bad     
+Blue-Mage     Poor          Poor          Bad           Bad          
+Chaos-Mage    Poor          Poor          Very Bad      Very Bad     
 Gray-Mage     Poor          Poor          Very Bad      Very Bad     
 High-Mage     Poor          Poor          Very Bad      Very Bad     
 Mage          Poor          Poor          Very Bad      Very Bad     
+Priest        Poor          Bad           Poor          Poor         
 Necromancer   Poor          Poor          Very Bad      Very Bad     
 Sorcerer      Poor          Poor          Very Bad      Very Bad     
 Yellow-Mage   Poor          Poor          Very Bad      Very Bad     
 Alchemist     Very Good     Fair          Fair          Good         
 Devicemaster  Poor          Poor          Poor          Poor         
 Magic-Eater   Poor          Poor          Poor          Poor         
-Priest        Poor          Bad           Poor          Poor         
 Ninja         Very Good     Fair          Excellent     Poor         
 Rogue         Fair          Fair          Good          Fair         
 Scout         Very Good     Fair          Good          Excellent    
 Chaos-Warrior Poor          Poor          Good          Fair         
 Disciple      Fair          Poor          Fair          Fair         
+Hexblade      Poor          Poor          Fair          Fair         
 Ninja-Lawyer  Good          Fair          Very Good     Poor         
 Paladin       Poor          Bad           Very Good     Fair         
 Ranger        Fair          Poor          Good          Fair         
@@ -1515,6 +1624,7 @@ Time-Lord     Poor          Bad           Poor          Poor
 Warlock       Poor          Poor          Poor          Poor         
 Archaeologist Very Good     Fair          Good          Poor         
 Bard          Poor          Poor          Bad           Bad          
+Imitator      Poor          Poor          Good          Good         
 Lawyer        Good          Fair          Fair          Poor         
 Politician    Good          Fair          Very Bad      Bad          
 Rage-Mage     Poor          Bad           Fair          Poor         

@@ -911,12 +911,6 @@ static void _whirlwind_attack_spell(int cmd, variant *res)
    does not require the book (cf The Samurai).
    Rage is a class specific realm.
 */
-#define _SPELLS_PER_BOOK 8
-
-typedef struct {
-    cptr name;
-    spell_info spells[_SPELLS_PER_BOOK];
-} book_t;
 
 static book_t _books[4] = {
     { "Anger Management",
