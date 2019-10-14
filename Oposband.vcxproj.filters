@@ -337,9 +337,6 @@
     <ClCompile Include="src\high_mage.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\hissatsu.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\home.c">
       <Filter>Source Files</Filter>
     </ClCompile>

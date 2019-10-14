@@ -3533,9 +3533,7 @@ static void _dispatch_command(int old_now_turn)
         /* Gain new spells/prayers */
         case 'G':
         {
-            if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SAMURAI)
-                msg_print("You don't have to learn spells!");
-            else if (p_ptr->pclass == CLASS_SKILLMASTER)
+            if (p_ptr->pclass == CLASS_SKILLMASTER)
                 skillmaster_gain_skill();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)
                 rage_mage_gain_spell();
@@ -3548,7 +3546,7 @@ static void _dispatch_command(int old_now_turn)
                 msg_print("You can only gain spells at certain levels.");
             }
             else
-                do_cmd_study();
+				msg_print("You don't have to learn spells!");
             break;
         }
 

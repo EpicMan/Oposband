@@ -34,39 +34,10 @@ static bool ang_sort_comp_pet(vptr u, vptr v, int a, int b)
 
 bool class_uses_spell_scrolls(int mika)
 {
-    if (mika == CLASS_WARRIOR ||
-	  mika == CLASS_IMITATOR ||
-      mika == CLASS_MINDCRAFTER ||
-      mika == CLASS_PSION ||
-      mika == CLASS_SORCERER ||
-      mika == CLASS_ARCHER ||
-      mika == CLASS_MAGIC_EATER ||
-      mika == CLASS_DEVICEMASTER ||
-      mika == CLASS_RED_MAGE ||
-      mika == CLASS_SAMURAI ||
-      mika == CLASS_BLUE_MAGE ||
-      mika == CLASS_CAVALRY ||
-      mika == CLASS_BERSERKER ||
-      mika == CLASS_WEAPONSMITH ||
-      mika == CLASS_MIRROR_MASTER ||
-      mika == CLASS_TIME_LORD ||
-      mika == CLASS_BLOOD_KNIGHT ||
-      mika == CLASS_WARLOCK ||
-      mika == CLASS_ARCHAEOLOGIST ||
-      mika == CLASS_DUELIST ||
-      mika == CLASS_RUNE_KNIGHT ||
-      mika == CLASS_WILD_TALENT ||
-      mika == CLASS_NINJA ||
-      mika == CLASS_NINJA_LAWYER ||
-      mika == CLASS_SCOUT ||
-      mika == CLASS_MYSTIC ||
-      mika == CLASS_MAULER ||
-      mika == CLASS_POLITICIAN ||
-      mika == CLASS_ALCHEMIST ||
-      mika == CLASS_DISCIPLE ||
-      mika == CLASS_SKILLMASTER )
-        return FALSE;
-    return TRUE;
+	if (mika == CLASS_GRAY_MAGE || mika == CLASS_RAGE_MAGE)
+		return TRUE;
+	
+	return FALSE;
 }
 
 /* Devices: We are following the do_spell() pattern which is quick and dirty,

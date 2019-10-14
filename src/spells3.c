@@ -3391,29 +3391,13 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm, bool br
     /* Spell is illegal */
     if (lawyer_hack(s_ptr, LAWYER_HACK_LEVEL) > p_ptr->lev) return (FALSE);
 
-    /* Spell is forgotten */
-    if ((use_realm == p_ptr->realm2) ?
-        (p_ptr->spell_forgotten2 & (1L << spell)) :
-        (p_ptr->spell_forgotten1 & (1L << spell)))
-    {
-        /* Never okay */
-        return (FALSE);
-    }
-
     if (p_ptr->pclass == CLASS_SORCERER) return (TRUE);
     if (p_ptr->pclass == CLASS_RED_MAGE) return (TRUE);
 
-    /* Spell is learned */
-    if ((use_realm == p_ptr->realm2) ?
-        (p_ptr->spell_learned2 & (1L << spell)) :
-        (p_ptr->spell_learned1 & (1L << spell)))
-    {
-        /* Always true */
-        return (!study_pray);
-    }
+	if (p_ptr->realm1 != use_realm && p_ptr->realm2 != use_realm) return (FALSE);
 
-    /* Okay to study, not to cast */
-    return (!learned);
+    /* Spell is learned */
+    return TRUE;
 }
 
 
@@ -3550,30 +3534,21 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
 
             line_attr = TERM_L_BLUE;
         }
-        else if ((use_realm == p_ptr->realm1) ?
-            ((p_ptr->spell_forgotten1 & (1L << spell))) :
-            ((p_ptr->spell_forgotten2 & (1L << spell))))
-        {
-            comment = "forgotten";
+		else
+		{
+			if (vaikeustaso > p_ptr->max_plv)
+			{
+				comment = "unknown";
 
-            line_attr = TERM_YELLOW;
-        }
-        else if (!((use_realm == p_ptr->realm1) ?
-            (p_ptr->spell_learned1 & (1L << spell)) :
-            (p_ptr->spell_learned2 & (1L << spell))))
-        {
-            comment = "unknown";
+				line_attr = TERM_L_BLUE;
+			}
+			else if (vaikeustaso > p_ptr->lev)
+			{
+				comment = "forgotten";
 
-            line_attr = TERM_L_BLUE;
-        }
-        else if (!((use_realm == p_ptr->realm1) ?
-            (p_ptr->spell_worked1 & (1L << spell)) :
-            (p_ptr->spell_worked2 & (1L << spell))))
-        {
-            comment = "untried";
-
-            line_attr = TERM_L_GREEN;
-        }
+				line_attr = TERM_YELLOW;
+			}
+		}
 
         /* Dump the spell --(-- */
         if (use_realm == REALM_HISSATSU)

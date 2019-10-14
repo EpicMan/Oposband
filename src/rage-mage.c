@@ -963,7 +963,7 @@ static int _spell_index(int book, int spell)
 static bool _is_spell_known(int book, int spell)
 {
     int idx = _spell_index(book, spell);
-    if (p_ptr->spell_learned1 & (1L << idx)) return TRUE;
+    if (p_ptr->rage_spells_learned & (1L << idx)) return TRUE;
     return FALSE;
 }
 
@@ -972,7 +972,7 @@ static void _learn_spell(int book, int spell)
     int idx = _spell_index(book, spell);
     int i;
 
-    p_ptr->spell_learned1 |= (1L << idx);
+    p_ptr->rage_spells_learned |= (1L << idx);
 
     /* Find the next open entry in "p_ptr->spell_order[]" */
     for (i = 0; i < 64; i++)

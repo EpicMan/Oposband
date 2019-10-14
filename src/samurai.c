@@ -1392,32 +1392,15 @@ static int _spell_index(int book, int spell)
 static bool _is_spell_known(int book, int spell)
 {
     int idx = _spell_index(book, spell);
-    if (p_ptr->spell_learned1 & (1L << idx)) return TRUE;
-    return FALSE;
+
+	if (_books[book].spells[spell].level <= p_ptr->lev)
+	{
+		return TRUE;
+	}
+    else
+		return FALSE;
 }
 
-static void _learn_spell(int book, int spell)
-{
-    int idx = _spell_index(book, spell);
-    int i;
-
-    p_ptr->spell_learned1 |= (1L << idx);
-
-    /* Find the next open entry in "p_ptr->spell_order[]" */
-    for (i = 0; i < 64; i++)
-    {
-        /* Stop at the first empty space */
-        if (p_ptr->spell_order[i] == 99) break;
-    }
-
-    /* Add the spell to the known list */
-    p_ptr->spell_order[i++] = spell;
-    p_ptr->learned_spells++;
-    p_ptr->update |= PU_SPELLS;
-    p_ptr->redraw |= PR_EFFECTS;
-
-    msg_format("You have learned the technique of %s.", get_spell_name(_books[book].spells[spell].fn));
-}
 
 void samurai_browse_spell(void)
 {

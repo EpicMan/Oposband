@@ -3913,7 +3913,7 @@ static void bldg_process_command(building_type *bldg, int i)
         paid = ident_spell(NULL);
         break;
     case BACT_LEARN:
-        do_cmd_study();
+		msg_print("You don't have to learn spells!");
         break;
     case BACT_HEALING: /* needs work */
         hp_player(200);

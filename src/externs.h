@@ -835,7 +835,6 @@ extern void msg_add_tiny_screenshot(int cx, int cy);
 extern cptr spell_category_name(int tval);
 extern cptr spell_category_verb(int tval);
 extern void do_cmd_browse(void);
-extern void do_cmd_study(void);
 extern void do_cmd_cast(void);
 extern bool rakuba(int dam, bool force);
 extern bool do_riding(bool force);
@@ -2874,3 +2873,6 @@ extern void wild_reset_counters(void);
 extern void wild_dispel_player(void);
 extern bool wild_has_power(int power);
 extern void wild_reset_counter(int power);
+
+/* spells_c.c*/
+extern void change_realm_power(void);

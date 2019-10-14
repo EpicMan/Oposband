@@ -222,20 +222,7 @@ static void player_wipe(void)
     /* Hack -- Well fed player */
     p_ptr->food = PY_FOOD_FULL - 1;
 
-
-    /* Wipe the spells */
-    if (p_ptr->pclass == CLASS_SORCERER)
-    {
-        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0xffffffffL;
-        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0xffffffffL;
-    }
-    else
-    {
-        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0L;
-        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0L;
-    }
-    p_ptr->spell_forgotten1 = p_ptr->spell_forgotten2 = 0L;
-    for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
+	for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
     p_ptr->learned_spells = 0;
     p_ptr->add_spells = 0;
     p_ptr->knowledge = 0;

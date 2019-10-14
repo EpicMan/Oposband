@@ -1240,12 +1240,6 @@ static bool wr_savefile_new(savefile_ptr file)
 
     savefile_write_s16b(file, p_ptr->life_rating);
 
-    savefile_write_u32b(file, p_ptr->spell_learned1);
-    savefile_write_u32b(file, p_ptr->spell_learned2);
-    savefile_write_u32b(file, p_ptr->spell_worked1);
-    savefile_write_u32b(file, p_ptr->spell_worked2);
-    savefile_write_u32b(file, p_ptr->spell_forgotten1);
-    savefile_write_u32b(file, p_ptr->spell_forgotten2);
     savefile_write_s16b(file, p_ptr->learned_spells);
     savefile_write_s16b(file, p_ptr->add_spells);
 

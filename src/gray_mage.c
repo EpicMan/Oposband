@@ -619,7 +619,7 @@ void gray_mage_gain_spell(void)
     }
 
     /* Learn the spell: Note, we don't bother with spell_learned# and spell_order[], since
-       these are hard coded for 2 spell realms. Hopefully, ticking up learned_spells is enough? */
+       these are hard coded for 2 spell realms. Hopefully, ticking up	`learned_spells is enough? */
     p_ptr->learned_spells++;
     slot_ptr->realm = tval2realm(prompt.obj->tval);
     slot_ptr->spell = spell_idx;

@@ -2670,12 +2670,10 @@ static void fix_object(void)
  */
 static void calc_spells(void)
 {
-    int            i, j, k, levels;
+    int            j, k, levels;
     int            num_allowed;
-    int                     num_boukyaku = 0;
 
     magic_type        *s_ptr;
-    int which;
     int bonus = 0;
 
 
@@ -2713,243 +2711,22 @@ static void calc_spells(void)
     {
         bonus = 4;
     }
-    if (p_ptr->pclass == CLASS_SAMURAI || p_ptr->pclass == CLASS_RAGE_MAGE)
+    if (p_ptr->pclass == CLASS_RAGE_MAGE)
     {
         num_allowed = 32;
     }
-    else if ( p_ptr->pclass == CLASS_MAGE
-           || p_ptr->pclass == CLASS_BLOOD_MAGE
-           || p_ptr->pclass == CLASS_PRIEST
-           || p_ptr->pclass == CLASS_YELLOW_MAGE
-           || p_ptr->pclass == CLASS_GRAY_MAGE )
+    else if ( p_ptr->pclass == CLASS_GRAY_MAGE )
     {
         if (num_allowed>(96+bonus)) num_allowed = 96+bonus;
     }
-    else if (p_ptr->realm2 == REALM_NONE)
-    {
-        num_allowed = (num_allowed+1)/2;
-        if (num_allowed>(32+bonus)) num_allowed = 32+bonus;
-    }
     else
     {
-        if (num_allowed>(80+bonus)) num_allowed = 80+bonus;
-    }
-
-    /* Count the number of spells we know */
-    for (j = 0; j < 64; j++)
-    {
-        /* Count known spells */
-        if ((j < 32) ?
-            (p_ptr->spell_forgotten1 & (1L << j)) :
-            (p_ptr->spell_forgotten2 & (1L << (j - 32))))
-        {
-            num_boukyaku++;
-        }
+        num_allowed = 0;
+		return;
     }
 
     /* See how many spells we must forget or may learn */
-    p_ptr->new_spells = num_allowed + p_ptr->add_spells + num_boukyaku - p_ptr->learned_spells;
-
-    /* Forget spells which are too hard */
-    for (i = 63; i >= 0; i--)
-    {
-        /* Efficiency -- all done */
-        if (!p_ptr->spell_learned1 && !p_ptr->spell_learned2) break;
-        if (p_ptr->pclass == CLASS_RAGE_MAGE) break;
-        if (p_ptr->pclass == CLASS_GRAY_MAGE) break;
-
-        /* Access the spell */
-        j = p_ptr->spell_order[i];
-
-        /* Skip non-spells */
-        if (j >= 99) continue;
-
-
-        /* Get the spell */
-        if (!is_magic((j < 32) ? p_ptr->realm1 : p_ptr->realm2))
-        {
-            if (j < 32)
-                s_ptr = &technic_info[p_ptr->realm1 - MIN_TECHNIC][j];
-            else
-                s_ptr = &technic_info[p_ptr->realm2 - MIN_TECHNIC][j%32];
-        }
-        else if (j < 32)
-            s_ptr = &mp_ptr->info[p_ptr->realm1-1][j];
-        else
-            s_ptr = &mp_ptr->info[p_ptr->realm2-1][j%32];
-
-        /* Skip spells we are allowed to know */
-        if (lawyer_hack(s_ptr, LAWYER_HACK_LEVEL) <= p_ptr->lev) continue;
-
-        /* Is it known? */
-        if ((j < 32) ?
-            (p_ptr->spell_learned1 & (1L << j)) :
-            (p_ptr->spell_learned2 & (1L << (j - 32))))
-        {
-            /* Mark as forgotten */
-            if (j < 32)
-            {
-                p_ptr->spell_forgotten1 |= (1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_forgotten2 |= (1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* No longer known */
-            if (j < 32)
-            {
-                p_ptr->spell_learned1 &= ~(1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_learned2 &= ~(1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* Message */
-            msg_format("You have forgotten the %s of %s.", p,
-            do_spell(which, j%32, SPELL_NAME));
-
-
-            /* One more can be learned */
-            p_ptr->new_spells++;
-        }
-    }
-
-
-    /* Forget spells if we know too many spells */
-    for (i = 63; i >= 0; i--)
-    {
-        /* Stop when possible */
-        if (p_ptr->new_spells >= 0) break;
-
-        if (p_ptr->pclass == CLASS_RAGE_MAGE) break;
-        if (p_ptr->pclass == CLASS_GRAY_MAGE) break;
-
-        /* Efficiency -- all done */
-        if (!p_ptr->spell_learned1 && !p_ptr->spell_learned2) break;
-
-        /* Get the (i+1)th spell learned */
-        j = p_ptr->spell_order[i];
-
-        /* Skip unknown spells */
-        if (j >= 99) continue;
-
-        /* Forget it (if learned) */
-        if ((j < 32) ?
-            (p_ptr->spell_learned1 & (1L << j)) :
-            (p_ptr->spell_learned2 & (1L << (j - 32))))
-        {
-            /* Mark as forgotten */
-            if (j < 32)
-            {
-                p_ptr->spell_forgotten1 |= (1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_forgotten2 |= (1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* No longer known */
-            if (j < 32)
-            {
-                p_ptr->spell_learned1 &= ~(1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_learned2 &= ~(1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* Message */
-            msg_format("You have forgotten the %s of %s.", p,
-                   do_spell(which, j%32, SPELL_NAME));
-
-
-            /* One more can be learned */
-            p_ptr->new_spells++;
-        }
-    }
-
-
-    /* Check for spells to remember */
-    for (i = 0; i < 64; i++)
-    {
-        /* None left to remember */
-        if (p_ptr->new_spells <= 0) break;
-        if (p_ptr->pclass == CLASS_RAGE_MAGE) break;
-        if (p_ptr->pclass == CLASS_GRAY_MAGE) break;
-
-        /* Efficiency -- all done */
-        if (!p_ptr->spell_forgotten1 && !p_ptr->spell_forgotten2) break;
-
-        /* Get the next spell we learned */
-        j = p_ptr->spell_order[i];
-
-        /* Skip unknown spells */
-        if (j >= 99) break;
-
-        /* Access the spell */
-        if (!is_magic((j < 32) ? p_ptr->realm1 : p_ptr->realm2))
-        {
-            if (j < 32)
-                s_ptr = &technic_info[p_ptr->realm1 - MIN_TECHNIC][j];
-            else
-                s_ptr = &technic_info[p_ptr->realm2 - MIN_TECHNIC][j%32];
-        }
-        else if (j<32)
-            s_ptr = &mp_ptr->info[p_ptr->realm1-1][j];
-        else
-            s_ptr = &mp_ptr->info[p_ptr->realm2-1][j%32];
-
-        /* Skip spells we cannot remember */
-        if (lawyer_hack(s_ptr, LAWYER_HACK_LEVEL) > p_ptr->lev) continue;
-
-        /* First set of spells */
-        if ((j < 32) ?
-            (p_ptr->spell_forgotten1 & (1L << j)) :
-            (p_ptr->spell_forgotten2 & (1L << (j - 32))))
-        {
-            /* No longer forgotten */
-            if (j < 32)
-            {
-                p_ptr->spell_forgotten1 &= ~(1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_forgotten2 &= ~(1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* Known once more */
-            if (j < 32)
-            {
-                p_ptr->spell_learned1 |= (1L << j);
-                which = p_ptr->realm1;
-            }
-            else
-            {
-                p_ptr->spell_learned2 |= (1L << (j - 32));
-                which = p_ptr->realm2;
-            }
-
-            /* Message */
-            msg_format("You have remembered the %s of %s.",
-                   p, do_spell(which, j%32, SPELL_NAME));
-
-
-            /* One less can be learned */
-            p_ptr->new_spells--;
-        }
-    }
+    p_ptr->new_spells = num_allowed + p_ptr->add_spells - p_ptr->learned_spells;
 
     k = 0;
 
@@ -2965,7 +2742,7 @@ static void calc_spells(void)
             if (lawyer_hack(s_ptr, LAWYER_HACK_LEVEL) > p_ptr->lev) continue;
 
             /* Skip spells we already know */
-            if (p_ptr->spell_learned1 & (1L << j))
+            if (p_ptr->max_plv >= s_ptr->slevel)
             {
                 continue;
             }
@@ -2976,7 +2753,6 @@ static void calc_spells(void)
         if (k>32) k = 32;
         if ( p_ptr->new_spells > k
           && (mp_ptr->spell_book == TV_LIFE_BOOK
-           || mp_ptr->spell_book == TV_HISSATSU_BOOK
            || mp_ptr->spell_book == TV_RAGE_BOOK))
         {
             p_ptr->new_spells = k;

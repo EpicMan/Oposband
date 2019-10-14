@@ -1242,12 +1242,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     }
 
     /* Read spell info */
-    p_ptr->spell_learned1 = savefile_read_u32b(file);
-    p_ptr->spell_learned2 = savefile_read_u32b(file);
-    p_ptr->spell_worked1 = savefile_read_u32b(file);
-    p_ptr->spell_worked2 = savefile_read_u32b(file);
-    p_ptr->spell_forgotten1 = savefile_read_u32b(file);
-    p_ptr->spell_forgotten2 = savefile_read_u32b(file);
     p_ptr->learned_spells = savefile_read_s16b(file);
     p_ptr->add_spells = savefile_read_s16b(file);
     if (p_ptr->pclass == CLASS_MINDCRAFTER) p_ptr->add_spells = 0;

@@ -1,5 +1,6 @@
 #include "angband.h"
 
+
 static int _get_powers(spell_info* spells, int max)
 {
     int ct = 0;
@@ -9,9 +10,10 @@ static int _get_powers(spell_info* spells, int max)
     spell->cost = 1;
     spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_INT]);
     spell->fn = eat_magic_spell;
-
+	/* TODO: add change_realm_spell to this list */
     return ct;
 }
+
 
 static caster_info * _caster_info(void)
 {

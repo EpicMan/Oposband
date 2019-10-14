@@ -1247,12 +1247,8 @@ struct player_type
     u32b special_defense;      /* Special block capacity -LM- */
     byte action;          /* Current action */
 
-    u32b spell_learned1;      /* bit mask of spells learned */
-    u32b spell_learned2;      /* bit mask of spells learned */
-    u32b spell_worked1;      /* bit mask of spells tried and worked */
-    u32b spell_worked2;      /* bit mask of spells tried and worked */
-    u32b spell_forgotten1;      /* bit mask of spells learned but forgotten */
-    u32b spell_forgotten2;      /* bit mask of spells learned but forgotten */
+    u32b rage_spells_learned;      /* bit mask of spells learned */
+
     byte spell_order[64];      /* order spells learned/remembered/forgotten */
 
     s16b spell_exp[64];       /* Proficiency of spells */
