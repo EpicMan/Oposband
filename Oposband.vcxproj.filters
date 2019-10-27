@@ -176,6 +176,9 @@
     <ClInclude Include="src\z-virt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\alky.c">
@@ -787,5 +790,13 @@
     <ClCompile Include="src\imitator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\angband.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\wall.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

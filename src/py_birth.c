@@ -46,7 +46,8 @@ extern int py_birth(void);
                     static int _mon_spider_ui(void);
                     static int _mon_troll_ui(void);
                     static int _mon_orc_ui(void);
-    static int _stats_ui(void);
+/*    static int _stats_ui(void);*/
+	static void _starting_stats(void);
 
 extern void py_birth_obj(object_type *o_ptr);
 extern void py_birth_obj_aux(int tval, int sval, int qty);
@@ -419,9 +420,10 @@ static int _race_class_ui(void)
 		else
 			doc_insert(cols[0], "  <color:y>g</color>) Normal Game Mode\n");
 
+#ifdef WINDOWS
 		if (previous_char.quick_ok)
 			doc_insert(cols[0], "  <color:y>q</color>) Quick start with previous character\n");
-
+#endif /*WINDOWS*/
         doc_insert(cols[1], "<color:y>  *</color>) Random Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
         doc_insert(cols[1], "<color:y>  =</color>) Options\n");
@@ -447,7 +449,7 @@ static int _race_class_ui(void)
             {
                 if (_patron_ui() != UI_OK) break;
             }
-            if (_stats_ui() == UI_OK)
+			_starting_stats(); /*if (_stats_ui() == UI_OK)*/
                 return UI_OK;
             break;
         case ESCAPE:
@@ -476,6 +478,7 @@ static int _race_class_ui(void)
             }
             player_name[0] = toupper(player_name[0]);
             break;
+#ifdef WINDOWS
 		case 'q':
 			if (previous_char.quick_ok)
 			{
@@ -497,7 +500,7 @@ static int _race_class_ui(void)
 					p_ptr->stat_max[i] = previous_char.stat_max[i];
 				}
 				_stats_changed = TRUE; /* block default stat allocation via _stats_init */
-				if (_stats_ui() == UI_OK)
+				_starting_stats();/*if (_stats_ui() == UI_OK)*/
 					return UI_OK;
 			}
 			break;
@@ -506,6 +509,7 @@ static int _race_class_ui(void)
 			if (previous_char.quick_ok)
 				doc_display_help("birth.txt", "QuickStart");
 			break;
+#endif /* WINDOWS */
         case 'n':
             _change_name();
             break;
@@ -1969,7 +1973,18 @@ static cptr _stat_names[MAX_STATS] = { "STR", "INT", "WIS", "DEX", "CON", "CHR" 
 static char _stat_to_char(int which);
 static int _char_to_stat(char which);
 
-static int _stats_ui(void)
+static void _starting_stats(void)
+{
+	_stats_init();
+	/*for (int i = 0; i < MAX_STATS; i++)
+	{
+		p_ptr->stat_cur[i] = 12;
+		p_ptr->stat_max[i] = 12;
+	}*/
+	_birth_finalize();
+}
+
+/*static int _stats_ui(void)
 {
     race_t         *race_ptr = get_race();
     class_t        *class_ptr = get_class();
@@ -1979,7 +1994,7 @@ static int _stats_ui(void)
        If the user backs up and changes their class,
        pick new defaults (unless they manually made
        changes. */
-    if (!_stats_changed)
+/*    if (!_stats_changed)
         _stats_init();
 
     for (;;)
@@ -2071,7 +2086,7 @@ static int _stats_ui(void)
                 _stat_dec(i);
         }
     }
-}
+}*/
 
 static char _stat_cmd_map[MAX_STATS] = { 's', 'i', 'w', 'd', 'c', 'r' };
 static char _stat_to_char(int which)
