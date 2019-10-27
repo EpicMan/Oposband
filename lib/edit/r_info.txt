@@ -2908,8 +2908,8 @@ S:1_IN_11 |
 S:DRAIN_MANA
 D:It is a strange glowing growth on the dungeon floor.
 
-N:193:Pseudo dragon
-G:d:v
+N:193:Cave Drakling
+G:d:s
 I:110:20d10:20:30:40:250
 W:10:2:50:150:1200:504
 B:CLAW:HURT(1d4)
@@ -9200,7 +9200,7 @@ S:1_IN_5 |
 S:BO_ICE | BA_COLD
 D:It is a towering glacier of ice.
 
-N:571:Ipsissimus
+N:571:Chaos cultist
 G:p:D
 I:110:28d13:20:50:10:140
 W:36:2:999:666:6000:638
@@ -12904,7 +12904,7 @@ D:Chief messenger between Sauron and Morgoth, she is surely the most deadly
 D:of her vampire race. At first she is charming to meet, but her wings and
 D:eyes give away her true form.
 
-N:756:Great Lava Wyrm
+N:756:Great Brimstone Wyrm
 G:D:r
 I:122:54d100:40:225:40:2000
 W:70:2:999:25000:0:0
@@ -23952,7 +23952,7 @@ B:BITE:HURT(1d5):SOUND(1d3)
 F:FORCE_MAXHP | FORCE_SLEEP | CAN_FLY |
 F:ONLY_GOLD | DROP_60 | DROP_1D2 |
 F:OPEN_DOOR | BASH_DOOR
-F:EVIL | DRAGON | RES_FIRE
+F:EVIL | DRAGON | RES_SOUN
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Human:Beastmaster
 P:Body:Dragon
@@ -24044,7 +24044,7 @@ B:BITE:HURT(1d5):CONFUSE(1d3)
 F:FORCE_MAXHP | FORCE_SLEEP | CAN_FLY |
 F:ONLY_GOLD | DROP_60 | DROP_1D2 |
 F:OPEN_DOOR | BASH_DOOR
-F:EVIL | DRAGON | RES_FIRE
+F:EVIL | DRAGON | NO_CONF
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Human:Beastmaster
 P:Body:Dragon
@@ -24070,18 +24070,18 @@ S:FREQ_5 | BR_INERTIA | DETECT_OBJECTS
 D:This hatchling dragon is still soft, its eyes unaccustomed to light and
 D:its scales a pale bronze.
 
-N:1325:Great Wyrm of Annihilation
+N:1325:Great Eldritch Wyrm
 G:D:v
 I:123:50d100:30:255:80:2000
 W:80:2:999:31000:0:0
 B:CLAW:HURT(6d12)
 B:CLAW:HURT(6d12)
-B:BITE:HURT(7d14)
+B:BITE:HURT(7d14):CONFUSE(1d11)
 B:BITE:HURT(7d14)
 F:FORCE_SLEEP | FORCE_MAXHP | AURA_ELEC | CAN_FLY |
 F:ONLY_ITEM | DROP_2D2 | DROP_3D2 | DROP_GOOD | SELF_LITE_2 |
 F:BASH_DOOR | MOVE_BODY | IM_FIRE | IM_COLD | IM_ACID | IM_POIS
-F:RES_DARK | RES_NETH | RES_CHAO | RES_TIME
+F:RES_DARK | RES_NETH | RES_CHAO | RES_TIME | ELDRITCH_HORROR
 F:EVIL | DRAGON | IM_ELEC | NO_CONF | NO_SLEEP | RIDING | WILD_MOUNTAIN
 F:DROP_CORPSE | POS_SEE_INVIS | POS_GAIN_AC
 P:Copy:Half-Titan:Beastmaster
@@ -24090,9 +24090,105 @@ P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BLIND | CONFUSE | SCARE | DETECT_OBJECTS | S_DRAGON | S_HI_DRAGON
 S:BR_POIS | BR_DARK | BR_NETHER | BR_CHAOS | BR_TIME
-D:A massive dragon of hideous form.  From its shadowy aura comes the stench
-D:of the underworld.  Its body is twisted by chaotic forces as it strives
+D:A massive dragon of hideous form.  From its bewildering aura comes the stench
+D:of the edge of reality.  Its body is twisted by chaotic forces as it strives
 D:to stay real.  Its very existence distorts the universe around it.
+
+N:1326:Void dragon
+G:D:d
+I:120:15d100:20:110:80:500
+W:39:1:999:2500:100000:741
+B:CLAW:HURT(6d9)
+B:CLAW:HURT(6d9)
+B:BITE:HURT(6d12):DRAIN_EXP(40d6)
+B:BITE:HURT(6d12):UNLIFE(2d12)
+F:FORCE_SLEEP | FORCE_MAXHP |
+F:DROP_3D2 | DROP_4D2 | RES_FIRE | RES_ACID | RES_ELEC | RES_DARK
+F:KILL_WALL | KILL_ITEM | KILL_BODY | CAN_FLY | WILD_WASTE | WILD_MOUNTAIN |
+F:EVIL | DRAGON | RES_COLD | NO_CONF | NO_SLEEP | RIDING | 
+F:POS_GAIN_AC | INVISIBLE | WEIRD_MIND
+P:Copy:Half-Titan:Beastmaster
+P:Life:110
+P:Body:Dragon
+S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_DISINTEGRATE | DETECT_OBJECTS
+D:A huge hole in reality shaped vaguely like a draconic form.
+
+N:1327:Elder Void Dragon
+G:D:d
+I:125:30d100:40:225:20:2000
+W:75:2:999:28000:0:0
+B:CLAW:HURT(6d12)
+B:CLAW:HURT(6d12)
+B:BITE:HURT(8d14):DRAIN_EXP(80d6)
+B:BITE:HURT(8d14):UNLIFE(4d12)
+F:ATTR_MULTI | ATTR_ANY |
+F:FORCE_SLEEP | FORCE_MAXHP | RES_CHAO | RES_DISE |
+F:RES_FIRE | RES_ACID | RES_ELEC | RES_DARK
+F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
+F:BASH_DOOR | MOVE_BODY | CAN_FLY |
+F:EVIL | DRAGON | NO_CONF | NO_SLEEP | RIDING
+F:DROP_CORPSE | POS_SEE_INVIS | POS_GAIN_AC
+P:Copy:Half-Titan:Beastmaster
+P:Stats:1:0:0:0:1:1
+P:Life:110
+P:Body:Dragon
+S:FREQ_20 | BLIND | CONFUSE | SCARE | BR_DISINTEGRATE | DETECT_OBJECTS
+D:A huge hole in reality shaped vaguely like a draconic form. You feel
+D:a strange mixture of dread and numbness as you gaze into the abyss
+
+N:1328:Evil eye
+G:e:D
+I:110:15d8:2:6:10:60
+W:18:3:75:80:0:0
+B:GAZE:DRAIN_EXP(10d6)
+B:GAZE:DRAIN_EXP(10d6)
+F:CAN_FLY | RES_POIS | WILD_WOOD | EVIL | HURT_LITE
+F:DROP_CORPSE | POS_TELEPATHY | POS_GAIN_AC | NEVER_MOVE
+S:1_IN_8
+S:PARALYZE | TELE_TO
+P:Copy:Gnome:Mage
+P:Body:Eye
+D:A huge disembodied eye.  As you stare into the black nothingness of its pupil, 
+D:you feel your will and vitality draining away, and are unable to do anything 
+D:except approach it in horrified fascination. 
+
+N:1329:Kobold shaman
+G:k:r
+I:110:5d5:20:16:10:120
+W:5:1:35:5:14:102
+B:HIT:HURT(1d8)
+B:HIT:HURT(1d8)
+F:DROP_60 | WILD_ALL |
+F:OPEN_DOOR | BASH_DOOR | DROP_SKELETON | DROP_CORPSE
+F:EVIL | RES_POIS
+S:1_IN_5
+S:CAUSE_1 | CONFUSE | MISSILE | HEAL
+O:DROP_MAGE
+P:Copy:Kobold:Mage
+P:Stats:-2:0:0:-1:-1:0
+P:Life:70
+D:It is a kobold dressed in skins and gesturing wildly.
+
+N:1330:Necromancer
+G:p:d
+I:110:13d8:20:40:10:150
+W:36:2:70:200:0:0
+B:HIT:HURT(2d5)
+B:HIT:HURT(2d5)
+B:TOUCH:DRAIN_MANA(2d6)
+F:MALE | HAS_LITE_2 | HUMAN |
+F:FORCE_SLEEP |
+F:ONLY_ITEM | DROP_1D2 |
+F:SMART | OPEN_DOOR | BASH_DOOR |
+F:EVIL
+F:DROP_SKELETON | DROP_CORPSE |
+P:Copy:Dunadan:Mage
+S:1_IN_3 |
+S:HASTE | TELE_SELF | TELE_TO | BLIND | PARALYZE |
+S:SCARE | CAUSE_3 | BO_NETHER | MIND_BLAST | AMNESIA
+S:S_UNDEAD | ANIM_DEAD
+O:DROP_MAGE
+D:A gaunt figure, clothed in black robes. A human skull perches atop his gnarled staff.
 
 # N: serial number : monster name
 # G: symbol : color

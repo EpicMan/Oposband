@@ -1083,6 +1083,7 @@ extern cptr err_str[PARSE_ERROR_MAX];
 extern errr init_buildings(void);
 extern s16b f_tag_to_index_in_init(cptr str);
 extern void init_angband(void);
+extern void display_news_win(int n);
 extern void display_news(void);
 
 /* load.c */

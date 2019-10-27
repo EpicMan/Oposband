@@ -1405,6 +1405,47 @@ static void _display_file(cptr name)
     }
 }
 
+void display_news_win(int n)
+{
+	bool done = FALSE;
+	const int max_n = 19;
+
+	while (!done)
+	{
+		char name[100];
+		int  cmd;
+		sprintf(name, "news%d.txt", n);
+		_display_file(name);
+
+		/* Windows is an odd duck, indeed! */
+		if (strcmp(ANGBAND_SYS, "win") == 0)
+			break;
+
+		cmd = inkey_special(TRUE);
+		switch (cmd)
+		{
+		case '?':
+			_display_file("credits.txt");
+			inkey();
+			break;
+		case SKEY_DOWN:
+		case '2':
+			n++;
+			if (n > max_n)
+				n = 1;
+			break;
+		case SKEY_UP:
+		case '8':
+			n--;
+			if (n == 0)
+				n = max_n;
+			break;
+		default:
+			done = TRUE;
+		}
+	}
+}
+
 void display_news(void)
 {
     const int max_n = 19;

@@ -13,7 +13,8 @@
 -Reversed pack AI settings for animals and sentient beings, so the latter will try to lure healthy players into rooms while the latter will hunt you down. Idea from Sil
 -Player now receives full HP and SP restore when levelling up
 -Objects now have a single attack plus instead of split to-hit and to-dam values. Generally to_h was always much less important than to_d to players and having them different (and randomly rolled) just made stacking ammo, etc harder.  Scrolls of enchant to-hit and enchant to-dam have been replaced with a single Enchant Weapon scroll.
--Somewhat streamlined character creation by removing the first screen. Removed beginner mode and moved normal/monster mode selection to the race/class UI, so you can easily switch between them. 
+-Can now create new characters or load savefiles with keystrokes from news screen, without having to use the File menu. High scores list viewing has been moved to this screen as well.
+-Streamlined character creation by compressing screens to character creation. Removed beginner mode and moved normal/monster mode selection to the race/class UI, so you can easily switch between them. 
 -Prayer class group had a single class, Priest, and even when the alternative priest class, Disciple, was added it wasn't put there. So Priest has been moved to the Magic class group and Prayer group has been removed.
 -Orc shamans now have SP like other casters. I see no reason for them to use HP to cast.
 -Needless opaque and polemical no_chris option renamed no_nexus_warp
@@ -32,29 +33,25 @@
 -Player elemental characters get a thematic reward from the thieves quest (a magical version of their starting weapon)
 -Player life rating now stored as a number, and player_hp array replaced with a simple hp= 5 + (5 * level * life_rating / 100). Older savefiles will be converted;
 -Samurai gain their spell attacks as they level, and no longer need to learn their spells from books. Books of Kendo nhave been removed
+-Most book casters no longer need to learn spells, they can just cast any from their books they are high enough level for. Gray Mages and Rage Mages still learn spells due to their unique mechanics.
+-'C'haracter display now lists the percentage of physical damage reduction from AC.
+-Players receive a full HP/SP restore upon levelling up, like in many other games. Could be a birth option but there are so many alreay. Mostly it allows more extended fighting in the early levels when level ups come frequently.
+-Added many monsters from Vanilla Angband 4.2.X
+-First town renamed Rampart (from Omega) - Outpost was a silly name
 
 TODO
--No more spell learning for book casters (mostly). Cast like red mage/sorcerors. 
--Show physical damage reduction percentage next to armor class in character display
--Buffs don't have a time limit but reduce max mana while on
 -Elite monsters with random prefix/suffix.
 -Randomized Challenge Dungeons with random alterations (faster monsters, fire damage every turn, darkness, random teleportation, corpses revive, etc)
 -Buff spells that can be maintained indefinitely (due to low costs and/or non-brokenness, plus not having some issue when they expire, like invulnerability's loss of actions) don't have a duration but instead just reserve mana and stay active. Reserved mana reduces your current max SP, so a lot of buffs mean little to no mana for casting.
--Add Blue Mage from Hengband, but add in the Imitator's ability to do observed things for the past 3 observed monster spells.
 -Add elemental lord from Portralis
 -Merge Weaponmaster's ranged weapon specialties into Archer class, and melee/shield specialties into Warrior.
 -Add or merge vanilla's new necromancer into poschangeband necromancer.
 -Add Vanilla's new Druid and shapeshifting class?
 -Change stealth mechanic to affect monster awareness of the player. So high stealth players would appear and disappear to monsters, making taking on a group more manageable as more distant ones are less likely to be able to see you to engage.
--Should speed just be move speed?s
--Fully restore HP/SP on reaching a new level
--Re-add Blue Mage. Blue Mage should be able to gain SP from being hit with spells.
--Re-add Imitator
--Add Elemental Lord 
+-Should speed just be move speed?
 -Add group ID to objects, and make weapon proficiencies based on group. Groups could be as simple as weaponmaster specialties, or more specific.
 -Make beastmasters inability to summon ghosts be a class-specific code, where summoning them always results in hostiles.
 -Change spell proficiency to be book-based.
--Take away spell learning for most classes. Samurai might need to just become normal book casters, keeping their books.
 -Caster level mechanic (merge into spell power?). 0 for non-casters or non-realms, =level for primary realm, worse for hybrid casters (who count as several levels lower for spell learning), etc
 -Merge rod effects into wands and staves, then rebrand staves rods. Expand the wizardstaff to be like the MageStaff from ToME (extra mana, extra caster level/spell power,decreased mana usage,mana regen, etc)
 -Split HP and SP regeneration (reinvigoration or something).
@@ -63,51 +60,16 @@ TODO
 
 
 Add monsters from Vanilla (includes boosting dragons and adding web ability):
-Birds
-Blood Falcon
-giant roc
-
-Bugs
-giant black scorpion
-giant firefly
-giant silver ant
-giant yellow centipede
-killer fire beetle
-neekerbreeker
-purple worm
-stegocentipede
-
-Demons
-Bile demon
-homunculus
-horned reaper
-Fury
-Nruling
-
-Dragons:
-All have been buffed reportedly, buff Opos to match if weaker
- Baby Gold Dragon
-great swamp wyrm
-great wyrm of annihilation
-great wyrm of thunder
-sky dragon
 
 Elementals
-great earth elemental
-great water elemental
 vargo, tyrant of fire
 waldern, king of water
-
-Eyes
-beholder hive-mother
-evil eye
 
 Giants
 nan, the giant
 
 Kobolds
 kobold archer
-kobold shaman
 
 Maia
 maia
@@ -147,7 +109,6 @@ eöl, the dark elf
 ibun, son of mîm
 khîm, son of mîm
 mîm, betrayer of turin
-necromancer
 meássë, the bloody
 patriarch (Priest of the outer gods)
 uldor the accursed

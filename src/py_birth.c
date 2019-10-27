@@ -62,6 +62,7 @@ static void _birth_finalize(void);
 static int _inkey(void);
 static void _sync_term(doc_ptr doc);
 static int _count(int ids[]);
+static void _set_mode(int mode);
 
 /************************************************************************
  * Public Entrypoints
@@ -80,8 +81,16 @@ int py_birth(void)
     msg_line_clear();
     Term_clear();
     Term_save();
-    result = _welcome_ui();
-    Term_load();
+
+	/*Old starting point was _welcome_ui*/
+	/* Mega-Hack */
+	werewolf_init();
+	beorning_init();
+	p_ptr->chaos_patron = RANDOM_PATRON;
+	_set_mode(GAME_MODE_NORMAL);
+	result = _race_class_ui();
+    
+	Term_load();
 
     doc_free(_doc);
     _doc = NULL;
@@ -195,7 +204,6 @@ void py_birth_spellbooks(void)
 /************************************************************************
  * Welcome to Oposband!
  ***********************************************************************/ 
-static void _set_mode(int mode);
 static bool _stats_changed = FALSE;
 
 static int _welcome_ui(void)
@@ -411,6 +419,9 @@ static int _race_class_ui(void)
 		else
 			doc_insert(cols[0], "  <color:y>g</color>) Normal Game Mode\n");
 
+		if (previous_char.quick_ok)
+			doc_insert(cols[0], "  <color:y>q</color>) Quick start with previous character\n");
+
         doc_insert(cols[1], "<color:y>  *</color>) Random Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
         doc_insert(cols[1], "<color:y>  =</color>) Options\n");
@@ -465,6 +476,36 @@ static int _race_class_ui(void)
             }
             player_name[0] = toupper(player_name[0]);
             break;
+		case 'q':
+			if (previous_char.quick_ok)
+			{
+				int i;
+				game_mode = previous_char.game_mode;
+				p_ptr->psex = previous_char.psex;
+				p_ptr->prace = previous_char.prace;
+				p_ptr->psubrace = previous_char.psubrace;
+				p_ptr->pclass = previous_char.pclass;
+				p_ptr->psubclass = previous_char.psubclass;
+				p_ptr->personality = previous_char.personality;
+				p_ptr->realm1 = previous_char.realm1;
+				p_ptr->realm2 = previous_char.realm2;
+				p_ptr->dragon_realm = previous_char.dragon_realm;
+				p_ptr->au = previous_char.au;
+				for (i = 0; i < MAX_STATS; i++)
+				{
+					p_ptr->stat_cur[i] = previous_char.stat_max[i];
+					p_ptr->stat_max[i] = previous_char.stat_max[i];
+				}
+				_stats_changed = TRUE; /* block default stat allocation via _stats_init */
+				if (_stats_ui() == UI_OK)
+					return UI_OK;
+			}
+			break;
+
+		case 'Q': 
+			if (previous_char.quick_ok)
+				doc_display_help("birth.txt", "QuickStart");
+			break;
         case 'n':
             _change_name();
             break;
