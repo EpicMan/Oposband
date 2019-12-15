@@ -428,7 +428,7 @@ static int _race_class_ui(void)
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
         doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
-        doc_insert(cols[1], "<color:y>RET</color>) Next Screen\n");
+        doc_insert(cols[1], "<color:y>RET</color>) Accept and Play\n");
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
 
         doc_insert_cols(_doc, cols, 2, 1);

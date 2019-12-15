@@ -37,7 +37,9 @@
 -'C'haracter display now lists the percentage of physical damage reduction from AC.
 -Players receive a full HP/SP restore upon levelling up, like in many other games. Could be a birth option but there are so many alreay. Mostly it allows more extended fighting in the early levels when level ups come frequently.
 -Added many monsters from Vanilla Angband 4.2.X
--First town renamed Rampart (from Omega) - Outpost was a silly name
+-First town renamed Rampart (from Omega) - Outpost was always a silly name
+-Can now see/browse what race/class powers the character will get at what level.
+-EXPERIMENTAL: Only race affects XP gain. Not shown in character creation yet, just in XP calculations.
 
 TODO
 -Elite monsters with random prefix/suffix.
