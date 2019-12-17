@@ -43,7 +43,7 @@ static void _birth(void)
 static void _gain_level(int new_level)
 {
 	if (new_level > 1) /* avoid double reward */
-		chaos_warrior_reward();
+		chaos_patron_reward(PATRON_LEVEL_UP);
 }
 
 class_t *chaos_mage_get_class(void)

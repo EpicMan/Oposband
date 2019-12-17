@@ -2881,3 +2881,4 @@ extern void change_realm_power(void);
 extern void     chaos_choose_effect(int);
 extern bool		worships_chaos();
 extern cptr     chaos_patron_name(int);
+extern void chaos_patron_reward(int category);

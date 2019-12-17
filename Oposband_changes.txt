@@ -44,6 +44,7 @@
 -Added Great Wyrms for Bronze, Silver and Gold dragons (Perplexity, Procrastination, and Dissonance, respectively).
 -Added Chaos Patrons from Composband, along with ability to select a patron at character birth
 -Added links to Chaos Patron helpfile in Chaos-Warrior and Chaos-Mage descriptions in Classes.txt helpfile.
+-New ego lantern: of the Third Eye, gives telepathy and resist blindness (too strong? maybe telepathy is enough?), native to DL80. Based on suggestion for Vanilla Angband by Derakon.
 
 TODO
 -EXPERIMENTAL: Only race affects XP gain. Not shown in character creation yet, just in XP calculations.
