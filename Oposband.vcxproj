@@ -103,9 +103,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;WINDOWS;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
@@ -204,6 +205,7 @@
     <ClCompile Include="src\cavalry.c" />
     <ClCompile Include="src\cave.c" />
     <ClCompile Include="src\chaos_mage.c" />
+    <ClCompile Include="src\chaos_patron.c" />
     <ClCompile Include="src\chaos_warrior.c" />
     <ClCompile Include="src\classes.c" />
     <ClCompile Include="src\cmd1.c" />

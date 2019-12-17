@@ -2531,6 +2531,7 @@ extern void     troika_punish_quest_fail(void);
 extern bool     troika_allow_equip_item(object_type *o_ptr);
 extern bool     troika_allow_use_device(object_type *o_ptr);
 extern void     troika_bonus_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE]);
+extern void nonlethal_ty_substitute(bool do_dec);
 
 /* duelist.c */
 extern cptr duelist_current_challenge(void);
@@ -2614,8 +2615,6 @@ extern class_t *cavalry_get_class(void);
 extern void     rodeo_spell(int cmd, variant *res);
 
 extern class_t *chaos_warrior_get_class(void);
-extern void     chaos_warrior_reward(void);
-extern void     nonlethal_ty_substitute(bool do_dec);
 
 extern class_t *devicemaster_get_class(int psubclass);
 extern bool     devicemaster_desperation;
@@ -2877,3 +2876,8 @@ extern void wild_reset_counter(int power);
 
 /* spells_c.c*/
 extern void change_realm_power(void);
+
+/* chaos_patron.c */
+extern void     chaos_choose_effect(int);
+extern bool		worships_chaos();
+extern cptr     chaos_patron_name(int);

@@ -31,6 +31,7 @@ extern int py_birth(void);
                     static int _devicemaster_ui(void);
                     static int _gray_mage_ui(void);
                     static int _patron_ui(void);
+					static int _chaos_patron_ui(void);
         static int _realm1_ui(void);
             static int _realm2_ui(void);
         /* Monster Mode */
@@ -46,8 +47,7 @@ extern int py_birth(void);
                     static int _mon_spider_ui(void);
                     static int _mon_troll_ui(void);
                     static int _mon_orc_ui(void);
-/*    static int _stats_ui(void);*/
-	static void _starting_stats(void);
+        static int _stats_ui(void);
 
 extern void py_birth_obj(object_type *o_ptr);
 extern void py_birth_obj_aux(int tval, int sval, int qty);
@@ -445,11 +445,7 @@ static int _race_class_ui(void)
         switch (cmd)
         {
         case '\r':
-            if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->pclass == CLASS_CHAOS_MAGE))
-            {
-                if (_patron_ui() != UI_OK) break;
-            }
-			_starting_stats(); /*if (_stats_ui() == UI_OK)*/
+			if (_stats_ui() == UI_OK)
                 return UI_OK;
             break;
         case ESCAPE:
@@ -500,7 +496,7 @@ static int _race_class_ui(void)
 					p_ptr->stat_max[i] = previous_char.stat_max[i];
 				}
 				_stats_changed = TRUE; /* block default stat allocation via _stats_init */
-				_starting_stats();/*if (_stats_ui() == UI_OK)*/
+				if (_stats_ui() == UI_OK)
 					return UI_OK;
 			}
 			break;
@@ -666,7 +662,6 @@ static void _pers_ui(void)
         }
     }
     vec_free(v);
-//    if ((p_ptr->personality == PERS_CHAOTIC) && (p_ptr->pclass != CLASS_DISCIPLE)) (void)_patron_ui();
 }
 
 static int _pers_cmp(personality_ptr l, personality_ptr r)
@@ -1195,6 +1190,8 @@ static int _subclass_ui(void)
             rc = _gray_mage_ui();
         else if (p_ptr->pclass == CLASS_DISCIPLE)
             rc = _patron_ui();
+		else if (p_ptr->pclass == CLASS_CHAOS_MAGE || p_ptr->pclass == CLASS_CHAOS_WARRIOR)
+			rc = _chaos_patron_ui(); /* not really a subclass */
         else
         {
             p_ptr->psubclass = 0;
@@ -1465,6 +1462,56 @@ static int _patron_ui(void)
             }
         }
     }
+}
+
+static int _chaos_patron_ui(void)
+{
+	assert(p_ptr->pclass == CLASS_CHAOS_WARRIOR || p_ptr->pclass == CLASS_CHAOS_MAGE);
+	for (;;)
+	{
+		int cmd, i;
+
+		doc_clear(_doc);
+		_race_class_top(_doc);
+
+		doc_insert(_doc, "<color:G>Choose Patron</color>\n");
+		for (i = 0; i < MAX_CHAOS_PATRON; i++)
+		{
+			cptr patron_name = chaos_patron_name(i);
+			doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+				I2A(i),
+				p_ptr->chaos_patron == i ? 'B' : 'w',
+				patron_name
+			);
+		}
+		doc_insert(_doc, "  <color:y>*</color>) Random\n");
+		doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+		_sync_term(_doc);
+		cmd = _inkey();
+		if (cmd == ESCAPE) return UI_CANCEL;
+		else if (cmd == '\t') _inc_rcp_state();
+		else if (cmd == '=') _birth_options();
+		else if (cmd == '?') doc_display_help("Chaos_Patrons.txt", NULL);
+		else if (isupper(cmd))
+		{
+			i = A2I(tolower(cmd));
+			if (0 <= i && i < MAX_CHAOS_PATRON)
+			{
+				doc_display_help("Chaos_Patrons.txt", chaos_patrons[i]);
+			}
+		}
+		else
+		{
+			if (cmd == '*') i = randint0(MAX_CHAOS_PATRON);
+			else i = A2I(cmd);
+			if (0 <= i && i < MAX_CHAOS_PATRON)
+			{
+				p_ptr->chaos_patron = i;
+				return UI_OK;
+			}
+		}
+	}
 }
 
 /************************************************************************
@@ -1973,28 +2020,17 @@ static cptr _stat_names[MAX_STATS] = { "STR", "INT", "WIS", "DEX", "CON", "CHR" 
 static char _stat_to_char(int which);
 static int _char_to_stat(char which);
 
-static void _starting_stats(void)
+static int _stats_ui(void)
 {
-	_stats_init();
-	/*for (int i = 0; i < MAX_STATS; i++)
-	{
-		p_ptr->stat_cur[i] = 12;
-		p_ptr->stat_max[i] = 12;
-	}*/
-	_birth_finalize();
-}
-
-/*static int _stats_ui(void)
-{
-    race_t         *race_ptr = get_race();
-    class_t        *class_ptr = get_class();
+    race_t* race_ptr = get_race();
+    class_t* class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     /* Initialize stats with reasonable defaults.
        If the user backs up and changes their class,
        pick new defaults (unless they manually made
        changes. */
-/*    if (!_stats_changed)
+    if (!_stats_changed)
         _stats_init();
 
     for (;;)
@@ -2086,7 +2122,7 @@ static void _starting_stats(void)
                 _stat_dec(i);
         }
     }
-}*/
+}
 
 static char _stat_cmd_map[MAX_STATS] = { 's', 'i', 'w', 'd', 'c', 'r' };
 static char _stat_to_char(int which)
@@ -2110,9 +2146,11 @@ static cptr _stat_desc(int stat)
     static char buf[10];
     if (stat < 3) stat = 3;
     if (stat > 40) stat = 40;
-	sprintf(buf, "%2d", stat);
-    
-	return buf;
+    if (stat < 19)
+        sprintf(buf, "%2d", stat);
+    else
+        sprintf(buf, "18/%d", 10 * (stat - 18));
+    return buf;
 }
 
 static void _stats_init_aux(int stats[MAX_STATS])
@@ -2143,12 +2181,9 @@ static void _stats_init(void)
         case RACE_MON_LEPRECHAUN:
         case RACE_MON_ELEMENTAL:
         case RACE_MON_SWORD:
-        case RACE_MON_ARMOR:
         case RACE_MON_GOLEM:
-        case RACE_MON_ORC:
-        case RACE_MON_PUMPKIN:
         {
-            int stats[6] = { 17, 13, 8, 16, 15, 10 };
+            int stats[6] = { 17, 8, 8, 17, 15, 9 };
             _stats_init_aux(stats);
             break;
         }
@@ -2160,14 +2195,9 @@ static void _stats_init(void)
         }
         case RACE_MON_LICH:
         case RACE_MON_BEHOLDER:
-        {
-            int stats[6] = { 16, 17, 9, 9, 16, 9 };
-            _stats_init_aux(stats);
-            break;
-        }
         case RACE_MON_RING:
         {
-            int stats[6] = { 11, 17, 10, 10, 16, 15 };
+            int stats[6] = { 16, 17, 9, 9, 16, 9 };
             _stats_init_aux(stats);
             break;
         }
@@ -2206,8 +2236,8 @@ static void _stats_init(void)
                 int stats[6] = { 16, 9, 16, 16, 14, 10 };
                 _stats_init_aux(stats);
             }
-            else if ( p_ptr->dragon_realm == DRAGON_REALM_DOMINATION
-                   || p_ptr->dragon_realm == DRAGON_REALM_CRUSADE )
+            else if (p_ptr->dragon_realm == DRAGON_REALM_DOMINATION
+                || p_ptr->dragon_realm == DRAGON_REALM_CRUSADE)
             {
                 int stats[6] = { 16, 8, 8, 16, 15, 16 };
                 _stats_init_aux(stats);
@@ -2241,14 +2271,9 @@ static void _stats_init(void)
     {
         switch (p_ptr->pclass)
         {
-        case CLASS_BERSERKER:
-        {
-            int stats[6] = { 17, 8, 8, 17, 15, 9 };
-            _stats_init_aux(stats);
-            break;
-        }
         case CLASS_WARRIOR:
         case CLASS_CAVALRY:
+        case CLASS_BERSERKER:
         case CLASS_MAULER:
         case CLASS_ARCHER:
         case CLASS_SAMURAI:
@@ -2259,7 +2284,7 @@ static void _stats_init(void)
         case CLASS_DUELIST:
         case CLASS_RAGE_MAGE:
         {
-            int stats[6] = { 17, 13, 8, 16, 15, 10 };
+            int stats[6] = { 17, 8, 8, 17, 15, 9 };
             _stats_init_aux(stats);
             break;
         }
@@ -2270,39 +2295,25 @@ static void _stats_init(void)
             _stats_init_aux(stats);
             break;
         }
-        case CLASS_ALCHEMIST:
-        {
-            int stats[6] = { 16, 16, 8, 14, 16, 11 };
-            _stats_init_aux(stats);
-            break;
-        }
         case CLASS_BLOOD_KNIGHT:
         {
-            int stats[6] = { 17, 13, 8, 15, 16, 10 };
+            int stats[6] = { 17, 8, 8, 15, 17, 9 };
             _stats_init_aux(stats);
             break;
         }
         case CLASS_MAGE:
         case CLASS_HIGH_MAGE:
-		case CLASS_BLUE_MAGE:
+        case CLASS_GRAY_MAGE:
         case CLASS_YELLOW_MAGE:
         case CLASS_MIRROR_MASTER:
         case CLASS_BLOOD_MAGE:
         case CLASS_NECROMANCER:
-		case CLASS_CHAOS_MAGE:
+        case CLASS_CHAOS_MAGE:
         {
             int stats[6] = { 16, 17, 9, 9, 16, 9 };
             _stats_init_aux(stats);
             break;
         }
-
-        case CLASS_GRAY_MAGE:
-        {
-            int stats[6] = { 16, 17, 8, 13, 15, 10 };
-            _stats_init_aux(stats);
-            break;
-        }
-
         case CLASS_SORCERER:
         {
             int stats[6] = { 16, 9, 9, 9, 16, 17 };
@@ -2310,7 +2321,6 @@ static void _stats_init(void)
             break;
         }
         case CLASS_PRIEST:
-        case CLASS_RANGER:
         case CLASS_PALADIN:
         case CLASS_MINDCRAFTER:
         case CLASS_FORCETRAINER:
@@ -2323,6 +2333,7 @@ static void _stats_init(void)
             break;
         }
         case CLASS_ROGUE:
+        case CLASS_RANGER:
         case CLASS_WARRIOR_MAGE:
         case CLASS_CHAOS_WARRIOR:
         case CLASS_TOURIST:
@@ -2349,38 +2360,11 @@ static void _stats_init(void)
         }
         case CLASS_BEASTMASTER:
         case CLASS_BARD:
-		case CLASS_IMITATOR:
-        case CLASS_POLITICIAN:
         case CLASS_WARLOCK:
-		case CLASS_HEXBLADE:
+        case CLASS_HEXBLADE:
         {
-            int stats[6] = { 16, 8, 8, 16, 11, 17 };
+            int stats[6] = { 16, 10, 9, 16, 14, 16 };
             _stats_init_aux(stats);
-            break;
-        }
-        case CLASS_DISCIPLE:
-        {
-            switch (p_ptr->psubclass)
-            {
-                case DISCIPLE_KARROT:
-                {
-                    int stats[6] = { 17, 15, 8, 15, 14, 13 };
-                    _stats_init_aux(stats);
-                    break;
-                }
-                case DISCIPLE_TROIKA:
-                {
-                    int stats[6] = { 17, 13, 8, 16, 15, 10 };
-                    _stats_init_aux(stats);
-                    break;
-                }
-                default:
-                {
-                    int stats[6] = { 16, 16, 9, 14, 16, 10 };
-                    _stats_init_aux(stats);
-                    break;
-                }
-            }
             break;
         }
         /* TODO */

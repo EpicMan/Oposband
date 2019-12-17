@@ -18,7 +18,7 @@
 
 #define VER_MAJOR 0
 #define VER_MINOR 1
-#define VER_PATCH 0
+#define VER_PATCH 1
 #define VER_EXTRA 0
 #define VERSION_IS_DEVELOPMENT (FALSE)
 
@@ -5983,6 +5983,40 @@ enum {
 #define LAWYER_HACK_LEVEL 1
 #define LAWYER_HACK_MANA 2
 #define LAWYER_HACK_FAILRATE 3
+
+/* Chaos Patrons from Composband */
+/* patron interaction triggers */
+#define PATRON_HIT 0
+#define PATRON_KILL_WEAK 1
+#define PATRON_KILL 2
+#define PATRON_KILL_UNIQUE 3
+#define PATRON_KILL_FAMOUS 4
+#define PATRON_KILL_GOOD 5
+#define PATRON_KILL_DEMON 6
+#define PATRON_CAST 7
+#define PATRON_VILLIANY 8
+#define PATRON_CHANCE 9
+#define PATRON_TAKE_HIT 10
+#define PATRON_LEVEL_UP 11
+#define PATRON_EFFECT_MAX 12
+
+/* patrons by name */
+#define PATRON_SLORTAR 0
+#define PATRON_MABELODE 1
+#define PATRON_CHARDROS 2
+#define PATRON_HIONHURN 3
+#define PATRON_XIOMBARG 4
+#define PATRON_PYARAY 5
+#define PATRON_BALAAN 6
+#define PATRON_ARIOCH 7
+#define PATRON_EEQUOR 8
+#define PATRON_NARJHAN 9
+#define PATRON_BALO 10
+#define PATRON_KHORNE 11
+#define PATRON_SLAANESH 12
+#define PATRON_NURGLE 13
+#define PATRON_TZEENTCH 14
+#define PATRON_KHAINE 15
 
 enum dragon_realm_e
 {

@@ -271,8 +271,7 @@ void check_experience(void)
 
             level_inc_stat = TRUE;
 
-            if (mut_present(MUT_CHAOS_GIFT))
-                chaos_warrior_reward();
+			if (worships_chaos()) chaos_choose_effect(PATRON_LEVEL_UP);
 
             /* N.B. The class hook or the Chaos Gift mutation may result in a race
                change (stupid Chaos-Warriors), so we better always requery the player's

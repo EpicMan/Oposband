@@ -9772,7 +9772,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_ELEC(50%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form. Lightning crackles along its length.
 
 N:602:Ancient bronze dragon
@@ -9791,7 +9790,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_CONFUSION(30%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form enveloped in a cascade of colour.
 
 N:603:Beholder
@@ -10098,7 +10096,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_COLD(50%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form. Frost covers it from head to tail.
 
 N:618:Ancient green dragon
@@ -10117,7 +10114,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_POISON(50%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form enveloped in clouds of poisonous vapour.
 
 N:619:Chthonian
@@ -10235,7 +10231,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_ACID(50%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form. Pools of acid melt the floor around it.
 
 N:625:Weird fume
@@ -10591,7 +10586,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:115
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_FIRE(40%) | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form. Wisps of smoke steam from its nostrils and the
 D:extreme heat surrounding it makes you gasp for breath.
 
@@ -10611,7 +10605,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_10 | BLIND | CONFUSE | SCARE | BR_SOUND | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form wreathed in a nimbus of light.
 
 N:646:Great crystal drake
@@ -12307,7 +12300,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BLIND | CONFUSE | SCARE | BR_ELEC | BR_STORM | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:A vast dragon of power. Storms and lightning crash around its titanic
 D:form. Deep blue scales reflect the flashes and highlight the creature's
 D:great muscles. It regards you with contempt.
@@ -12592,7 +12584,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BLIND | CONFUSE | SCARE | BR_COLD | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:An immense dragon capable of awesome destruction. You have never felt
 D:such extreme cold, or witnessed such an icy stare. Begone quickly or feel
 D:its wrath!
@@ -12922,7 +12913,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BLIND | CONFUSE | SCARE | BR_FIRE | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:A vast dragon of immense power. Fire leaps continuously from its huge
 D:form. The air around it scalds you. Its slightest glance burns you, and
 D:you truly realize how insignificant you are.
@@ -13571,7 +13561,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_20 | BLIND | CONFUSE | SCARE | BR_CHAOS | BR_DISENCHANT | S_DRAGON | DETECT_OBJECTS
-S:S_HI_DRAGON
 D:A massive dragon of changing form. As you watch, it appears first fair
 D:and then foul. Its body is twisted by chaotic forces as it strives to
 D:stay real. Its very existence distorts the universe around it.
@@ -13594,7 +13583,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_20 | BLIND | CONFUSE | SCARE | BR_SOUND | BR_SHARDS | S_DRAGON | DETECT_OBJECTS
-S:S_HI_DRAGON
 D:A massive dragon of powerful intellect. It seeks to dominate the universe
 D:and despises all other life. It sees all who do not obey it as mere
 D:insects to be crushed underfoot.
@@ -13739,7 +13727,6 @@ P:Life:110
 P:Body:Dragon
 S:FREQ_20 | BR_POISON | BR_ELEC | BR_ACID | BR_FIRE | BR_COLD |
 S:CONFUSE | SCARE | BLIND | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:A huge dragon whose scales shimmer in myriad hues.
 
 N:791:Fiona the Sorceress
@@ -16075,7 +16062,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BLIND | CONFUSE | SCARE | BR_POISON | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:A huge dragon of incredible destructive power. Noxious vapours
 D:fill the room near it, leaving you gasping for breath. Flee
 D:now while you still can!
@@ -18997,7 +18983,7 @@ P:Body:Dragon
 S:FREQ_20 | BR_TIME | BR_NEXUS | BR_GRAVITY | BR_INERTIA
 S:TELE_SELF | BLINK | TELE_OTHER | TELE_LEVEL | HASTE | SLOW
 S:PARALYZE | S_DRAGON | DETECT_OBJECTS
-S:S_HI_DRAGON
+
 N:1065:Octopus of Kshitigarbha
 G:l:w
 I:110:10d20:10:30:20:100
@@ -19032,7 +19018,6 @@ P:Stats:1:0:0:0:1:1
 P:Life:110
 P:Body:Dragon
 S:FREQ_12 | BR_ACID | BLIND | CONFUSE | SCARE | DETECT_OBJECTS
-S:S_DRAGON | S_HI_DRAGON
 D:A huge and very powerful dragon. Great steaming pools of acid drip from
 D:its form onto the ground. You shudder when you see the acid eating away
 D:the very stones of the dungeon - what could it do to you?
@@ -21890,7 +21875,6 @@ P:Copy:Half-Titan:Beastmaster
 P:Life:110
 P:Body:Dragon
 S:FREQ_15 | SLOW | CONFUSE | SCARE | BR_INERTIA | DETECT_OBJECTS
-S:S_DRAGON
 D:A huge draconic form wreathed in a nimbus of light.
 
 # Crystal snakes
@@ -24189,6 +24173,78 @@ S:SCARE | CAUSE_3 | BO_NETHER | MIND_BLAST | AMNESIA
 S:S_UNDEAD | ANIM_DEAD
 O:DROP_MAGE
 D:A gaunt figure, clothed in black robes. A human skull perches atop his gnarled staff.
+
+#Silver Dragon
+N:1331:Great Wyrm of Procrastination
+G:D:W
+I:122:42d100:30:225:80:1000
+W:70:2:999:17000:0:0
+B:CLAW:HURT(6d12)
+B:CLAW:HURT(6d12)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+A:ACID(2d4)
+F:FORCE_SLEEP | FORCE_MAXHP |
+F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
+F:BASH_DOOR | MOVE_BODY | RIDING | CAN_FLY
+F:EVIL | DRAGON | RES_INER | NO_CONF | NO_SLEEP
+F:DROP_CORPSE | POS_SEE_INVIS | POS_GAIN_AC
+P:Copy:Half-Titan:Beastmaster
+P:Stats:1:0:0:0:1:1
+P:Life:110
+P:Body:Dragon
+S:FREQ_12 | BR_INERTIA | BLIND | CONFUSE | SCARE | DETECT_OBJECTS
+D:A dragon of great size and power. Its polished silver scales reflect the
+D:light in hypnotic patterns, and you find it hard to keep your
+D:eyes open and mind focused. Time seems to slow down as it approaches.
+
+#Bronze Dragon
+N:1332:Great Wyrm of Perplexity
+G:D:U
+I:122:42d100:30:225:80:1000
+W:70:2:999:17000:0:0
+B:CLAW:HURT(6d12)
+B:CLAW:HURT(6d12)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+A:ACID(2d4)
+F:FORCE_SLEEP | FORCE_MAXHP |
+F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
+F:BASH_DOOR | MOVE_BODY | RIDING | CAN_FLY
+F:EVIL | DRAGON | IM_ACID | NO_CONF | NO_SLEEP
+F:DROP_CORPSE | POS_SEE_INVIS | POS_GAIN_AC
+P:Copy:Half-Titan:Beastmaster
+P:Stats:1:0:0:0:1:1
+P:Life:110
+P:Body:Dragon
+S:FREQ_12 | BR_CONFUSION | BLIND | CONFUSE | SCARE | DETECT_OBJECTS
+D:A dragon of great size and power. Its polished bronze scales reflect the
+D:light in strange and confusing patterns, and you find it hard to keep your
+D:mind on the job of fighting for your life.
+
+#Gold Dragon
+N:1333:Great Wyrm of Dissonance
+G:D:y
+I:122:42d100:30:225:80:1000
+W:70:2:999:17000:0:0
+B:CLAW:HURT(6d12)
+B:CLAW:HURT(6d12)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+B:BITE:HURT(8d14):ACID(3d14):CUT(3d14, 10%)
+A:ACID(2d4)
+F:FORCE_SLEEP | FORCE_MAXHP |
+F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
+F:BASH_DOOR | MOVE_BODY | RIDING | CAN_FLY
+F:EVIL | DRAGON | RES_SOUN | NO_CONF | NO_SLEEP
+F:DROP_CORPSE | POS_SEE_INVIS | POS_GAIN_AC
+P:Copy:Half-Titan:Beastmaster
+P:Stats:1:0:0:0:1:1
+P:Life:110
+P:Body:Dragon
+S:FREQ_12 | BR_SOUND | BLIND | CONFUSE | SCARE | DETECT_OBJECTS
+D:A dragon of great size and power. Its polished gold scales gleam brightly
+D:and the throbs of its beating wings reverberate through the dungeon with
+D:deafening volume. You feel its dissonant roaring shaking your very bones.
 
 # N: serial number : monster name
 # G: symbol : color

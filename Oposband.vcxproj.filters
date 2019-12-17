@@ -790,6 +790,9 @@
     <ClCompile Include="src\imitator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\chaos_patron.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\angband.ico">

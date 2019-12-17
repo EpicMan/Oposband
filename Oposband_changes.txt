@@ -39,9 +39,14 @@
 -Added many monsters from Vanilla Angband 4.2.X
 -First town renamed Rampart (from Omega) - Outpost was always a silly name
 -Can now see/browse what race/class powers the character will get at what level.
--EXPERIMENTAL: Only race affects XP gain. Not shown in character creation yet, just in XP calculations.
+-Increase min/max depths of the Dragon Lair to put Great Wyrms of Law/Chaos/Balance back in-depth (Ster)
+-Removed summoning spells from Ancient Dragons & Great Wyrms that don't summon in other PCBs (Wobbley & Ster)
+-Added Great Wyrms for Bronze, Silver and Gold dragons (Perplexity, Procrastination, and Dissonance, respectively).
+-Added Chaos Patrons from Composband, along with ability to select a patron at character birth
+-Added links to Chaos Patron helpfile in Chaos-Warrior and Chaos-Mage descriptions in Classes.txt helpfile.
 
 TODO
+-EXPERIMENTAL: Only race affects XP gain. Not shown in character creation yet, just in XP calculations.
 -Elite monsters with random prefix/suffix.
 -Randomized Challenge Dungeons with random alterations (faster monsters, fire damage every turn, darkness, random teleportation, corpses revive, etc)
 -Buff spells that can be maintained indefinitely (due to low costs and/or non-brokenness, plus not having some issue when they expire, like invulnerability's loss of actions) don't have a duration but instead just reserve mana and stay active. Reserved mana reduces your current max SP, so a lot of buffs mean little to no mana for casting.
