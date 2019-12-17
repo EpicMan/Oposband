@@ -1703,7 +1703,7 @@ bool load_player(void)
 
 
     /* Message */
-    msg_format("Error (%s) reading %d.%d.%s savefile.",
+    msg_format("Error (%s) reading %d.%d.%d savefile.",
            what, (z_major>9) ? z_major - 10 : z_major, z_minor, z_patch);
     msg_print(NULL);
 

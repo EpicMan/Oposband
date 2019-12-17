@@ -1035,7 +1035,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     /* Mention the savefile version */
     note(format(
-             "Loading a %d.%d.%s savefile...",
+             "Loading a %d.%d.%d savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
     /* Savefiles break iff VER_MAJOR bumps */
