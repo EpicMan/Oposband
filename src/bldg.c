@@ -2971,7 +2971,7 @@ static bool _reforge_artifact(void)
             adjustment -= MAX(0, ((nval / 2) - ABS(min_power - nval)) / 720);
         }
 
-        if (object_is_(dest, TV_HAFTED, SV_WIZSTAFF))
+        if (object_is_(dest, TV_STAVES, SV_WIZSTAFF))
         {
             int muutos = ((8500 - ABS(min_power - 14000)) / 100);
             if (muutos < 0) muutos /= 4;

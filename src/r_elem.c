@@ -775,7 +775,7 @@ void water_mana_action(byte check_hurt_mode, int mana)
             object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
             o_ptr->marked |= OM_SLIPPING;
             msg_format("You flow too fast! Your %s is caught in the flow and slips off!", o_name);
-            if ((object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI)) && (p_ptr->personality == PERS_SEXY))
+            if ((object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT)) && (p_ptr->personality == PERS_SEXY))
             {
                 msg_print("You roar!");
                 p_ptr->csp = 1000;

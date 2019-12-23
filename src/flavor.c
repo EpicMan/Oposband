@@ -1173,6 +1173,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
+        case TV_DAGGER:
+        case TV_STAVES:
+        case TV_AXE:
         case TV_DIGGING:
         {
             show_weapon = TRUE;
@@ -1825,6 +1828,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
     case TV_DIGGING:
 		show_weapon = FALSE;
         if (known)

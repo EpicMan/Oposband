@@ -392,7 +392,7 @@ static void _troika_event(int effect)
                     dummy2 = SV_ZWEIHANDER;
                     break;
                 case 38:
-                    dummy2 = SV_HAYABUSA;
+                    dummy2 = SV_FALCON_SWORD;
                     break;
                 case 39:
                     dummy2 = SV_BLADE_OF_CHAOS;

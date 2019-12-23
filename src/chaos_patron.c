@@ -102,27 +102,33 @@ void chaos_forge_weapon() {
 	switch (randint1(p_ptr->lev))
 	{
 	case 0: case 1:
+		dummy = TV_DAGGER;
 		dummy2 = SV_DAGGER;
 		break;
 	case 2: case 3:
+		dummy = TV_DAGGER; 
 		dummy2 = SV_MAIN_GAUCHE;
 		break;
 	case 4:
+		dummy = TV_DAGGER;
 		dummy2 = SV_TANTO;
 		break;
 	case 5: case 6:
+		dummy = TV_DAGGER;
 		dummy2 = SV_RAPIER;
 		break;
 	case 7: case 8:
 		dummy2 = SV_SMALL_SWORD;
 		break;
 	case 9: case 10:
+		dummy = TV_DAGGER;
 		dummy2 = SV_BASILLARD;
 		break;
 	case 11: case 12: case 13:
 		dummy2 = SV_SHORT_SWORD;
 		break;
 	case 14: case 15:
+		dummy = TV_DAGGER;
 		dummy2 = SV_SABRE;
 		break;
 	case 16: case 17:
@@ -147,6 +153,7 @@ void chaos_forge_weapon() {
 		dummy2 = SV_SCIMITAR;
 		break;
 	case 26:
+		dummy = TV_DAGGER;
 		dummy2 = SV_NINJATO;
 		break;
 	case 27:
@@ -180,7 +187,8 @@ void chaos_forge_weapon() {
 		dummy2 = SV_ZWEIHANDER;
 		break;
 	case 38:
-		dummy2 = SV_HAYABUSA;
+		dummy = TV_DAGGER;
+		dummy2 = SV_FALCON_SWORD;
 		break;
 	default:
 		dummy2 = SV_BLADE_OF_CHAOS;

@@ -1,3 +1,7 @@
+0.2.0
+-Split the three types of weapons (hafted, polearms, swords) into six: hafted, stave, polearms, axes, swords, daggers+stabby weapons, adding three new weapon TVALS.
+
+0.1.X
 -Forked from FrogComposband 7.1.Chocolate
 -Changed variant name to Oposband and version to 0.1.0
 -Removed many unnessary if_savefile_older_than calls as we won't be converting those
@@ -45,6 +49,9 @@
 -Added Chaos Patrons from Composband, along with ability to select a patron at character birth
 -Added links to Chaos Patron helpfile in Chaos-Warrior and Chaos-Mage descriptions in Classes.txt helpfile.
 -New ego lantern: of the Third Eye, gives telepathy and resist blindness (too strong? maybe telepathy is enough?), native to DL80. Based on suggestion for Vanilla Angband by Derakon.
+
+INVESTIGATE - learn how this works
+REWRITE - rewrite to make it work
 
 TODO
 -EXPERIMENTAL: Only race affects XP gain. Not shown in character creation yet, just in XP calculations.

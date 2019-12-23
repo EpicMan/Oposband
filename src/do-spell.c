@@ -5298,7 +5298,7 @@ static cptr do_arcane_spell(int spell, int mode)
 }
 
 static bool _can_enchant(obj_ptr obj) {
-    if (object_is_(obj, TV_SWORD, SV_POISON_NEEDLE)) return FALSE;
+    if (object_is_(obj, TV_DAGGER, SV_POISON_NEEDLE)) return FALSE;
     return object_is_weapon_armour_ammo(obj);
 }
 bool craft_enchant(int max, int inc)
@@ -7998,6 +7998,9 @@ static bool item_tester_hook_weapon_except_bow(object_type *o_ptr)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
+        case TV_DAGGER:
+        case TV_AXE:
+        case TV_STAVES:
         case TV_DIGGING:
         {
             return (TRUE);

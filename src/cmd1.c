@@ -794,6 +794,9 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
+        case TV_DAGGER:
+        case TV_STAVES:
+        case TV_AXE:
         case TV_DIGGING:
         case TV_GLOVES:
         {
@@ -3100,7 +3103,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (mode == WEAPONMASTER_FLURRY) num_blow *= 2;
     if (mode == WEAPONMASTER_CUNNING_STRIKE) num_blow = (num_blow + 1)/2;
 
-    if (o_ptr && o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+    if (o_ptr && o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
     {
         poison_needle = TRUE;
         num_blow = 1;

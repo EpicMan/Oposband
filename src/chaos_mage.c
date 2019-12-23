@@ -35,7 +35,7 @@ static void _birth(void)
 	mut_gain(MUT_CHAOS_GIFT);
 	mut_lock(MUT_CHAOS_GIFT);
 
-	py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+	py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
 	py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
 	py_birth_spellbooks();
 }

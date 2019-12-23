@@ -76,7 +76,8 @@ static bool _object_is_weapon(obj_ptr obj)
 {
     switch (obj->tval)
     {
-    case TV_DIGGING: case TV_HAFTED: case TV_POLEARM: case TV_SWORD:
+    case TV_DIGGING: case TV_HAFTED: case TV_POLEARM: case TV_SWORD: 
+    case TV_DAGGER: case TV_AXE: case TV_STAVES:
         return TRUE;
     }
     return FALSE;
@@ -84,13 +85,7 @@ static bool _object_is_weapon(obj_ptr obj)
 
 static bool _object_is_weapon_or_shield(obj_ptr obj)
 {
-    switch (obj->tval)
-    {
-    case TV_DIGGING: case TV_HAFTED: case TV_POLEARM: case TV_SWORD:
-    case TV_SHIELD:  case TV_CARD: case TV_CAPTURE:
-        return TRUE;
-    }
-    return FALSE;
+    return _object_is_weapon(obj) || obj->tval == TV_SHIELD || obj->tval == TV_CARD || obj->tval == TV_CAPTURE;
 }
 
 static bool _object_is_capture_ball(obj_ptr obj)

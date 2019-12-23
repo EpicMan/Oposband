@@ -394,7 +394,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr, int optio
 
     if (have_flag(flgs, OF_AGGRAVATE))
     {
-        if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI)) p = p * 5 / 6;
+        if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT)) p = p * 5 / 6;
         else p = p * 8 / 10;
         if (cost_calc_hook)
         {
@@ -1190,7 +1190,7 @@ s32b armor_cost(object_type *o_ptr, int options)
     p = _finalize_p(p, flgs, o_ptr, options);
 
     /* Sexy Swimsuits aren't worthless */
-    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI)) p = MAX(1, p);
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT)) p = MAX(1, p);
 
     return p;
 }
@@ -1214,7 +1214,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     char dbg_msg[512];
 
     /* Hacks for objects with "hidden" powers */
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
         return 2500;
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD)
         return 1;

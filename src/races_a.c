@@ -91,7 +91,7 @@ int android_obj_exp(object_type *o_ptr)
 
     value = _obj_value(o_ptr);
     if (value <= 0) return 0;
-    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI) && p_ptr->personality != PERS_SEXY
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT) && p_ptr->personality != PERS_SEXY
         && p_ptr->pclass != CLASS_POLITICIAN) value /= 32;
     if (value > 5000000) value = 5000000;
 

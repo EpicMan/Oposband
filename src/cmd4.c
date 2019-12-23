@@ -3833,7 +3833,7 @@ static cptr object_group_text[] =
     NULL
 };
 
-
+/*INVESTIGATE*/
 /*
  * TVALs of items in each group
  */
@@ -3862,8 +3862,11 @@ static byte object_group_tval[] =
     TV_SKELETON,
     TV_CORPSE, */
     TV_SWORD,
+    TV_DAGGER,
     TV_HAFTED,
+    TV_STAVES,
     TV_POLEARM,
+    TV_AXE,
     TV_DIGGING,
     TV_BOW,
     TV_SHOT,
@@ -4606,11 +4609,14 @@ static cptr _prof_weapon_heading(int tval)
 {
     switch (tval)
     {
-    case TV_SWORD: return "Swords";
+    case TV_SWORD: return "Long Blades";
     case TV_POLEARM: return "Polearms";
     case TV_HAFTED: return "Hafted";
     case TV_DIGGING: return "Diggers";
     case TV_BOW: return "Bows";
+    case TV_DAGGER: return "Short Blades";
+    case TV_STAVES: return "Staves";
+    case TV_AXE: return "Axes";
     }
     return "";
 }
@@ -4745,10 +4751,14 @@ static int _do_cmd_knowledge_weapon_exp_aux(int mode, int *huippu)
     for (i = 0; i < 3; i++)
         cols[i] = doc_alloc(26);
 
+    /* REWRITE */
     _prof_weapon_doc(cols[0], TV_SWORD, mode);
+    _prof_weapon_doc(cols[0], TV_DAGGER, mode);
     _prof_weapon_doc(cols[1], TV_POLEARM, mode);
+    _prof_weapon_doc(cols[1], TV_AXE, mode);
     _prof_weapon_doc(cols[1], TV_BOW, mode);
     _prof_weapon_doc(cols[2], TV_HAFTED, mode);
+    _prof_weapon_doc(cols[2], TV_STAVES, mode);
     _prof_weapon_doc(cols[2], TV_DIGGING, mode);
     _prof_skill_doc(cols[2], mode);
 

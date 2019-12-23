@@ -34,7 +34,7 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+    object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
     forge.name2 = EGO_WEAPON_DEATH;
     py_birth_obj(&forge);
 

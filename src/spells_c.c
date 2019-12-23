@@ -335,7 +335,7 @@ void crafting_spell(int cmd, variant *res)
             return;
         }
 
-        if ((object_is_(prompt.obj, TV_SWORD, SV_POISON_NEEDLE)) ||
+        if ((object_is_(prompt.obj, TV_DAGGER, SV_POISON_NEEDLE)) ||
             (object_is_(prompt.obj, TV_SWORD, SV_RUNESWORD)) ||
             (object_is_(prompt.obj, TV_POLEARM, SV_DEATH_SCYTHE)))
         {

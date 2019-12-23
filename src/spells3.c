@@ -1328,7 +1328,7 @@ static bool _can_brand_weapon(obj_ptr obj)
 {
     if (!object_is_melee_weapon(obj)) return FALSE;
     if (!object_is_nameless(obj)) return FALSE;
-    if (object_is_(obj, TV_SWORD, SV_POISON_NEEDLE)) return FALSE;
+    if (object_is_(obj, TV_DAGGER, SV_POISON_NEEDLE)) return FALSE;
     if (object_is_(obj, TV_SWORD, SV_RUNESWORD)) return FALSE;
     /* Hengband: if (object_is_(obj, TV_SWORD, SV_DIAMOND_EDGE)) return FALSE;*/
     if (have_flag(obj->flags, OF_NO_REMOVE)) return FALSE;
@@ -2283,7 +2283,7 @@ bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr)
         return FALSE;
 
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD) return FALSE;
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) return FALSE;
+    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE) return FALSE;
 
     return TRUE;
 }
@@ -3592,8 +3592,11 @@ bool hates_acid(object_type *o_ptr)
         case TV_BOLT:
         case TV_BOW:
         case TV_SWORD:
+        case TV_DAGGER:
         case TV_HAFTED:
+        case TV_STAVES:
         case TV_POLEARM:
+        case TV_AXE:
         case TV_HELM:
         case TV_CROWN:
         case TV_SHIELD:
@@ -3666,7 +3669,9 @@ bool hates_fire(object_type *o_ptr)
         case TV_ARROW:
         case TV_BOW:
         case TV_HAFTED:
+        case TV_STAVES:
         case TV_POLEARM:
+        case TV_AXE:
         case TV_BOOTS:
         case TV_GLOVES:
         case TV_CLOAK:

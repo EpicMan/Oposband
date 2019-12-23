@@ -304,7 +304,7 @@ int skills_weapon_max(int tval, int sval)
     }
 
     /* Edged weapons for priests. I never understood the restriction for evil priests! */
-    if (p_ptr->pclass == CLASS_PRIEST && (tval == TV_SWORD || tval == TV_POLEARM))
+    if (p_ptr->pclass == CLASS_PRIEST && tval != TV_HAFTED && tval != TV_STAVES)
     {
         if (priest_is_good())
             return WEAPON_EXP_BEGINNER;
@@ -312,7 +312,7 @@ int skills_weapon_max(int tval, int sval)
             return WEAPON_EXP_SKILLED;
     }
 
-    if (p_ptr->prace == RACE_TONBERRY && tval == TV_SWORD && sval == SV_SABRE)
+    if (p_ptr->prace == RACE_TONBERRY && tval == TV_DAGGER && sval == SV_SABRE)
         return WEAPON_EXP_MASTER;
 
     if (p_ptr->personality == PERS_SEXY && tval == TV_HAFTED && sval == SV_WHIP)

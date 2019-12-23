@@ -2261,12 +2261,12 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
     /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
       {  25,  20,  31,   1,  14,   2, 70, 25},
       {   9,   7,  10,   0,   0,   0, 30, 11},
-      { { TV_POLEARM, SV_HATCHET },
-        { TV_POLEARM, SV_BATTLE_AXE },
-        { TV_POLEARM, SV_BEAKED_AXE },
-        { TV_POLEARM, SV_BROAD_AXE },
-        { TV_POLEARM, SV_LOCHABER_AXE },
-        { TV_POLEARM, SV_GREAT_AXE },
+      { { TV_AXE, SV_HATCHET },
+        { TV_AXE, SV_BATTLE_AXE },
+        { TV_AXE, SV_BEAKED_AXE },
+        { TV_AXE, SV_BROAD_AXE },
+        { TV_AXE, SV_LOCHABER_AXE },
+        { TV_AXE, SV_GREAT_AXE },
         { 0, 0 },
       },
       { { 10,   0,  0, _power_attack_spell },
@@ -2277,7 +2277,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { 40,  25,  0, _vicious_strike_spell },
         { -1,   0,  0, NULL },
       },
-      { TV_POLEARM, SV_BROAD_AXE },
+      { TV_AXE, SV_BROAD_AXE },
     },
     { "Bows",
       "You will shoot to kill! The bowmaster gains techniques to enhance shooting, "
@@ -2383,16 +2383,16 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
     /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
       {  30,  29,  31,   5,  30,  20, 60, 66},
       {  12,   9,  10,   0,   0,   0, 18, 20},
-      { { TV_SWORD, SV_BASILLARD },
-        { TV_SWORD, SV_BROKEN_DAGGER },
-        { TV_SWORD, SV_DAGGER },
-        { TV_SWORD, SV_FALCON_SWORD },
-        { TV_SWORD, SV_MAIN_GAUCHE },
-        { TV_SWORD, SV_NINJATO },
-        { TV_SWORD, SV_RAPIER },
-        { TV_SWORD, SV_SABRE },
-        { TV_SWORD, SV_TANTO },
-        { TV_SWORD, SV_DRAGON_FANG },
+      { { TV_DAGGER, SV_BASILLARD },
+        { TV_DAGGER, SV_BROKEN_DAGGER },
+        { TV_DAGGER, SV_DAGGER },
+        { TV_DAGGER, SV_FALCON_SWORD },
+        { TV_DAGGER, SV_MAIN_GAUCHE },
+        { TV_DAGGER, SV_NINJATO },
+        { TV_DAGGER, SV_RAPIER },
+        { TV_DAGGER, SV_SABRE },
+        { TV_DAGGER, SV_TANTO },
+        { TV_DAGGER, SV_DRAGON_FANG },
         { 0, 0 },
       },
       {
@@ -2405,7 +2405,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { 45,   0,  0, _frenzy_spell },
         { -1,   0,  0, NULL },
       },
-      { TV_SWORD, SV_DAGGER },
+      { TV_DAGGER, SV_DAGGER },
     },
     { "Polearms",
       "You don a grim face before setting out to reap your harvest of death. You will swing "
@@ -2517,11 +2517,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       {  25,  24,  31,   2,  14,   4, 63, 25},
       {  10,   9,  10,   0,   0,   0, 26, 11},
       {
-        { TV_HAFTED, SV_BO_STAFF },
-        { TV_HAFTED, SV_JO_STAFF },
-        { TV_HAFTED, SV_QUARTERSTAFF },
-        { TV_HAFTED, SV_WIZSTAFF },
-        { TV_HAFTED, SV_THREE_PIECE_ROD },
+        { TV_STAVES, SV_BO_STAFF },
+        { TV_STAVES, SV_JO_STAFF },
+        { TV_STAVES, SV_QUARTERSTAFF },
+        { TV_STAVES, SV_WIZSTAFF },
+        { TV_STAVES, SV_THREE_PIECE_ROD },
         { 0, 0 },
       },
       {
@@ -2532,7 +2532,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { 45, 80, 0, _flurry_of_blows_spell },
         { -1,  0, 0, NULL },
       },
-      { TV_HAFTED, SV_QUARTERSTAFF },
+      { TV_STAVES, SV_QUARTERSTAFF },
     },
     { "Swords",
       "You will become a true swordmaster! Mastery of the blade will augment "
@@ -2774,7 +2774,7 @@ void _on_birth(void)
             py_birth_obj(&forge);
             break;
         }
-        object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+        object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
         py_birth_obj(&forge);
     }
 
@@ -2822,8 +2822,11 @@ void weaponmaster_adjust_skills(void)
     case _WEAPONMASTER_MELEE:
         _set_max_skill(TV_DIGGING, WEAPON_EXP_UNSKILLED);
         _set_max_skill(TV_HAFTED, WEAPON_EXP_UNSKILLED);
+        _set_max_skill(TV_STAVES, WEAPON_EXP_UNSKILLED);
         _set_max_skill(TV_POLEARM, WEAPON_EXP_UNSKILLED);
+        _set_max_skill(TV_AXE, WEAPON_EXP_UNSKILLED);
         _set_max_skill(TV_SWORD, WEAPON_EXP_UNSKILLED);
+        _set_max_skill(TV_DAGGER, WEAPON_EXP_UNSKILLED);
         break;
 
     case _WEAPONMASTER_BOWS:

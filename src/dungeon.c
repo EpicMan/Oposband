@@ -939,8 +939,11 @@ bool psychometry(void)
     case TV_BOW:
     case TV_DIGGING:
     case TV_HAFTED:
+    case TV_STAVES:
     case TV_POLEARM:
+    case TV_AXE:
     case TV_SWORD:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:

@@ -39,7 +39,7 @@ static void _fighter_birth(void)
 { 
     object_type forge;
     
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_RAPIER));
+    object_prep(&forge, lookup_kind(TV_DAGGER, SV_RAPIER));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));

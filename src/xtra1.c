@@ -4221,8 +4221,8 @@ void calc_bonuses(void)
             if (p_ptr->easy_2weapon)
                 pct += 100;
 
-            if ( lobj->tval == TV_SWORD
-              && (lobj->sval == SV_MAIN_GAUCHE || lobj->sval == SV_WAKIZASHI) )
+            if ((lobj->tval == TV_DAGGER && lobj->sval == SV_MAIN_GAUCHE) ||
+                (lobj->tval == TV_SWORD && lobj->sval == SV_WAKIZASHI))
             {
                 pct += 50;
             }
@@ -4234,6 +4234,12 @@ void calc_bonuses(void)
                 p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
 
             if (lobj->tval == TV_POLEARM && lobj->weight > 100)
+                p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
+
+            if (robj->tval == TV_AXE && robj->weight > 100)
+                p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
+
+            if (lobj->tval == TV_AXE && lobj->weight > 100)
                 p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
 
             if (robj->name1 == ART_MUSASI_KATANA && lobj->name1 == ART_MUSASI_WAKIZASI)
@@ -4516,8 +4522,8 @@ void calc_bonuses(void)
 
         if ( i % 2 == 1
           && p_ptr->weapon_info[i-1].wield_how != WIELD_NONE
-          && o_ptr->tval == TV_SWORD
-          && (o_ptr->sval == SV_MAIN_GAUCHE || o_ptr->sval == SV_WAKIZASHI) )
+          && ((o_ptr->tval == TV_SWORD && o_ptr->sval == SV_WAKIZASHI) || 
+            (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_MAIN_GAUCHE)))
         {
             p_ptr->to_a += 5;
             p_ptr->dis_to_a += 5;
@@ -4538,7 +4544,7 @@ void calc_bonuses(void)
             race_ptr->calc_weapon_bonuses(o_ptr, info_ptr);
 
         /* Hacks */
-        if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+        if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
             info_ptr->blows_calc.max = 100;
         if (arm > 0)
             info_ptr->blows_calc.max = MAX(100, info_ptr->blows_calc.max - 100);
@@ -4555,7 +4561,7 @@ void calc_bonuses(void)
 
             if (p_ptr->special_defense & KATA_FUUJIN) info_ptr->xtra_blow -= 100;
 
-            if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+            if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
             {
                 info_ptr->base_blow = 100;
                 info_ptr->xtra_blow = 0;

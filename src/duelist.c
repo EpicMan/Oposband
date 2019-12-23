@@ -18,7 +18,7 @@ cptr duelist_equip_error(void)
     if (p_ptr->weapon_ct > 1)
         return "Dual wielding is disrupting your talents.";
 
-    if (equip_find_obj(TV_SWORD, SV_POISON_NEEDLE))
+    if (equip_find_obj(TV_DAGGER, SV_POISON_NEEDLE))
         return "The Poison Needle is not an honorable dueling weapon.";
 
     if (p_ptr->anti_magic)
@@ -608,7 +608,7 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_RAPIER, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_RAPIER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }

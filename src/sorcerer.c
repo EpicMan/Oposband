@@ -22,13 +22,13 @@ static void _calc_bonuses(void)
 static bool _sorcerer_weapon_is_icky(object_type *o_ptr)
 {
     if (!object_is_weapon(o_ptr)) return FALSE;
-    if (object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
+    if (object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
     return TRUE;
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
-    if ( object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF)
+    if ( object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF)
       || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER) )
     {
         info_ptr->to_h -= 30;
@@ -69,7 +69,7 @@ static void _birth(void)
     for (i = 0; i < 64; i++)
         p_ptr->spell_exp[i] = SPELL_EXP_MASTER;
 
-    py_birth_obj_aux(TV_HAFTED, SV_WIZSTAFF, 1);
+    py_birth_obj_aux(TV_STAVES, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
 

@@ -276,6 +276,7 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b < WEAPON_EXP_UNSKILLED) tmp_s16b = WEAPON_EXP_UNSKILLED;
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
+    /* Max out player weapon proficiencies */
     for (j = 0; j <= TV_WEAPON_END - TV_WEAPON_BEGIN; j++)
     {
         for (i = 0;i < 64;i++)
@@ -375,6 +376,9 @@ static tval_desc tvals[] =
     { TV_SWORD,             "Sword"                },
     { TV_POLEARM,           "Polearm"              },
     { TV_HAFTED,            "Hafted Weapon"        },
+    { TV_DAGGER,            "Dagger"               },
+    { TV_AXE,               "Axe"                  },
+    { TV_STAVES,            "Staff Weapon"         },
     { TV_BOW,               "Bow"                  },
     { TV_ARROW,             "Arrows"               },
     { TV_BOLT,              "Bolts"                },

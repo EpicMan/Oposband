@@ -85,9 +85,9 @@ static bool _object_is_allowed(object_type *o_ptr, int flags)
 
     switch (o_ptr->tval)
     {
-    case TV_SWORD: return (flags & _ALLOW_SWORD) ? TRUE : FALSE;
-    case TV_POLEARM: return (flags & _ALLOW_POLEARM) ? TRUE : FALSE;
-    case TV_HAFTED: return (flags & _ALLOW_HAFTED) ? TRUE : FALSE;
+    case TV_DAGGER: case TV_SWORD: return (flags & _ALLOW_SWORD) ? TRUE : FALSE;
+    case TV_AXE: case TV_POLEARM: return (flags & _ALLOW_POLEARM) ? TRUE : FALSE;
+    case TV_STAVES: case TV_HAFTED: return (flags & _ALLOW_HAFTED) ? TRUE : FALSE;
     case TV_DIGGING: return (flags & _ALLOW_DIGGER) ? TRUE : FALSE;
     case TV_BOW: return (flags & _ALLOW_BOW) ? TRUE : FALSE;
     }
@@ -2532,7 +2532,7 @@ static void _character_dump(doc_ptr doc)
 static void _birth(void)
 {
     _clear_essences();
-    py_birth_obj_aux(TV_POLEARM, SV_BROAD_AXE, 1);
+    py_birth_obj_aux(TV_AXE, SV_BROAD_AXE, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(15, 25));

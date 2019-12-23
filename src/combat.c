@@ -722,7 +722,7 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     doc_printf(cols[0], " %-7.7s: %d.%d lbs\n", "Weight", o_ptr->weight/10, o_ptr->weight%10);
 
-    if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE)) /* special case */
+    if (object_is_(o_ptr, TV_DAGGER, SV_POISON_NEEDLE)) /* special case */
     {
         doc_insert(cols[0], " Blows  : 1.00\n");
         doc_insert(cols[0], " Damage : 1\n");

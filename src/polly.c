@@ -771,7 +771,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 
 static void _calc_bonuses(void)
 {
-    if ((!p_ptr->realm1) && (equip_find_obj(TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI))) p_ptr->uimapuku = TRUE;
+    if ((!p_ptr->realm1) && (equip_find_obj(TV_SOFT_ARMOR, SV_SWIMSUIT))) p_ptr->uimapuku = TRUE;
     if (p_ptr->realm1)
     {
         p_ptr->skills.stl = MIN(p_ptr->skills.stl, 1);
@@ -899,7 +899,7 @@ static void _save_player(savefile_ptr file)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_RAPIER, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_RAPIER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CURE_LIGHT, 3 + randint1(3));
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_PHASE_DOOR, 3 + randint1(3));
