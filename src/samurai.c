@@ -1825,6 +1825,17 @@ static void _birth(void)
 {
 	py_birth_obj_aux(TV_SWORD, SV_KATANA, 1);
 	py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
+
+	for (int i = PROF_BLUNT; i < PROF_DAGGER; i++)
+		p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER;
+
+	for (int i = PROF_BLUNT; i < PROF_DAGGER; i++)
+		p_ptr->proficiency_cap[i] = WEAPON_EXP_MASTER;
+
+	p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+	p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *samurai_get_class(void)

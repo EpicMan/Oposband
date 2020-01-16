@@ -2741,10 +2741,64 @@ void _on_birth(void)
     _object_kind kind;
     int i;
 
-    if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
+    for (i = 0; i <= PROF_MARTIAL_ARTS; i++)
     {
+        p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
+    }
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
+
+    switch (p_ptr->psubclass)
+    {
+    case WEAPONMASTER_AXES:
+        p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_BOWS:
+        p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_CLUBS:
+        p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_CROSSBOWS:
+        p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_DAGGERS:
+        p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_POLEARMS:
+        p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_SHIELDS:
+        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
         object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
         py_birth_obj(&forge);
+        break;
+    case WEAPONMASTER_SLINGS:
+        p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_STAVES:
+        p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_SWORDS:
+        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+        break;
+    case WEAPONMASTER_DIGGERS:
+        p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
+        break;
     }
 
     /* Give the player a starting weapon from this group */
@@ -2754,6 +2808,9 @@ void _on_birth(void)
 
     if (kind.tval == TV_BOW)
     {
+        p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+
         switch (kind.sval)
         {
         case SV_SLING:

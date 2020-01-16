@@ -1226,6 +1226,12 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_SKILLED;
 }
 
 class_t *rage_mage_get_class(void)

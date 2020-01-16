@@ -3007,5 +3007,8 @@ static void _birth_finalize(void)
     p_ptr->chp = p_ptr->mhp;
     p_ptr->csp = p_ptr->msp;
     process_player_name(FALSE);
+
+    /* New proficiency system - set proficiencies at birth, because why wouldn't you? */
+    
 }
 

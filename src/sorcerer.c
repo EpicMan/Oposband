@@ -78,6 +78,17 @@ static void _birth(void)
         if (i == TV_NECROMANCY_BOOK) continue;
         py_birth_obj_aux(i, 0, 1);
     }
+
+    for (i = PROF_DIGGER; i < PROF_RIDING; i++)
+    {
+        if (i == PROF_STAVE)
+        {
+            p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+            p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+        }
+        else
+            p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
+    }
 }
 
 class_t *sorcerer_get_class(void)
