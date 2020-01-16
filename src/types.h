@@ -1260,6 +1260,9 @@ struct player_type
     /* Staves (Quarterstaff and such / Staffmaster) and Blunts (non-stave hafted weapons) */
     /* Last but not least, bows, crossbows, and slings */
     s16b weapon_exp[5][64];   /* Proficiency of weapons */
+    /* New Proficiency code */
+    s16b proficiency[MAX_PROFICIENCIES];
+    s16b proficiency_cap[MAX_PROFICIENCIES];
     /*********************************************/
     s16b skill_exp[10];       /* Proficiency of misc. skill */
     s16b spells_per_round;    /* 175 = 1.75 spells per round, etc. Calculated in calc_bonuses(). Only works for book casters (do_cmd_cast) at the moment. */
@@ -1962,6 +1965,7 @@ typedef void(*stats_fn)(s16b stats[MAX_STATS]);
 typedef void(*load_fn)(savefile_ptr file);
 typedef void(*save_fn)(savefile_ptr file);
 typedef int(*birth_ui_fn)(doc_ptr doc);
+typedef void(*proficiency_fn)(void);
 
 typedef struct {
     int                     id;
@@ -2002,6 +2006,7 @@ typedef struct {
     obj_p                   destroy_object;
     obj_f                   get_object;
     inv_ptr                 bonus_pack;
+    proficiency_fn          set_proficiencies;
 } class_t, *class_ptr;
 
 struct equip_template_s;

@@ -1032,6 +1032,30 @@ void skills_on_birth(void)
         p_ptr->skill_exp[SKILL_RIDING] = RIDING_EXP_BEGINNER;
 
     str_map_clear(_innate_map());
+
+    /* New Proficiency Systen */
+
+    /* Start with weapon proficiency halfway to beginner */
+    for (int i = 0; i < MAX_PROFICIENCIES - 1; i++)
+    {
+        p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER / 2;
+    }
+    p_ptr->proficiency[PROF_RIDING] = WEAPON_EXP_UNSKILLED;
+
+    /* Profificency caps set to common values, class birth functions will alter as needed */
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_UNSKILLED;
 }
 
 /*************************************************************************

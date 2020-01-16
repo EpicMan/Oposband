@@ -115,6 +115,14 @@ static void _birth(void)
     py_birth_obj_aux(TV_SHOT, SV_PEBBLE, rand_range(20, 40));
     p_ptr->au += 2000;
     _ini_photo_list();
+
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    for (int i = PROF_DIGGER; i < PROF_RIDING; i++)
+        p_ptr->proficiency_cap[i] = WEAPON_EXP_MASTER;
+
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 int tourist_sell_photo_aux(object_type *o_ptr, int amount, bool merkitse)

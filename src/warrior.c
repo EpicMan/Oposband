@@ -37,6 +37,24 @@ static int _get_powers(spell_info* spells, int max)
 
 static void _birth(void)
 {
+    for (int i = PROF_DIGGER; i <= PROF_DAGGER; i++)
+    {
+        p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[i] = WEAPON_EXP_MASTER;
+
+    }
+    for (int i = PROF_BOW; i <= PROF_SLING; i++)
+    {
+        p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[i] = WEAPON_EXP_EXPERT;
+
+    }
+    
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_EXPERT;
+
+
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);

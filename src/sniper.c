@@ -6,6 +6,22 @@ static void _birth(void)
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_LIGHT_XBOW, 1);
     py_birth_obj_aux(TV_BOLT, SV_BOLT, rand_range(20, 30));
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    for (int i = PROF_DIGGER; i < PROF_DAGGER; i++)
+    {
+        p_ptr->proficiency_cap[i] = WEAPON_EXP_BEGINNER;
+    }
+
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_MASTER;
+
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
 }
 
 /************************************************************************

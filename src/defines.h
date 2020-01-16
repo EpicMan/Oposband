@@ -6147,3 +6147,19 @@ enum
 #define SMALL_LVL_MAX 12
 
 #define _SPELLS_PER_BOOK 8
+
+/* New Proficiency code */
+#define PROF_DIGGER         0
+#define PROF_BLUNT          1
+#define PROF_POLEARM        2
+#define PROF_SWORD          3
+#define PROF_STAVE          4
+#define PROF_AXE            5
+#define PROF_DAGGER         6
+#define PROF_BOW            7
+#define PROF_CROSSBOW       8
+#define PROF_SLING          9
+#define PROF_MARTIAL_ARTS   10
+#define PROF_DUAL_WIELDING  11
+#define PROF_RIDING         12
+#define MAX_PROFICIENCIES   13
