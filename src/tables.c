@@ -3024,3 +3024,21 @@ byte feature_action_flags[FF_FLAG_MAX] =
     0, /* WEB */
     0, /* SEMI_PUN */
 };
+
+cptr PROFICIENCIES[MAX_PROFICIENCIES] =
+{
+    "Digging Tools",
+    "Hafted Weapons",
+    "Polearms",
+    "Swords",
+    "Staves",
+    "Axes",
+    "Daggers",
+    "Bows",
+    "Crossbows",
+    "Slings",
+    "Martial Arts",
+    "Dual Wielding",
+    "Riding",
+    "Innate Attacks"
+};

@@ -851,6 +851,14 @@ race_t *tomte_get_race(void)
 /****************************************************************
  * Tonberry
  ****************************************************************/
+static void _tonberry_birth(void)
+{
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+
+    py_birth_food();
+    py_birth_light();
+}
 static void _tonberry_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
@@ -929,6 +937,7 @@ race_t *tonberry_get_race(void)
         me.infra = 2;
         me.shop_adjust = 115;
 
+        me.birth = _tonberry_birth;
         me.calc_bonuses = _tonberry_calc_bonuses;
         me.get_flags = _tonberry_get_flags;
         init = TRUE;

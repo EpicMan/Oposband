@@ -1,5 +1,8 @@
 0.2.0
 -Split the three types of weapons (hafted, polearms, swords) into six: hafted, stave, polearms, axes, swords, daggers+stabby weapons, adding three new weapon TVALS.
+-Replaced weapon / skill proficiency system with new system where proficiency is by weapon class (TVAL; weaponmaster choices) instead of individual weapon types.
+-NOTE: May need to revisit the max proficiency / monster level thresholds. In any case playtesting is needed to check proficiency growth rates
+Question: Should whips be moved to tools (diggers, etc)?
 
 0.1.X
 -Forked from FrogComposband 7.1.Chocolate

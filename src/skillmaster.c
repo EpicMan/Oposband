@@ -448,9 +448,9 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     info_ptr->dis_to_d += info.to_d;
 }
 
-int skillmaster_weapon_prof(int tval)
+int skillmaster_weapon_prof(int prof)
 {
-    int pts = _get_skill_pts(_TYPE_MELEE, tval);
+    int pts = _get_skill_pts(_TYPE_MELEE, prof + TV_WEAPON_BEGIN);
     assert(0 <= pts && pts <= 5);
     return _melee_info[pts].prof;
 }

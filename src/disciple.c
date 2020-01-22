@@ -21,9 +21,18 @@ void disciple_birth(void)
     /* Disciple proficiencies */
     p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
 
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
     p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
     p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
     p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
     p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 

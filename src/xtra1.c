@@ -4764,7 +4764,7 @@ void calc_bonuses(void)
             else if (p_ptr->prace == RACE_MON_ARMOR) {} /* no bonus */
             else
             {
-                int bonus = skills_weapon_calc_bonus(obj->tval, obj->sval);
+                int bonus = skills_weapon_calc_bonus(tsvals_to_proficiency(obj->tval, obj->sval));
                 p_ptr->weapon_info[i].to_h += bonus;
                 p_ptr->weapon_info[i].dis_to_h += bonus;
                 if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)

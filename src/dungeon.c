@@ -5523,11 +5523,6 @@ void play_game(bool new_game)
     now_turn = game_turn;
     start_time = time(NULL);
 
-    /* TODO: py_skills_init() or some such ... w_max needs to be reset each time you play, 
-     * not just on player birth */
-    if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
-        weaponmaster_adjust_skills();
-
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
 
@@ -5678,6 +5673,20 @@ void play_game(bool new_game)
             py_birth_food();
             py_birth_light();
         }
+
+        /* TODO Where should this go? */
+        if (p_ptr->pclass == CLASS_MONSTER)
+        {
+            monster_proficiencies();
+        }
+
+        /* TODO Hack: This should be put in personality birth but can't until we can move it after the race/class birth functions for weapon proficiencies */
+        if (p_ptr->personality == PERS_SEXY)
+        {
+            p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+            p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+        }
+
         if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) py_birth_obj_aux(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL, 1);
         if (thrall_mode)
         {

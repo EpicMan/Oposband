@@ -3,8 +3,6 @@
 #include <assert.h>
 #include "str-map.h"
 
-skill_table *s_info;
-
 static int _class_idx(void)
 {
     int result = p_ptr->pclass;
@@ -128,8 +126,10 @@ int skills_bow_current(int sval)
         return skillmaster_bow_prof();
     else
     {
-        int max = skills_bow_max(sval);
-        int cur = p_ptr->weapon_exp[0][sval];
+        int prof = tsvals_to_proficiency(TV_BOW, sval);
+
+        int max = p_ptr->proficiency_cap[prof];
+        int cur = p_ptr->proficiency_cap[prof];
 
         if (cur > max)
             cur = max;
@@ -143,13 +143,11 @@ int skills_bow_max(int sval)
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
-    if (demigod_is_(DEMIGOD_ARTEMIS))
-        return WEAPON_EXP_MASTER;
-
     if (p_ptr->pclass == CLASS_SKILLMASTER)
         return skillmaster_bow_prof();
 
-    return s_info[_class_idx()].w_max[0][sval];
+    int prof = tsvals_to_proficiency(TV_BOW, sval);
+    return p_ptr->proficiency_cap[prof];
 }
 
 static int _bow_calc_bonus_aux(int sval, int skill)
@@ -177,76 +175,19 @@ int skills_bow_calc_bonus(int sval)
 static int _weapon_min_rlvl(int plvl);
 static int _weapon_max_skill(int rlvl);
 static int _weapon_gain_amt(int skill);
-void skills_bow_gain(int sval, int rlvl)
-{
-    int max = skills_bow_max(sval);
-    int cur = p_ptr->weapon_exp[0][sval];
 
-    if (p_ptr->pclass == CLASS_SKILLMASTER) return;
-    if (cur < max)
-    {
-        int step;
-        int add;
-
-        if (rlvl < _weapon_min_rlvl(p_ptr->lev))
-        {
-            if (p_ptr->wizard)
-                msg_format("<color:B>You must shoot level <color:R>%d</color> monsters to gain bow proficiency.</color>", _weapon_min_rlvl(p_ptr->lev));
-            return;
-        }
-        if (cur >= _weapon_max_skill(rlvl))
-        {
-            if (p_ptr->wizard)
-            {
-                msg_format("<color:B>Against level <color:R>%d</color> foes, you can only train bow "
-                    "proficiency to <color:R>%d</color> (Current Skill: <color:R>%d</color>).</color>",
-                    rlvl, _weapon_max_skill(rlvl), cur);
-            }
-            return;
-        }
-
-        step = _weapon_gain_amt(cur);
-        add = step / 10;
-        if (step%10 && randint0(10) < step%10) add++;
-
-        if (add > 0)
-        {
-            int old_bonus = _bow_calc_bonus_aux(sval, cur);
-            int new_bonus;
-            cur += add;
-            if (cur > max)
-                cur = max;
-            new_bonus = _bow_calc_bonus_aux(sval, cur);
-            p_ptr->weapon_exp[0][sval] = cur;
-            if (old_bonus != new_bonus)
-            {
-                int k_idx = lookup_kind(TV_BOW, sval);
-                char buf[MAX_NLEN];
-                strip_name(buf, k_idx);
-                msg_format("<color:B>Your <color:R>%s</color> skills are improving.</color>", buf);
-                p_ptr->update |= PU_BONUS;
-            }
-        }
-    }
-}
-
-int skills_weapon_current(int tval, int sval)
+int skills_weapon_current(int prof)
 {
     int max;
     int cur;
 
     if (p_ptr->prace == RACE_MON_ARMOR) return WEAPON_EXP_BEGINNER; /* Skills? What skills? */
 
-    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
-
-    if (tval == TV_BOW)
-        return skills_bow_current(sval);
-
     if (p_ptr->pclass == CLASS_SKILLMASTER)
-        return skillmaster_weapon_prof(tval);
+        return skillmaster_weapon_prof(prof);
 
-    max = skills_weapon_max(tval, sval);
-    cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
+    cur = p_ptr->proficiency[prof];
+    max = p_ptr->proficiency_cap[prof];
 
     if (cur > max)
         cur = max;
@@ -254,74 +195,20 @@ int skills_weapon_current(int tval, int sval)
     return cur;
 }
 
-void skills_weapon_init(int tval, int sval, int skill)
+int skills_weapon_max(int prof)
 {
-    int max, cur;
-
-    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
-    assert(tval != TV_BOW);
-    /* XXX Poseidon Demigod!
-     * assert(p_ptr->pclass != CLASS_SKILLMASTER); */
-
-    max = skills_weapon_max(tval, sval);
-    cur = MIN(skill, max);
-
-    p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval] = cur;
-}
-
-int skills_weapon_max(int tval, int sval)
-{
-    if ((p_ptr->prace == RACE_MON_ARMOR) && (tval == TV_GLOVES)) return WEAPON_EXP_BEGINNER; /* Skills? What skills? */
-
-    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
-
-    if (tval == TV_BOW)
-        return skills_bow_max(sval);
-
-    if (p_ptr->pclass == CLASS_SKILLMASTER)
-        return skillmaster_weapon_prof(tval);
+    if ((p_ptr->prace == RACE_MON_ARMOR) && (prof == PROF_MARTIAL_ARTS)) return WEAPON_EXP_BEGINNER; /* Skills? What skills? */
 
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
-    /* TODO: Add a class_t callback to override the skill tables ... */
+    if (p_ptr->pclass == CLASS_SKILLMASTER)
+        return skillmaster_weapon_prof(prof);
 
-    /* Dragon Warlocks are Dragon Riders! */
-    if ( warlock_is_(WARLOCK_DRAGONS)
-      && tval == TV_POLEARM
-      && (sval == SV_LANCE || sval == SV_HEAVY_LANCE) )
-    {
-        return WEAPON_EXP_MASTER;
-    }
-
-    if (warlock_is_(WARLOCK_GIANTS) && tval != TV_BOW)
-    {
-        int k_idx = lookup_kind(tval, sval);
-        if (k_info[k_idx].weight >= 200)
-            return WEAPON_EXP_MASTER;
-        if (k_info[k_idx].weight <= 100)
-            return WEAPON_EXP_BEGINNER;
-    }
-
-    /* Edged weapons for priests. I never understood the restriction for evil priests! */
-    if (p_ptr->pclass == CLASS_PRIEST && tval != TV_HAFTED && tval != TV_STAVES)
-    {
-        if (priest_is_good())
-            return WEAPON_EXP_BEGINNER;
-        else if (priest_is_evil())
-            return WEAPON_EXP_SKILLED;
-    }
-
-    if (p_ptr->prace == RACE_TONBERRY && tval == TV_DAGGER && sval == SV_SABRE)
+    if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
-    if (p_ptr->personality == PERS_SEXY && tval == TV_HAFTED && sval == SV_WHIP)
-        return WEAPON_EXP_MASTER;
-
-    if (demigod_is_(DEMIGOD_POSEIDON) && tval == TV_POLEARM && sval == SV_TRIDENT)
-        return WEAPON_EXP_MASTER;
-
-    return s_info[_class_idx()].w_max[tval-TV_WEAPON_BEGIN][sval];
+    return p_ptr->proficiency_cap[prof];
 }
 
 /* Weapons: Gaining Proficiency
@@ -335,9 +222,9 @@ static int _weapon_calc_bonus_aux(int skill)
     return bonus;
 }
 
-int skills_weapon_calc_bonus(int tval, int sval)
+int skills_weapon_calc_bonus(int prof)
 {
-    int current = skills_weapon_current(tval, sval);
+    int current = p_ptr->proficiency[prof];
     return _weapon_calc_bonus_aux(current);
 }
 
@@ -363,20 +250,17 @@ static int _weapon_min_rlvl(int plvl)
     return interpolate(plvl, tbl, 6);
 }
 
-void skills_weapon_gain(int tval, int sval, int rlvl)
+void skills_weapon_gain(int proficiency, int rlvl)
 {
     int max;
     int cur;
 
     if (p_ptr->prace == RACE_MON_ARMOR) return; /* No skill gain for you */
-    
-    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
-    assert(tval != TV_BOW);
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    max = skills_weapon_max(tval, sval);
-    cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
+    max = p_ptr->proficiency_cap[proficiency];
+    cur = p_ptr->proficiency[proficiency];
 
     if (cur < max)
     {
@@ -412,13 +296,10 @@ void skills_weapon_gain(int tval, int sval, int rlvl)
             if (cur > max)
                 cur = max;
             new_bonus = _weapon_calc_bonus_aux(cur);
-            p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval] = cur;
+            p_ptr->proficiency[proficiency] = cur;
             if (old_bonus != new_bonus)
             {
-                int k_idx = lookup_kind(tval, sval);
-                char buf[MAX_NLEN];
-                strip_name(buf, k_idx);
-                msg_format("<color:B>Your <color:R>%s</color> skills are improving.</color>", buf);
+                msg_format("<color:B>Your <color:R>%s</color> skills are improving.</color>", PROFICIENCIES[proficiency]);
                 p_ptr->update |= PU_BONUS;
             }
         }
@@ -439,14 +320,14 @@ bool skills_weapon_is_icky(int tval, int sval)
     case CLASS_MONK:
     case CLASS_MYSTIC:
     case CLASS_FORCETRAINER:
-        if (s_info[p_ptr->pclass].w_max[tval-TV_WEAPON_BEGIN][sval] == WEAPON_EXP_UNSKILLED)
+        if (p_ptr->proficiency_cap[tsvals_to_proficiency(tval, sval)] == WEAPON_EXP_UNSKILLED) 
             result = TRUE;
         break;
 
     case CLASS_NINJA:
     case CLASS_NINJA_LAWYER:
     case CLASS_DUELIST:
-        if (s_info[p_ptr->pclass].w_max[tval-TV_WEAPON_BEGIN][sval] <= WEAPON_EXP_BEGINNER)
+        if (p_ptr->proficiency_cap[tsvals_to_proficiency(tval, sval)] == WEAPON_EXP_BEGINNER)
             result = TRUE;
         break;
     case CLASS_SKILLMASTER:
@@ -481,11 +362,11 @@ static cptr _weapon_describe_aux(int skill, int max)
     return desc;
 }
 
-cptr skills_weapon_describe_current(int tval, int sval)
+cptr skills_weapon_describe_current(int prof)
 {
     return _weapon_describe_aux(
-        skills_weapon_current(tval, sval),
-        skills_weapon_max(tval, sval));
+        skills_weapon_current(prof),
+        skills_weapon_max(prof));
 }
 
 cptr skills_bow_describe_current(int sval)
@@ -504,41 +385,16 @@ static cptr skills_shield_calc_name(int sval)
     return buf;
 }
 
-int skills_shield_current(int sval)
-{
-    return skills_innate_current(
-        skills_shield_calc_name(sval));
-}
-
-void skills_shield_init(int sval, int current, int max)
-{
-    skills_innate_init(
-        skills_shield_calc_name(sval), current, max);
-}
-
-int skills_shield_max(int sval)
-{
-    return skills_innate_max(
-        skills_shield_calc_name(sval));
-}
-
-void skills_shield_gain(int sval, int rlvl)
-{
-    skills_innate_gain(
-        skills_shield_calc_name(sval), rlvl);
-}
-
 int skills_shield_calc_bonus(int sval)
 {
-    return _weapon_calc_bonus_aux(
-        skills_shield_current(sval));
+    return _weapon_calc_bonus_aux(p_ptr->proficiency[PROF_INNATE_ATTACKS]);
 }
 
 cptr skills_shield_describe_current(int sval)
 {
     return _weapon_describe_aux(
-        skills_shield_current(sval),
-        skills_shield_max(sval));
+        skills_weapon_current(PROF_INNATE_ATTACKS),
+        skills_weapon_max(PROF_INNATE_ATTACKS));
 }
 
 void skills_martial_arts_gain(void)
@@ -548,8 +404,8 @@ void skills_martial_arts_gain(void)
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    current = p_ptr->skill_exp[SKILL_MARTIAL_ARTS];
-    max = s_info[_class_idx()].s_max[SKILL_MARTIAL_ARTS];
+    current = p_ptr->proficiency[PROF_MARTIAL_ARTS];
+    max = p_ptr->proficiency_cap[PROF_MARTIAL_ARTS];
 
     if (current < max)
     {
@@ -573,8 +429,8 @@ int skills_martial_arts_current(void)
         return skillmaster_martial_arts_prof();
     else
     {
-        int current = p_ptr->skill_exp[SKILL_MARTIAL_ARTS];
-        int max = s_info[_class_idx()].s_max[SKILL_MARTIAL_ARTS];
+        int current = p_ptr->proficiency[PROF_MARTIAL_ARTS];
+        int max = p_ptr->proficiency_cap[PROF_MARTIAL_ARTS];
         return MIN(current, max);
     }
 }
@@ -583,7 +439,8 @@ int skills_martial_arts_max(void)
 {
     if (p_ptr->pclass == CLASS_SKILLMASTER)
         return skillmaster_martial_arts_prof();
-    return s_info[_class_idx()].s_max[SKILL_MARTIAL_ARTS];
+
+    return p_ptr->proficiency_cap[PROF_MARTIAL_ARTS];
 }
 
 void skills_dual_wielding_gain(monster_race *r_ptr)
@@ -628,8 +485,8 @@ int skills_dual_wielding_max(void)
 {
     if (p_ptr->pclass == CLASS_SKILLMASTER)
         return skillmaster_dual_wielding_prof();
-    if (disciple_is_(DISCIPLE_TROIKA)) return WEAPON_EXP_MASTER;
-    return s_info[_class_idx()].s_max[SKILL_DUAL_WIELDING];
+
+    return p_ptr->proficiency_cap[PROF_DUAL_WIELDING];
 }
 
 static void _skills_riding_gain(int inc)
@@ -764,11 +621,9 @@ int skills_riding_current(void)
 
 int skills_riding_max(void)
 {
-    if (warlock_is_(WARLOCK_DRAGONS))
-        return RIDING_EXP_MASTER;
     if (p_ptr->pclass == CLASS_SKILLMASTER)
         return skillmaster_riding_prof();
-    return s_info[_class_idx()].s_max[SKILL_RIDING];
+    return p_ptr->proficiency_cap[PROF_RIDING];
 }
 
 /* Innate Attacks
@@ -958,29 +813,6 @@ cptr skills_innate_describe_current(cptr name)
     return desc;
 }
 
-void skills_on_load(savefile_ptr file)
-{
-    str_map_ptr map = _innate_map();
-    int         ct, i;
-
-    str_map_clear(map);
-    ct = savefile_read_s32b(file);
-
-    for (i = 0; i < ct; i++)
-    {
-        char            name[255];
-        _skill_info_ptr info = malloc(sizeof(_skill_info_t));
-
-        savefile_read_cptr(file, name, sizeof(name));
-        info->current = savefile_read_s32b(file);
-        info->max = savefile_read_s32b(file);
-
-        str_map_add(map, name, info);
-    }
-
-    /* TODO: Spell Skills for Bookless Casters */
-    ct = savefile_read_s32b(file);
-}
 
 void skills_on_save(savefile_ptr file)
 {
@@ -1008,54 +840,17 @@ void skills_on_save(savefile_ptr file)
 
 void skills_on_birth(void)
 {
-    int i, j;
-    int class_idx = _class_idx();
-    for (i = 0; i < 5; i++)
-    {
-        for (j = 0; j < 64; j++)
-        {
-            if (i == TV_BOW-TV_WEAPON_BEGIN && demigod_is_(DEMIGOD_ARTEMIS))
-                p_ptr->weapon_exp[i][j] = WEAPON_EXP_BEGINNER;
-            else if (demigod_is_(DEMIGOD_ARES))
-                p_ptr->weapon_exp[i][j] = WEAPON_EXP_BEGINNER;
-            else
-                p_ptr->weapon_exp[i][j] = s_info[class_idx].w_start[i][j];
-            if (p_ptr->weapon_exp[i][j] == 0) p_ptr->weapon_exp[i][j] = MIN(WEAPON_EXP_BEGINNER / 2, s_info[class_idx].w_max[i][j]);
-        }
-    }
-    if (p_ptr->personality == PERS_SEXY)
-        p_ptr->weapon_exp[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = MAX(WEAPON_EXP_BEGINNER, p_ptr->weapon_exp[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP]);
-    for (i = 0; i < 10; i++)
-        p_ptr->skill_exp[i] = s_info[class_idx].s_start[i];
-
-    if (warlock_is_(WARLOCK_DRAGONS))
-        p_ptr->skill_exp[SKILL_RIDING] = RIDING_EXP_BEGINNER;
-
-    str_map_clear(_innate_map());
-
-    /* New Proficiency Systen */
-
     /* Start with weapon proficiency halfway to beginner */
-    for (int i = 0; i < MAX_PROFICIENCIES - 1; i++)
+    for (int i = 0; i < MAX_PROFICIENCIES - 2; i++)
     {
         p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER / 2;
     }
-    p_ptr->proficiency[PROF_RIDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 
-    /* Profificency caps set to common values, class birth functions will alter as needed */
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_UNSKILLED;
+    /* Everyone starts unskilled with innate attacks, but can become an expert since they are innate. */
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = WEAPON_EXP_BEGINNER / 2;
+    p_ptr->proficiency_cap[PROF_INNATE_ATTACKS] = WEAPON_EXP_EXPERT;
+
 }
 
 /*************************************************************************
@@ -1220,3 +1015,73 @@ void skills_desc_aux(skills_t *base, skills_t *xtra, skills_desc_t *skills)
     strcpy(skills->thb, _thb_skill_desc(base->thb, xtra->thb));
 }
 
+/* Default monster weapon / skill proficiencies */
+void monster_proficiencies(void)
+{
+    p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_INNATE_ATTACKS] = WEAPON_EXP_MASTER;
+}
+
+int tsvals_to_proficiency(int tval, int sval)
+{
+    int prof = PROF_INNATE_ATTACKS;
+    switch (tval)
+    {
+    case TV_BOW:
+        prof = PROF_CROSSBOW;
+        switch (sval)
+        {
+        case SV_SHORT_BOW:
+        case SV_LONG_BOW:
+        case SV_NAMAKE_BOW:
+            prof = PROF_BOW;
+            break;
+        case SV_SLING:
+            prof = PROF_SLING;
+        }
+        break;
+
+    case TV_HAFTED:
+        prof = PROF_BLUNT;
+        break;
+    case TV_POLEARM:
+        prof = PROF_POLEARM;
+        break;
+    case TV_SWORD:
+        prof = PROF_SWORD;
+        break;
+    case TV_STAVES:
+        prof = PROF_STAVE;
+        break;
+    case TV_AXE:
+        prof = PROF_AXE;
+        break;
+    case TV_DAGGER:
+        prof = PROF_DAGGER;
+        break;
+    }
+
+    return prof;
+}

@@ -277,21 +277,8 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
     /* Max out player weapon proficiencies */
-    for (j = 0; j <= TV_WEAPON_END - TV_WEAPON_BEGIN; j++)
-    {
-        for (i = 0;i < 64;i++)
-        {
-            int max = skills_weapon_max(TV_WEAPON_BEGIN + j, i);
-            p_ptr->weapon_exp[j][i] = tmp_s16b;
-            if (p_ptr->weapon_exp[j][i] > max) p_ptr->weapon_exp[j][i] = max;
-        }
-    }
-
-    for (j = 0; j < 10; j++)
-    {
-        p_ptr->skill_exp[j] = tmp_s16b;
-        if (p_ptr->skill_exp[j] > s_info[p_ptr->pclass].s_max[j]) p_ptr->skill_exp[j] = s_info[p_ptr->pclass].s_max[j];
-    }
+    for (j = PROF_DIGGER; j < MAX_PROFICIENCIES; j++)
+        p_ptr->proficiency[j] = p_ptr->proficiency_cap[j];
 
     /* Hack for WARLOCK_DRAGONS. Of course, reading skill tables directly is forbidden, so this code is inherently wrong! */
     p_ptr->skill_exp[SKILL_RIDING] = MIN(skills_riding_max(), tmp_s16b);

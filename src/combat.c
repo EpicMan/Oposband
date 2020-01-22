@@ -734,21 +734,23 @@ void display_weapon_info(doc_ptr doc, int hand)
         return;
     }
 
+    int proficiency = tsvals_to_proficiency(o_ptr->tval, o_ptr->sval);
+
     if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH)
     {
         assert(o_ptr->tval == TV_SHIELD);
         doc_printf(cols[0], " %-7.7s: %dd%d (%+d,%+d)\n", "Bash", dd, ds, to_h, to_d);
         doc_printf(cols[0], " %-7.7s: %s (%+d To Hit)\n",
                     "Profic",
-                    skills_shield_describe_current(o_ptr->sval),
-                    skills_shield_calc_bonus(o_ptr->sval));
+            skills_weapon_describe_current(proficiency),
+            skills_weapon_calc_bonus(proficiency));
     }
     else
     {
         doc_printf(cols[0], " %-7.7s: %s (%+d To Hit)\n",
                     "Profic",
-                    skills_weapon_describe_current(o_ptr->tval, o_ptr->sval),
-                    skills_weapon_calc_bonus(o_ptr->tval, o_ptr->sval));
+                    skills_weapon_describe_current(proficiency),
+                    skills_weapon_calc_bonus(proficiency));
     }
     doc_printf(cols[0], " %-7.7s: %d + %d = %d\n", "To Hit", to_h, p_ptr->weapon_info[hand].to_h, to_h + p_ptr->weapon_info[hand].to_h);
     doc_printf(cols[0], " %-7.7s: %d + %d = %d\n", "To Dam", to_d, p_ptr->weapon_info[hand].to_d, to_d + p_ptr->weapon_info[hand].to_d);

@@ -17,8 +17,8 @@
 
 
 #define VER_MAJOR 0
-#define VER_MINOR 1
-#define VER_PATCH 2
+#define VER_MINOR 2
+#define VER_PATCH 0
 #define VER_EXTRA 0
 #define VERSION_IS_DEVELOPMENT (FALSE)
 
@@ -6162,4 +6162,5 @@ enum
 #define PROF_MARTIAL_ARTS   10
 #define PROF_DUAL_WIELDING  11
 #define PROF_RIDING         12
-#define MAX_PROFICIENCIES   13
+#define PROF_INNATE_ATTACKS 13
+#define MAX_PROFICIENCIES   14

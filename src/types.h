@@ -1259,7 +1259,6 @@ struct player_type
     /* Axes (Axemaster polearms) and Polearms (Non-axe polearms) */
     /* Staves (Quarterstaff and such / Staffmaster) and Blunts (non-stave hafted weapons) */
     /* Last but not least, bows, crossbows, and slings */
-    s16b weapon_exp[5][64];   /* Proficiency of weapons */
     /* New Proficiency code */
     s16b proficiency[MAX_PROFICIENCIES];
     s16b proficiency_cap[MAX_PROFICIENCIES];

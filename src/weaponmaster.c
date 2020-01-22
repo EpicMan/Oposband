@@ -2739,12 +2739,18 @@ void _on_birth(void)
 {
     object_type forge;
     _object_kind kind;
-    int i;
 
-    for (i = 0; i <= PROF_MARTIAL_ARTS; i++)
-    {
-        p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
-    }
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
     p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
     p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 
@@ -2775,6 +2781,11 @@ void _on_birth(void)
         p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
         break;
     case WEAPONMASTER_SHIELDS:
+        /* Shield bash is treated as an innate attack */
+        p_ptr->proficiency[PROF_INNATE_ATTACKS] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_INNATE_ATTACKS] = WEAPON_EXP_MASTER;
+        
+        /*Fight weapon + shield without penalty */
         p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
         p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
         p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
@@ -2834,85 +2845,8 @@ void _on_birth(void)
         object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
         py_birth_obj(&forge);
     }
-
-    for (i = 0; i < _MAX_OBJECTS_PER_SPECIALITY; i++)
-    {
-        kind = _specialities[p_ptr->psubclass].objects[i];
-        if (kind.tval == 0) break;
-
-        if (kind.tval != TV_SHIELD)
-            p_ptr->weapon_exp[kind.tval-TV_WEAPON_BEGIN][kind.sval] = WEAPON_EXP_BEGINNER;
-    }
-
-    if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
-    {
-        skills_shield_init(SV_SMALL_LEATHER_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_SMALL_METAL_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_LARGE_LEATHER_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_LARGE_METAL_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_MITHRIL_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_MIRROR_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_DRAGON_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-        skills_shield_init(SV_KNIGHT_SHIELD, WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    }
-    weaponmaster_adjust_skills();
-
+    
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_JACK, 1);
-}
-
-static void _set_max_skill(int tval, int skill)
-{
-    int j;
-    for (j = 0; j < 64; j++)
-        s_info[p_ptr->pclass].w_max[tval - TV_WEAPON_BEGIN][j] = skill;
-}
-
-void weaponmaster_adjust_skills(void)
-{
-    int i, j;
-    _object_kind kind;
-
-    /* Fix up skills for Speciality. This needs to be called every time the game is loaded! */
-    /* Bang everything in class (melee, bows, shields) down to unskilled max */
-    switch (_specialities[p_ptr->psubclass].kind)
-    {
-    case _WEAPONMASTER_MELEE:
-        _set_max_skill(TV_DIGGING, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_HAFTED, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_STAVES, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_POLEARM, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_AXE, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_SWORD, WEAPON_EXP_UNSKILLED);
-        _set_max_skill(TV_DAGGER, WEAPON_EXP_UNSKILLED);
-        break;
-
-    case _WEAPONMASTER_BOWS:
-        _set_max_skill(TV_BOW, WEAPON_EXP_UNSKILLED);
-        break;
-
-    case _WEAPONMASTER_SHIELDS:
-        /* This only needs to be done once, in _birth. */
-        break;
-    }
-
-    /* Now make favored weapons "masterable" */
-    for (i = 0; i < _MAX_OBJECTS_PER_SPECIALITY; i++)
-    {
-        kind = _specialities[p_ptr->psubclass].objects[i];
-        if (kind.tval == 0 || kind.tval == TV_SHIELD) break;
-
-        s_info[p_ptr->pclass].w_max[kind.tval-TV_WEAPON_BEGIN][kind.sval] = WEAPON_EXP_MASTER;
-    }
-
-    /* Patch up current skills since we keep changing the allowed maximums */
-    for (i = 0; i < 5; i++)
-    {
-        for (j = 0; j < 64; j++)
-        {
-            if (p_ptr->weapon_exp[i][j] > s_info[p_ptr->pclass].w_max[i][j])
-                p_ptr->weapon_exp[i][j] = s_info[p_ptr->pclass].w_max[i][j];
-        }
-    }
 }
 
 static int _max_pval(void)

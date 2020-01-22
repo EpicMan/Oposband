@@ -3400,7 +3400,8 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_HONOUR, -1);
                 }
 
-                skills_bow_gain(bow->sval, r_ptr->level);
+                int proficiency_type = tsvals_to_proficiency(bow->tval, bow->sval);
+                skills_weapon_gain(proficiency_type, r_ptr->level);
                 if (p_ptr->riding)
                     skills_riding_gain_archery(r_ptr);
 

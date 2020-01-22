@@ -3051,9 +3051,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (o_ptr)
     {
         if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH && o_ptr->tval == TV_SHIELD)
-            skills_shield_gain(o_ptr->sval, r_ptr->level);
+            skills_weapon_gain(PROF_INNATE_ATTACKS, r_ptr->level);
         else if (!bird_recoil)
-            skills_weapon_gain(o_ptr->tval, o_ptr->sval, r_ptr->level);
+            skills_weapon_gain(tsvals_to_proficiency(o_ptr->tval, o_ptr->sval), r_ptr->level);
     }
     else
     {

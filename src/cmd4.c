@@ -4623,23 +4623,23 @@ static cptr _prof_weapon_heading(int tval)
 
 static void _prof_weapon_doc(doc_ptr doc, int tval, int mode)
 {
-    vec_ptr v = _prof_weapon_alloc(tval);
     int     i;
 
     doc_insert_text(doc, TERM_RED, _prof_weapon_heading(tval));
     doc_newline(doc);
 
-    for (i = 0; i < vec_length(v); i++)
+    for (i = 0; i < MAX_PROFICIENCIES; i++)
     {
-        object_kind *k_ptr = vec_get(v, i);
-        int          exp = skills_weapon_current(k_ptr->tval, k_ptr->sval);
-        int          max = skills_weapon_max(k_ptr->tval, k_ptr->sval);
-        int          max_lvl = weapon_exp_level(max);
-        int          exp_lvl = weapon_exp_level(exp);
-        char         name[MAX_NLEN];
+        int  exp = p_ptr->proficiency[i];
+        int  max = p_ptr->proficiency_cap[i];
+        int  max_lvl = weapon_exp_level(max);
+        int  exp_lvl = weapon_exp_level(exp);
+        
+        if (i < PROF_MARTIAL_ARTS)
+            doc_printf(doc, "<color:%c>%-15s</color> ", equip_find_obj(TV_DIGGING + i, SV_ANY) ? 'B' : 'w', PROFICIENCIES[i]);
+        else
+            doc_printf(doc, "<color:%c>%-15s</color> ", 'w', PROFICIENCIES[i]);
 
-        strip_name(name, k_ptr->idx);
-        doc_printf(doc, "<color:%c>%-19s</color> ", equip_find_obj(k_ptr->tval, k_ptr->sval) ? 'B' : 'w', name);
         switch (mode)
         {
             case 1:
@@ -4668,7 +4668,6 @@ static void _prof_weapon_doc(doc_ptr doc, int tval, int mode)
         doc_newline(doc);
     }
     doc_newline(doc);
-    vec_free(v);
 }
 
 static void _prof_skill_aux(doc_ptr doc, int skill, int mode)

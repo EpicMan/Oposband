@@ -79,16 +79,19 @@ static void _birth(void)
         py_birth_obj_aux(i, 0, 1);
     }
 
-    for (i = PROF_DIGGER; i < PROF_RIDING; i++)
-    {
-        if (i == PROF_STAVE)
-        {
-            p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-            p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-        }
-        else
-            p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
-    }
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *sorcerer_get_class(void)

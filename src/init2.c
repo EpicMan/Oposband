@@ -635,26 +635,6 @@ static errr init_d_info(void)
 
 
 /*
- * Initialize the "s_info" array
- */
-static errr init_s_info(void)
-{
-    /* Init the header */
-    init_header(&s_head, MAX_CLASS, sizeof(skill_table));
-
-#ifdef ALLOW_TEMPLATES
-
-    /* Save a pointer to the parsing function */
-    s_head.parse_info_txt = parse_s_info;
-
-#endif /* ALLOW_TEMPLATES */
-
-    return init_info("s_info", &s_head,
-             (void*)&s_info, NULL, NULL, NULL);
-}
-
-
-/*
  * Initialize the "m_info" array
  */
 static errr init_m_info(void)
@@ -1619,10 +1599,6 @@ void init_angband(void)
     /* Initialize magic info */
     note("[Initializing arrays... (magic)]");
     if (init_m_info()) quit("Cannot initialize magic");
-
-    /* Initialize weapon_exp info */
-    note("[Initializing arrays... (skill)]");
-    if (init_s_info()) quit("Cannot initialize skill");
 
     /* Initialize wilderness array */
     note("[Initializing arrays... (wilderness)]");

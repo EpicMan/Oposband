@@ -37,28 +37,35 @@ static int _get_powers(spell_info* spells, int max)
 
 static void _birth(void)
 {
-    for (int i = PROF_DIGGER; i <= PROF_DAGGER; i++)
-    {
-        p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER;
-        p_ptr->proficiency_cap[i] = WEAPON_EXP_MASTER;
-
-    }
-    for (int i = PROF_BOW; i <= PROF_SLING; i++)
-    {
-        p_ptr->proficiency[i] = WEAPON_EXP_BEGINNER;
-        p_ptr->proficiency_cap[i] = WEAPON_EXP_EXPERT;
-
-    }
-    
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_EXPERT;
-
-
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(15, 30));
+
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *warrior_get_class(void)

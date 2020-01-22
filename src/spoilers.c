@@ -1670,22 +1670,25 @@ static void _skills_class_table(FILE* fp)
             else
                 fprintf(fp, "\"%s\",", class_ptr->name);
             fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d+%d,%d+%d,%d+%d,%d+%d,%d+%d,%d,%d,%d,%d\n",
-                class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis,
-                class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev,
-                class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav,
-                class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl,
+                class_ptr->base_skills.dis + 5 * class_ptr->extra_skills.dis,
+                class_ptr->base_skills.dev + 5 * class_ptr->extra_skills.dev,
+                class_ptr->base_skills.sav + 5 * class_ptr->extra_skills.sav,
+                class_ptr->base_skills.stl + 5 * class_ptr->extra_skills.stl,
                 class_ptr->base_skills.srh,
                 class_ptr->base_skills.fos,
-                class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn,
-                class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb,
+                class_ptr->base_skills.thn + 5 * class_ptr->extra_skills.thn,
+                class_ptr->base_skills.thb + 5 * class_ptr->extra_skills.thb,
                 class_ptr->base_skills.dis, class_ptr->extra_skills.dis,
                 class_ptr->base_skills.dev, class_ptr->extra_skills.dev,
                 class_ptr->base_skills.sav, class_ptr->extra_skills.sav,
                 class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
                 class_ptr->base_skills.thb, class_ptr->extra_skills.thb,
                 class_ptr->life, class_ptr->base_hp,
-                s_info[i].s_max[SKILL_RIDING],
-                s_info[i].s_max[SKILL_DUAL_WIELDING]
+                '100',
+                '100'
+                /* TODO: How to display this? Maybe create a table in tables.c with this info, then load it in the class functions. Bleh
+                p_ptr->proficiency_cap[PROF_RIDING],
+                p_ptr->proficiency_cap[PROF_DUAL_WIELDING]*/
             );
         }
     }
