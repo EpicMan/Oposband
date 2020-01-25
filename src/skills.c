@@ -1,7 +1,6 @@
 #include "angband.h"
 
 #include <assert.h>
-#include "str-map.h"
 
 static int _class_idx(void)
 {
@@ -197,7 +196,7 @@ int skills_weapon_current(int prof)
 
 int skills_weapon_max(int prof)
 {
-    if ((p_ptr->prace == RACE_MON_ARMOR) && (prof == PROF_MARTIAL_ARTS)) return WEAPON_EXP_BEGINNER; /* Skills? What skills? */
+    int skill = p_ptr->proficiency_cap[prof];
 
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
@@ -208,7 +207,7 @@ int skills_weapon_max(int prof)
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
-    return p_ptr->proficiency_cap[prof];
+    return skill;
 }
 
 /* Weapons: Gaining Proficiency
@@ -418,7 +417,7 @@ void skills_martial_arts_gain(void)
         else if ((p_ptr->lev > 34) && (one_in_(3) || coffee_break))
             current += 1;
 
-        p_ptr->skill_exp[SKILL_MARTIAL_ARTS] = MIN(current, max);
+        p_ptr->proficiency[PROF_MARTIAL_ARTS] = MIN(current, max);
         p_ptr->update |= PU_BONUS;
     }
 }
@@ -450,7 +449,7 @@ void skills_dual_wielding_gain(monster_race *r_ptr)
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    current = p_ptr->skill_exp[SKILL_DUAL_WIELDING];
+    current = p_ptr->proficiency[PROF_DUAL_WIELDING];
     max = skills_dual_wielding_max();
 
     if (current < max && (current - 1000) / 200 < r_ptr->level)
@@ -464,7 +463,7 @@ void skills_dual_wielding_gain(monster_race *r_ptr)
         else if ((current < WEAPON_EXP_MASTER) && (one_in_(3) || coffee_break))
             current += 1;
 
-        p_ptr->skill_exp[SKILL_DUAL_WIELDING] = MIN(current, max);
+        p_ptr->proficiency[PROF_DUAL_WIELDING] = MIN(current, max);
         p_ptr->update |= PU_BONUS;
     }
 }
@@ -475,7 +474,7 @@ int skills_dual_wielding_current(void)
         return skillmaster_dual_wielding_prof();
     else
     {
-        int current = p_ptr->skill_exp[SKILL_DUAL_WIELDING];
+        int current = p_ptr->proficiency[PROF_DUAL_WIELDING];
         int max = skills_dual_wielding_max();
         return MIN(current, max);
     }
@@ -497,13 +496,13 @@ static void _skills_riding_gain(int inc)
 
     if (coffee_break) inc *= 3;
 
-    current = p_ptr->skill_exp[SKILL_RIDING];
+    current = p_ptr->proficiency[PROF_RIDING];
     max = skills_riding_max();
     update = MIN(max, current + inc);
 
     if (update > current)
     {
-        p_ptr->skill_exp[SKILL_RIDING] = update;
+        p_ptr->proficiency[PROF_RIDING] = update;
         p_ptr->update |= PU_BONUS;
 
         /* Give some feedback every 100 points */
@@ -529,7 +528,7 @@ void skills_riding_gain_melee(monster_race *r_ptr)
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    current = p_ptr->skill_exp[SKILL_RIDING];
+    current = p_ptr->proficiency[PROF_RIDING];
     max = skills_riding_max();
 
     assert(p_ptr->riding);
@@ -561,7 +560,7 @@ void skills_riding_gain_rakuba(int dam)
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    current = p_ptr->skill_exp[SKILL_RIDING];
+    current = p_ptr->proficiency[PROF_RIDING];
     max = skills_riding_max();
 
     assert(p_ptr->riding);
@@ -589,7 +588,7 @@ void skills_riding_gain_archery(monster_race *r_ptr)
 
     if (p_ptr->pclass == CLASS_SKILLMASTER) return;
 
-    current = p_ptr->skill_exp[SKILL_RIDING];
+    current = p_ptr->proficiency[PROF_RIDING];
     max = skills_riding_max();
 
     assert(p_ptr->riding);
@@ -611,7 +610,7 @@ int skills_riding_current(void)
         return skillmaster_riding_prof();
     else
     {
-        int current = p_ptr->skill_exp[SKILL_RIDING];
+        int current = p_ptr->proficiency[PROF_RIDING];
         int max = skills_riding_max();
         if (p_ptr->prace == RACE_MON_RING)
             return RIDING_EXP_MASTER;
@@ -626,30 +625,6 @@ int skills_riding_max(void)
     return p_ptr->proficiency_cap[PROF_RIDING];
 }
 
-/* Innate Attacks
- * Note: The Possessor and The Mimic may need to learn a large number of
- * innate attacks, and I'm thinking of making the proficiency depend on the
- * body type as well as the attack type (So a Dragon's Bite requires different
- * skill than a Tiger's Bite). For other classes, the number of possible forms
- * to learn is small, and and this implementation may seem like so much overkill.
- *
- * Note: You need not call init to use innate skills. But failing to do so
- * means you begin as unskilled. My thoughts are that normal guys like dragons
- * will init their skills on birth, beginning life as a Beginner. This makes sense,
- * since they have had time to grow up and are used to their body. But possessors
- * and mimics will not init their skills as they change bodies, and this means
- * that they always need to spend some time learning the new form. Again, this
- * makes sense.
- */
-struct _skill_info_s
-{
-    int current;
-    int max;
-};
-
-typedef struct _skill_info_s  _skill_info_t;
-typedef struct _skill_info_s *_skill_info_ptr;
-
 static str_map_ptr _innate_map(void)
 {
     static str_map_ptr _map = NULL;
@@ -658,44 +633,21 @@ static str_map_ptr _innate_map(void)
     return _map;
 }
 
-static _skill_info_ptr _innate_info(cptr name)
-{
-    _skill_info_ptr result = (_skill_info_ptr)str_map_find(_innate_map(), name);
-    return result;
-}
-
 void skills_innate_init(cptr name, int current, int max)
 {
-    _skill_info_ptr info = _innate_info(name);
-    if (!info)
-    {
-        info = malloc(sizeof(_skill_info_t));
-        str_map_add(_innate_map(), name, info);
-    }
-    info->current = current;
-    info->max = max;
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = current;
+    p_ptr->proficiency_cap[PROF_INNATE_ATTACKS] = max;
 }
 
 int skills_innate_max(cptr name)
 {
-    _skill_info_ptr info = _innate_info(name);
-    int             result = WEAPON_EXP_MASTER;
-
-    if (info)
-        result = info->max;
-
-    return result;
+    
+    return p_ptr->proficiency_cap[PROF_INNATE_ATTACKS];
 }
 
 int skills_innate_current(cptr name)
 {
-    _skill_info_ptr info = _innate_info(name);
-    int             result = WEAPON_EXP_UNSKILLED;
-
-    if (info)
-        result = info->current;
-
-    return result;
+    return p_ptr->proficiency[PROF_INNATE_ATTACKS];
 }
 
 static int _innate_calc_bonus_aux(int skill)
@@ -712,18 +664,12 @@ int skills_innate_calc_bonus(cptr name)
 
 void skills_innate_gain(cptr name, int rlvl)
 {
-    _skill_info_ptr info = _innate_info(name);
+    int current = p_ptr->proficiency[PROF_INNATE_ATTACKS];
+    int max = p_ptr->proficiency_cap[PROF_INNATE_ATTACKS];
+    if (mut_present(MUT_WEAPON_SKILLS))
+        max = WEAPON_EXP_MASTER;
 
-    /* Double Check initialization */
-    if (!info)
-    {
-        info = malloc(sizeof(_skill_info_t));
-        info->current = WEAPON_EXP_UNSKILLED;
-        info->max = WEAPON_EXP_MASTER;
-        str_map_add(_innate_map(), name, info);
-    }
-
-    if (info->current < info->max)
+    if (current < max)
     {
         int step;
         int add;
@@ -735,29 +681,29 @@ void skills_innate_gain(cptr name, int rlvl)
             return;
         }
 
-        if (info->current >= _weapon_max_skill(rlvl))
+        if (current >= _weapon_max_skill(rlvl))
         {
             if (p_ptr->wizard)
             {
                 msg_format("<color:B>Against level <color:R>%d</color> foes, you can only train weapon "
                     "proficiency to <color:R>%d</color> (Current Skill: <color:R>%d</color>).</color>",
-                    rlvl, _weapon_max_skill(rlvl), info->current);
+                    rlvl, _weapon_max_skill(rlvl), current);
             }
             return;
         }
 
-        step = _weapon_gain_amt(info->current);
+        step = _weapon_gain_amt(current);
         add = step / 10;
         if (step%10 && randint0(10) < step%10) add++;
 
         if (add > 0)
         {
-            int old_bonus = _innate_calc_bonus_aux(info->current);
+            int old_bonus = _innate_calc_bonus_aux(current);
             int new_bonus;
-            info->current += add;
-            if (info->current > info->max)
-                info->current = info->max;
-            new_bonus = _innate_calc_bonus_aux(info->current);
+            current += add;
+            if (current > max)
+                current = max;
+            new_bonus = _innate_calc_bonus_aux(current);
             if (old_bonus != new_bonus)
             {
                 msg_format("<color:B>Your <color:R>%s</color> skills are improving.</color>", name);
@@ -814,30 +760,6 @@ cptr skills_innate_describe_current(cptr name)
 }
 
 
-void skills_on_save(savefile_ptr file)
-{
-    str_map_ptr         map = _innate_map();
-    str_map_iter_ptr    iter;
-
-    savefile_write_s32b(file, str_map_count(map));
-
-    for (iter = str_map_iter_alloc(map);
-            str_map_iter_is_valid(iter);
-            str_map_iter_next(iter))
-    {
-        cptr            name = str_map_iter_current_key(iter);
-        _skill_info_ptr info = (_skill_info_ptr)str_map_iter_current(iter);
-
-        savefile_write_cptr(file, name);
-        savefile_write_s32b(file, info->current);
-        savefile_write_s32b(file, info->max);
-    }
-    str_map_iter_free(iter);
-
-    /* TODO: Spell Skills for Bookless Casters */
-    savefile_write_s32b(file, 0);
-}
-
 void skills_on_birth(void)
 {
     /* Start with weapon proficiency halfway to beginner */
@@ -850,7 +772,6 @@ void skills_on_birth(void)
     /* Everyone starts unskilled with innate attacks, but can become an expert since they are innate. */
     p_ptr->proficiency[PROF_INNATE_ATTACKS] = WEAPON_EXP_BEGINNER / 2;
     p_ptr->proficiency_cap[PROF_INNATE_ATTACKS] = WEAPON_EXP_EXPERT;
-
 }
 
 /*************************************************************************

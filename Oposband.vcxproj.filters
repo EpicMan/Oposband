@@ -146,9 +146,6 @@
     <ClInclude Include="src\streams.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\str-map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>

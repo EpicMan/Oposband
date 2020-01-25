@@ -173,7 +173,6 @@
     <ClInclude Include="src\scores.h" />
     <ClInclude Include="src\shop.h" />
     <ClInclude Include="src\spells.h" />
-    <ClInclude Include="src\str-map.h" />
     <ClInclude Include="src\streams.h" />
     <ClInclude Include="src\types.h" />
     <ClInclude Include="src\variant.h" />

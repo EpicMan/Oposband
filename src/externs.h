@@ -2827,7 +2827,6 @@ extern cptr skills_innate_calc_name(innate_attack_ptr attack); /* Note: Uses a s
 extern cptr skills_innate_describe_current(cptr name);
 
 extern void skills_on_birth(void);
-extern void skills_on_save(savefile_ptr file);
 
 extern int tsvals_to_proficiency(int tval, int sval);
 
