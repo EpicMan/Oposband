@@ -277,11 +277,18 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
     /* Max out player weapon proficiencies */
-    for (j = PROF_DIGGER; j < MAX_PROFICIENCIES; j++)
-        p_ptr->proficiency[j] = p_ptr->proficiency_cap[j];
+    for (j = PROF_DIGGER; j <= PROF_DAGGER; j++)
+        p_ptr->proficiency[j] = MIN(tmp_s16b, skills_weapon_max(j));
+    
+    p_ptr->proficiency[PROF_BOW] = MIN(tmp_s16b, skills_bow_max(SV_SHORT_BOW));
+    p_ptr->proficiency[PROF_CROSSBOW] = MIN(tmp_s16b, skills_bow_max(SV_LIGHT_XBOW));
+    p_ptr->proficiency[PROF_SLING] = MIN(tmp_s16b, skills_bow_max(SV_SLING));
 
-    /* Hack for WARLOCK_DRAGONS. Of course, reading skill tables directly is forbidden, so this code is inherently wrong! */
-    p_ptr->skill_exp[SKILL_RIDING] = MIN(skills_riding_max(), tmp_s16b);
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = MIN(tmp_s16b, skills_martial_arts_max());
+    p_ptr->proficiency[PROF_DUAL_WIELDING] = MIN(tmp_s16b, skills_dual_wielding_max());
+    p_ptr->proficiency[PROF_RIDING] = MIN(tmp_s16b, skills_riding_max());
+
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = MIN(tmp_s16b, skills_weapon_max(PROF_INNATE_ATTACKS));
 
     for (j = 0; j < 32; j++)
         p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_MASTER ? SPELL_EXP_MASTER : tmp_s16b);

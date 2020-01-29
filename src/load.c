@@ -368,9 +368,6 @@ static void rd_extra(savefile_ptr file)
 
     for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency[i] = savefile_read_s16b(file);
     for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency_cap[i] = savefile_read_s16b(file);
-    /*for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) p_ptr->weapon_exp[i][j] = savefile_read_s16b(file);*/
-
-    for (i = 0; i < 10; i++) p_ptr->skill_exp[i] = savefile_read_s16b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num1[i] = savefile_read_s32b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num2[i] = savefile_read_byte(file);
     if (music_singing_any()) p_ptr->action = ACTION_SING;

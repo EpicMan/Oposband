@@ -1002,7 +1002,7 @@ struct player_type
     byte psex;            /* Sex index */
     byte prace;            /* Race index */
     byte pclass;        /* Class index */
-    byte personality;        /* Seikaku index */
+    byte personality;        /* Personality index */
     byte realm1;        /* First magic realm */
     byte realm2;        /* Second magic realm */
     byte dragon_realm;
@@ -1263,7 +1263,6 @@ struct player_type
     s16b proficiency[MAX_PROFICIENCIES];
     s16b proficiency_cap[MAX_PROFICIENCIES];
     /*********************************************/
-    s16b skill_exp[10];       /* Proficiency of misc. skill */
     s16b spells_per_round;    /* 175 = 1.75 spells per round, etc. Calculated in calc_bonuses(). Only works for book casters (do_cmd_cast) at the moment. */
 
     s32b magic_num1[MAX_MAGIC_NUM];     /* Array for non-spellbook type magic */
@@ -1514,7 +1513,7 @@ struct birther
     byte psubrace;
     byte pclass;       /* Class index */
     byte psubclass;       /* Subclass index */
-    byte personality;     /* Seikaku index */
+    byte personality;     /* Personality index */
     byte realm1;       /* First magic realm */
     byte realm2;       /* Second magic realm */
     byte dragon_realm;
@@ -1702,7 +1701,7 @@ struct high_score
     char sex[2];        /* Player Sex (string) */
     char p_r[3];        /* Player Race (number) */
     char p_c[3];        /* Player Class (number) */
-    char p_a[3];        /* Player Seikaku (number) */
+    char p_a[3];        /* Player Personality (number) */
 
     char cur_lev[4];        /* Current Player Level (number) */
     char cur_dun[4];        /* Current Dungeon Level (number) */
