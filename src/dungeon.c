@@ -3562,8 +3562,6 @@ static void _dispatch_command(int old_now_turn)
                 magic_eater_browse();
 			else if (p_ptr->pclass == CLASS_RAGE_MAGE)
 				rage_mage_browse_spell();
-			else if (p_ptr->pclass == CLASS_SAMURAI)
-				samurai_browse_spell();
             else if (p_ptr->pclass == CLASS_SKILLMASTER)
                 skillmaster_browse();
             else if (p_ptr->pclass == CLASS_ALCHEMIST)
@@ -3703,15 +3701,13 @@ static void _dispatch_command(int old_now_turn)
                             p_ptr->pclass == CLASS_WEAPONMASTER ||
                             p_ptr->pclass == CLASS_DEVICEMASTER ||
                             p_ptr->pclass == CLASS_RAGE_MAGE ||
-							p_ptr->pclass == CLASS_SAMURAI ||
                             p_ptr->pclass == CLASS_SCOUT ||
                             p_ptr->pclass == CLASS_MAULER ||
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
                             p_ptr->pclass == CLASS_SNIPER ||
                             p_ptr->pclass == CLASS_DISCIPLE ||
-                            p_ptr->pclass == CLASS_TIME_LORD ||
-							p_ptr->pclass == CLASS_SAMURAI)
+                            p_ptr->pclass == CLASS_TIME_LORD)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on coverting everything else */

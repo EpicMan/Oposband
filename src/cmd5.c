@@ -538,6 +538,12 @@ void do_cmd_cast(void)
         return;
     }
 
+    if (p_ptr->pclass == CLASS_SAMURAI && !equip_find_first(object_is_melee_weapon))
+    {
+        if (flush_failure) flush();
+        msg_print("You need to wield a weapon!");
+        return;
+    }
 
     /* Require lite */
     if (p_ptr->blind || no_lite())

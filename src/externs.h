@@ -2715,7 +2715,7 @@ extern void     samurai_posture_spell(int cmd, variant *res);
 extern void     samurai_posture_get_flags(u32b flgs[OF_ARRAY_SIZE]);
 extern void     samurai_posture_calc_stats(s16b stats[MAX_STATS]);
 extern void     samurai_posture_calc_bonuses(void);
-extern void		samurai_browse_spell(void);
+extern cptr     do_hissatsu_spell(int spell, int mode);
 
 extern class_t *skillmaster_get_class(void);
 extern void     skillmaster_gain_skill(void);

@@ -1034,11 +1034,13 @@ static void _build_equipment(doc_ptr doc)
 /****************************** Combat ************************************/
 static void _build_melee(doc_ptr doc)
 {
+    doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
+
     if (p_ptr->prace == RACE_MON_RING) return;
     if (possessor_can_attack() && !p_ptr->weapon_ct && !p_ptr->innate_attack_ct) return;
     {
         int i;
-        doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
+        
         for (i = 0; i < MAX_HANDS; i++)
         {
             if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
