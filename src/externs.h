@@ -1592,7 +1592,6 @@ extern bool recharge_from_device(int power);
 extern bool bless_weapon(void);
 extern bool polish_shield(void);
 extern bool potion_smash_effect(int who, int y, int x, int k_idx);
-extern s16b experience_of_spell(int spell, int realm);
 extern int mod_need_mana(int need_mana, int spell, int realm);
 extern int mod_spell_chance_1(int chance, int realm);
 extern int mod_spell_chance_2(int chance, int realm);
@@ -1992,7 +1991,6 @@ extern s16b gain_energy(void);
 extern cptr your_alignment(void);
 extern int weapon_exp_level(int weapon_exp);
 extern int riding_exp_level(int riding_exp);
-extern int spell_exp_level(int spell_exp);
 
 /* mspells1.c */
 extern bool clean_shot(int y1, int x1, int y2, int x2, bool friend);

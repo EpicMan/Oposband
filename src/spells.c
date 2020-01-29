@@ -1424,9 +1424,11 @@ static void _dump_book(doc_ptr doc, int realm, int book)
     else
     {
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
-            doc_printf(doc, "<color:G>    %-23.23s Profic Lvl  HP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
+			doc_printf(doc, "<color:G>    %-23.23s   Lvl  HP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
+			/*doc_printf(doc, "<color:G>    %-23.23s        Lvl  HP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");*/
         else
-            doc_printf(doc, "<color:G>    %-23.23s Profic Lvl  SP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
+			doc_printf(doc, "<color:G>    %-23.23s   Lvl  SP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
+			/*doc_printf(doc, "<color:G>    %-23.23s        Lvl  SP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");*/
     }
 
     for (i = 0; i < 8; i++)
@@ -1435,8 +1437,6 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         magic_type *s_ptr;
         int	    vaikeustaso;
         int         cost;
-        bool        max = FALSE;
-        char        proficiency[10];
         char        info[80];
         cptr        comment;
         char        line[160];
@@ -1454,19 +1454,7 @@ static void _dump_book(doc_ptr doc, int realm, int book)
             cost = s_ptr->smana;
         else
         {
-            s16b exp = experience_of_spell(s_idx, realm);
-            int  exp_level = spell_exp_level(exp);
-
-            cost = mod_need_mana(lawyer_hack(s_ptr, LAWYER_HACK_MANA), s_idx, realm);
-
-            max = FALSE;
-            if (!increment && (exp_level == EXP_LEVEL_MASTER)) max = TRUE;
-            else if ((increment == 32) && (exp_level >= EXP_LEVEL_EXPERT)) max = TRUE;
-            else if ((p_ptr->pclass == CLASS_RED_MAGE) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
-
-            strncpy(proficiency, exp_level_str[exp_level], 4);
-            proficiency[3] = ']';
-            proficiency[4] = '\0';
+			cost = mod_need_mana(lawyer_hack(s_ptr, LAWYER_HACK_MANA), s_idx, realm);
         }
 
         strcpy(info, do_spell(realm, s_idx, SPELL_INFO));
@@ -1489,11 +1477,9 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         strcat(
             line,
             format(
-                "<color:%c>%-25s%c%-4s %3d %3d %3d%% %-15.15s %5d %4d %3d%%</color>",
+                "<color:%c>%-25s %3d %3d %3d%% %-15.15s %5d %4d %3d%%</color>",
                 color,
                 do_spell(realm, s_idx, SPELL_NAME),
-                (max ? '!' : ' '),
-                proficiency,
                 vaikeustaso,
                 cost,
                 spell_chance(s_idx, realm),

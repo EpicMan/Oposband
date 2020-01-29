@@ -3135,27 +3135,11 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
     return angry;
 }
 
-
-/*
- * Returns experience of a spell
- */
-s16b experience_of_spell(int spell, int use_realm)
-{
-    if (p_ptr->pclass == CLASS_SORCERER) return SPELL_EXP_MASTER;
-    else if (p_ptr->pclass == CLASS_RED_MAGE) return SPELL_EXP_SKILLED;
-    else if (p_ptr->pclass == CLASS_SAMURAI) return SPELL_EXP_EXPERT;
-    else if (use_realm == p_ptr->realm1) return p_ptr->spell_exp[spell];
-    else if (use_realm == p_ptr->realm2) return p_ptr->spell_exp[spell + 32];
-    else return 0;
-}
-
-
 /*
  * Modify mana consumption rate using spell exp and p_ptr->dec_mana
  */
 int mod_need_mana(int need_mana, int spell, int realm)
 {
-#define MANA_CONST   2400
 #define MANA_DIV        4
 #define DEC_MANA_DIV    3
 
@@ -3167,13 +3151,8 @@ int mod_need_mana(int need_mana, int spell, int realm)
     /* Realm magic */
     if ((realm > REALM_NONE) && (realm <= MAX_REALM))
     {
-        /*
-         * need_mana defaults if spell exp equals SPELL_EXP_EXPERT and !p_ptr->dec_mana.
-         * MANA_CONST is used to calculate need_mana effected from spell proficiency.
-         */
-        need_mana = need_mana * (MANA_CONST + SPELL_EXP_EXPERT - experience_of_spell(spell, realm)) + (MANA_CONST - 1);
         need_mana *= dec_mana ? DEC_MANA_DIV : MANA_DIV;
-        need_mana /= MANA_CONST * MANA_DIV;
+        need_mana /= MANA_DIV;
         if (need_mana < 1) need_mana = 1;
     }
 
@@ -3185,7 +3164,6 @@ int mod_need_mana(int need_mana, int spell, int realm)
 
 #undef DEC_MANA_DIV
 #undef MANA_DIV
-#undef MANA_CONST
 
     if (p_ptr->tim_blood_rite)
         need_mana *= 2;
@@ -3353,14 +3331,6 @@ s16b spell_chance(int spell, int use_realm)
     /* Always a 5 percent chance of working */
     if (chance > 95) chance = 95;
 
-    if ((use_realm == p_ptr->realm1) || (use_realm == p_ptr->realm2)
-        || (p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
-    {
-        s16b exp = experience_of_spell(spell, use_realm);
-        if (exp >= SPELL_EXP_EXPERT) chance--;
-        if (exp >= SPELL_EXP_MASTER) chance--;
-    }
-
     /* Return the chance */
     return mod_spell_chance_2(chance, use_realm);
 }
@@ -3414,7 +3384,6 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
     char            out_val[160];
     byte            line_attr;
     int             need_mana;
-    char            ryakuji[15];
     char            buf[256];
     bool            max = FALSE;
     caster_info    *caster_ptr = get_caster_info();
@@ -3430,9 +3399,9 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
     else
     {
         if (caster_ptr && ((caster_ptr->options & CASTER_USE_HP) || ((p_ptr->pclass == CLASS_NINJA_LAWYER) && (use_realm != REALM_LAW))))
-            strcpy(buf,"Profic Lvl  HP Fail Desc");
+            strcpy(buf,"Lvl  HP Fail Desc");
         else
-            strcpy(buf,"Profic Lvl  SP Fail Desc");
+            strcpy(buf,"Lvl  SP Fail Desc");
     }
 
     Term_erase(display.x, display.y, display.cx);
@@ -3467,23 +3436,17 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
             need_mana = s_ptr->smana;
         else
         {
-            s16b exp = experience_of_spell(spell, use_realm);
-
             /* Extract mana consumption rate */
             need_mana = mod_need_mana(lawyer_hack(s_ptr, LAWYER_HACK_MANA), spell, use_realm);
 
             if ((increment == 64) || (vaikeustaso >= 99)) exp_level = EXP_LEVEL_UNSKILLED;
-            else exp_level = spell_exp_level(exp);
+            else exp_level = EXP_LEVEL_EXPERT;
 
             max = FALSE;
             if (!increment && (exp_level == EXP_LEVEL_MASTER)) max = TRUE;
             else if ((increment == 32) && (exp_level >= EXP_LEVEL_EXPERT)) max = TRUE;
             else if (vaikeustaso >= 99) max = TRUE;
             else if ((p_ptr->pclass == CLASS_RED_MAGE) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
-
-            strncpy(ryakuji, exp_level_str[exp_level], 4);
-            ryakuji[3] = ']';
-            ryakuji[4] = '\0';
         }
 
         if (use_menu && target_spell)
@@ -3560,9 +3523,9 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
         }
         else
         {
-            strcat(out_val, format("%-25s%c%-4s %3d %3d %3d%% %s",
+            strcat(out_val, format("%-22s%c %3d %3d %3d%% %s",
                 do_spell(use_realm, spell, SPELL_NAME),
-                (max ? '!' : ' '), ryakuji,
+                (max ? '!' : ' '), 
                 vaikeustaso, need_mana, spell_chance(spell, use_realm), comment));
         }
         c_put_str(line_attr, out_val, display.y + i + 1, display.x);

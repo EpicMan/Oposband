@@ -364,8 +364,6 @@ static void rd_extra(savefile_ptr file)
     p_ptr->lev = savefile_read_s16b(file);
     p_ptr->quest_seed = savefile_read_u32b(file);
 
-    for (i = 0; i < 64; i++) p_ptr->spell_exp[i] = savefile_read_s16b(file);
-
     for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency[i] = savefile_read_s16b(file);
     for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency_cap[i] = savefile_read_s16b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num1[i] = savefile_read_s32b(file);

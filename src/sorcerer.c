@@ -66,8 +66,6 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     int i;
-    for (i = 0; i < 64; i++)
-        p_ptr->spell_exp[i] = SPELL_EXP_MASTER;
 
     py_birth_obj_aux(TV_STAVES, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);

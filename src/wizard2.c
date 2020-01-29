@@ -290,11 +290,6 @@ static void do_cmd_wiz_change_aux(void)
 
     p_ptr->proficiency[PROF_INNATE_ATTACKS] = MIN(tmp_s16b, skills_weapon_max(PROF_INNATE_ATTACKS));
 
-    for (j = 0; j < 32; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_MASTER ? SPELL_EXP_MASTER : tmp_s16b);
-    for (; j < 64; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_EXPERT ? SPELL_EXP_EXPERT : tmp_s16b);
-
     /* Default */
     sprintf(tmp_val, "%d", p_ptr->au);
 

@@ -2004,11 +2004,6 @@ static void change_realm2(int next_realm)
 	for (; j < 64; j++)
 		p_ptr->spell_order[j] = 99;
 
-	for (i = 32; i < 64; i++)
-	{
-		p_ptr->spell_exp[i] = SPELL_EXP_UNSKILLED;
-	}
-
 	p_ptr->old_realm |= 1 << (p_ptr->realm2 - 1);
 	p_ptr->realm2 = next_realm;
 

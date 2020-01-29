@@ -1251,7 +1251,6 @@ struct player_type
 
     byte spell_order[64];      /* order spells learned/remembered/forgotten */
 
-    s16b spell_exp[64];       /* Proficiency of spells */
     /*********************************************/
     /* Changed how weapon proficiencies are used */
     /* Now proficiency is for an entire class of weapons, and there are only nine */
