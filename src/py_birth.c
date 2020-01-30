@@ -270,7 +270,8 @@ static int _welcome_ui(void)
             p_ptr->realm1 = previous_char.realm1;
             p_ptr->realm2 = previous_char.realm2;
             p_ptr->dragon_realm = previous_char.dragon_realm;
-            p_ptr->au = previous_char.au;            
+            p_ptr->au = previous_char.au;
+            p_ptr->chaos_patron = previous_char.chaos_patron;
             for (i = 0; i < MAX_STATS; i++)
             {
                 p_ptr->stat_cur[i] = previous_char.stat_max[i];
@@ -490,6 +491,7 @@ static int _race_class_ui(void)
 				p_ptr->realm2 = previous_char.realm2;
 				p_ptr->dragon_realm = previous_char.dragon_realm;
 				p_ptr->au = previous_char.au;
+                p_ptr->chaos_patron = previous_char.chaos_patron;
 				for (i = 0; i < MAX_STATS; i++)
 				{
 					p_ptr->stat_cur[i] = previous_char.stat_max[i];
@@ -2929,6 +2931,7 @@ static void _birth_finalize(void)
     previous_char.realm2 = p_ptr->realm2;
     previous_char.dragon_realm = p_ptr->dragon_realm;
     previous_char.au = p_ptr->au;
+    previous_char.chaos_patron = p_ptr->chaos_patron;
 
     for (i = 0; i < MAX_STATS; i++)
         previous_char.stat_max[i] = p_ptr->stat_max[i];

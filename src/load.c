@@ -316,6 +316,7 @@ static void rd_quick_start(savefile_ptr file)
     previous_char.realm2 = savefile_read_byte(file);
     previous_char.dragon_realm = savefile_read_byte(file);
     previous_char.au = savefile_read_s32b(file);
+    previous_char.chaos_patron = savefile_read_s16b(file);
 
     for (i = 0; i < 6; i++)
         previous_char.stat_max[i] = savefile_read_s16b(file);

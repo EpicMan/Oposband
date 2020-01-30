@@ -501,6 +501,7 @@ static void wr_quick_start(savefile_ptr file)
     savefile_write_byte(file, previous_char.realm2);
     savefile_write_byte(file, previous_char.dragon_realm);
     savefile_write_s32b(file, previous_char.au);
+    savefile_write_s16b(file, previous_char.chaos_patron);
 
     for (i = 0; i < 6; i++)
         savefile_write_s16b(file, previous_char.stat_max[i]);

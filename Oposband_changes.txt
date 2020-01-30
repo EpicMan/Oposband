@@ -3,6 +3,9 @@
 -Replaced weapon / skill proficiency system with new system where proficiency is by weapon class (TVAL; weaponmaster choices) instead of individual weapon types.
 -NOTE: May need to revisit the max proficiency / monster level thresholds. In any case playtesting is needed to check proficiency growth rates
 Question: Should whips be moved to tools (diggers, etc)?
+-Removed spell proficiency system. Encouraged casting spells over and over again in safe spaces to build up proficiencies. Effectively everyone is now at Expert proficiency in their spells.
+-Restored books of Kendo, fixing problem with skillmasters where they could gain skill in Kendo but couldn't actually use it without books. Samurai are now book casters for now.
+-Chaos patron is now preserved for quick-starting from dead character's save files.
 
 0.1.X
 -Forked from FrogComposband 7.1.Chocolate
