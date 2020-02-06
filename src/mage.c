@@ -91,9 +91,9 @@ class_t *mage_get_class(void)
                     "her realms better than any other character. The ability to choose "
                     "second realm of magic has a special meaning: Only the "
                     "second realm can be changed in the middle of the game. You can "
-                    "change second realm by studying ('G') from a spellbook of new "
-                    "realm. They have a class power - 'Eat Magic' - which absorbs mana "
-                    "from wands, staves or rods.";
+                    "change second realm with a class power 'Change 2nd Magic Realm' and "
+                    "a spellbook of the new realm. They have another class power - "
+                    "'Eat Magic' - which absorbs mana from wands, staves or rods.";
 
         me.stats[A_STR] = -4;
         me.stats[A_INT] =  3;
