@@ -2144,7 +2144,7 @@ E:BREATHE_ONE_MULTIHUED:40:70:250
 D:A suit of scales that throbs with angry energies; it takes all your energy
 D:to master the Elements fighting an endless war trapped inside.
 
-N:*:Pseudo Dragon Scale Mail~
+N:*:Moon Dragon Scale Mail~
 G:[:v
 I:38:10:0
 W:50:0:0:200:60000
