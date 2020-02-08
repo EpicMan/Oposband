@@ -374,7 +374,7 @@ Experience   125%
 <topic:Sorcerer><color:o>Sorcerer</color>
 Sorcerers are the all-around best magicians, being able to cast any spell from most magic realms without having to learn it. On the downside, they are the worst fighters in the dungeon, being unable to use any weapon but a Wizardstaff.
  
-Sorcerers can cast any spell from any spellbooks of all magic realms with 'Master' proficiency level without having to learn it. They have a class power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
+Sorcerers can cast any spell from any spellbooks of all magic realms. They have a class power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> -5</color>        Disarming   <color:R>Poor         </color>
@@ -595,9 +595,9 @@ Base HP        8        Bows        <color:o>Fair         </color>
 Experience   140%
 </style></indent>
 <topic:Red-Mage><color:o>Red-Mage</color>
-Red Mages are similar to Warrior-Mage; they are decent fighters and spellcasters. Red-Mages can use almost all spells from lower rank spellbooks of all realms, but they cannot cast spells from higher rank spellbooks, and they are extremely slow learners in them. They are not bad at using magical devices and magic resistance, but are bad at other skills. A red-mage's prime statistic is intelligence.
+Red Mages are similar to Warrior-Mage; they are decent fighters and spellcasters. Red-Mages can use almost all spells from lower rank spellbooks of all realms, but they cannot cast spells from higher rank spellbooks. They are not bad at using magical devices and magic resistance, but are bad at other skills. A red-mage's prime statistic is intelligence.
  
-Red-Mages can use almost all spells from lower rank spellbooks of all realms: first and second spellbooks of all realms and third and fourth Arcane spellbooks, without having to learn it, but they cannot cast spells from higher rank spellbooks; third and fourth spellbooks for all realms other than Arcane. Since they use all realms at once, they have large penalties in the mana costs, minimum levels, and failure rates of spells. They have a class power - 'Double Magic' - which allows them to cast two spells at once.
+Red-Mages can use almost all spells from lower rank spellbooks of all realms: first and second spellbooks of all realms and third and fourth Arcane spellbooks, but they cannot cast spells from higher rank spellbooks; third and fourth spellbooks for all realms other than Arcane. Since they use all realms at once, they have large penalties in the mana costs, minimum levels, and failure rates of spells. They have a class power - 'Double Magic' - which allows them to cast two spells at once.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +2</color>        Disarming   <color:r>Bad          </color>
