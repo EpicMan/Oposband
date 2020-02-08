@@ -2866,7 +2866,7 @@ extern bool wild_has_power(int power);
 extern void wild_reset_counter(int power);
 
 /* spells_c.c*/
-extern void change_realm_power(void);
+extern void change_realm_power(int cmd, variant* res);
 
 /* chaos_patron.c */
 extern void     chaos_choose_effect(int);
