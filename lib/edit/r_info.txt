@@ -1298,7 +1298,7 @@ F:ANIMAL | CAN_SWIM | DROP_CORPSE
 P:Copy:Snotling:Tourist
 P:Life:70
 P:Body:Scrawny
-D:It is an armoured lizard with a powerful bite.
+D:It is an armored lizard with a powerful bite.
 
 #Dup with N:142
 N:83:Novice ranger
@@ -2769,7 +2769,7 @@ P:Copy:Dark-Elf:Warrior-Mage
 S:1_IN_12
 S:MISSILE
 O:DROP_WARRIOR
-D:A dark elven figure in armour and ready with his sword.
+D:A dark elven figure in armor and ready with his sword.
 
 N:183:Sand-dweller
 G:u:U
@@ -3525,7 +3525,7 @@ F:ANIMAL | DROP_SKELETON
 F:POS_GAIN_AC
 P:Copy:Human:Warrior
 P:Body:Centipede4
-D:It is a vast armoured centipede with massive mandibles and a spiked tail.
+D:It is a vast armored centipede with massive mandibles and a spiked tail.
 
 N:233:Spotted jelly
 G:j:s
@@ -4347,7 +4347,7 @@ F:EVIL | ORC | RES_DARK | CAN_SPEAK
 P:Copy:Kobold:Warrior
 S:1_IN_15 | SHOOT(3d6)
 O:DROP_WARRIOR_SHOOT
-D:An armoured orc with an air of authority.
+D:An armored orc with an air of authority.
 
 N:286:Gelatinous cube
 G:j:B
@@ -5225,7 +5225,7 @@ P:Skills:0:-7:0:0:0:0:0:0
 P:ExtraSkills:0:-4:0:0:0:0:0:0
 P:Body:Hound
 D:A fierce and dangerous cat, its huge tusks and sharp claws would lacerate
-D:even the strongest armour.
+D:even the strongest armor.
 
 N:340:Water hound
 G:Z:b
@@ -5368,7 +5368,7 @@ F:DROP_SKELETON | DROP_CORPSE | POS_SEE_INVIS
 P:Copy:Dark-Elf:Chaos-Warrior
 S:1_IN_5 | DETECT_MONSTERS | DETECT_TRAPS
 S:HASTE | BLIND | CONFUSE | DARKNESS | BO_FIRE | BO_COLD | MISSILE
-D:A dark elven figure in armour and radiating evil power.
+D:A dark elven figure in armor and radiating evil power.
 
 N:349:Cloud giant
 G:P:B
@@ -6947,7 +6947,7 @@ S:1_IN_8 |
 S:BLIND | SCARE | CAUSE_3 | DARKNESS | HEROISM
 P:Copy:Dunadan:Paladin
 O:DROP_PALADIN_EVIL
-D:He is a figure encased in deep black plate armour; he looks at you
+D:He is a figure encased in deep black plate armor; he looks at you
 D:menacingly.
 
 N:443:Seahorse
@@ -7474,7 +7474,7 @@ F:RAND_25 | KILL_BODY | FRIENDS(6d3) | WEIRD_MIND | BASH_DOOR | ANIMAL
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Human:Warrior
 P:Body:Ant
-D:An armoured form moving with purpose. Powerful on its own, flee when
+D:An armored form moving with purpose. Powerful on its own, flee when
 D:hordes of them march.
 
 N:474:Killer slicer beetle
@@ -8553,7 +8553,7 @@ F:POS_SEE_INVIS | POS_HOLD_LIFE
 P:Copy:High-Elf:Rogue
 S:1_IN_8 |
 S:BLIND | PARALYZE | CONFUSE | SCARE | BO_NETHER
-D:A towering figure clad in gruesome spiked armour, you
+D:A towering figure clad in gruesome spiked armor, you
 D:feel a chill in the air as he advances silently through
 D:the dungeon.
 
@@ -9698,7 +9698,7 @@ P:Copy:Dunadan:Paladin
 S:1_IN_5 | BLIND | SCARE | CAUSE_3 | BO_NETHER |
 S:S_MONSTER | DETECT_MONSTERS | MAPPING | BLESS
 O:DROP_PALADIN_EVIL
-D:It is a humanoid form dressed in armour of an ancient form. From beneath
+D:It is a humanoid form dressed in armor of an ancient form. From beneath
 D:its helmet, eyes glow a baleful red and seem to pierce you like lances of
 D:fire.
 
@@ -10348,7 +10348,7 @@ P:Copy:Half-Troll:Berserker
 P:Life:80
 S:BERSERK
 O:DROP_WARRIOR
-D:A massive troll, equipped with a scimitar and heavy armour.
+D:A massive troll, equipped with a scimitar and heavy armor.
 
 N:632:Disenchanter worm mass
 G:w:v
@@ -10680,7 +10680,7 @@ P:Copy:Imp:Chaos-Warrior
 S:1_IN_10 |
 S:BLIND | CONFUSE | SCARE | CAUSE_3 | AMNESIA |
 S:S_DEMON
-D:It is a demon of small stature, but its armoured frame moves with
+D:It is a demon of small stature, but its armored frame moves with
 D:lightning speed and its powers make it a tornado of death and destruction.
 
 N:650:Giganto the Gargantuan
@@ -12363,7 +12363,7 @@ P:Copy:Dunadan:Paladin
 S:1_IN_5 |
 S:BLIND | SCARE | CAUSE_3 | BA_NETHER | BA_FIRE | BO_PLASMA | S_MONSTER | DETECT_MONSTERS
 O:DROP_PALADIN_EVIL
-D:It is a humanoid form dressed in armour of ancient style. From beneath
+D:It is a humanoid form dressed in armor of ancient style. From beneath
 D:its helmet, eyes glow with hellfire.
 
 N:732:Bull Gates
@@ -12630,7 +12630,7 @@ S:1_IN_3 |
 S:BO_FIRE | BO_PLASMA | BA_FIRE |
 S:BR_FIRE | BR_LITE | BR_PLASMA
 D:A massive glowing eagle bathed in flames. The searing heat chars your
-D:skin and melts your armour.
+D:skin and melts your armor.
 
 N:744:Nightcrawler
 G:W:D
@@ -12958,7 +12958,7 @@ S:BERSERK
 D:Khorne's mightiest servant, a winged hound-demon walking on
 D:two paws and wielding a mighty axe and a whip in the other
 D:two. Intelligent, bloodthirsty eyes behold you from inside
-D:the bloody demon armour.
+D:the bloody demon armor.
 
 N:759:Draconic quylthulg
 G:Q:G
@@ -13205,7 +13205,7 @@ S:BLIND | SCARE | BRAIN_SMASH |
 S:BO_MANA | BO_NETHER | BA_NETHER |
 S:S_UNDEAD
 D:A huge giant garbed in black, more massive than a titan and stronger than
-D:a dragon. With terrible blows, it breaks your armour from your back,
+D:a dragon. With terrible blows, it breaks your armor from your back,
 D:leaving you defenseless against its evil wrath. It can smell your fear,
 D:and you in turn smell the awful stench of death as this ghastly figure
 D:strides towards you menacingly.
@@ -16230,7 +16230,7 @@ B:SLASH:HURT(2d6):ELEC(8d6, 25%):CUT(1d4, 50%)
 B:SLASH:HURT(2d6):FIRE(4d6, 50%):CUT(1d4, 50%)
 F:MALE | ONLY_ITEM | DROP_90 | DROP_CORPSE | DROP_SKELETON | GOOD | HUMAN |
 F:OPEN_DOOR | BASH_DOOR | HAS_LITE_1 | RANGED_MELEE
-D:A warrior clad in ornate but effective armour, holding katana so sharp it
+D:A warrior clad in ornate but effective armor, holding katana so sharp it
 D:can cut your throat and you won't notice till you nod.
 O:DROP_SAMURAI
 P:Copy:Demigod:Warrior
@@ -16313,7 +16313,7 @@ F:RAND_25 | DROP_90 | OPEN_DOOR | BASH_DOOR | DROP_CORPSE | EVIL | GIANT | MOVE_
 F:WILD_WASTE
 P:Copy:Ogre:Warrior
 O:DROP_WARRIOR
-D:It is a massive ogre in metal armour, a champion of its kind.
+D:It is a massive ogre in metal armor, a champion of its kind.
 
 N:908:Pole axe of animated attack
 G:/:w
@@ -17492,7 +17492,7 @@ F:DROP_CORPSE | POS_SEE_INVIS
 P:Copy:Dark-Elf:Chaos-Warrior
 S:1_IN_3 | PARALYZE | SCARE | DARKNESS | BLIND | IDENTIFY
 D:A grim-faced dark elf, garbed in layer upon layer of gleaming black
-D:armour. As strong as he is magical, Eol is a worthy opponent.
+D:armor. As strong as he is magical, Eol is a worthy opponent.
 
 N:977:Maeglin, Betrayer of Gondolin
 G:h:r
@@ -21451,7 +21451,7 @@ F:EVIL | ORC | RES_DARK | CAN_SPEAK
 P:Copy:Kobold:Warrior
 S:1_IN_10 | SHOOT(3d8) | S_KIN | BERSERK
 O:DROP_WARRIOR_SHOOT
-D:An armoured orc of great size who has won respect and power among
+D:An armored orc of great size who has won respect and power among
 D:his fellow orcs.
 
 # new
@@ -22089,7 +22089,7 @@ F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Human:Mauler
 P:Body:Elephant
 D:A giant armadillo-like creature shuffling along awkwardly beneath its
-D:massive armoured shell.
+D:massive armored shell.
 
 N:1223:Dimetrodon
 G:R:U
@@ -23905,7 +23905,7 @@ F:ONLY_ITEM | DROP_2D2 | DROP_GOOD |
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Human:Mauler
 P:Body:Centipede6
-D:It is a vast armoured centipede with massive mandibles and a spiked tail.
+D:It is a vast armored centipede with massive mandibles and a spiked tail.
 
 N:1317:Horned reaper
 G:U:B
