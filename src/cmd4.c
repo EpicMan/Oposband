@@ -4638,36 +4638,69 @@ static void _prof_weapon_doc(doc_ptr doc, int mode)
         int  max = p_ptr->proficiency_cap[i];
         int  max_lvl = weapon_exp_level(max);
         int  exp_lvl = weapon_exp_level(exp);
-        
-        if (i < PROF_MARTIAL_ARTS)
-            doc_printf(doc, "<color:%c>%-15s</color> ", equip_find_obj(TV_DIGGING + i, SV_ANY) ? 'B' : 'w', PROFICIENCIES[i]);
-        else
-            doc_printf(doc, "<color:%c>%-15s</color> ", 'w', PROFICIENCIES[i]);
+
+        char color = 'w';
+
+        switch (i)
+        {
+        case PROF_DIGGER:
+        case PROF_BLUNT:
+        case PROF_POLEARM:
+        case PROF_SWORD:
+        case PROF_STAVE:
+        case PROF_AXE:
+        case PROF_DAGGER:
+            if (equip_find_obj(TV_DIGGING + i, SV_ANY)) color = 'B';
+            break;
+        case PROF_BOW:
+            if (equip_find_obj(TV_BOW, SV_SHORT_BOW) || equip_find_obj(TV_BOW, SV_LONG_BOW) || equip_find_obj(TV_BOW, SV_NAMAKE_BOW)) color = 'B';
+            break;
+        case PROF_CROSSBOW:
+            if (equip_find_obj(TV_BOW, SV_LIGHT_XBOW) || equip_find_obj(TV_BOW, SV_HEAVY_XBOW)) color = 'B';
+            break;
+        case PROF_SLING:
+            if (equip_find_obj(TV_BOW, SV_SLING)) color = 'B';
+            break;
+        case PROF_MARTIAL_ARTS:
+            if (p_ptr->weapon_info[0].bare_hands) color = 'B';
+            break;
+        case PROF_DUAL_WIELDING:
+            if (p_ptr->weapon_info[0].dual_wield_pct < 1000) color = 'B';
+            break;
+        case PROF_RIDING:
+            if (p_ptr->riding) color = 'B';
+            break;
+        case PROF_INNATE_ATTACKS:
+            if (p_ptr->innate_attack_ct) color = 'B';
+            break;
+        }
+
+        doc_printf(doc, "<color:%c>%-15s</color> ", color, PROFICIENCIES[i]);
 
         switch (mode)
         {
-            case 1:
-                doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
-                break;
-            case 2:
-                {
-                    s32b pct = 0;
-                    int pct_lvl;
-                    if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
-                    pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-                    break;
-                }
-            case 3:
-                {
-                    s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
-                    int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-                    break;
-                }
-            default:
-                doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
-                break;
+        case 1:
+            doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
+            break;
+        case 2:
+        {
+            s32b pct = 0;
+            int pct_lvl;
+            if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
+            pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+            break;
+        }
+        case 3:
+        {
+            s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
+            int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+            break;
+        }
+        default:
+            doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
+            break;
         }
         doc_newline(doc);
     }
