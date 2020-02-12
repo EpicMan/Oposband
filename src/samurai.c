@@ -298,17 +298,10 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 11:
         if (name) return "Judge";
-        if (desc) return "Identifies a weapon or armor. Or *identifies* these at level 45.";
+        if (desc) return "Identifies a weapon or armor.";
         if (cast)
         {
-            if (plev > 44)
-            {
-                if (!identify_fully(object_is_weapon_armor_ammo)) return NULL;
-            }
-            else
-            {
-                if (!ident_spell(object_is_weapon_armor_ammo)) return NULL;
-            }
+            if (!ident_spell(object_is_weapon_armor_ammo)) return NULL;
         }
         break;
 

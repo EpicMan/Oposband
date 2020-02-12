@@ -168,16 +168,13 @@ cptr do_law_spell(int spell, int mode)
         break;
 
     case 6:
-        lisa = ((plev >= 45) && (lawyer_aptitude));
         if (name) return "Identify";
-        if (desc) return (lisa ? "Fully identifies an item." : "Identifies an item.");
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if ((lisa) && (!identify_fully(NULL))) return NULL;
-                else if (lisa) break;
-                else if (!ident_spell(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;

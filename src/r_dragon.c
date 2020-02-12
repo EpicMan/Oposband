@@ -419,7 +419,7 @@ static dragon_realm_t _realms[DRAGON_REALM_MAX] = {
         "Armed with a vast array of detection and knowledge spells, dragons of lore "
         "seek power through knowledge. They eventually gain powers of telepathy and "
         "automatic object identification. Lore dragons are quick learners and gain "
-        "maturity much more rapidly than the rest of their kind.",
+		"maturity much more rapidly than the rest of their kind.",
     /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb  Life  Exp Attack Breath*/
       {-1, +3,  0, -1, -1,  0}, {   3,   8,   2,   0,   5,   5, -8,  0}, 100,  80,   100,   100, A_INT},
 
@@ -536,7 +536,7 @@ static spell_info _lore_spells[] = {
     { 20, 15, 60, detection_spell },
     { 22, 17, 60, probing_spell },
     { 25, 20, 65, self_knowledge_spell },
-    { 30, 25, 70, identify_fully_spell },
+    { 30, 25, 70, alter_reality_spell },
     { 40, 50, 90, clairvoyance_spell },
     { -1, -1, -1, NULL}
 };

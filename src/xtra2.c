@@ -770,8 +770,9 @@ static bool _kind_is_utility(int k_idx)
         case SV_SCROLL_DETECT_MONSTERS:
             return TRUE;
         case SV_SCROLL_IDENTIFY:
-        case SV_SCROLL_STAR_IDENTIFY:
 			return easy_id ? FALSE : TRUE;
+		case SV_SCROLL_STAR_IDENTIFY:
+			return FALSE;
         }
         break;
 

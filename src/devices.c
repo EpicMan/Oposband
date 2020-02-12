@@ -1301,14 +1301,6 @@ static cptr _do_scroll(int sval, int mode)
             if (!_do_identify()) return NULL;
         }
         break;
-    case SV_SCROLL_STAR_IDENTIFY:
-        if (desc) return "It reveals all information about an item when you read it.";
-        if (cast)
-        {
-            device_noticed = TRUE;
-            if (!identify_fully(NULL)) return NULL;
-        }
-        break;
     case SV_SCROLL_REMOVE_CURSE:
         if (desc) return "It removes normal curses from equipped items when you read it.";
         if (cast)
@@ -1975,7 +1967,7 @@ static _effect_info_t _effect_info[] =
 
     {"ENCHANTMENT",     EFFECT_ENCHANTMENT,         30, 900, 16, 0},
     {"IDENTIFY",        EFFECT_IDENTIFY,            15,  50,  1, BIAS_ROGUE | BIAS_MAGE},
-    {"IDENTIFY_FULL",   EFFECT_IDENTIFY_FULL,       50, 200,  3, BIAS_ROGUE | BIAS_MAGE},
+    {"IDENTIFY_FULL",   EFFECT_IDENTIFY_FULL,       50, 200,  0, 0},
     {"PROBING",         EFFECT_PROBING,             30,  50,  1, BIAS_MAGE},
     {"RUNE_EXPLOSIVE",  EFFECT_RUNE_EXPLOSIVE,      30, 100,  2, BIAS_MAGE},
     {"RUNE_PROTECTION", EFFECT_RUNE_PROTECTION,     70, 500,  4, BIAS_PRIESTLY},
@@ -2525,7 +2517,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_ANIMATE_DEAD,          35,  17,     2,  70,    33,  0, 0},
     {EFFECT_SLOWNESS,              40,  19,     3,  70,    50, 10, 0},
     {EFFECT_SPEED,                 40,  19,     2,   0,    10,  0, _COMMON},
-    {EFFECT_IDENTIFY_FULL,         40,  20,     3,   0,    10,  0, _COMMON},
+    {EFFECT_IDENTIFY_FULL,         40,  20,     0,   0,    10,  0, _COMMON},
     {EFFECT_REMOVE_CURSE,          40,  20,     4,   0,    10,  0, 0},
     {EFFECT_DISPEL_DEMON,          45,  10,     2,   0,    50, 10, 0},
     {EFFECT_DISPEL_UNDEAD,         45,  10,     2,   0,    50, 10, 0},
@@ -2644,7 +2636,6 @@ static void _device_pick_effect(object_type *o_ptr, device_effect_info_ptr table
         if ((mode & AM_GOOD) && !(entry->flags & _DROP_GOOD)) continue;
         if ((mode & AM_GREAT) && !(entry->flags & _DROP_GREAT)) continue;
         if ((mode & AM_STOCK_TOWN) && !(entry->flags & _STOCK_TOWN)) continue;
-		if (entry->type == EFFECT_IDENTIFY_FULL) continue;
 		if (entry->type == EFFECT_PROBING) continue;
 
         entry->prob = 64 / rarity;
@@ -3686,16 +3677,6 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             device_noticed = TRUE;
             if (!_do_identify()) return NULL;
-        }
-        break;
-    case EFFECT_IDENTIFY_FULL:
-        if (name) return "*Identify*";
-        if (desc) return "It reveals all information about an item.";
-        if (value) return format("%d", 5000);
-        if (cast)
-        {
-            device_noticed = TRUE;
-            if (!identify_fully(NULL)) return NULL;
         }
         break;
     case EFFECT_PROBING:

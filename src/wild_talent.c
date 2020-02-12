@@ -203,7 +203,7 @@ static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] =
     /* CL33: Good Utility */
     {
         { A_INT, "like an Amberite", {30, 50, 50, shadow_shifting_spell}},
-        { A_INT, "like a Tourist", {25, 20, 30, identify_fully_spell}},
+        /*{ A_INT, "like a Tourist", {25, 20, 30, identify_fully_spell}},*/
         { A_CHR, "like an Earth Elemental", {30, 10, 40, earthquake_spell}},
         { A_CHR, "like a Wizard", {30, 20, 40, teleport_level_spell}},
         { A_WIS, "like a Priest", {30, 30, 50, healing_I_spell}},

@@ -2533,7 +2533,7 @@ static void _ego_create_dragon_armor(object_type *o_ptr, int level)
             if (one_in_(ACTIVATION_CHANCE))
             {   /* Only do strong effects since we lose the DSM's breathe activation! */
                 int choices[] = {
-                    EFFECT_IDENTIFY_FULL, EFFECT_DETECT_ALL, EFFECT_ENLIGHTENMENT,
+                    EFFECT_DETECT_ALL, EFFECT_ENLIGHTENMENT,
                     EFFECT_CLAIRVOYANCE, EFFECT_SELF_KNOWLEDGE, -1
                 };
                 _effect_add_list(o_ptr, choices);
@@ -3132,7 +3132,7 @@ static void _ego_create_helmet(object_type *o_ptr, int level)
             if (one_in_(ACTIVATION_CHANCE))
             {
                 int choices[] = {
-                    EFFECT_IDENTIFY, EFFECT_IDENTIFY_FULL, EFFECT_PROBING, EFFECT_DETECT_TRAPS,
+                    EFFECT_IDENTIFY, EFFECT_PROBING, EFFECT_DETECT_TRAPS,
                     EFFECT_DETECT_MONSTERS, EFFECT_DETECT_OBJECTS, EFFECT_DETECT_ALL,
                     EFFECT_ENLIGHTENMENT, EFFECT_CLAIRVOYANCE, EFFECT_SELF_KNOWLEDGE, -1
                 };
