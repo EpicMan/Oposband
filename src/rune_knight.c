@@ -1990,7 +1990,7 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     object_type forge = {0};
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_BROAD_SWORD));
+    object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
     rune_add(&forge, RUNE_ABSORPTION, FALSE);
     py_birth_obj(&forge);
 

@@ -231,7 +231,7 @@ void troika_wipe_timeouts(void)
 static void _birth(void)
 {
     disciple_birth(); 
-    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CONFUSION, 2);
     _troika_ini_quests();
@@ -328,10 +328,10 @@ static void _troika_event(int effect)
                     dummy2 = SV_RAPIER;
                     break;
                 case 7: case 8:
-                    dummy2 = SV_SMALL_SWORD;
+                    dummy2 = SV_SHORT_SWORD;
                     break;
                 case 9: case 10:
-                    dummy2 = SV_BASILLARD;
+                    dummy2 = SV_SABRE;
                     break;
                 case 11: case 12: case 13:
                     dummy2 = SV_SHORT_SWORD;
@@ -340,25 +340,18 @@ static void _troika_event(int effect)
                     dummy2 = SV_SABRE;
                     break;
                 case 16: case 17:
-                    dummy2 = SV_CUTLASS;
+                    dummy2 = SV_MEDIUM_SWORD;
                     break;
                 case 18:
                     dummy2 = SV_WAKIZASHI;
                     break;
                 case 19:
-                    dummy2 = SV_KHOPESH;
-                    break;
                 case 20:
-                    dummy2 = SV_TULWAR;
+                    dummy2 = SV_CURVED_SWORD;
                     break;
-                case 21:
-                    dummy2 = SV_BROAD_SWORD;
-                    break;
-                case 22: case 23:
-                    dummy2 = SV_LONG_SWORD;
-                    break;
-                case 24: case 25:
-                    dummy2 = SV_SCIMITAR;
+                case 21: case 22: case 23:
+				case 24: case 25:
+					dummy2 = SV_LONG_SWORD;
                     break;
                 case 26:
                     dummy2 = SV_NINJATO;
@@ -367,31 +360,25 @@ static void _troika_event(int effect)
                     dummy2 = SV_KATANA;
                     break;
                 case 28: case 29:
-                    dummy2 = SV_BASTARD_SWORD;
+                    dummy2 = SV_BROAD_SWORD;
                     break;
                 case 30:
-                    dummy2 = SV_GREAT_SCIMITAR;
+                    dummy2 = SV_EXECUTIONERS_SWORD;
                     break;
-                case 31:
-                    dummy2 = SV_CLAYMORE;
-                    break;
-                case 32:
-                    dummy2 = SV_ESPADON;
-                    break;
-                case 33:
+				case 31: case 32: case 33:
                     dummy2 = SV_TWO_HANDED_SWORD;
                     break;
                 case 34:
-                    dummy2 = SV_FLAMBERGE;
+                    dummy2 = SV_GREATSWORD;
                     break;
                 case 35:
-                    dummy2 = SV_NO_DACHI;
+                    dummy2 = SV_MITHRIL_SWORD;
                     break;
                 case 36:
                     dummy2 = SV_EXECUTIONERS_SWORD;
                     break;
                 case 37:
-                    dummy2 = SV_ZWEIHANDER;
+                    dummy2 = SV_BUSTER_SWORD;
                     break;
                 case 38:
                     dummy2 = SV_FALCON_SWORD;

@@ -1975,7 +1975,7 @@ static void _birth(void)
     if (p_ptr->psubclass == WARLOCK_GIANTS)
     {
         p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-        py_birth_obj_aux(TV_SWORD, SV_CLAYMORE, 1);
+        py_birth_obj_aux(TV_SWORD, SV_TWO_HANDED_SWORD, 1);
 
         p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
         p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;

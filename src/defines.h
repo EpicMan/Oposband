@@ -1712,15 +1712,11 @@ enum {
 /* The "sval" values for TV_HAFTED */
 #define SV_CLUB                          1    /* 1d4  */
 #define SV_WHIP                          2    /* 1d6  */
-#define SV_MACE                          5    /* 2d4  */
-#define SV_BALL_AND_CHAIN                6    /* 2d4  */
-#define SV_WAR_HAMMER                    8    /* 3d3  */
-#define SV_MORNING_STAR                 12    /* 2d6  */
+#define SV_MACE                8    /* 3d3  */ /* was WAR_HAMMER */
 #define SV_FLAIL                        13    /* 2d6  */
-#define SV_LEAD_FILLED_MACE             15    /* 3d4  */
-#define SV_TETSUBO                      16    /* 2d7  */
-#define SV_TWO_HANDED_FLAIL             18    /* 3d6  */
-#define SV_GREAT_HAMMER                 19    /* 4d6  */
+#define SV_BALL_AND_CHAIN             15    /* 3d4  */ /* was LEAD_FILLED_MACE */
+#define SV_WAR_HAMMER             18    /* 3d6  */ /* was two-handed flail */
+#define SV_MORNING_STAR                 19    /* 4d6  */ /* was GREAT_HAMMER */
 #define SV_MACE_OF_DISRUPTION           20    /* 5d8  */
 #define SV_GROND                        50    /* 3d9  */
 #define SV_BASEBALL_BAT                 51    /* 1d4  */
@@ -1737,56 +1733,47 @@ enum {
 
 /* The "sval" values for TV_POLEARM */
 #define SV_SPEAR                         2    /* 1d6 */
-#define SV_SICKLE                        3    /* 2d3 */
-#define SV_AWL_PIKE                      4    /* 1d8 */
 #define SV_TRIDENT                       5    /* 1d9 */
-#define SV_FAUCHARD                      6  /* 1d10 */
 #define SV_BROAD_SPEAR                   7    /* 1d9 */
-#define SV_PIKE                          8    /* 2d5 */
-#define SV_NAGINATA                      9  /* 2d6 */
+#define SV_POLEAXE                      9  /* 2d6 */
 #define SV_LUCERNE_HAMMER               12    /* 2d5  */
 #define SV_GLAIVE                       13    /* 2d6 */
-#define SV_LAJATANG                     14    /* 2d7 */
+#define SV_PIKE                     14    /* 2d7 */
 #define SV_HALBERD                      15    /* 3d4 */
-#define SV_GUISARME                     16  /* 2d5 */
+#define SV_SICKLE                     16  /* 2d5 */
 #define SV_SCYTHE                       17    /* 5d3 */
 #define SV_LANCE                        20    /* 2d8 */
 #define SV_TRIFURCATE_SPEAR             26    /* 2d9 */
 #define SV_HEAVY_LANCE                  29  /* 4d8 */
 #define SV_SCYTHE_OF_SLICING            30    /* 8d4 */
-#define SV_TSURIZAO                     40    /* 1d1 */
+#define SV_FISHING_POLE                     40    /* 1d1 */
 #define SV_DEATH_SCYTHE                 50    /* 10d10 */
 #define SV_DEATH_SCYTHE_HACK            51    /* 10d10 */
 
 /* The "sval" codes for TV_AXE */
 #define SV_HATCHET                       1    /* 1d5 */
-#define SV_BEAKED_AXE                   10    /* 2d6 */
-#define SV_BROAD_AXE                    11    /* 2d6 */
+#define SV_BROAD_AXE                   10    /* 2d6 */
+#define SV_BEAKED_AXE                    11    /* 2d6 */
 #define SV_BATTLE_AXE                   22    /* 2d8 */
 #define SV_GREAT_AXE                    25    /* 4d4 */
 #define SV_LOCHABER_AXE                 28    /* 3d8 */
+#define SV_WAR_AXE						31    /* 2d7 */
+#define SV_SLAUGHTER_AXE				32    /* 5d8 */
 
 /* The "sval" codes for TV_SWORD */
-#define SV_BROKEN_SWORD                  2  /* 1d2 */
-#define SV_SMALL_SWORD                   8  /* 1d6 */
-#define SV_SHORT_SWORD                  10  /* 1d7 */
-#define SV_CUTLASS                      12  /* 1d7 */
+#define SV_BROKEN_SWORD                  2  /* 1d2 */ /* Now only used for death sword */
+#define SV_SHORT_SWORD                   8  /* 1d6 */ /*Was small sword */
+#define SV_MEDIUM_SWORD                 12  /* 1d7 */
 #define SV_WAKIZASHI                    13  /* 2d4 */
-#define SV_KHOPESH                      14  /* 2d4 */
-#define SV_TULWAR                       15  /* 2d4 */
-#define SV_BROAD_SWORD                  16  /* 2d5 */
+#define SV_CURVED_SWORD                 15  /* 2d4 */
 #define SV_LONG_SWORD                   17  /* 2d5 */
-#define SV_SCIMITAR                     18  /* 2d5 */
 #define SV_KATANA                       20  /* 3d4 */
-#define SV_BASTARD_SWORD                21  /* 3d4 */
-#define SV_GREAT_SCIMITAR               22  /* 4d5 */
-#define SV_CLAYMORE                     23  /* 2d8 */
-#define SV_ESPADON                      24  /* 2d9 */
+#define SV_BROAD_SWORD                  21  /* 3d4 */
+#define SV_EXECUTIONERS_SWORD           22  /* 4d5 */
 #define SV_TWO_HANDED_SWORD             25  /* 3d6 */
-#define SV_FLAMBERGE                    26  /* 3d7 */
-#define SV_NO_DACHI                     27  /* 5d4 */
-#define SV_EXECUTIONERS_SWORD           28  /* 4d5 */
-#define SV_ZWEIHANDER                   29  /* 4d6 */
+#define SV_GREATSWORD                   26  /* 3d7 */
+#define SV_MITHRIL_SWORD                27  /* 5d4 */
+#define SV_BUSTER_SWORD                 29  /* 4d6 */
 #define SV_BLADE_OF_CHAOS               30  /* 6d5 */
 #define SV_DIAMOND_EDGE                 31  /* 7d5 */
 #define SV_RUNESWORD                    34  /* 0d0 */
@@ -1797,7 +1784,6 @@ enum {
 #define SV_MAIN_GAUCHE                   5  /* 1d5 */
 #define SV_TANTO                         6  /* 1d5 */
 #define SV_RAPIER                        7  /* 1d6 */
-#define SV_BASILLARD                     9  /* 1d8 */
 #define SV_SABRE                        11  /* 1d7 */
 #define SV_NINJATO                      19  /* 1d9 */
 #define SV_POISON_NEEDLE                32  /* 1d1 */

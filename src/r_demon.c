@@ -397,7 +397,7 @@ static void _marilith_birth(void) {
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_BROAD_SWORD));
+    object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
     forge.to_h = 2;
     py_birth_obj(&forge);
 
@@ -818,7 +818,7 @@ static void _cyber_birth(void)
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_HAFTED, SV_GREAT_HAMMER));
+    object_prep(&forge, lookup_kind(TV_HAFTED, SV_MORNING_STAR));
     py_birth_obj(&forge);
 
     _demon_birth();

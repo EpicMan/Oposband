@@ -963,7 +963,7 @@ bool karrot_replace_art(object_type *o_ptr)
 static void _birth(void)
 {
     disciple_birth();
-    py_birth_obj_aux(TV_SWORD, SV_CUTLASS, 1);
+    py_birth_obj_aux(TV_SWORD, SV_MEDIUM_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     _karrot_ini_quests();
 }

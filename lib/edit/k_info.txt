@@ -339,14 +339,15 @@ A:0/1
 P:0:1d3:-4:0
 F:SHOW_MODS
 
+#Hack for Death sword race
 N:*:& Broken Sword~
 G:|:D
 I:23:2:0
 W:0:0:0:30:2
-A:0/1
 P:0:2d3:-4:0
 F:SHOW_MODS
 D:Above the hilt, a foot of steel rises, ending in a jagged edge.
+
 
 N:*:& Dagger~
 G:|:W
@@ -366,15 +367,16 @@ P:0:1d6:0:0
 F:SHOW_MODS | TOWN
 D:A short thrusting blade with a large guard, primarily used in duels.
 
-N:*:& Tanto~
+N:*:& Foil~
 G:|:W
 I:26:6:0
 W:3:0:0:20:30
 A:3/2
 P:0:1d7:0:0
 F:SHOW_MODS | TOWN
+D:A long, thin thrusting blade, mainly used in duels.
 
-N:*:& Rapier~
+N:*:& Epee~
 G:|:W
 I:26:7:0
 W:5:0:0:40:42
@@ -383,31 +385,31 @@ P:0:1d8:0:0
 F:SHOW_MODS | TOWN
 D:A long, thin thrusting blade, mainly used in duels.
 
-N:*:& Small Sword~
+N:*:& Short Sword~
 G:|:W
 I:23:8:0
 W:5:0:0:75:48
 A:5/1
 P:0:1d8:0:0
 F:SHOW_MODS | TOWN
-D:A smaller version of the longsword, perfectly sized for Hobbits.
+D:A short thrusting sword, perfectly sized for Hobbits.
 
-N:*:& Basillard~
-G:|:w
-I:26:9:0
-W:15:0:0:80:220
-A:15/3
-P:0:1d9:0:0
-F:SHOW_MODS | TOWN
+#N:*:& Basillard~
+#G:|:w
+#I:26:9:0
+#W:15:0:0:80:220
+#A:15/3
+#P:0:1d9:0:0
+#F:SHOW_MODS | TOWN
 
-N:*:& Short Sword~
-G:|:W
-I:23:10:0
-W:5:0:0:80:90
-A:5/1
-P:0:1d8:0:0
-F:SHOW_MODS | TOWN
-D:A short thrusting sword.
+#N:*:& Short Sword~
+#G:|:W
+#I:23:10:0
+#W:5:0:0:80:90
+#A:5/1
+#P:0:1d8:0:0
+#F:SHOW_MODS | TOWN
+#D:A short thrusting sword.
 
 N:*:& Sabre~
 G:|:W
@@ -419,14 +421,14 @@ F:SHOW_MODS | RIDING | TOWN
 D:A light, somewhat curved blade that can be used to thrust or slash; familiar
 D:to horseman and duelists alike.
 
-N:*:& Cutlass~
+N:*:& Medium Sword~
 G:|:W
 I:23:12:0
 W:5:0:0:110:85
 A:5/1
 P:0:1d9:0:0
 F:SHOW_MODS | TOWN
-D:A large, curved chopper with a basket hilt, well known to seamen.
+D:Short sword too small, but long sword too big? Here is the blade for you!
 
 N:*:& Wakizashi~
 G:|:W
@@ -436,30 +438,31 @@ A:15/3
 P:0:2d5:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Khopesh~
-G:|:W
-I:23:14:0
-W:10:0:0:130:190
-A:10/2
-P:0:2d5:0:0
-F:SHOW_MODS | TOWN
+#N:*:& Khopesh~
+#G:|:W
+#I:23:14:0
+#W:10:0:0:130:190
+#A:10/2
+#P:0:2d5:0:0
+#F:SHOW_MODS | TOWN
 
-N:*:& Tulwar~
+N:*:& Curved Sword~
 G:|:W
 I:23:15:0
 W:5:0:0:100:200
 A:5/1
 P:0:2d5:0:0
 F:SHOW_MODS | RIDING | TOWN
+D:A one-edged sword with a long, curving blade. Favored by Orcs.
 
-N:*:& Broad Sword~
-G:|:W
-I:23:16:0
-W:10:0:0:150:255
-A:10/1
-P:0:2d6:0:0
-F:SHOW_MODS | RIDING | TOWN
-D:A heavy, double-edged sword with a strong grip.
+#N:*:& Broad Sword~
+#G:|:W
+#I:23:16:0
+#W:10:0:0:150:255
+#A:10/1
+#P:0:2d6:0:0
+#F:SHOW_MODS | RIDING | TOWN
+#D:A heavy, double-edged sword with a strong grip.
 
 N:*:& Long Sword~
 G:|:W
@@ -471,14 +474,14 @@ F:SHOW_MODS | RIDING | TOWN
 D:A long, straight, two-edged blade, with two hand guards projecting out from
 D:the hilt to form a perfect cross.
 
-N:*:& Scimitar~
-G:|:W
-I:23:18:0
-W:10:0:0:130:250
-A:10/1
-P:0:2d6:0:0
-F:SHOW_MODS | TOWN
-D:A single-edged slashing sword with a blade like a crescent.
+#N:*:& Scimitar~
+#G:|:W
+#I:23:18:0
+#W:10:0:0:130:250
+#A:10/1
+#P:0:2d6:0:0
+#F:SHOW_MODS | TOWN
+#D:A single-edged slashing sword with a blade like a crescent.
 
 N:*:& Ninjato~
 G:|:s
@@ -498,39 +501,40 @@ F:SHOW_MODS | TOWN
 D:A slightly curved long-handled slashing sword with a single-edged
 D:blade and a chisel tip.
 
-N:*:& Bastard Sword~
+N:*:& Broad Sword~
 G:|:W
 I:23:21:0
 W:15:0:0:140:350
 A:15/1
 P:0:3d5:0:0
 F:SHOW_MODS | TOWN
-D:Also known as the hand-and-a-half blade.  A larger-than-normal
-D:straight-sided sword with two cutting edges.
+D:A heavy, double-edged sword with a strong grip.
 
-N:*:& Falchion~
+N:*:& Executioner's Sword~
 G:|:W
 I:23:22:0
 W:40:0:0:240:500
 A:40/3
 P:0:4d6:0:0
-F:SHOW_MODS | RIDING
-
-N:*:& Claymore~
-G:|:W
-I:23:23:0
-W:40:0:0:200:600
-A:40/2
-P:0:2d9:0:0
-F:SHOW_MODS | TOWN
-
-N:*:& Espadon~
-G:|:W
-I:23:24:0
-W:40:0:0:200:600
-A:40/3
-P:0:2d10:0:0
 F:SHOW_MODS
+D:A giant, curved blade designed to cleave the head cleanly from the
+D:body.
+
+#N:*:& Claymore~
+#G:|:W
+#I:23:23:0
+#W:40:0:0:200:600
+#A:40/2
+#P:0:2d9:0:0
+#F:SHOW_MODS | TOWN
+
+#N:*:& Espadon~
+#G:|:W
+#I:23:24:0
+#W:40:0:0:200:600
+#A:40/3
+#P:0:2d10:0:0
+#F:SHOW_MODS
 
 N:*:& Two-Handed Sword~
 G:|:W
@@ -541,7 +545,7 @@ P:0:3d7:0:0
 F:SHOW_MODS | TOWN
 D:A great, double-edged broadsword which few can wield in one hand.
 
-N:*:& Flamberge~
+N:*:& Greatsword~
 G:|:W
 I:23:26:0
 W:40:0:0:230:600
@@ -549,25 +553,23 @@ A:40/2
 P:0:3d8:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& No-dachi~
-G:|:W
+N:*:& Mithril-plated Sword~
+G:|:B
 I:23:27:0
 W:35:0:0:190:579
 A:35/3
 P:0:5d4:0:0
-F:SHOW_MODS | TOWN
+F:SHOW_MODS | TOWN | RIDING
 
-N:*:& Executioner's Sword~
-G:|:r
-I:23:28:0
-W:40:0:0:260:850
-A:40/1
-P:0:4d6:0:0
-F:SHOW_MODS
-D:A giant, curved blade designed to cleave the head cleanly from the
-D:body.
+#N:*:& Executioner's Sword~
+#G:|:r
+#I:23:28:0
+#W:40:0:0:260:850
+#A:40/1
+#P:0:4d6:0:0
+#F:SHOW_MODS
 
-N:*:& Zweihander~
+N:*:& Buster Sword~
 G:|:w
 I:23:29:0
 W:40:0:0:280:580
@@ -637,7 +639,7 @@ N:85:& Hatchet~
 G:/:s
 I:25:1:0
 W:10:0:0:60:120
-A:10/2
+A:3/3
 P:0:1d6:0:0
 F:SHOW_MODS | TOWN
 
@@ -651,21 +653,21 @@ F:SHOW_MODS | RIDING | TOWN
 D:The basic polearm, with a double-edged knife mounted on a light shaft.
 D:This weapon can be thrown effectively.
 
-N:*:& Sickle~
-G:/:s
-I:22:3:0
-W:10:0:0:70:110
-A:10/3
-P:0:2d4:0:0
-F:SHOW_MODS | TOWN
+#N:*:& Sickle~
+#G:/:s
+#I:22:3:0
+#W:10:0:0:70:110
+#A:10/3
+#P:0:2d4:0:0
+#F:SHOW_MODS | TOWN
 
-N:*:& Awl-Pike~
-G:/:s
-I:22:4:0
-W:10:0:0:160:340
-A:10/1
-P:0:1d10:0:0
-F:SHOW_MODS | TOWN
+#N:*:& Awl-Pike~
+#G:/:s
+#I:22:4:0
+#W:10:0:0:160:340
+#A:10/1
+#P:0:1d10:0:0
+#F:SHOW_MODS | TOWN
 
 N:*:& Trident~
 G:/:y
@@ -676,13 +678,13 @@ P:0:1d10:0:0
 F:SHOW_MODS | RIDING | TOWN
 D:A three-pronged spear, originally for catching fish.
 
-N:*:& Fauchard~
-G:/:s
-I:22:6:0
-W:18:0:0:155:301
-A:18/2
-P:0:1d12:0:0
-F:SHOW_MODS | RIDING | TOWN
+#N:*:& Fauchard~
+#G:/:s
+#I:22:6:0
+#W:18:0:0:155:301
+#A:18/2
+#P:0:1d12:0:0
+#F:SHOW_MODS | RIDING | TOWN
 
 N:*:& Broad Spear~
 G:/:w
@@ -692,16 +694,16 @@ A:14/1
 P:0:1d11:0:0
 F:SHOW_MODS | RIDING | TOWN
 
-N:*:& Pike~
-G:/:s
-I:22:8:0
-W:15:0:0:160:358
-A:15/1
-P:0:2d6:0:0
-F:SHOW_MODS | TOWN
-D:A long, heavy spear with an iron head and reinforced shaft.
+#N:*:& Pike~
+#G:/:s
+#I:22:8:0
+#W:15:0:0:160:358
+#A:15/1
+#P:0:2d6:0:0
+#F:SHOW_MODS | TOWN
+#D:A long, heavy spear with an iron head and reinforced shaft.
 
-N:*:& Naginata~
+N:*:& Poleaxe~
 G:/:s
 I:22:9:0
 W:25:0:0:150:408
@@ -711,21 +713,21 @@ F:SHOW_MODS | TOWN
 
 N:*:& Beaked Axe~
 G:/:s
-I:25:10:0
-W:15:0:0:120:408
-A:15/1
+I:25:11:0
+W:15:0:0:130:304
+A:10/1
 P:0:2d7:0:0
 F:SHOW_MODS | TOWN
 D:A narrow axe head opposed by a crow's beak, mounted on an oaken shaft.
 
 N:*:& Broad Axe~
 G:/:s
-I:25:11:0
-W:15:0:0:130:304
+I:25:10:0
+W:15:0:0:120:408
 A:15/1
 P:0:2d7:0:0
 F:SHOW_MODS | TOWN
-D:A simple, single-bladed war axe capable of chopping though limbs or armor.
+D:A large, single-bladed war axe capable of chopping though limbs or armor.
 
 N:*:& Lucerne Hammer~
 G:/:B
@@ -745,13 +747,14 @@ F:SHOW_MODS | RIDING | TOWN
 D:A reinforced wooden pole eight feet long, topped by a massive knife blade
 D:that can can be used to thrust or chop.
 
-N:*:& Lajatang~
+N:*:& Pike~
 G:/:s
 I:22:14:0
 W:25:0:0:175:330
 A:25/2
 P:0:2d8:0:0
 F:SHOW_MODS | TOWN
+D:A long, heavy spear with an iron head and reinforced shaft.
 
 N:*:& Halberd~
 G:/:s
@@ -763,7 +766,7 @@ F:SHOW_MODS | TOWN
 D:The most successful of the polearms, the halberd has a long haft mounted
 D:with a heavy axe blade and opposing spike, and topped by a thrusting spine.
 
-N:*:& Guisarme~
+N:*:& Sickle~
 G:/:s
 I:22:16:0
 W:21:0:0:165:320
@@ -869,6 +872,25 @@ W:70:0:0:350:10000
 P:0:10d10:30:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
+N:*:& Cleaver~
+G:/:s
+I:25:2:0
+W:13:0:0:110:175
+A:13/1
+P:0:2d5:0:0:0
+F:SHOW_MODS | TOWN
+D:A small axe with a heavy rectangular blade.
+
+N:*:& Slaughter Axe~
+G:/:G
+I:25:32:0
+W:70:0:0:300:6000
+A:70/8
+P:0:5d8:0:0
+F:SLAY_ANIMAL | VORPAL | SHOW_MODS
+D:A huge axe, the sort used for slaughtering animals, this weapon is unusually deadly against
+D:natural creatures.
+
 ########################################################################
 # Blunt Weapons (TV_HAFTED)
 ########################################################################
@@ -908,23 +930,23 @@ A:16/2
 P:0:2d4:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Mace~
-G:\:D
-I:21:5:0
-W:5:0:0:120:130
-A:5/1
-P:0:2d5:0:0
-F:SHOW_MODS | TOWN
-D:A war club with an iron head, usually flanged.
+#N:*:& Mace~
+#G:\:D
+#I:21:5:0
+#W:5:0:0:120:130
+#A:5/1
+#P:0:2d5:0:0
+#F:SHOW_MODS | TOWN
+#D:A war club with an iron head, usually flanged.
 
-N:*:& Ball-and-Chain~
-G:\:D
-I:21:6:0
-W:20:0:0:150:200
-A:20/1
-P:0:2d5:0:0
-F:SHOW_MODS | RIDING | TOWN
-D:A weighty iron ball, suspended by a chain from a sturdy oaken handle.
+#N:*:& Ball-and-Chain~
+#G:\:D
+#I:21:6:0
+#W:20:0:0:150:200
+#A:20/1
+#P:0:2d5:0:0
+#F:SHOW_MODS | RIDING | TOWN
+#D:A weighty iron ball, suspended by a chain from a sturdy oaken handle.
 
 N:*:& Jo Staff~
 G:\:U
@@ -934,14 +956,15 @@ A:11/2
 P:0:1d8:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& War Hammer~
+#Was war hammer
+N:*:& Mace~
 G:\:D
 I:21:8:0
 W:5:0:0:120:225
 A:5/1
 P:0:3d4:0:0
 F:SHOW_MODS | RIDING | TOWN
-D:A mallet with a tapered head and a long handle.
+D:A war club with an iron head, usually flanged.
 
 N:*:& Three Piece Rod~
 G:\:u
@@ -951,14 +974,14 @@ A:20/3
 P:0:4d3:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Morning Star~
-G:\:D
-I:21:12:0
-W:10:0:0:150:396
-A:10/1
-P:0:2d7:0:0
-F:SHOW_MODS | TOWN
-D:A war club with an spiked iron ball on the head.
+#N:*:& Morning Star~
+#G:\:D
+#I:21:12:0
+#W:10:0:0:150:396
+#A:10/1
+#P:0:2d7:0:0
+#F:SHOW_MODS | TOWN
+#D:A war club with an spiked iron ball on the head.
 
 N:*:& Flail~
 G:\:D
@@ -978,41 +1001,43 @@ A:20/1
 P:0:1d12:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Lead-Filled Mace~
+#Was lead-filled mace
+N:*:& Ball-and-chain~
 G:\:D
 I:21:15:0
 W:15:0:0:180:502
 A:15/1
 P:0:3d5:0:0
 F:SHOW_MODS | TOWN
-D:A heavy war club topped with a mass of lead-filled steel, capable of
-D:landing crushing blows.
+D:A weighty iron ball, suspended by a chain from a sturdy oaken handle.
 
-N:*:& Tetsubo~
-G:\:u
-I:21:16:0
-W:25:0:0:190:570
-A:25/2
-P:0:2d8:0:0
-F:SHOW_MODS
+#N:*:& Tetsubo~
+#G:\:u
+#I:21:16:0
+#W:25:0:0:190:570
+#A:25/2
+#P:0:2d8:0:0
+#F:SHOW_MODS
 
-N:*:& Two-Handed Flail~
+#Was Two-Handed Flail
+N:*:& War Hammer~
 G:\:y
 I:21:18:0
 W:45:0:0:280:590
 A:45/1
 P:0:3d7:0:0
 F:SHOW_MODS | TOWN
-D:Two great bars of wood connected by a massive chain, needing two hands
-D:to properly wield.
+D:A mallet with a tapered head and a long handle.
 
-N:*:& Great Hammer~
+#Was Great Hammer
+N:*:& Morning Star~
 G:\:D
 I:21:19:0
 W:45:0:0:300:350
 A:45/3
 P:0:4d7:0:0
 F:SHOW_MODS | TOWN
+D:A war club with an spiked iron ball on the head.
 
 N:*:& Mace~ of Disruption
 G:\:v
@@ -4471,6 +4496,14 @@ W:0:0:10:3:0
 A:0/1
 P:0:1d1:0:0
 M:100:1d5
+
+N:*:& Broken Sword~
+G:|:D
+I:3:9:0
+W:0:0:0:30:0
+A:0/1
+P:0:1d1:0:0
+D:Above the hilt, a foot of steel rises, ending in a jagged edge.
 
 N:*:& Capture Ball#
 G:~:B

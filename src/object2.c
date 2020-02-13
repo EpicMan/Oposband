@@ -3395,8 +3395,8 @@ static bool _kind_theme_hobbit(int k_idx) {
 }
 static bool _kind_theme_dwarf(int k_idx) {
     if ( _kind_is_(k_idx, TV_AXE, SV_LOCHABER_AXE)
-      || _kind_is_(k_idx, TV_AXE, SV_BEAKED_AXE)
       || _kind_is_(k_idx, TV_AXE, SV_BROAD_AXE)
+      || _kind_is_(k_idx, TV_AXE, SV_BEAKED_AXE)
       || _kind_is_(k_idx, TV_AXE, SV_BATTLE_AXE)
       || _kind_is_(k_idx, TV_AXE, SV_GREAT_AXE)
       || _kind_is_(k_idx, TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS)

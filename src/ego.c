@@ -1873,7 +1873,7 @@ static void _ego_create_weapon_armageddon(object_type *o_ptr, int level)
                 o_ptr->ds = 5; /* Muramasa */
             }
         }
-        if (object_is_(o_ptr, TV_HAFTED, SV_WAR_HAMMER) && one_in_(2))
+        if (object_is_(o_ptr, TV_HAFTED, SV_MACE) && one_in_(2))
             o_ptr->dd = 9; /* Aule */
     }
     else
