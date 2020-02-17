@@ -2529,8 +2529,8 @@ option_type option_info[] =
 	{ &never_forget,		FALSE, OPT_PAGE_BIRTH, 6, 27,
 	"never_forget",			"Easy Labyrinth and no amnesia" },
 
-    { &smart_learn,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
-    "smart_learn",                  "Monsters learn from their mistakes (*)" },
+    { &xp_penalty_to_score,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
+    "xp_penalty_to_score",                  "Exp multiplier affect score instead" },
 
     { &smart_cheat,                 FALSE, OPT_PAGE_BIRTH, 1, 15,
     "smart_cheat",                  "Monsters exploit player's weaknesses (*)" },

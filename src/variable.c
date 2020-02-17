@@ -321,7 +321,7 @@ bool coffee_break;   /* Coffee-break mode */
 bool easy_id;        /* Easy Identify */
 bool easy_damage;    /* Access wizard info about damage and monster health */
 bool power_tele;     /* Use old-style, non-fuzzy telepathy */
-bool smart_learn;    /* Monsters learn from their mistakes (*) */
+bool xp_penalty_to_score;    /* Monsters learn from their mistakes (*) */
 bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
 bool no_wilderness;
 bool ironman_shops;    /* Stores are permanently closed (*) */

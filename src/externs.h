@@ -342,7 +342,7 @@ extern bool coffee_break;   /* Coffeebreak mode */
 extern bool easy_id;        /* Easy Identify */
 extern bool easy_damage;    /* Peek into damage and monster health */
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
-extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
+extern bool xp_penalty_to_score;    /* XP modifiers used to modify score instead. Was smart_learn. (*) */
 extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
 extern bool no_wilderness;  /* Play without a normal wilderness */
 extern bool ironman_shops;    /* Stores are permanently closed (*) */
@@ -1221,7 +1221,6 @@ extern bool alloc_monster(int dis, u32b mode);
 extern bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode);
 extern bool summon_named_creature (int who, int oy, int ox, int r_idx, u32b mode);
 extern bool multiply_monster(int m_idx, bool clone, u32b mode);
-extern void update_smart_learn(int m_idx, int what);
 extern void choose_new_monster(int m_idx, bool born, int r_idx);
 extern byte get_mspeed(monster_race *r_ptr);
 extern bool player_place(int y, int x);

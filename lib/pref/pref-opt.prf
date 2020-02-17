@@ -98,7 +98,7 @@ Y:alert_trap_detect
 ##### Birth Options #####
 
 X:easy_id
-X:smart_learn
+Y:xp_penalty_to_score
 X:smart_cheat
 X:no_wilderness
 X:ironman_shops

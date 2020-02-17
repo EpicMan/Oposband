@@ -142,10 +142,14 @@ int exp_requirement(int level)
 {
     bool android = (p_ptr->prace == RACE_ANDROID ? TRUE : FALSE);
     int base = (android ? _player_exp_a : _player_exp)[level-1];
+
+    int div = p_ptr->expfact;
+    if (xp_penalty_to_score) div = 180; //Average normal XP multiplier is 190, monster race is 180, make things slightly faster for normals.
+
     if (base % 100 == 0)
-        return base / 100 * p_ptr->expfact;
+        return base / 100 * div;
     else
-        return base * p_ptr->expfact / 100;
+        return base * div / 100;
 }
 
 void gain_chosen_stat(void)

@@ -5881,7 +5881,7 @@ void change_race(int new_race, cptr effect_msg)
     p_ptr->psubrace = 0;
 
     /* Experience factor */
-    p_ptr->expfact = calc_exp_factor();
+    if (!xp_penalty_to_score) p_ptr->expfact = calc_exp_factor();
 
     do_cmd_rerate(FALSE);
 

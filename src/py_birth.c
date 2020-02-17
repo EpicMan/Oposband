@@ -2591,29 +2591,45 @@ static void _race_class_info(doc_ptr doc)
         _stats_add(stats, pers_ptr->stats);
         if (p_ptr->dragon_realm)
             _stats_add(stats, realm_ptr->stats);
-
-        doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
+        if (xp_penalty_to_score)
+            doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Score</color>\n");
+        else
+            doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
         _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
-        doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, pers_ptr->exp);
+
+        int xp = pers_ptr->exp;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
+        doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, xp);
         
+        xp = race_ptr->exp;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
         _stats_line(doc, race_ptr->stats, spell_stat, 'G');
-        doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, race_ptr->exp);
+        doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, xp);
         if (game_mode != GAME_MODE_MONSTER)
         {
+            xp = class_ptr->exp;
+            if (xp_penalty_to_score) xp = 100 * 100 / xp;
+
             _stats_line(doc, class_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%  %+3d  %3d%%\n", class_ptr->life, class_ptr->base_hp, class_ptr->exp);
+            doc_printf(doc, "%3d%%  %+3d  %3d%%\n", class_ptr->life, class_ptr->base_hp, xp);
         }
         if (p_ptr->dragon_realm)
         {
+            xp = realm_ptr->exp;
+            if (xp_penalty_to_score) xp = 100 * 100 / xp;
+            
             _stats_line(doc, realm_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%       %3d%%\n", realm_ptr->life, realm_ptr->exp);
-        }
+            doc_printf(doc, "%3d%%       %3d%%\n", realm_ptr->life, xp);        }
 
         _stats_line(doc, stats, spell_stat, 'R');
+
+        xp = race_ptr->exp * class_ptr->exp * pers_ptr->exp * realm_ptr->exp / 1000000;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
+
         doc_printf(doc, "<color:R>%3d%%  %+3d  %3d%%</color>\n",
             race_ptr->life * class_ptr->life * pers_ptr->life * realm_ptr->life / 1000000,
             race_ptr->base_hp + class_ptr->base_hp,
-            race_ptr->exp * class_ptr->exp * pers_ptr->exp * realm_ptr->exp / 1000000
+            xp
         );
         doc_insert(doc, "</style>");
     }
