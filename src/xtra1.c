@@ -3617,7 +3617,7 @@ void calc_bonuses(void)
     p_ptr->align = friend_align;
     p_ptr->maul_of_vice = FALSE;
 
-    if (easy_id)
+    if (no_id)
         p_ptr->auto_id = TRUE;
     else p_ptr->auto_pseudo_id = TRUE;
 

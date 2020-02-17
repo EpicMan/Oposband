@@ -176,8 +176,8 @@ static void sense_inventory1(void)
 
     if (p_ptr->confused) return;
 
-	if (easy_id)
-        strong = TRUE;
+    if (no_id)
+        return;
 	else
     {
 		int flags = _get_pseudo_id_flags();
@@ -219,9 +219,9 @@ static void sense_inventory2(void)
 //    int  flags = _get_pseudo_id_flags();
 
     if (p_ptr->confused) return;
-	if (easy_id)
+	if (no_id)
 	{
-        strong = TRUE;
+        return;
     }
     else
     {

@@ -2485,8 +2485,8 @@ static void _build_options(doc_ptr doc)
     if (easy_damage)
 		doc_printf(doc, " Easy Damage Info:   On\n");
 
-	if (easy_id)
-		doc_printf(doc, " Easy Identify:      On\n");
+	if (no_id)
+		doc_printf(doc, " All items pre-IDed: On\n");
 
     if (no_wilderness)
         doc_printf(doc, " Wilderness:         Off\n");

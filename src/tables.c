@@ -2514,8 +2514,8 @@ option_type option_info[] =
 	{ &coffee_break,		FALSE, OPT_PAGE_BIRTH, 6, 3,
 	"coffee_break",			"Coffee-break mode (accelerated game) (*)" },
 
-	{ &easy_id,			FALSE, OPT_PAGE_BIRTH, 6, 31,
-	"easy_id",			"Easy Identify" },
+	{ &no_id,			FALSE, OPT_PAGE_BIRTH, 6, 31,
+	"no_id",			"No ID is needed" },
 
 	{ &easy_damage,			FALSE, OPT_PAGE_BIRTH, 6, 16,
 	"easy_damage",			"Easy monster health and damage information (*)" },
@@ -2524,13 +2524,13 @@ option_type option_info[] =
 	"power_tele",			"Use enhanced telepathy" },
 
 	{ &easy_thalos,			TRUE, OPT_PAGE_BIRTH, 6, 28,
-	"easy_thalos",			"Allow easy teleportation to Thalos" },
+	"easy_thalos",			"Allow easy teleportation to Thalos (*)" },
 
 	{ &never_forget,		FALSE, OPT_PAGE_BIRTH, 6, 27,
 	"never_forget",			"Easy Labyrinth and no amnesia" },
 
     { &xp_penalty_to_score,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
-    "xp_penalty_to_score",                  "Exp multiplier affect score instead" },
+    "xp_penalty_to_score",                  "Exp multiplier affect score instead (*)" },
 
     { &smart_cheat,                 FALSE, OPT_PAGE_BIRTH, 1, 15,
     "smart_cheat",                  "Monsters exploit player's weaknesses (*)" },

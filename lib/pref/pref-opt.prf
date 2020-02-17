@@ -97,7 +97,7 @@ Y:alert_trap_detect
 
 ##### Birth Options #####
 
-X:easy_id
+X:no_id
 Y:xp_penalty_to_score
 X:smart_cheat
 X:no_wilderness

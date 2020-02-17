@@ -339,7 +339,7 @@ extern bool alert_poison;       /* Alert on poisoning */
 /*** Birth Options ***/
 
 extern bool coffee_break;   /* Coffeebreak mode */
-extern bool easy_id;        /* Easy Identify */
+extern bool no_id;        /* No ID needed */
 extern bool easy_damage;    /* Peek into damage and monster health */
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
 extern bool xp_penalty_to_score;    /* XP modifiers used to modify score instead. Was smart_learn. (*) */
