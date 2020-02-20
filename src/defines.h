@@ -1771,15 +1771,13 @@ enum {
 #define SV_BROAD_SWORD                  21  /* 3d4 */
 #define SV_EXECUTIONERS_SWORD           22  /* 4d5 */
 #define SV_TWO_HANDED_SWORD             25  /* 3d6 */
-#define SV_GREATSWORD                   26  /* 3d7 */
-#define SV_MITHRIL_SWORD                27  /* 5d4 */
+#define SV_GREATSWORD                   27  /* 3d7 */
 #define SV_BUSTER_SWORD                 29  /* 4d6 */
 #define SV_BLADE_OF_CHAOS               30  /* 6d5 */
 #define SV_DIAMOND_EDGE                 31  /* 7d5 */
 #define SV_RUNESWORD                    34  /* 0d0 */
 
 /* The "sval" codes for TV_DAGGER */
-#define SV_BROKEN_DAGGER                 1  /* 1d1 */
 #define SV_DAGGER                        4  /* 1d4 */
 #define SV_MAIN_GAUCHE                   5  /* 1d5 */
 #define SV_TANTO                         6  /* 1d5 */

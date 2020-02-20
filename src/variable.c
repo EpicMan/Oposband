@@ -287,9 +287,6 @@ bool last_words;    /* Leave last words when your character dies */
 bool send_score;    /* Send score dump to the world score server */
 #endif
 
-bool allow_debug_opts;    /* Allow use of debug/cheat options */
-
-
 /*** Disturbance Options ***/
 
 bool find_ignore_stairs;    /* Run past stairs */
@@ -319,7 +316,6 @@ bool alert_poison;   /* Alert on high poisoning */
 
 bool coffee_break;   /* Coffee-break mode */
 bool no_id;        /* All objects identified on creation / all flavors known */
-bool easy_damage;    /* Access wizard info about damage and monster health */
 bool power_tele;     /* Use old-style, non-fuzzy telepathy */
 bool xp_penalty_to_score;    /* Monsters learn from their mistakes (*) */
 bool smart_cheat;    /* Monsters exploit players weaknesses (*) */

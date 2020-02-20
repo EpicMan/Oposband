@@ -87,7 +87,6 @@ static bool _weapon_is_giant(int tval, int sval)
         case SV_EXECUTIONERS_SWORD:
         case SV_GREATSWORD:
         case SV_TWO_HANDED_SWORD:
-        case SV_MITHRIL_SWORD:
         case SV_BUSTER_SWORD:
             return TRUE;
         }

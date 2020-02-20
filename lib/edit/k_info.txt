@@ -331,16 +331,8 @@ D:It cures poison, heals hp a bit, and restores your stats and life when eaten.
 # Edged Weapons (TV_SWORD)
 ########################################################################
 
-N:45:& Broken Dagger~
-G:|:D
-I:26:1:0
-W:0:0:0:5:1
-A:0/1
-P:0:1d3:-4:0
-F:SHOW_MODS
-
 #Hack for Death sword race
-N:*:& Broken Sword~
+N:45:& Broken Sword~
 G:|:D
 I:23:2:0
 W:0:0:0:30:2
@@ -545,21 +537,21 @@ P:0:3d7:0:0
 F:SHOW_MODS | TOWN
 D:A great, double-edged broadsword which few can wield in one hand.
 
-N:*:& Greatsword~
-G:|:W
-I:23:26:0
-W:40:0:0:230:600
-A:40/2
-P:0:3d8:0:0
-F:SHOW_MODS | TOWN
+#N:*:& Greatsword~
+#G:|:W
+#I:23:26:0
+#W:40:0:0:230:600
+#A:40/2
+#P:0:3d8:0:0
+#F:SHOW_MODS | TOWN
 
-N:*:& Mithril-plated Sword~
+N:*:& Greatsword~
 G:|:B
 I:23:27:0
 W:35:0:0:190:579
 A:35/3
 P:0:5d4:0:0
-F:SHOW_MODS | TOWN | RIDING
+F:SHOW_MODS | TOWN
 
 #N:*:& Executioner's Sword~
 #G:|:r

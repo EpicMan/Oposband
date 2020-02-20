@@ -2137,7 +2137,7 @@ void monster_desc(char *desc, monster_type *m_ptr, int mode)
         strcat(desc, buf);
     }
     #endif
-    if ((p_ptr->wizard || easy_damage) && (m_ptr->mpower != 1000))
+    if ((p_ptr->wizard) && (m_ptr->mpower != 1000)) /*easy_damage showed - display? */
     {
         strcat(desc, format(" (%d.%d%%)", m_ptr->mpower/10, m_ptr->mpower%10));
     }

@@ -307,9 +307,6 @@ extern bool last_words;    /* Leave last words when your character dies */
 extern bool send_score;    /* Send score dump to the world score server */
 #endif
 
-extern bool allow_debug_opts;    /* Allow use of debug/cheat options */
-
-
 /*** Disturbance Options ***/
 
 extern bool find_ignore_stairs;    /* Run past stairs */
@@ -340,7 +337,6 @@ extern bool alert_poison;       /* Alert on poisoning */
 
 extern bool coffee_break;   /* Coffeebreak mode */
 extern bool no_id;        /* No ID needed */
-extern bool easy_damage;    /* Peek into damage and monster health */
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
 extern bool xp_penalty_to_score;    /* XP modifiers used to modify score instead. Was smart_learn. (*) */
 extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
@@ -1253,7 +1249,6 @@ extern void py_display_spells_aux(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_character_sheet(doc_ptr doc);
 extern void py_display_dungeons(doc_ptr doc);
-extern int  oook_score(void);
 extern char *version_modifier(void);
 
 /* object1.c */

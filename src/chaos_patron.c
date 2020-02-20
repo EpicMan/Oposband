@@ -161,11 +161,8 @@ void chaos_forge_weapon() {
 	case 31: case 32: case 33:
 		dummy2 = SV_TWO_HANDED_SWORD;
 		break;
-	case 34:
+	case 34: case 35:
 		dummy2 = SV_GREATSWORD;
-		break;
-	case 35:
-		dummy2 = SV_MITHRIL_SWORD;
 		break;
 	case 36:
 		dummy2 = SV_EXECUTIONERS_SWORD;

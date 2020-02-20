@@ -2037,7 +2037,7 @@ static void prt_hp_bar(int row, int col)
     else if (pct > hitpoint_warn*10) a = TERM_YELLOW;
     else a = TERM_RED;
 
-    if (easy_damage || p_ptr->wizard)
+    if (p_ptr->wizard)
     {
         char buf[20];
         sprintf(buf, "%3d%%", pct);
@@ -2070,7 +2070,7 @@ static void prt_sp_bar(int row, int col)
     else if (pct > mana_warn*10) a = TERM_YELLOW;
     else a = TERM_RED;
 
-    if (easy_damage || p_ptr->wizard)
+    if (p_ptr->wizard)
     {
         char buf[20];
         sprintf(buf, "%3d%%", pct);
@@ -2103,7 +2103,7 @@ static void prt_food_bar(int row, int col)
     else if (pct >= 10) attr = TERM_L_RED;
     else attr = TERM_VIOLET;
 
-    if (easy_damage || p_ptr->wizard)
+    if (p_ptr->wizard)
     {
         char buf[20];
         sprintf(buf, "%3d%%", pct);
@@ -2139,7 +2139,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
             Term_queue_bigchar(col, row, TERM_WHITE, (easy_mimics ? r_ptr->x_char : r_ptr->d_char), 0, 0);
 
         /* Indicate that the monster health is "unknown" */
-        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
+        Term_putstr(col + 1, row, 11, base_attr, "  ???/???  ");
     }
 
     /* Tracking a hallucinatory monster */
@@ -2147,14 +2147,14 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
     {
         /* Indicate that the monster health is "unknown" */
         Term_putch(col, row, base_attr, ' ');
-        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
+        Term_putstr(col + 1, row, 11, base_attr, "  ???/???  ");
     }
 
     /* Tracking a dead monster (???) */
     else if (m_ptr->hp < 0)
     {
         Term_putch(col, row, base_attr, ' ');
-        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
+        Term_putstr(col + 1, row, 7, base_attr, " (dead)");
     }
 
     /* Tracking a visible monster */
@@ -2181,7 +2181,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         else if (pct >= 25) attr = TERM_ORANGE;
         else if (pct >= 10) attr = TERM_L_RED;
 
-        if (easy_damage || p_ptr->wizard)
+        if (p_ptr->wizard)
         {
             char buf[20];
             sprintf(buf, "%3d%%", pct);
@@ -2211,18 +2211,33 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         }
         else
         {
-            if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
-            else if (MON_PARALYZED(m_ptr)) attr = TERM_BLUE;
-            else if (MON_CSLEEP(m_ptr)) attr = TERM_BLUE;
-            else if (MON_CONFUSED(m_ptr)) attr = TERM_UMBER;
-            else if (MON_STUNNED(m_ptr)) attr = TERM_L_BLUE;
-            else if (MON_MONFEAR(m_ptr)) attr = TERM_VIOLET;
-            Term_putstr(col+1, row, 11, base_attr, "[---------]");
+			char buf[20];
 
-            if (m_ptr->ego_whip_ct)
+			if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
+			else if (MON_PARALYZED(m_ptr)) attr = TERM_BLUE;
+			else if (MON_CSLEEP(m_ptr)) attr = TERM_BLUE;
+			else if (MON_CONFUSED(m_ptr)) attr = TERM_UMBER;
+			else if (MON_STUNNED(m_ptr)) attr = TERM_L_BLUE;
+			else if (MON_MONFEAR(m_ptr)) attr = TERM_VIOLET;
+			else if (m_ptr->ego_whip_ct) attr = TERM_L_UMBER;
+
+			/* Label pet or target */
+			if (m_idx == target_who)
+				Term_putstr(col++, row, 1, TERM_RED, "*");
+			else if (m_idx == p_ptr->riding)
+				Term_putstr(col++, row, 1, TERM_GREEN, ">");
+
+            Term_putstr(col, row, 11, TERM_WHITE, "     /     ");
+			
+			/* Current / max hp */
+			sprintf(buf, "%5d", m_ptr->hp);
+			Term_putstr(col, row, 5, attr, buf);
+			sprintf(buf, "%d", m_ptr->maxhp);
+			Term_putstr(col + 6, row, 5, attr, buf);
+			/*if (m_ptr->ego_whip_ct)
                 Term_putstr(col + 2, row, len, attr, "wwwwwwwww");
             else
-                Term_putstr(col + 2, row, len, attr, "*********");
+                Term_putstr(col + 2, row, len, attr, "*********");*/
         }
     }
 }

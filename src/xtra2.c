@@ -2585,8 +2585,8 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     /* Genocided by chaos patron */
     if (!m_idx) return TRUE;
 
-    if (dam > 0 && (p_ptr->wizard || cheat_xtra || easy_damage))
-        msg_format("You do %d damage.", dam);
+    if (dam > 0)
+        msg_format("for <color:y>%d</color>.", dam);
 
     if ( p_ptr->melt_armor
       && note == NULL /* Hack: Trying to just get melee and shooting */
@@ -2595,10 +2595,8 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     {
         char m_name[MAX_NLEN];
         monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
-        msg_format("%^s armor melts.", m_name);
-        m_ptr->ac_adj -= randint1(2);
-        if (p_ptr->wizard || cheat_xtra || easy_damage)
-            msg_format("Melt Armor: AC is now %d", mon_ac(m_ptr));
+		m_ptr->ac_adj -= randint1(2);
+		msg_format("%^s armor melts (now %d).", m_name, mon_ac(m_ptr));
     }
 
     /* Rage Mage: "Blood Lust" */
