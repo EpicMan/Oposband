@@ -21531,15 +21531,15 @@ S:1_IN_4 |
 S:BR_DARK | BR_CONF | BR_INERTIA | S_DEMON |
 D:The prince of evil.
 
-N:1195:Lucifer, Father of Lies
-G:A:W
+N:1195:sUrGoL lOgRuS, lOrD oF cHaOs
+G:A:v
 I:140:192d100:50:242:25:235
 W:100:2:999:80586:0:0
 B:HIT:HURT(20d20):DISENCHANT(5d5, 50%):SLOW(3d3, 40%)
 B:TOUCH:DRAIN_CHARGES:UNLIFE(2d12, 50%):SLOW(3d3, 40%)
 B:GAZE:HURT(7d7):LOSE_WIS:CONFUSE
 B:GAZE:HURT(7d7):LOSE_CHR:DRAIN_EXP(10d6, 25%)
-A:LIGHT(3d4)
+A:CHAOS(3d4):FIRE(2d3):COLD(2d3)
 F:UNIQUE | MALE | CAN_SPEAK | CAN_FLY | AURA_REVENGE |
 F:FORCE_SLEEP | FORCE_MAXHP | REGENERATE | SELF_LITE_2 |
 F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD | DROP_GREAT |
@@ -21551,8 +21551,8 @@ P:Copy:Archon:Paladin
 S:FREQ_30 |
 S:BR_COLD | BR_NETHER | BR_SHARDS | PSY_SPEAR(1d200+150) | S_ANGEL | BA_LITE
 S:S_HI_DEMON
-D:The bringer of dawn, tempter of men's souls, the angel of the
-D: thirty-one-level pit; he twists reality around him and appears
+D:The heart and soul of the courts of chaos, Surgol is the embodiment of 
+D:chaos and madness; he twists reality around him and appears
 D: cloaked in both ice and flames.
 
 N:1196:The Lurking Horror
@@ -22618,7 +22618,7 @@ F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Human:Rage-Mage
 D:An icy whirlwind of cold air.
 
-N:1250:Polyphemus, the Blind Cyclops
+N:1250N:1250:Polyphemus, the Blind Cyclops
 G:P:g
 I:134:42d242:40:200:20:1000
 W:80:3:999:58080:0:0
@@ -22673,7 +22673,7 @@ P:Copy:Human:Warrior
 P:Body:Fish
 D:It always grows louder when it's about to feed.
 
-N:1253:Metatron, the High Angel
+N:1253:Metatron, the Living Pattern
 G:A:G
 I:136:108d148:100:192:2:250
 W:100:1:999:80586:0:0
@@ -22696,7 +22696,7 @@ S:FREQ_36 |
 S:TELE_TO | INVULN | BR_FIRE | BR_DISENCHANT | BR_MANA | S_ANGEL
 S:BA_LITE | BO_MANA | BRAIN_SMASH | HASTE | HEAL | ANTI_MAGIC | BR_GRAVITY
 S:BLINK | BR_NEXUS | MANA_STORM | BA_DARK | S_HI_DRAGON | PSY_SPEAR(1d200+150)
-D:You assume that, as the leading angel in Heaven, he must be officially good;
+D:You assume that, as the leading angel in Amber, he must be officially good;
 D:but you sense in him a ruthless scheming manipulator, one who has remained
 D:home and ruled in absolute comfort as Michael and Raphael have led the
 D:heavenly legions to the world outside in their fight against evil.

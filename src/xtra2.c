@@ -144,7 +144,7 @@ int exp_requirement(int level)
     int base = (android ? _player_exp_a : _player_exp)[level-1];
 
     int div = p_ptr->expfact;
-    if (xp_penalty_to_score) div = 180; //Average normal XP multiplier is 190, monster race is 180, make things slightly faster for normals.
+    if (xp_penalty_to_score) div = 150; //Average normal XP multiplier is 190, monster race is 180, give everyone a bit of a break.
 
     if (base % 100 == 0)
         return base / 100 * div;
