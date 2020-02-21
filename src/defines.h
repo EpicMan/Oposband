@@ -5540,7 +5540,7 @@ enum ego_type_e {
     EGO_BOOTS_GOLEM,
 
     /* Missile Weapons */
-    EGO_BOW_ACCURACY = 160,
+    EGO_BOW_KEEN_EYES = 160,
     EGO_BOW_VELOCITY,
     EGO_BOW_EXTRA_MIGHT,
     EGO_BOW_EXTRA_SHOTS,

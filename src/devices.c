@@ -2498,7 +2498,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_DETECT_EVIL,            7,   5,     1,  30,    10,  0, 0},
     {EFFECT_HASTE_MONSTERS,        10,   5,     1,  30,    50, 10, 0},
     {EFFECT_SUMMON_ANGRY_MONSTERS, 10,   5,     1,  30,    50, 10, 0},
-    {EFFECT_IDENTIFY,              10,   4,     1,   0,    10,  0, _STOCK_TOWN | _COMMON},
+    {EFFECT_IDENTIFY,              10,   4,     1,   0,    10,  0, 0},
     {EFFECT_SLEEP_MONSTERS,        10,   6,     1,  40,    33,  0, 0},
     {EFFECT_SLOW_MONSTERS,         10,   6,     1,  40,    33,  0, 0},
     {EFFECT_CONFUSE_MONSTERS,      15,   8,     1,  40,    33,  0, 0},
