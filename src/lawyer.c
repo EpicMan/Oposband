@@ -384,9 +384,16 @@ cptr do_law_spell(int spell, int mode)
         break;
 
     case 20:
-        if (name) return "Probe";
-        if (desc) return "Reveals information about nearby monsters.";
-        if (cast) probing();
+        if (name) return "Contempt of Court";
+        if (desc) return "Scare and stun a lawbreaking monster";
+		if (cast)
+		{
+
+			if (!get_fire_dir(&dir)) return NULL;
+
+			fear_monster(dir, 2 * plev);
+			stun_monster(dir, 5 + plev / 5);
+		}
         break;
 
     case 21:

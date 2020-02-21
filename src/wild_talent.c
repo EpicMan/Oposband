@@ -141,7 +141,7 @@ static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] =
     },
     /* CL19: Good Utility */
     {
-        { A_INT, "like a Half Titan", {15, 10, 40, probing_spell}},
+        { A_INT, "like a Half Titan", {15, 10, 40, word_of_power_spell}},
         { A_STR, "like a Half Giant", {19, 10, 40, stone_to_mud_spell}},
         { A_CHR, "like a Sorcerer", {19, 20, 50, identify_spell}},
         { A_CHR, "like a Mage", {19, 10, 40, teleport_spell}},

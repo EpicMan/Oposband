@@ -265,7 +265,7 @@ void check_experience(void)
 
 			/* Oposband: FUll heal / recharge */
 			int healed = p_ptr->mhp - p_ptr->chp;
-			msg_format("Healed <color:g>%d</color>.", healed);
+			if (healed) msg_format("Healed <color:g>%d</color>.", healed);
 			p_ptr->chp = p_ptr->mhp;
 			p_ptr->chp_frac = 0;
 			p_ptr->csp = p_ptr->msp;

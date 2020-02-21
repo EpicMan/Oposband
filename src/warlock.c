@@ -585,7 +585,7 @@ static void _understanding_spell(int cmd, variant *res)
         var_set_string(res, "Understanding");
         break;
     default:
-        probing_spell(cmd, res);
+		word_of_power_spell(cmd, res);
         break;
     }
 }

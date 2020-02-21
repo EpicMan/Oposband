@@ -1927,13 +1927,18 @@ static cptr do_sorcery_spell(int spell, int mode)
         break;
 
     case 24:
-        if (name) return "Probing";
-        if (desc) return "Proves all monsters' alignment, HP, speed and their true character.";
+        if (name) return "Word of Power";
+        if (desc) return "Attempts to stun and slow a monster";
 
         {
             if (cast)
             {
-                probing();
+				int dir;
+				int power = spell_power(p_ptr->lev * 2);
+				if (!get_fire_dir(&dir)) return NULL;
+
+				slow_monster(dir, power);
+				stun_monster(dir, 5 + p_ptr->lev / 5);
             }
         }
         break;

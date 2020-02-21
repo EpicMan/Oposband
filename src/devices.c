@@ -1968,7 +1968,7 @@ static _effect_info_t _effect_info[] =
     {"ENCHANTMENT",     EFFECT_ENCHANTMENT,         30, 900, 16, 0},
     {"IDENTIFY",        EFFECT_IDENTIFY,            15,  50,  1, BIAS_ROGUE | BIAS_MAGE},
     {"IDENTIFY_FULL",   EFFECT_IDENTIFY_FULL,       50, 200,  0, 0},
-    {"PROBING",         EFFECT_PROBING,             30,  50,  1, BIAS_MAGE},
+    {"PROBING",         EFFECT_PROBING,             30,  50,  0, 0},
     {"RUNE_EXPLOSIVE",  EFFECT_RUNE_EXPLOSIVE,      30, 100,  2, BIAS_MAGE},
     {"RUNE_PROTECTION", EFFECT_RUNE_PROTECTION,     70, 500,  4, BIAS_PRIESTLY},
 
@@ -2498,7 +2498,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_DETECT_EVIL,            7,   5,     1,  30,    10,  0, 0},
     {EFFECT_HASTE_MONSTERS,        10,   5,     1,  30,    50, 10, 0},
     {EFFECT_SUMMON_ANGRY_MONSTERS, 10,   5,     1,  30,    50, 10, 0},
-    {EFFECT_IDENTIFY,              10,   4,     1,   0,    10,  0, 0},
+    {EFFECT_IDENTIFY,              40,  20,     4,   0,    10,  0, 0},
     {EFFECT_SLEEP_MONSTERS,        10,   6,     1,  40,    33,  0, 0},
     {EFFECT_SLOW_MONSTERS,         10,   6,     1,  40,    33,  0, 0},
     {EFFECT_CONFUSE_MONSTERS,      15,   8,     1,  40,    33,  0, 0},
@@ -2511,7 +2511,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_SUMMON_HOUNDS,         27,  25,     2,   0,    10,  0, 0},
     {EFFECT_SUMMON_HYDRAS,         27,  25,     3,   0,    10,  0, 0},
     {EFFECT_SUMMON_ANTS,           27,  20,     2,   0,    10,  0, 0},
-    {EFFECT_PROBING,               30,  15,     3,  70,    10,  0, 0},
+    {EFFECT_PROBING,               30,  15,     0,  70,    10,  0, 0},
     {EFFECT_TELEPATHY,             30,  16,     2,   0,    10,  0, 0},
     {EFFECT_SUMMON_MONSTERS,       32,  30,     2,   0,    33,  0, 0},
     {EFFECT_ANIMATE_DEAD,          35,  17,     2,  70,    33,  0, 0},
@@ -7053,8 +7053,8 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         }
         break;
     case EFFECT_SACRED_KNIGHTS:
-        if (name) return "Dispel Curse and Probing";
-        if (desc) return "It removes all normal curses from your equipment and probes nearby monsters.";
+        if (name) return "Dispel Curse and Healing";
+        if (desc) return "It removes all normal curses from your equipment and heals for 500.";
         if (value) return format("%d", 5000);
         if (cast)
         {
@@ -7063,7 +7063,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
                 msg_print("You feel as if someone is watching over you.");
                 device_noticed = TRUE;
             }
-            if (probing())
+            if (hp_player(500))
                 device_noticed = TRUE;
         }
         break;

@@ -534,7 +534,7 @@ static spell_info _lore_spells[] = {
     { 12, 10, 60, identify_spell },
     { 15, 12, 60, sense_surroundings_spell },
     { 20, 15, 60, detection_spell },
-    { 22, 17, 60, probing_spell },
+    { 22, 17, 60, word_of_power_spell },
     { 25, 20, 65, self_knowledge_spell },
     { 30, 25, 70, alter_reality_spell },
     { 40, 50, 90, clairvoyance_spell },

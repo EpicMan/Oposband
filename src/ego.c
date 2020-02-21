@@ -3129,7 +3129,7 @@ static void _ego_create_helmet(object_type *o_ptr, int level)
             if (one_in_(ACTIVATION_CHANCE))
             {
                 int choices[] = {
-                    EFFECT_IDENTIFY, EFFECT_PROBING, EFFECT_DETECT_TRAPS,
+                    EFFECT_IDENTIFY, EFFECT_DETECT_TRAPS,
                     EFFECT_DETECT_MONSTERS, EFFECT_DETECT_OBJECTS, EFFECT_DETECT_ALL,
                     EFFECT_ENLIGHTENMENT, EFFECT_CLAIRVOYANCE, EFFECT_SELF_KNOWLEDGE, -1
                 };

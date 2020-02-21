@@ -939,7 +939,7 @@ static _group_t _groups[] = {
         { EFFECT_LITE_MAP_AREA,       20,  10, 50 },
         { EFFECT_ENLIGHTENMENT,       20,  10, 50 },
         { EFFECT_DETECT_ALL,          25,  15, 60 },
-        { EFFECT_PROBING,             27,  20, 60 },
+        /*{ EFFECT_PROBING,             27,  20, 60 },*/
         { EFFECT_SELF_KNOWLEDGE,      30,  23, 65 },
         { EFFECT_LIST_UNIQUES,        40,  50, 75 },
         { EFFECT_LIST_ARTIFACTS,      42,  50, 75 }, 
