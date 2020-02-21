@@ -8219,11 +8219,8 @@ static cptr do_hex_spell(int spell, int mode)
                     project(0, rad, py, px, power, GF_HELL_FIRE,
                         (PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL));
                 }
-                if (p_ptr->wizard || easy_damage)
-                {
-                    msg_format("You return %d damages.", power);
-                }
-
+				msg_format("You return %d damages.", power);
+                
                 /* Reset */
                 p_ptr->magic_num2[1] = 0;
                 p_ptr->magic_num2[2] = 0;
@@ -8755,16 +8752,13 @@ static cptr do_hex_spell(int spell, int mode)
 
                     do
                     {
-                        msg_print("Time to revenge!");
+                        msg_print("Time for revenge!");
                     }
                     while (!get_fire_dir(&dir));
 
                     fire_ball(GF_HELL_FIRE, dir, power, 1);
 
-                    if (p_ptr->wizard || easy_damage)
-                    {
-                        msg_format("You return %d damages.", power);
-                    }
+                    msg_format("You return %d damages.", power);
                 }
                 else
                 {

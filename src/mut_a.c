@@ -2783,7 +2783,7 @@ void tentacles_mut(int cmd, variant *res)
         a.ds = 5;
         a.weight = 50;
         a.blows = 100;
-        a.msg = "You hit with your tentacles.";
+        a.msg = "You hit with your tentacles:";
         a.name = "Tentacles";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;
@@ -2846,7 +2846,7 @@ void trunk_mut(int cmd, variant *res)
         a.ds = 4;
         a.weight = 200;
         a.blows = 100;
-        a.msg = "You hit with your trunk.";
+        a.msg = "You hit with your trunk:";
         a.name = "Trunk";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;

@@ -2138,7 +2138,7 @@ void dragon_tail_sweep_spell(int cmd, variant *res)
 
             a.weight = 100 + l;
             a.blows = 100;
-            a.msg = "You hit.";
+            a.msg = "You hit:";
             a.name = "Tail";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

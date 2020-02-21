@@ -2539,7 +2539,6 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_SWORD, SV_EXECUTIONERS_SWORD } , /* Falchion */
         { TV_SWORD, SV_KATANA } ,
         { TV_SWORD, SV_LONG_SWORD } ,
-        { TV_SWORD, SV_MITHRIL_SWORD },
         { TV_SWORD, SV_SHORT_SWORD } ,
         { TV_SWORD, SV_CURVED_SWORD } ,
         { TV_SWORD, SV_TWO_HANDED_SWORD } ,

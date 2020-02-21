@@ -2930,7 +2930,6 @@ long total_points(void)
     if (ironman_nightmare) mult += 100;
     if (wacky_rooms) mult += 10;
     if (thrall_mode) mult += (p_ptr->personality == PERS_SEXY) ? 50 : 10;
-    if (easy_damage) mult /= 2;
     if (coffee_break)
     {
         mult /= 2; /* This only cancels out the x2 from ironman_downward */

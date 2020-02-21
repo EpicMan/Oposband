@@ -5012,7 +5012,7 @@ bool set_food(int v)
     v = (v > 20000) ? 20000 : (v < 0) ? 0 : v;
 
     /* CTK: I added a "food bar" to track hunger ... */
-    if (easy_damage || p_ptr->wizard)
+    if (p_ptr->wizard)
     {
         old_pct = p_ptr->food * 100 / PY_FOOD_FULL;
         new_pct = v * 100 / PY_FOOD_FULL;
@@ -5405,6 +5405,9 @@ bool hp_player_aux(int num)
 
     if ((p_ptr->prace == RACE_EINHERI) || (p_ptr->mimic_form == RACE_EINHERI)) num /= 2;
     if (disciple_is_(DISCIPLE_YEQREZH)) num = hp_player_yeqrezh(num);
+
+	/* Display amount healed */
+	msg_format("(Healed <color:G>%d</color>)", num);
 
     /* Healing needed */
     if (p_ptr->chp < p_ptr->mhp)
@@ -6184,8 +6187,8 @@ int take_hit(int damage_type, int damage, cptr hit_from)
     }
 
     
-    if ((p_ptr->wizard || easy_damage) && (damage > 0))
-        msg_format("You take %d damage.", damage);
+    if (damage > 0)
+        msg_format("(<color:r>%d</color>)", damage);
 
     p_ptr->chp -= damage;
     if(damage_type == DAMAGE_GENO && p_ptr->chp < 0)

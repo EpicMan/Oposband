@@ -805,7 +805,7 @@ void do_cmd_options_aux(int page, cptr info)
     int     opt[40];
     char    buf[80];
     bool    browse_only = (page == OPT_PAGE_BIRTH) && character_generated &&
-                          (!p_ptr->wizard || !allow_debug_opts);
+                          (!p_ptr->wizard);
     bool    scroll_mode;
     byte    option_offset = 0;
     byte    bottom_opt = Term->hgt - ((page == OPT_PAGE_AUTODESTROY) ? 5 : 2);
@@ -1359,7 +1359,7 @@ void do_cmd_options(void)
         int n = OPT_NUM;
 
         /* Does not list cheat option when cheat option is off */
-        if (!p_ptr->noscore && !allow_debug_opts) n--;
+        if (!p_ptr->noscore) n--;
 
         /* Clear screen */
         Term_clear();
@@ -1468,7 +1468,7 @@ void do_cmd_options(void)
             case 'B':
             case 'b':
             {
-                do_cmd_options_aux(OPT_PAGE_BIRTH, (!p_ptr->wizard || !allow_debug_opts) ? "Birth Options(browse only)" : "Birth Options((*)s effect score)");
+                do_cmd_options_aux(OPT_PAGE_BIRTH, (!p_ptr->wizard) ? "Birth Options(browse only)" : "Birth Options((*)s effect score)");
                 break;
             }
 
@@ -1476,7 +1476,7 @@ void do_cmd_options(void)
             case 'C':
             {
 #ifdef ALLOW_WIZARD
-                if (!p_ptr->noscore && !allow_debug_opts)
+                if (!p_ptr->noscore)
                 {
                     /* Cheat options are not permitted */
                     bell();
