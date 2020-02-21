@@ -6148,3 +6148,6 @@ enum
 #define PROF_RIDING         12
 #define PROF_INNATE_ATTACKS 13
 #define MAX_PROFICIENCIES   14
+
+/* Fully replenish HP/SP on levelup */
+#define LEVELUP_RESTORE     -99

@@ -264,8 +264,12 @@ void check_experience(void)
             p_ptr->max_plv = p_ptr->lev;
 
 			/* Oposband: FUll heal / recharge */
-			hp_player(p_ptr->mhp * 2); /* x2 so halving from blood knight/mage won't prevent it */
-			sp_player(p_ptr->msp);
+			int healed = p_ptr->mhp - p_ptr->chp;
+			msg_format("Healed <color:g>%d</color>.", healed);
+			p_ptr->chp = p_ptr->mhp;
+			p_ptr->chp_frac = 0;
+			p_ptr->csp = p_ptr->msp;
+			p_ptr->csp_frac = 0;
 
             sound(SOUND_LEVEL);
             cmsg_format(TERM_L_GREEN, "Welcome to level %d.", p_ptr->lev);
@@ -2585,7 +2589,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     /* Genocided by chaos patron */
     if (!m_idx) return TRUE;
 
-    if (dam > 0)
+    if (show_damage && dam > 0)
         msg_format("for <color:y>%d</color>.", dam);
 
     if ( p_ptr->melt_armor

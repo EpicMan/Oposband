@@ -2412,6 +2412,9 @@ option_type option_info[] =
     { &auto_sticky_labels,           TRUE,  OPT_PAGE_TEXT, 2, 17,
     "auto_sticky_labels",           "Automatically make all power labels sticky" },
 
+	{ &show_damage,                  TRUE, OPT_PAGE_TEXT, 2, 12,
+	"show_damage",					"Show damage amounts in messages" },
+
 
     /*** Game-Play ***/
 

@@ -5396,18 +5396,9 @@ bool hp_player_aux(int num)
 {
     int old_hp = p_ptr->chp;
 
-    num = num * (virtue_current(VIRTUE_VITALITY) + 1250) / 1250;
-
-    if (mut_present(MUT_SACRED_VITALITY))
-    {
-        num += num/5;
-    }
-
-    if ((p_ptr->prace == RACE_EINHERI) || (p_ptr->mimic_form == RACE_EINHERI)) num /= 2;
-    if (disciple_is_(DISCIPLE_YEQREZH)) num = hp_player_yeqrezh(num);
 
 	/* Display amount healed */
-	msg_format("(Healed <color:G>%d</color>)", num);
+	if (num && show_damage) msg_format("(Healed <color:G>+%d</color>)", num);
 
     /* Healing needed */
     if (p_ptr->chp < p_ptr->mhp)
@@ -6187,8 +6178,17 @@ int take_hit(int damage_type, int damage, cptr hit_from)
     }
 
     
-    if (damage > 0)
-        msg_format("(<color:r>%d</color>)", damage);
+	if (show_damage & damage > 0)
+	{
+		if (hit_from == "poison")
+			msg_format("(<color:g>Poison: %d</color>)", damage);
+		else if (hit_from == "a fatal wound")
+			msg_format("(<color:R>Bleed: %d</color>)", damage);
+		else if (hit_from == "starvation")
+			msg_format("(<color:R>Starving: %d</color>)", damage);
+		else
+			msg_format("<color:r>(%d)</color>", damage);
+	}
 
     p_ptr->chp -= damage;
     if(damage_type == DAMAGE_GENO && p_ptr->chp < 0)
