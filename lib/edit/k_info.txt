@@ -327,19 +327,9 @@ A:90/1
 D:Food of the gods, fragrant and sweet.
 D:It cures poison, heals hp a bit, and restores your stats and life when eaten.
 
-########################################################################
-# Edged Weapons (TV_SWORD)
-########################################################################
-
-#Hack for Death sword race
-N:45:& Broken Sword~
-G:|:D
-I:23:2:0
-W:0:0:0:30:2
-P:0:2d3:-4:0
-F:SHOW_MODS
-D:Above the hilt, a foot of steel rises, ending in a jagged edge.
-
+#########################################################################
+# Daggers (TV_DAGGER)
+#########################################################################
 
 N:*:& Dagger~
 G:|:W
@@ -359,15 +349,50 @@ P:0:1d6:0:0
 F:SHOW_MODS | TOWN
 D:A short thrusting blade with a large guard, primarily used in duels.
 
-N:*:& Assassin's Blade~
+N:*:& Black Blade~
 G:|:d
 I:26:6:0
+W:10:0:0:30:50
+A:10/1
+P:0:1d9:0:0
+F:SHOW_MODS | TOWN
+D:A dark, winding dagger blade with a bone handle.
+
+N:*:& Shadow Blade~
+G:|:s
+I:26:19:0
+W:15:0:0:100:865
+A:15/2
+P:0:2d5:0:1
+F:SHOW_MODS | TOWN | STEALTH
+D:A long, straight blade; often carried by ninjas.
+
+N:*:& Crysknife~
+G:|:b
+I:26:11:0
 W:20:0:0:20:500
 A:20/2
 P:0:2d5:0:0
 F:SHOW_MODS | BRAND_POIS
-D:A long, thin thrusting blade, mainly used in duels.
-D:A coating a poison has been applied beforehand.
+D:A long, thin thrusting blade, made from the tooth of a giant worm.
+D:It is naturally poisonous.
+
+N:*:& Poison Needle~
+G:|:g
+I:26:32:0
+W:0:0:0:5:2000
+A:30/6
+P:0:1d1:0:0
+F:SHOW_MODS
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+
+N:*:& Dragon Fang~
+G:|:G
+I:26:35:0
+W:40:0:0:20:10000
+A:40/15
+P:0:1d9:3:0
+F:IGNORE_ACID | IGNORE_FIRE | IGNORE_ELEC | IGNORE_COLD
 
 N:*:& Mithril Dagger~
 G:|:B
@@ -376,8 +401,30 @@ W:50:0:0:12:1500
 A:50/1
 P:0:2d8:0:0
 F:SHOW_MODS | BRAND_POIS
-D:A long, thin thrusting blade, it glitters wickedly.
-D:A coating a poison has been applied beforehand.
+F:IGNORE_ACID | IGNORE_FIRE | IGNORE_ELEC | IGNORE_COLD
+D:A long, thin thrusting blade, it glitters with a pale gleam.
+D:Runes of wasting and death are carved into its blade.
+
+N:*:& Falcon Sword~
+G:|:y
+I:26:33:3
+W:65:0:0:30:3500
+A:65/8
+P:0:1d7:0:0
+F:SHOW_MODS | BLOWS
+
+########################################################################
+# Edged Weapons (TV_SWORD)
+########################################################################
+
+#Hack for Death sword race
+N:45:& Broken Sword~
+G:|:D
+I:23:2:0
+W:0:0:0:30:2
+P:0:2d3:-4:0
+F:SHOW_MODS
+D:Above the hilt, a foot of steel rises, ending in a jagged edge.
 
 N:*:& Short Sword~
 G:|:W
@@ -387,16 +434,6 @@ A:5/1
 P:0:1d8:0:0
 F:SHOW_MODS | TOWN
 D:A short thrusting sword, perfectly sized for Hobbits.
-
-N:*:& Nightblade~
-G:|:d
-I:26:11:0
-W:10:0:0:30:50
-A:10/1
-P:0:1d9:0:0
-F:SHOW_MODS | TOWN
-D:A dark-bladed long knife or small sword, this is the main weapon
-D:carried by Ninjas.
 
 N:*:& Medium Sword~
 G:|:W
@@ -415,14 +452,14 @@ A:15/3
 P:0:2d5:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Rapier~
+N:*:& Thrusting Sword~
 G:|:W
 I:23:7:0
 W:5:0:0:40:42
 A:5/1
 P:0:1d8:0:0:0
-F:SHOW_MODS | TOWN
-D:A long, thin thrusting blade, mainly used in duels.
+F:SHOW_MODS | RIDING | TOWN
+D:A long, thin thrusting blade, known to cavalry and duelists alike.
 
 N:*:& Curved Sword~
 G:|:W
@@ -442,14 +479,6 @@ P:0:2d6:0:0
 F:SHOW_MODS | RIDING | TOWN
 D:A long, straight, two-edged blade, with two hand guards projecting out from
 D:the hilt to form a perfect cross.
-
-N:*:& Ninja Sword~
-G:|:s
-I:26:19:0
-W:15:0:0:100:265
-A:15/2
-P:0:2d5:0:0
-F:SHOW_MODS | TOWN
 
 N:*:& Katana~
 G:|:W
@@ -523,23 +552,6 @@ A:90/16
 P:0:6d6:10:0
 F:SHOW_MODS | VORPAL | TUNNEL | RIDING
 
-N:*:& Poison Needle~
-G:|:g
-I:26:32:0
-W:0:0:0:5:2000
-A:30/6
-P:0:1d1:0:0
-F:SHOW_MODS
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:*:& Falcon Sword~
-G:|:y
-I:26:33:3
-W:65:0:0:30:3500
-A:65/8
-P:0:1d7:0:0
-F:SHOW_MODS | BLOWS
-
 N:*:& Rune Sword~
 G:|:D
 I:23:34:0
@@ -551,14 +563,6 @@ F:BRAND_VAMP | NO_ENCHANT
 D:A black blade, covered with gleaming runes. It is rumored
 D:to be an evil weapon of great power that will ultimately control
 D:its bearer.
-
-N:*:& Dragon Fang~
-G:|:G
-I:26:35:0
-W:40:0:0:20:10000
-A:40/15
-P:0:1d9:3:0
-F:IGNORE_ACID | IGNORE_FIRE | IGNORE_ELEC | IGNORE_COLD
 
 ########################################################################
 # Polearms (TV_POLEARM)

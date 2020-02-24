@@ -1752,6 +1752,7 @@ enum {
 
 /* The "sval" codes for TV_AXE */
 #define SV_HATCHET                       1    /* 1d5 */
+#define SV_CLEAVER                       2    /* 2d5 */
 #define SV_BROAD_AXE                   10    /* 2d6 */
 #define SV_BEAKED_AXE                    11    /* 2d6 */
 #define SV_BATTLE_AXE                   22    /* 2d8 */
@@ -1762,6 +1763,7 @@ enum {
 
 /* The "sval" codes for TV_SWORD */
 #define SV_BROKEN_SWORD                  2  /* 1d2 */ /* Now only used for death sword */
+#define SV_THRUSTING_SWORD               7  /* 1d6 */ /* Was rapier */
 #define SV_SHORT_SWORD                   8  /* 1d6 */ /*Was small sword */
 #define SV_MEDIUM_SWORD                 12  /* 1d7 */
 #define SV_WAKIZASHI                    13  /* 2d4 */
@@ -1779,10 +1781,10 @@ enum {
 
 /* The "sval" codes for TV_DAGGER */
 #define SV_DAGGER                        4  /* 1d4 */
-#define SV_MAIN_GAUCHE                   5  /* 1d5 */
-#define SV_TANTO                         6  /* 1d5 */
-#define SV_RAPIER                        7  /* 1d6 */
-#define SV_SABRE                        11  /* 1d7 */
+#define SV_DIRK                   5  /* 1d5 */
+#define SV_BLACK_BLADE                         6  /* 1d5 */
+#define SV_MITHRIL_DAGGER				7
+#define SV_CRYSKNIFE                        11  /* 1d7 */ /* Was Sabre */
 #define SV_NINJATO                      19  /* 1d9 */
 #define SV_POISON_NEEDLE                32  /* 1d1 */
 #define SV_FALCON_SWORD                 33  /* 1d6 */

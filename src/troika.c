@@ -319,25 +319,25 @@ static void _troika_event(int effect)
                     dummy2 = SV_DAGGER;
                     break;
                 case 2: case 3:
-                    dummy2 = SV_MAIN_GAUCHE;
+                    dummy2 = SV_DIRK;
                     break;
                 case 4:
-                    dummy2 = SV_TANTO;
+                    dummy2 = SV_BLACK_BLADE;
                     break;
                 case 5: case 6:
-                    dummy2 = SV_RAPIER;
+                    dummy2 = SV_THRUSTING_SWORD;
                     break;
                 case 7: case 8:
                     dummy2 = SV_SHORT_SWORD;
                     break;
                 case 9: case 10:
-                    dummy2 = SV_SABRE;
+                    dummy2 = SV_BLACK_BLADE;
                     break;
                 case 11: case 12: case 13:
                     dummy2 = SV_SHORT_SWORD;
                     break;
                 case 14: case 15:
-                    dummy2 = SV_SABRE;
+                    dummy2 = SV_CRYSKNIFE;
                     break;
                 case 16: case 17:
                     dummy2 = SV_MEDIUM_SWORD;
