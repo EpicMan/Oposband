@@ -1782,7 +1782,7 @@ enum {
 /* The "sval" codes for TV_DAGGER */
 #define SV_DAGGER                        4  /* 1d4 */
 #define SV_DIRK                   5  /* 1d5 */
-#define SV_BLACK_BLADE                         6  /* 1d5 */
+#define SV_CAT_CLAW                         6  /* 1d5 */
 #define SV_MITHRIL_DAGGER				7
 #define SV_CRYSKNIFE                        11  /* 1d7 */ /* Was Sabre */
 #define SV_NINJATO                      19  /* 1d9 */

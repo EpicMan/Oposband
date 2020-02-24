@@ -322,7 +322,7 @@ static void _troika_event(int effect)
                     dummy2 = SV_DIRK;
                     break;
                 case 4:
-                    dummy2 = SV_BLACK_BLADE;
+                    dummy2 = SV_CAT_CLAW;
                     break;
                 case 5: case 6:
                     dummy2 = SV_THRUSTING_SWORD;
@@ -331,7 +331,7 @@ static void _troika_event(int effect)
                     dummy2 = SV_SHORT_SWORD;
                     break;
                 case 9: case 10:
-                    dummy2 = SV_BLACK_BLADE;
+                    dummy2 = SV_CAT_CLAW;
                     break;
                 case 11: case 12: case 13:
                     dummy2 = SV_SHORT_SWORD;

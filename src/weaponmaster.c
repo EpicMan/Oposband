@@ -2383,7 +2383,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_DAGGER, SV_DIRK },
         { TV_DAGGER, SV_NINJATO },
         { TV_DAGGER, SV_CRYSKNIFE },
-        { TV_DAGGER, SV_BLACK_BLADE },
+        { TV_DAGGER, SV_CAT_CLAW },
         { TV_DAGGER, SV_DRAGON_FANG },
 	    { TV_DAGGER, SV_MITHRIL_DAGGER },
         { 0, 0 },

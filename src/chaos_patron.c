@@ -111,7 +111,7 @@ void chaos_forge_weapon() {
 		break;
 	case 4:
 		dummy = TV_DAGGER;
-		dummy2 = SV_BLACK_BLADE;
+		dummy2 = SV_CAT_CLAW;
 		break;
 	case 5: case 6:
 		dummy = TV_SWORD;
@@ -122,7 +122,7 @@ void chaos_forge_weapon() {
 		break;
 	case 9: case 10:
 		dummy = TV_DAGGER;
-		dummy2 = SV_BLACK_BLADE;
+		dummy2 = SV_CAT_CLAW;
 		break;
 	case 11: case 12: case 13:
 		dummy2 = SV_SHORT_SWORD;

@@ -500,14 +500,14 @@ P:0:1d6:0:0
 F:SHOW_MODS | TOWN
 D:A short thrusting blade with a large guard, primarily used in duels.
 
-N:*:& Black Blade~
+N:*:& Cat Claw~
 G:|:d
 I:26:6:0
 W:10:0:0:30:50
 A:10/1
 P:0:1d9:0:0
 F:SHOW_MODS | TOWN
-D:A dark, winding dagger blade with a bone handle.
+D:A dark, curved dagger blade with a bone handle.
 
 N:*:& Shadow Blade~
 G:|:s
