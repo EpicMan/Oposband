@@ -73,7 +73,7 @@ static void _jelly_calc_innate_attacks(void)
         a.weight = 100;
         a.effect[0] = GF_ACID;
         calc_innate_blows(&a, 600);
-        a.msg = "You shoot acid.";
+        a.msg = "You shoot acid";
         a.name = "Pseudopod";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
