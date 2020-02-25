@@ -5227,8 +5227,8 @@ P:Body:Hound
 D:A fierce and dangerous cat, its huge tusks and sharp claws would lacerate
 D:even the strongest armor.
 
-N:340:Water hound
-G:Z:b
+N:340:Acid hound
+G:Z:G
 I:110:15d8:30:30:0:150
 W:20:3:90:200:0:0
 B:BITE:ACID(2d8)
@@ -24245,6 +24245,75 @@ S:FREQ_12 | BR_SOUND | BLIND | CONFUSE | SCARE | DETECT_OBJECTS
 D:A dragon of great size and power. Its polished gold scales gleam brightly
 D:and the throbs of its beating wings reverberate through the dungeon with
 D:deafening volume. You feel its dissonant roaring shaking your very bones.
+
+N:1334:Water hound
+G:Z:b
+I:110:15d8:30:30:0:150
+W:25:3:90:200:0:0
+B:BITE:ACID(2d8)
+B:BITE:ACID(2d8)
+B:CLAW:HURT(3d3)
+B:CLAW:HURT(3d3)
+F:FORCE_SLEEP |
+F:FRIENDS(3d3) |
+F:BASH_DOOR | CAN_SWIM
+F:ANIMAL | RES_WATE
+F:DROP_CORPSE | POS_GAIN_AC
+P:Copy:Kutar:Rogue
+P:Skills:0:-7:0:0:0:0:0:0
+P:ExtraSkills:0:-4:0:0:0:0:0:0
+P:SpellStat:Dex
+P:Body:Hound
+S:FREQ_5 | BO_WATER | DETECT_MONSTERS
+D:Liquid footprints follow this hound as it pads around the dungeon. An
+D:salty smell of the sea rises from the dog's pelt.
+
+# New monsters for Oposband 0.3
+#Gnome trickster (shoot, traps, blink, otherwise annoy)
+#Gnome worm mage (summon worms)
+#Gnome Munchkin (blink and shoot seeker bolts, very high spell chance (1-in-3 or 1-in-2)
+#Naga Priestess (summon spiders + curse)
+#Naga Princess (summon spiders, summon naga)
+#Magic mirror (stationary, weak but has reflect and elemental resistances, hurt by rock remover. Blinds and summons)
+#Poison golem (stone golem with poison aura, fires starburst-pattern poison beams)
+#From TOME:
+#Golgarach, the Living Rock
+#Glass golem
+#Tik'srvzllat
+#Sandworm
+#The Sandworm Queen
+#Thiazi the storm giant
+#Avatar of Nyarlathotep
+#Servitor of the Outer gods
+#Cult leader
+#Cultist?
+#Snake of Yig
+#Glaryssa, Succubus Queen
+#The Insane Player
+#Vort the Kobold Queen
+#Rat King
+#Hrungnir, the Stone Giant
+#Death orb
+#Aranea
+#Elder Aranea
+#Blood sprout
+#Water demon
+#Merrow
+#Dragon turtles and Fastitocaoln
+#Giant turtle
+#Elder stargazer
+#stargazer
+#(water elf)aquatic elf shaman
+#(water elf name)aquatic elf warrior
+#(Water elf name) aquatic elf
+#aquatic golem (diver golem)
+#drowned soul
+#murk dweller
+#eye of the deep
+#octupus
+#mermaid
+#elite uruk
+
 
 # N: serial number : monster name
 # G: symbol : color

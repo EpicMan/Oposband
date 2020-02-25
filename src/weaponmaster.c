@@ -2827,7 +2827,7 @@ void _on_birth(void)
         py_birth_obj(&forge);
     }
     
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_JACK, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SPIDERHIDE_JACKET, 1);
 }
 
 static int _max_pval(void)

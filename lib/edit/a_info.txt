@@ -285,7 +285,7 @@ D:warding and stability deeply engraved into its surface.
 # The Metal Brigandine Armor of the Rohirrim
 
 N:21:of the Rohirrim
-I:37:9:2
+I:37:10:2
 W:35:3:200:30000
 P:19:1d4:0:15
 F:STR | DEX | HIDE_TYPE | XTRA_H_RES |
@@ -309,7 +309,7 @@ E:A heavenly choir sings...
 # The Mithril Plate Mail of Celeborn -> Julian
 
 N:23:of Julian
-I:37:3:4
+I:37:5:4
 W:75:15:250:120000
 P:15:2d4:0:40
 F:STR | CHR | HIDE_TYPE |
@@ -321,7 +321,7 @@ E:Your armor glows deep blue...
 # The Chain Mail of Arvedui
 
 N:24:of Arvedui
-I:37:4:2
+I:37:5:2
 W:40:3:220:32000
 P:14:1d4:0:15
 F:STR | CHR | HIDE_TYPE | XTRA_H_RES |
@@ -333,7 +333,7 @@ D:as you put it on.
 # The Augmented Chain Mail of Caspanion
 
 N:25:of Caspanion
-I:37:6:3
+I:37:7:3
 W:45:9:270:40000
 P:16:1d4:0:20
 F:INT | WIS | CON | HIDE_TYPE | XTRA_H_RES |
@@ -2193,7 +2193,7 @@ E:BALL_WATER:50:250:200
 E:Your trident throbs deep blue...
 
 N:203:of The High Priest of Morlok
-I:37:1:2
+I:37:5:2
 W:90:8:200:100000
 P:14:1d4:0:-40
 F:INT | WIS | CHR | HIDE_TYPE | RES_LITE | RES_DARK |
@@ -2220,7 +2220,7 @@ E:RESIST_COLD:20:60
 E:Your cloak grows white.
 
 N:206:of The Padre
-I:37:13:2
+I:37:15:2
 W:55:5:340:80000
 P:23:1d6:5:17
 F:CHR | REFLECT |
@@ -2499,7 +2499,7 @@ D:This is Yositsune's kabuto. It defended his head against
 D:many arrows and blades from his enemies.
 
 N:235:of Yositsune
-I:37:14:2
+I:37:15:2
 W:50:20:200:40000
 P:17:1d4:0:28
 F:DEX | SPEED | STEALTH | HIDE_TYPE |

@@ -31,7 +31,7 @@ static void _birth(void)
     p_ptr->current_r_idx = MON_VAMPIRE;
     equip_on_change_race();
     
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));

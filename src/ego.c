@@ -2831,7 +2831,7 @@ static void _ego_create_body_armor(object_type *o_ptr, int level)
             _ego_create_armor_elvenkind(o_ptr, level);
             break;
         case EGO_BODY_DWARVEN:
-            if (o_ptr->tval != TV_HARD_ARMOR || o_ptr->sval == SV_RUSTY_CHAIN_MAIL)
+            if (o_ptr->tval != TV_HARD_ARMOR)
                 done = FALSE;
             else
             {

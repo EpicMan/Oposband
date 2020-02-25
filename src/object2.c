@@ -3320,7 +3320,8 @@ static bool _kind_theme_paladin_evil(int k_idx) {
 static bool _kind_theme_samurai(int k_idx) {
     if ( _kind_is_(k_idx, TV_SWORD, SV_KATANA)
       || _kind_is_(k_idx, TV_SWORD, SV_WAKIZASHI)
-      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_HARAMAKIDO) )
+		|| _kind_is_(k_idx, TV_HARD_ARMOR, SV_USED_SAMURAI_ARMOR)
+      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_SAMURAI_ARMOR) )
     {
         return TRUE;
     }

@@ -1651,41 +1651,25 @@ F:TOWN
 P:2:0d0:0:0
 D:A practical garment of thick wool or velvet, draping from neck to heels.
 
-N:*:Paper Armor~
-G:(:w
-I:36:3:0
-W:5:0:0:30:50
-A:7/2
-P:4:1d1:0:0
-
-N:*:Soft Leather Armor~
-G:(:U
+N:*:Cloth Armor~
+G:(:y
 I:36:4:0
 W:3:0:0:80:18
 A:3/1
 F:TOWN
-P:4:0d0:0:0
-D:A cuirass of pliable leather with a thicker leather jack.
+P:4:0d0:0:0:0
+D:A cuirass of thick cotton padding with a thick cloth jacket.
 
-N:*:Soft Studded Leather~
-G:(:U
-I:36:5:0
-W:3:0:0:90:35
-A:3/1
-F:TOWN
-P:5:1d1:0:0
-D:A cuirass of pliable leather studded with metal rivets.
-
-N:*:Hard Leather Armor~
+N:*:Leather Armor~
 G:(:U
 I:36:6:0
 W:5:0:0:100:150
 A:5/1
 F:TOWN
 P:6:1d1:0:0
-D:A boiled leather cuirass and shoulder plates.
+D:A cuirass of pliable leather studded with metal rivets.
 
-N:*:Hard Studded Leather~
+N:*:Studded Leather Armor~
 G:(:U
 I:36:7:0
 W:10:0:0:110:200
@@ -1695,41 +1679,26 @@ P:7:1d2:0:0
 D:A strong leather breastplate and shoulder guards over a sleeved shirt
 D:of cured leather covered with iron studs.
 
-N:*:Rhino Hide Armor~
-G:(:s
-I:36:8:0
-W:15:0:0:110:400
-A:15/1
-P:8:1d1:0:0
-
-N:*:Cord Armor~
-G:(:y
+N:*:Salamander Scale Armor~
+G:(:o
 I:36:9:0
-W:5:0:0:80:200
-A:7/1
+W:5:0:0:80:250
+A:7/2
 P:6:1d1:0:0
-F:TOWN
+F:TOWN | IGNORE_FIRE
 
-N:*:Padded Armor~
-G:(:y
-I:36:10:0
-W:2:0:0:60:50
-A:5/1
-P:5:1d1:0:0
-F:TOWN
-
-N:*:Leather Scale Mail~
-G:(:U
+N:*:Mumak Hide Armor~
+G:(:s
 I:36:11:0
 W:15:0:0:140:450
 A:15/1
 F:TOWN
 P:11:1d1:0:0
 D:A tunic and skirt sewn with thick, overlapping scales of hardened
-D:leather.
+D:Mumak-hide leather.
 
-N:*:& Leather Jacket~
-G:(:U
+N:*:& Spider Hide Jacket~
+G:(:d
 I:36:12:0
 W:20:0:0:130:700
 A:20/3
@@ -1744,12 +1713,13 @@ A:40/4
 P:4:1d1:0:12
 F:STEALTH | IGNORE_FIRE | PLURAL
 
-N:*:Stone and Hide Armor~
-G:(:U
+N:*:Ambercloth Armor~
+G:(:R
 I:36:15:0
 W:35:0:0:200:1000
-A:35/7
+A:40/3
 P:15:1d1:0:0
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:*:Sexy Swimsuit~
 G:(:v
@@ -1759,6 +1729,7 @@ A:30/64
 P:0:0d0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | AGGRAVATE
 
+#Robe of the Twilight
 N:*:& Robe~
 G:(:D
 I:36:60:0
@@ -1776,16 +1747,7 @@ F:INSTA_ART
 #  Hard Armor (TV_HARD_ARMOR)
 ########################################################################
 
-N:270:Rusty Chain Mail~
-G:[:r
-I:37:1:0
-W:25:0:0:200:550
-A:25/1
-P:14:1d4:0:-8
-D:Each link of this suit is brittle with rust, and the corroded rings
-D:are stiff and weakened.
-
-N:*:Ring Mail~
+N:*:Breastplate
 G:[:s
 I:37:2:0
 W:20:0:0:200:500
@@ -1793,39 +1755,21 @@ A:20/1
 F:TOWN
 P:12:1d4:0:0
 
-N:*:Metal Scale Mail~
-G:[:s
-I:37:3:0
-W:25:0:0:250:550
-A:25/1
-F:TOWN
-P:13:1d4:0:0
-D:A heavy shirt of overlapping steel scales backed by leather, with
-D:matching skirt and sleeves.
-
 N:*:Chain Mail~
-G:[:s
-I:37:4:0
-W:25:0:0:220:750
-A:25/1
-F:TOWN
-P:14:1d4:0:0
-D:A sleeved hauberk of interlocking steel rings, well padded with leather.
-D:Chain mail takes skill to make, but offers good protection and relatively
-D:low weight.
-
-N:*:Double Ring Mail~
 G:[:s
 I:37:5:0
 W:25:0:0:230:700
 A:25/1
 F:TOWN
 P:15:1d4:0:0
+D:A sleeved hauberk of interlocking steel rings, well padded with leather.
+D:Chain mail takes skill to make, but offers good protection and relatively
+D:low weight.
 
 N:*:Augmented Chain Mail~
 G:[:s
-I:37:6:0
-W:30:0:0:270:900
+I:37:7:0
+W:30:0:0:250:1000
 A:30/1
 F:TOWN
 P:16:1d4:0:0
@@ -1833,31 +1777,7 @@ D:A hauberk, leggings, and sleeves of interlocking steel rings,
 D:strategically reinforced at vital locations with a second layer
 D:of chain, all over a layer of heavy padding.
 
-N:*:Double Chain Mail~
-G:[:s
-I:37:7:0
-W:30:0:0:250:1000
-A:30/1
-F:TOWN
-P:16:1d4:0:0
-
-N:*:Bar Chain Mail~
-G:[:s
-I:37:8:0
-W:35:0:0:280:1020
-A:35/1
-F:TOWN
-P:18:1d4:0:0
-
-N:*:Metal Brigandine Armor~
-G:[:s
-I:37:9:0
-W:35:0:0:290:1100
-A:35/1
-F:TOWN
-P:19:1d4:0:0
-
-N:*:Splint Mail~
+N:*:Brigandine Armor~
 G:[:D
 I:37:10:0
 W:35:0:0:250:1300
@@ -1865,7 +1785,7 @@ A:35/1
 F:TOWN
 P:19:1d4:0:0
 
-N:*:Do-maru~
+N:*:Samurai Armor~
 G:[:s
 I:37:11:0
 W:40:0:0:290:1250
@@ -1873,32 +1793,16 @@ A:40/2
 F:TOWN
 P:20:1d4:0:0
 
-N:*:Partial Plate Armor~
-G:[:W
-I:37:12:0
-W:45:0:0:260:1200
-A:45/1
-F:TOWN
-P:22:1d6:0:0
-D:A steel corselet and vambraces over a skirt and leggings of chain.
-
-N:*:Metal Lamellar Armor~
-G:[:W
-I:37:13:0
-W:45:0:0:340:1150
-A:45/1
-F:TOWN
-P:23:1d6:0:0
-
-N:*:Haramakido~
+N:*:Used Samurai Armor
 G:[:D
 I:37:14:0
-W:32:0:0:280:920
+W:32:0:0:290:800
 A:32/2
 F:TOWN
 P:17:1d4:0:0
+D: A suit of samurai armor, not in "like new" condition.
 
-N:*:Full Plate Armor~
+N:*:Steel Plate Armor~
 G:[:W
 I:37:15:0
 W:45:0:0:380:1350
@@ -1908,20 +1812,11 @@ P:25:2d4:0:0
 D:A full suit of carefully fitted plates, with hinged joints backed
 D:by chain, and light padding underneath.
 
-N:*:O-yoroi~
-G:[:D
-I:37:16:0
-W:45:0:0:320:1300
-A:45/2
-F:TOWN
-P:24:1d4:0:0
-
-N:*:Ribbed Plate Armor~
-G:[:W
+N:*:Knight Armor~
+G:[:r
 I:37:18:0
 W:50:0:0:380:1500
 A:50/1
-F:TOWN
 P:28:2d4:0:0
 
 N:*:Mithril Chain Mail~
@@ -1934,7 +1829,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 D:Rare and wondrous is chain mail made of true-silver, for it offers more
 D:protection for the weight than any other armor.
 
-N:*:Mithril Plate Mail~
+N:*:Mithril Plate Armor~
 G:[:B
 I:37:25:0
 W:60:0:0:300:15000
@@ -1944,7 +1839,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 D:A shimmering suit of true-silver, forged long ago by dwarven smiths of
 D:legend.  It gleams with purest white as you gaze upon it.
 
-N:*:Adamantite Plate Mail~
+N:*:Adamantite Plate Armor~
 G:[:G
 I:37:30:0
 W:75:0:0:420:20000
