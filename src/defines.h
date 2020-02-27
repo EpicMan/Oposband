@@ -1806,7 +1806,7 @@ enum {
 #define SV_KNIT_CAP                      1
 #define SV_HARD_LEATHER_CAP              2
 #define SV_METAL_CAP                     3
-#define SV_JINGASA                       4  /* 4 */
+#define SV_SKULL_HELM                    4  /* 4 */
 #define SV_IRON_HELM                     5
 #define SV_STEEL_HELM                    6
 #define SV_DRAGON_HELM                   8
@@ -4846,7 +4846,7 @@ extern int PlayerUID;
 
 #define WEAPONMASTER_FRENZY 31
 #define WEAPONMASTER_RETALIATION 32
-#define WEAPONMASTER_CRUSADERS_STRIKE 33
+#define WEAPONMASTER_VITALITY_STRIKE 33
 #define WEAPONMASTER_VICIOUS_STRIKE 35
 #define WEAPONMASTER_MANY_STRIKE 36
 #define WEAPONMASTER_WHIRLWIND 37

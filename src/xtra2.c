@@ -2530,8 +2530,9 @@ void mon_check_kill_unique(int m_idx)
  * instead of simply "(m_exp * m_lev) / (p_lev)", to make the first
  * monster worth more than subsequent monsters. This would also need
  * to induce changes in the monster recall code.
+ * "aoe" marker was added for message modification.
  */
-bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
+bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note, bool sentence)
 {
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
@@ -2589,8 +2590,13 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     /* Genocided by chaos patron */
     if (!m_idx) return TRUE;
 
-    if (show_damage && dam > 0)
-        msg_format("for <color:y>%d</color>.", dam);
+	if (show_damage && dam > 0)
+	{
+		if (sentence)
+			msg_format("for <color:y>%d</color>.", dam); 
+		else
+			msg_format("(<color:y>%d</color>)", dam);
+	}
 
     if ( p_ptr->melt_armor
       && note == NULL /* Hack: Trying to just get melee and shooting */
