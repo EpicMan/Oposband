@@ -303,6 +303,7 @@ extern bool empty_levels;    /* Allow empty 'arena' levels */
 extern bool bound_walls_perm;    /* Boundary walls become 'permanent wall' */
 extern bool delay_autopick;  /* Always use delayed autopick */
 extern bool last_words;    /* Leave last words when your character dies */
+extern bool unified_use;	/* Use a single 'a' command to use any item */
 
 #ifdef WORLD_SCORE
 extern bool send_score;    /* Send score dump to the world score server */
@@ -849,6 +850,7 @@ extern void do_cmd_aim_wand(void);
 extern void do_cmd_use_staff(void);
 extern void do_cmd_zap_rod(void);
 extern void do_cmd_activate(void);
+extern void do_cmd_unified_use(void);
 extern void do_cmd_rerate_aux(void);
 extern void do_cmd_rerate(bool display);
 extern void ring_of_power(int dir);
