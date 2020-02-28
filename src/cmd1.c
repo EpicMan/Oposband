@@ -2331,7 +2331,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     bool            weak = FALSE;
     const int       max_drain_amt = _max_vampiric_drain();
     bool            backstab = FALSE, fuiuchi = FALSE, stab_fleeing = FALSE, sleep_hit = FALSE;
-    bool            do_werewolf_effect = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
+    bool            do_werewolf_effect = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF1) || (p_ptr->current_r_idx == MON_WEREWOLF2)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
 
     if ((MON_CSLEEP(m_ptr)) && (m_ptr->ml)) sleep_hit = TRUE;
     set_monster_csleep(m_idx, 0);
@@ -3506,7 +3506,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                 }
 
-                if ((((have_flag(flgs, OF_STUN)) || (p_ptr->tim_field)) && randint1(100) < k) || ((o_ptr->name1 == ART_SILVER_HAMMER) && ((r_ptr->id == MON_WEREWOLF) || (r_ptr->id == MON_DRAUGLUIN) || (r_ptr->id == MON_CARCHAROTH))))
+                if (
+					(((have_flag(flgs, OF_STUN)) || (p_ptr->tim_field)) && randint1(100) < k) || 
+						((o_ptr->name1 == ART_SILVER_HAMMER) && 
+							((r_ptr->id == MON_WEREWOLF1) || (r_ptr->id == MON_WEREWOLF2) || (r_ptr->id == MON_DRAUGLUIN) || (r_ptr->id == MON_CARCHAROTH) ||
+							(r_ptr->id == MON_WERERAT1) || (r_ptr->id == MON_WERERAT2) || (r_ptr->id == MON_WEREWORM1) || (r_ptr->id == MON_WEREWORM2) ||
+							(r_ptr->id == MON_WEREBEAR1) || (r_ptr->id == MON_WEREBEAR2)))
+					)
                 {
                     if ( (r_ptr->flagsr & RFR_RES_ALL)
                       || (r_ptr->flags3 & RF3_NO_STUN) )

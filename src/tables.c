@@ -1322,7 +1322,7 @@ arena_type arena_info[MAX_ARENA_MONS + 2] =
     { MON_TIGER,         0,         0                             },
     { MON_DRUID,         0,         0                             },
     { MON_HILL_GIANT,    TV_POTION, SV_POTION_SPEED               },
-    { MON_WERERAT,       0,         0                             },
+    { MON_WERERAT1,      0,         0                             },
     { MON_ORC_CAPTAIN,   0,         0                             },
     { MON_BERSERKER,     TV_ROD,    EFFECT_DETECT_TRAPS           },
     { MON_STONE_GIANT,   0,         0                             },

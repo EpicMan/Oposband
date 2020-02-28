@@ -1097,6 +1097,86 @@ void monster_death(int m_idx, bool drop_item)
         }
         break;
 
+	/* This was actually a wererat! */
+	case MON_WERERAT1:
+	{
+		bool notice = FALSE;
+		int wy = y, wx = x;
+		bool pet = is_pet(m_ptr);
+		u32b mode = 0L;
+
+		if (pet) mode |= PM_FORCE_PET;
+
+		if (summon_specific((pet ? -1 : m_idx), wy, wx, 15, SUMMON_WERERAT, mode))
+		{
+			if (player_can_see_bold(wy, wx))
+				notice = TRUE;
+		}
+
+		if (notice) msg_print("The Scruffy-looking hobbit transforms into a Wererat!");
+	}
+		break;
+
+	/* This was actually a werewolf! */
+	case MON_WEREWOLF1:
+	{
+		bool notice = FALSE;
+		int wy = y, wx = x;
+		bool pet = is_pet(m_ptr);
+		u32b mode = 0L;
+
+		if (pet) mode |= PM_FORCE_PET;
+
+		if (summon_specific((pet ? -1 : m_idx), wy, wx, 20, SUMMON_WEREWOLF, mode))
+		{
+			if (player_can_see_bold(wy, wx))
+				notice = TRUE;
+		}
+
+		if (notice) msg_print("The Swordsman transforms into a Werewolf!");
+	}
+		break;
+
+	/* This was actually a wereworm! */
+	case MON_WEREWORM1:
+	{
+		bool notice = FALSE;
+		int wy = y, wx = x;
+		bool pet = is_pet(m_ptr);
+		u32b mode = 0L;
+
+		if (pet) mode |= PM_FORCE_PET;
+
+		if (summon_specific((pet ? -1 : m_idx), wy, wx, 25, SUMMON_WEREWORM, mode))
+		{
+			if (player_can_see_bold(wy, wx))
+				notice = TRUE;
+		}
+
+		if (notice) msg_print("The Hardened warrior transforms into a Wereworm!");
+	}
+		break;
+
+	/* This was actually a werebear! */
+	case MON_WEREBEAR1:
+	{
+		bool notice = FALSE;
+		int wy = y, wx = x;
+		bool pet = is_pet(m_ptr);
+		u32b mode = 0L;
+
+		if (pet) mode |= PM_FORCE_PET;
+
+		if (summon_specific((pet ? -1 : m_idx), wy, wx, 25, SUMMON_WEREBEAR, mode))
+		{
+			if (player_can_see_bold(wy, wx))
+				notice = TRUE;
+		}
+
+		if (notice) msg_print("The Druid transforms into a Werebear!");
+	}
+		break;
+
     case MON_VARIANT_MAINTAINER:
     {
         bool notice = FALSE;

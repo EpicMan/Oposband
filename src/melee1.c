@@ -142,7 +142,10 @@ bool make_attack_normal(int m_idx)
     int opx = px;
 
     /* Silver monsters have special effects on werewolves */
-    bool track_werewolf_dam = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
+    bool track_werewolf_dam = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF1) || (p_ptr->current_r_idx == MON_WEREWOLF2)
+		|| (p_ptr->current_r_idx == MON_WERERAT1) || (p_ptr->current_r_idx == MON_WERERAT2)
+		|| (p_ptr->current_r_idx == MON_WEREBEAR1) || (p_ptr->current_r_idx == MON_WEREBEAR2)
+		|| (p_ptr->current_r_idx == MON_WEREWORM1) || (p_ptr->current_r_idx == MON_WEREWORM2)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
 
     /* Not allowed to attack */
     if (r_ptr->flags1 & (RF1_NEVER_BLOW)) return (FALSE);
@@ -783,6 +786,11 @@ bool make_attack_normal(int m_idx)
                     if (effect_dam)
                         mon_gain_exp(m_ptr, effect_dam);
                     break; }
+
+				case RBE_HALLUCINATE:
+					set_image(effect_dam, FALSE);
+					obvious = TRUE;
+					break;
 
                 case RBE_DISEASE:
                     effect_dam = reduce_melee_dam_p(effect_dam);
