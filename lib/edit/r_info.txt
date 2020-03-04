@@ -10726,7 +10726,7 @@ D:growing out of its forehead. Nude, its flesh was a uniform ash-gray
 D:in color. It appeared to be sexless, and it had gray, leathery wings
 D:extending far out behind it'.
 
-N:652:Dark celestial
+N:652:Corrupted celestial
 G:A:D
 I:130:100d35:30:140:255:190
 W:41:5:999:8000:0:0
@@ -10744,8 +10744,7 @@ P:Copy:Archon:Paladin
 S:1_IN_3 | TELE_TO | BLIND | SCARE | CAUSE_2 | CAUSE_4 | BO_MANA |
 S:S_DEMON | BO_NETHER(5d5+111) | INVULN | DETECT_MONSTERS | BLESS |
 S:HEROISM | MAPPING
-D:An celestial being who was mighty once but dared defy the Omnipotent
-D:to arms.
+D:An celestial being who was has betrayed order and joined forces with Chaos.
 
 N:653:Giant headless
 G:H:u
@@ -12348,7 +12347,7 @@ S:1_IN_6 | SLOW | SHOOT(12d13) | BO_MANA | BO_PLASMA | BA_ELEC | BR_FORCE | BERS
 D:A fearsome bull-headed demon, Baphomet swings a mighty axe as he curses
 D:all that defy him.
 
-N:731:Hell knight
+N:731:Void knight
 G:p:s
 I:120:15d100:20:110:10:170
 W:52:1:999:7000:0:0
