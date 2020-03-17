@@ -366,7 +366,7 @@ A:15/3
 P:0:2d5:0:0
 F:SHOW_MODS | TOWN
 
-N:*:& Thrusting Sword~
+N:*:& Fencer Sword~
 G:|:W
 I:23:7:0
 W:5:0:0:40:42
