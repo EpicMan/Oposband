@@ -813,6 +813,11 @@ static bool build_type1(void)
         place_random_door(yval, xval, TRUE);
         if (curtain2) cave[yval][xval].feat = feat_door[DOOR_CURTAIN].closed;
     }
+	/* Hack, occasionally put a table in a room */
+	else if (0 == randint0(4))
+	{
+		generate_table_room(y1+1, x1+1, y2-1, x2-1);
+	}
 
     return TRUE;
 }
@@ -4481,5 +4486,66 @@ bool generate_rooms(void)
     }
 
     return TRUE;
+}
+
+
+/*
+ * Generate helper -- fill a rectangle with a table
+ */
+static int generate_table_room(int y1, int x1, int y2, int x2)
+{
+	int y, x;
+	int success = 0;
+	int height = y2 - y1 + 1;
+	int width = x2 - x1 + 1;
+	int feature;
+
+	/* Make tables a bit shorter */
+	if ((x2 - x1) > 1)
+	{
+		if (randint0(100) < 50) x1++;
+		else x2--;
+	}
+
+	/* 3*3 or bigger tables look funny */
+	for (y = 0; y < 8; y++)
+	{
+		/* Occasionally allow exactly 3*3 tables */
+		if (((x2 - x1) == 2) && ((y2 - y1) == 2) && (randint0(100) < 25))
+		{
+			break;
+		}
+
+		if (((x2 - x1) > 1) && ((y2 - y1) > 1))
+		{
+			if (randint0(100) < 40)
+			{
+				if (randint0(100) < 50) y1++;
+				else y2--;
+			}
+			else
+			{
+				if (randint0(100) < 50) x1++;
+				else x2--;
+			}
+		}
+	}
+
+	for (y = y1; y <= y2; y++)
+	{
+		for (x = x1; x <= x2; x++)
+		{
+			if (cave_clean_bold(y, x))
+			{
+				/* Create a table */
+				cave[y][x].feat = feat_table;
+
+				/* No longer "FLOOR" */
+				cave[y][x].info &= ~(CAVE_FLOOR);
+			}
+		}
+	}
+
+	return(TRUE);
 }
 

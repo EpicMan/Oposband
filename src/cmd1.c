@@ -5813,7 +5813,7 @@ void move_player(int dir, bool do_pickup, bool break_trap)
         oktomove = FALSE;
         disturb(0, 0);
     }
-    else if (p_ptr->riding)
+    else if (p_ptr->riding && !p_ptr->prace == RACE_ICKY_THING)
     {
         if (riding_r_ptr->flags1 & RF1_NEVER_MOVE)
         {

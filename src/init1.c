@@ -166,7 +166,7 @@ static cptr f_info_flags[] =
     "FLOOR",
     "WALL",
     "PERMANENT",
-    "XXX00",
+    "PLATFORM",
     "XXX01",
     "XXX02",
     "HIT_TRAP",

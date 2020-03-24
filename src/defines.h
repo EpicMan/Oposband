@@ -646,7 +646,8 @@
 #define RACE_BEORNING           69
 #define RACE_TOMTE              70
 #define RACE_MON_PUMPKIN        71
-#define MAX_RACES               72
+#define RACE_ICKY_THING			72
+#define MAX_RACES               73
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1
@@ -737,6 +738,10 @@
 #define RACE_IS_MONSTER      0x0008
 #define RACE_IS_ILLITERATE   0x0010
 #define RACE_NO_POLY         0x0020
+
+/* Body type constants */
+#define BODY_ICKY_THING		5
+#define BODY_NO_SHOES		35
 
 /* Pseudo-ID: Sense1 is the traditional equipable item sensing.
  * Sense2 is jewelry, lights and magical devices (mage like sensing). */
@@ -984,7 +989,9 @@ enum {
 #define FF_FLOOR         25
 #define FF_WALL          26
 #define FF_PERMANENT     27
-/* #define FF_XXX00         28 */
+/* New feature flags with Halls of Mist features */
+/* Tables are hard to move onto (but not through) and give a tactical advantage */
+#define FF_TABLE         28
 /* #define FF_XXX01         29 */
 /* #define FF_XXX02         30 */
 #define FF_HIT_TRAP      31
@@ -4791,6 +4798,8 @@ extern int PlayerUID;
 #define MON_WEREWOLF1			1340
 #define MON_WEREWORM1			1341
 #define MON_WEREBEAR1			1342
+#define MON_ARANEA				1343
+#define MON_ELDER_ARANEA		1344
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle

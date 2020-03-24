@@ -4068,15 +4068,15 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Show previous messages */
-        case KTRL('P'):
+        /* Show previous messages - used to be Ctrl+P */
+        case 'P':
         {
             do_cmd_messages(old_now_turn);
             break;
         }
 
-        /* Show quest status -KMW- */
-        case KTRL('Q'):
+        /* Show quest status -used to be Ctrl+Q */
+        case 'Q':
         {
             quests_display();
             break;
@@ -4115,8 +4115,8 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Quit (commit suicide) */
-        case 'Q':
+        /* Quit (commit suicide) -used to be 'Q' */
+		case KTRL('Q'):
         {
             do_cmd_suicide();
             break;

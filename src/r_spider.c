@@ -1,7 +1,7 @@
 #include "angband.h"
 
-#define MON_ARANEA       277 /* TODO: This is actually a Mirkwood spider ... */
-#define MON_ELDER_ARANEA 809 /* TODO: This is actually Atlach-Nacha ... */
+/*#define MON_ARANEA       277 /* TODO: This is actually a Mirkwood spider ... */
+/*#define MON_ELDER_ARANEA 809 /* TODO: This is actually Atlach-Nacha ... */
 
 /**********************************************************************
  * Spider: Cave Spider -> Giant Spider -> Phase Spider 

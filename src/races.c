@@ -157,6 +157,9 @@ race_t *get_race_aux(int prace, int psubrace)
     case RACE_IMP:
         result = imp_get_race();
         break;
+	case RACE_ICKY_THING:
+		result = icky_thing_get_race();
+		break;
     case RACE_KLACKON:
         result = klackon_get_race();
         break;

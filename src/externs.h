@@ -615,6 +615,7 @@ extern s16b feat_swamp;
 extern s16b feat_undetected;
 extern s16b feat_dark_pit;
 extern s16b feat_web;
+extern s16b feat_table;
 
 extern byte dungeon_type;
 extern s16b *max_dlv;
@@ -2323,6 +2324,7 @@ extern race_t *high_elf_get_race(void);
 extern race_t *hobbit_get_race(void);
 extern race_t *human_get_race(void);
 extern race_t *imp_get_race(void);
+extern race_t *icky_thing_get_race(void);
 extern race_t *klackon_get_race(void);
 extern race_t *kobold_get_race(void);
 extern race_t *kutar_get_race(void);
