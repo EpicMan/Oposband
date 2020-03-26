@@ -3788,8 +3788,8 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
 
 static bool mon_scatter(int r_idx, int *yp, int *xp, int y, int x, int max_dist)
 {
-    int place_x[MON_SCAT_MAXD];
-    int place_y[MON_SCAT_MAXD];
+	int place_x[MON_SCAT_MAXD] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int place_y[MON_SCAT_MAXD] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int num[MON_SCAT_MAXD];
     int i;
     int nx, ny;

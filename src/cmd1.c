@@ -3217,6 +3217,16 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 do_whirlwind = TRUE;
         }
 
+		/* Attacking a monster on a table from the floor is difficult, to the tune of 40% miss rate */
+		if (have_flag(f_info[c_ptr->feat].flags, FF_TABLE) && !have_flag(f_info[cave[py][px].feat].flags, FF_TABLE))
+		{
+			if (randint1(100) <= 40)
+			{
+				msg_print("Your blow hits the table!");
+				continue;
+			}
+		}
+
         if (poison_needle || mode == HISSATSU_KYUSHO || mode == MYSTIC_KILL)
         {
             int n = p_ptr->weapon_ct;
@@ -5911,6 +5921,19 @@ void move_player(int dir, bool do_pickup, bool break_trap)
         running = 0;
     }
 
+	/* If moving onto a table from the floor, a jumping skill test must be passed */
+	if (have_flag(f_ptr->flags, FF_TABLE))
+	{
+		feature_type* of_ptr = &f_info[cave[py][px].feat];
+
+		int jumping_skill = 40; /* TODO: player jumping skill */
+
+		if (!have_flag(of_ptr->flags, FF_TABLE) && randint1(100) > jumping_skill)
+		{
+			msg_print("You fail to climb up on the table!");
+			oktomove = FALSE;
+		}
+	}
 
     if (!oktomove)
     {

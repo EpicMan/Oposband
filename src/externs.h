@@ -2871,3 +2871,7 @@ extern void     chaos_choose_effect(int);
 extern bool		worships_chaos();
 extern cptr     chaos_patron_name(int);
 extern void chaos_patron_reward(int category);
+
+
+/* rooms.c */
+extern bool in_cover(int x, int y, int dir_x, int dir_y); 

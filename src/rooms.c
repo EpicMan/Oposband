@@ -814,7 +814,7 @@ static bool build_type1(void)
         if (curtain2) cave[yval][xval].feat = feat_door[DOOR_CURTAIN].closed;
     }
 	/* Hack, occasionally put a table in a room */
-	else if (0 == randint0(4))
+	else if (0 == randint0(3))
 	{
 		generate_table_room(y1+1, x1+1, y2-1, x2-1);
 	}
@@ -4498,7 +4498,6 @@ static int generate_table_room(int y1, int x1, int y2, int x2)
 	int success = 0;
 	int height = y2 - y1 + 1;
 	int width = x2 - x1 + 1;
-	int feature;
 
 	/* Make tables a bit shorter */
 	if ((x2 - x1) > 1)
@@ -4549,3 +4548,50 @@ static int generate_table_room(int y1, int x1, int y2, int x2)
 	return(TRUE);
 }
 
+/* check if a tile is in cover - i.e. it is adjacent to a table */
+bool in_cover(int x, int y, int dir_x, int dir_y)
+{
+	/* Not in cover if on a table */
+	if (have_flag(f_info[cave[y][x].feat].flags, FF_TABLE)) return FALSE;
+
+	bool cover = FALSE;
+
+	/* The table needs to be between the shooter and the target 
+	 * to provide cover. If dir_x / dir_y are both zero any direction counts */
+	if (dir_x == 0 && dir_y != 0)
+	{
+		if (dir_y < 0) cover = have_flag(f_info[cave[y + 1][x].feat].flags, FF_TABLE);
+		else if (dir_y > 0) cover = have_flag(f_info[cave[y - 1][x].feat].flags, FF_TABLE);
+	}
+	else if (dir_x != 0 && dir_y == 0)
+	{
+		if (dir_x < 0) cover = have_flag(f_info[cave[y][x+1].feat].flags, FF_TABLE);
+		else if (dir_x > 0) cover = have_flag(f_info[cave[y][x - 1].feat].flags, FF_TABLE);
+	}
+	else
+	{
+		for (int dx = -1; dx <= 1; dx++)
+		{
+			for (int dy = -1; dy <= 1; dy++)
+			{
+				/* skip our square */
+				if (dx == 0 && dy == 0) continue;
+
+				/* shots from the left don't car about cover on the right*/
+				if (dir_x < 0 && dx == -1) continue;
+				if (dir_x > 0 && dx == 1) continue;
+				if (dir_y < 0 && dy == -1) continue;
+				if (dir_y > 0 && dy == 1) continue;
+
+				/* If cover, then we're done */
+				if (have_flag(f_info[cave[y + dy][x + dx].feat].flags, FF_TABLE))
+				{
+					cover = TRUE;
+					dx = dy = 2;
+				}
+			}
+		}
+	}
+
+	return cover;
+}
