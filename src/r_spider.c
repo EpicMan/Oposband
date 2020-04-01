@@ -129,7 +129,7 @@ static void _cave_spider_calc_innate_attacks(void)
     a.ds = 5;
     a.weight = 70;
     calc_innate_blows(&a, 200);
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -193,7 +193,7 @@ static void _giant_spider_calc_innate_attacks(void)
     a.effect[0] = GF_MISSILE;
     a.effect[1] = GF_POIS;
     calc_innate_blows(&a, 400);
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -294,7 +294,7 @@ static void _phase_spider_calc_innate_attacks(void)
     a.effect[1] = GF_POIS;
     a.effect[2] = GF_OLD_SLEEP;
     calc_innate_blows(&a, 500);
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -383,7 +383,7 @@ static void _aranea_calc_innate_attacks(void)
     a.effect[1] = GF_POIS;
     a.effect[2] = GF_OLD_SLEEP;
     calc_innate_blows(&a, 500);
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -467,7 +467,7 @@ static void _elder_aranea_calc_innate_attacks(void)
     a.effect[2] = GF_PARALYSIS;
     a.effect_chance[2] = 25 + 5*(p_ptr->lev - 40);
     calc_innate_blows(&a, 550);
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
 }

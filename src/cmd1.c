@@ -2440,7 +2440,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
                 hit_ct++;
                 sound(SOUND_HIT);
-                if (mode == BEORNING_BIG_SWIPE) msg_print("You hit.");
+                if (mode == BEORNING_BIG_SWIPE) msg_print("You hit");
                 else msg_format(a->msg, m_name_object);
 
                 base_dam = damroll(dd, a->ds);
