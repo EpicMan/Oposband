@@ -57,7 +57,7 @@ static void _khorne_birth(void)
     forge.to_h = 6;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_BLADE_OF_CHAOS));
@@ -128,7 +128,7 @@ static void _khorne_calc_innate_attacks(void)
 
             a.weight = 200;
             calc_innate_blows(&a, 400);
-            a.msg = "You crush.";
+            a.msg = "You crush";
             a.name = "Claw";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -394,7 +394,7 @@ static void _marilith_birth(void) {
     forge.to_h = 3;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
@@ -635,7 +635,7 @@ static void _balrog_birth(void)
     forge.to_h = 5;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
@@ -815,7 +815,7 @@ static void _cyber_birth(void)
     forge.to_h = 10;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_MORNING_STAR));

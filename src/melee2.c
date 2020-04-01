@@ -1655,6 +1655,17 @@ bool mon_attack_mon(int m_idx, int t_idx)
             mon_lore_2(m_ptr, RF2_AURA_REVENGE);
         }
 
+		/* If attacking from floor onto a table, 40% miss chance */
+		if (have_flag(f_info[cave[t_ptr->fy][t_ptr->fx].feat].flags, FF_TABLE) && !have_flag(f_info[cave[m_ptr->fy][m_ptr->fx].feat].flags, FF_TABLE))
+		{
+			if (randint1(100) <= 40)
+			{
+				if (see_either)
+					msg_format("%s^ attacks but hits the table!", m_name);
+				continue;
+			}
+		}
+
         /* Monster hits */
         if ( !r_ptr->blows[ap_cnt].effects[0].effect  /* XXX B:BEG or B:INSULT */
           || check_hit2(power, rlev, ac, stun) )
@@ -1820,6 +1831,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
                 case RBE_LOSE_CHR:
                 case RBE_LOSE_ALL:
                 case RBE_DRAIN_EXP:
+				case RBE_HALLUCINATE:
                     pt = 0;
                     break;
 
@@ -2061,6 +2073,23 @@ static bool check_hp_for_feat_destruction(feature_type *f_ptr, monster_type *m_p
     return !have_flag(f_ptr->flags, FF_GLASS) ||
            (r_info[m_ptr->r_idx].flags2 & RF2_STUPID) ||
            (m_ptr->hp >= MAX(m_ptr->maxhp / 3, 200));
+}
+
+/* Most monsters have 40% chance to hop up on tables, slow ones are 20% */
+static int monster_jump_chance(monster_race *r_ptr, monster_type *m_ptr)
+{
+	/* FLyers ignore tables*/
+	if (r_ptr->flags7 & RF7_CAN_FLY) return 100;
+
+	/* Passwall monsters ignore tables */
+	if (r_ptr->flags2 & RF2_PASS_WALL) return 100;
+
+	/*Climbers are very good at climbing*/
+	if (r_ptr->flags7 & RF7_CAN_CLIMB) return 80;
+
+
+	/* Default chance is 40% */
+	return 40;
 }
 
 /*
@@ -3382,6 +3411,28 @@ static void process_monster(int m_idx)
                     cave_set_feat(ny, nx, floor_type[randint0(100)]);
                 }
             }
+
+			/* Moving onto tables can fail, wasting a turn */
+			if (have_flag(f_ptr->flags, FF_TABLE))
+			{
+				feature_type* of_ptr = &f_info[cave[oy][ox].feat];
+				/*If you are on the table already, no problem */
+				/* Otherwise, you have to pass a jumping test */
+				if (!have_flag(of_ptr->flags, FF_TABLE))
+				{
+					if (randint1(100) > monster_jump_chance(r_ptr, m_ptr))
+					{
+						if (see_m)
+						{
+							char m_name[80];
+							monster_desc(m_name, m_ptr, is_pet(m_ptr) ? MD_ASSUME_VISIBLE : 0);
+							msg_format("%^s fails to climb onto the table!", m_name);
+						}
+						return;
+					}
+						
+				}
+			}
 
             if (!is_riding_mon)
             {

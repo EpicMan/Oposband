@@ -283,6 +283,7 @@ bool empty_levels;    /* Allow empty 'arena' levels */
 bool bound_walls_perm;    /* Boundary walls become 'permanent wall' */
 bool delay_autopick;  /* Always use delayed autopick */
 bool last_words;    /* Leave last words when your character dies */
+bool unified_use;	/* Use the 'a' Activate command for all items */
 
 #ifdef WORLD_SCORE
 bool send_score;    /* Send score dump to the world score server */
@@ -334,7 +335,6 @@ bool no_artifacts;
 bool no_egos;
 bool no_selling;
 bool enable_virtues;
-bool easy_thalos;
 bool never_forget;
 bool no_nexus_warp;
 bool no_scrambling;
@@ -1173,6 +1173,7 @@ s16b feat_mountain;
 s16b feat_swamp;
 s16b feat_dark_pit;
 s16b feat_web;
+s16b feat_table;
 
 /* Unknown grid (not detected) */
 s16b feat_undetected;

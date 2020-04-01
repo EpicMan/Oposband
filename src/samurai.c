@@ -1249,7 +1249,7 @@ static int _get_powers(spell_info* spells, int max)
 static void _birth(void)
 {
 	py_birth_obj_aux(TV_SWORD, SV_KATANA, 1);
-	py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
+	py_birth_obj_aux(TV_HARD_ARMOR, SV_USED_SAMURAI_ARMOR, 1);
     py_birth_spellbooks();
 
 	p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;

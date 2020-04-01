@@ -3791,19 +3791,38 @@ static void _dispatch_command(int old_now_turn)
         }
 
         /* Aim a wand */
+		/* ...or unified use command */
         case 'a':
         {
             if (!p_ptr->wild_mode)
             {
-                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_WANDS))
-                {
-                    msg_print("The arena absorbs all attempted magic!");
-                    msg_print(NULL);
-                }
-                else
-                {
-                    do_cmd_aim_wand();
-                }
+				if (unified_use)
+				{
+					/* SLightly different order here, as the item chosen to use may or may not work 
+					*  depending on the devicemaster speciality. But if not a devicemaster, it certainly won't work */
+					if (p_ptr->inside_arena && p_ptr->pclass != CLASS_DEVICEMASTER)
+					{
+						msg_print("The arena absorbs all attempted magic!");
+						msg_print(NULL);
+					}
+					else
+					{
+						do_cmd_unified_use();
+					}
+				}
+				else
+				{
+					if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_WANDS))
+					{
+						msg_print("The arena absorbs all attempted magic!");
+						msg_print(NULL);
+					}
+					else
+					{
+						do_cmd_aim_wand();
+					}
+				}
+                
             }
             break;
         }
@@ -4049,15 +4068,15 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Show previous messages */
-        case KTRL('P'):
+        /* Show previous messages - used to be Ctrl+P */
+        case 'P':
         {
             do_cmd_messages(old_now_turn);
             break;
         }
 
-        /* Show quest status -KMW- */
-        case KTRL('Q'):
+        /* Show quest status -used to be Ctrl+Q */
+        case 'Q':
         {
             quests_display();
             break;
@@ -4096,8 +4115,8 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Quit (commit suicide) */
-        case 'Q':
+        /* Quit (commit suicide) -used to be 'Q' */
+		case KTRL('Q'):
         {
             do_cmd_suicide();
             break;

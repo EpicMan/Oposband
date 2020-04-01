@@ -3462,6 +3462,21 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     }
                 }
 
+				/* If target is in cover, then there is a 60% chance to hit the cover instead */
+				if (hit && in_cover(x, y, x - sx, y - sy) && randint1(100) <= 60)
+				{
+					if (visible)
+					{
+						char m_name[80];
+						monster_desc(m_name, m_ptr, 0);
+						msg_format("%^s takes cover behind the table!", m_name);
+					}
+					else
+						msg_print("Something takes cover behind the table!");
+						
+					hit = FALSE;
+				}
+
                 if (hit)
                 {
                     bool fear = FALSE;
@@ -3618,7 +3633,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     }
                     if (p_ptr->stun)
                         tdam -= tdam * MIN(100, p_ptr->stun) / 150;
-                    if (mon_take_hit(c_ptr->m_idx, tdam, &fear, NULL))
+                    if (mon_take_hit(c_ptr->m_idx, tdam, &fear, NULL, TRUE))
                     {
                         /* Dead monster ... abort firing additional shots */
                         i = num_shots;

@@ -31,7 +31,7 @@ static void _birth(void)
     p_ptr->current_r_idx = MON_VAMPIRE;
     equip_on_change_race();
     
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
@@ -235,7 +235,7 @@ void _grasp_spell(int cmd, variant *res)
         }
         msg_format("You grasp %s.", m_name);
         teleport_monster_to(m_idx, py, px, 100, TELEPORT_PASSIVE);
-        mon_take_hit(m_idx, damroll(10, 10), &fear, extract_note_dies(real_r_ptr(m_ptr)));
+        mon_take_hit(m_idx, damroll(10, 10), &fear, extract_note_dies(real_r_ptr(m_ptr)), TRUE);
         break;
     }
     default:

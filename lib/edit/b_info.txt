@@ -61,11 +61,15 @@ S:AMULET:Amulet
 S:LITE:Light
 
 N:5:Icky
+S:WEAPON_SHIELD:Right Hand:0
+S:BOW:Shooting
+S:QUIVER:Quiver
 S:RING:Ring
 S:RING:Ring
 S:RING:Ring
 S:LITE:Light
 S:CLOAK:Cloak
+S:HELMET:Head
 
 # Jellies
 N:6:Jelly3
@@ -359,18 +363,21 @@ S:HELMET:Head
 S:GLOVES:Hands
 S:BOOTS:Feet
 
-#XXX I mistakenly though nagas had female bodies including arms,
-#but they only have the trunk of the human body which Webster's says
-#does not include the head or appendages. I'm not familiar with the
-#origin of naga, so someone can correct me, but I guess they are mostly
-#snake like. We'll let them slither into body armor which will snugly
-#fit their female torso, but much else will have to be forbidden.
-N:35:Naga
+#XXX These nagas do have female bodies including arms
+#Hobbits have the same restrictions
+N:35:NoShoes
+S:WEAPON_SHIELD:Right Hand:0
+S:WEAPON_SHIELD:Left Hand:1
+S:BOW:Shooting
+S:QUIVER:Quiver
+S:RING:Right Ring:0
+S:RING:Left Ring:1
 S:AMULET:Neck
 S:LITE:Light
 S:BODY_ARMOR:Body
 S:CLOAK:Cloak
 S:HELMET:Head
+S:GLOVES:Hands
 
 N:36:Kavlax
 S:RING:Ring
@@ -667,16 +674,16 @@ S:LITE:Light
 S:CLOAK:Cloak
 
 N:62:Marilith
-S:WEAPON:Arm:0
-S:WEAPON:Arm:1
+S:WEAPON_SHIELD:Arm:0
+S:WEAPON_SHIELD:Arm:1
 S:RING:Ring:0
 S:RING:Ring:1
 S:GLOVES:Gloves:0
-S:WEAPON:Arm:2
-S:WEAPON:Arm:3
+S:WEAPON_SHIELD:Arm:2
+S:WEAPON_SHIELD:Arm:3
 S:GLOVES:Gloves:2
-S:WEAPON:Arm:4
-S:WEAPON:Arm:5
+S:WEAPON_SHIELD:Arm:4
+S:WEAPON_SHIELD:Arm:5
 S:AMULET:Neck
 S:LITE:Light
 
@@ -1172,3 +1179,11 @@ S:LITE:Light
 S:CLOAK:Cloak
 S:HELMET:Head
 S:QUIVER:Quiver
+
+N:112:Fishrooster
+S:BODY_ARMOR:Body
+S:BODY_ARMOR:Body
+S:BODY_ARMOR:Body
+S:BODY_ARMOR:Body
+S:BODY_ARMOR:Body
+S:BODY_ARMOR:Body

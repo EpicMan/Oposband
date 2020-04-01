@@ -58,7 +58,7 @@ static void _calc_innate_attacks(void)
         a.effect_chance[1] = 20;
 
         a.blows = 100;
-        a.msg = "You squash.";
+        a.msg = "You squash";
         a.name = "Squash";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

@@ -329,10 +329,26 @@ static cptr _do_potion(int sval, int mode)
     switch (sval)
     {
     case SV_POTION_WATER:
-        if (desc) return "It is just water.";
+		if (desc)
+		{
+			if (p_ptr->pclass == CLASS_PRIEST)
+				return "It is holy water, blessed by the gods to remove curses and cleanse the mind";
+			else
+				return "It is just water.";
+		}
         if (cast)
         {
-            msg_print("You feel less thirsty.");
+			if (p_ptr->pclass == CLASS_PRIEST)
+			{
+				//Dispel curses
+				msg_print("You annoint yourself with the holy water, purging curses and closing wounds.");
+				remove_all_curse();
+				set_cut(0, TRUE);
+				set_hero(25, FALSE);
+			}
+			else 
+				msg_print("You feel less thirsty.");
+
             device_noticed = TRUE;
         }
         break;

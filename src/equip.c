@@ -1172,6 +1172,11 @@ void equip_calc_bonuses(void)
         {
             p_ptr->riding_ryoute = FALSE;
         }
+		/* Symbiosis doesn't require a free hand */
+		else if (p_ptr->prace == RACE_ICKY_THING && r_info[m_list[p_ptr->riding].r_idx].flags1 & (RF1_NEVER_MOVE))
+		{
+			p_ptr->riding_ryoute = FALSE;
+		}
         else if (!(p_ptr->pet_extra_flags & PF_RYOUTE))
         {
             for (i = MAX_HANDS - 1; i >= 0; i--)

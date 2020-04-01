@@ -1401,8 +1401,7 @@ static void prt_gold(void)
     big_num_display(p_ptr->au, tmp);
     sprintf(out_val, "%8.8s", tmp);
 
-
-    put_str("AU ", r.y + ROW_GOLD, r.x + COL_GOLD);
+    put_str("GOLD", r.y + ROW_GOLD, r.x + COL_GOLD);
     c_put_str(TERM_L_GREEN, out_val, r.y + ROW_GOLD, r.x + COL_GOLD + 4);
 }
 
@@ -4236,7 +4235,7 @@ void calc_bonuses(void)
             if (p_ptr->easy_2weapon)
                 pct += 100;
 
-            if ((lobj->tval == TV_DAGGER && lobj->sval == SV_MAIN_GAUCHE) ||
+            if ((lobj->tval == TV_DAGGER && lobj->sval == SV_DIRK) ||
                 (lobj->tval == TV_SWORD && lobj->sval == SV_WAKIZASHI))
             {
                 pct += 50;
@@ -4538,7 +4537,7 @@ void calc_bonuses(void)
         if ( i % 2 == 1
           && p_ptr->weapon_info[i-1].wield_how != WIELD_NONE
           && ((o_ptr->tval == TV_SWORD && o_ptr->sval == SV_WAKIZASHI) || 
-            (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_MAIN_GAUCHE)))
+            (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_DIRK)))
         {
             p_ptr->to_a += 5;
             p_ptr->dis_to_a += 5;

@@ -1109,8 +1109,19 @@ bool mon_is_type(int r_idx, int type)
         break;
     case SUMMON_BLUE_HORROR:
         if (r_idx == MON_BLUE_HORROR) return TRUE;
-        break;
-    case SUMMON_ELEMENTAL:
+	case SUMMON_WERERAT:
+		if (r_idx == MON_WERERAT2) return TRUE;
+		break;
+	case SUMMON_WEREWOLF:
+		if (r_idx == MON_WEREWOLF2) return TRUE;
+		break;
+	case SUMMON_WEREWORM:
+		if (r_idx == MON_WEREWORM2) return TRUE;
+		break;
+	case SUMMON_WEREBEAR:
+		if (r_idx == MON_WEREBEAR2) return TRUE;
+		break;
+	case SUMMON_ELEMENTAL:
         if (r_ptr->d_char == 'E') return TRUE;
         break;
     case SUMMON_VORTEX:
@@ -3777,8 +3788,8 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
 
 static bool mon_scatter(int r_idx, int *yp, int *xp, int y, int x, int max_dist)
 {
-    int place_x[MON_SCAT_MAXD];
-    int place_y[MON_SCAT_MAXD];
+	int place_x[MON_SCAT_MAXD] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int place_y[MON_SCAT_MAXD] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int num[MON_SCAT_MAXD];
     int i;
     int nx, ny;
@@ -4549,7 +4560,8 @@ bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode)
         return (FALSE);
     }
 
-    if ((type == SUMMON_BLUE_HORROR) || (type == SUMMON_DAWN)) mode |= PM_NO_KAGE;
+    if ((type == SUMMON_BLUE_HORROR) || (type == SUMMON_WERERAT) || (type == SUMMON_WEREWOLF) || 
+		(type == SUMMON_WEREWORM) || (type == SUMMON_WEREBEAR) || (type == SUMMON_DAWN)) mode |= PM_NO_KAGE;
 
     if (mon_summoned && p_ptr->cult_of_personality)
     {

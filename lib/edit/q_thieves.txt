@@ -54,6 +54,9 @@ R:OBJ(^ring$):EGO(protection)
 ?:[EQU $RACE Centipede]
 R:OBJ(metal shod boots)
 
+?:[EQU $RACE Orc]
+R:OBJ(curved sword)
+
 ?:[EQU $RACE Dragon]
 R:OBJ(^cloak$)
 
@@ -73,7 +76,7 @@ R:OBJ(^ring$):EGO(protection)
 R:OBJ(studded leather gloves)
 
 ?:[EQU $CLASS Duelist]
-R:OBJ(rapier)
+R:OBJ(thrusting sword)
 
 ?:[EQU $CLASS Archaeologist]
 R:OBJ(^whip$)
@@ -93,14 +96,11 @@ R:OBJ(katana)
 ?:[EQU $CLASS Mauler]
 R:OBJ(potion of cure critical wounds)
 
-?:[EQU $CLASS Warrior Paladin]
-R:OBJ(broad sword)
-
 ?:[EQU $CLASS Priest]
-R:OBJ(war hammer)
+R:OBJ(mace)
 
 ?:[EQU $RACE Angel]
-R:OBJ(war hammer)
+R:OBJ(mace)
 
 ?:[EQU $CLASS Weaponsmith]
 R:OBJ(broad axe)
@@ -109,7 +109,7 @@ R:OBJ(broad axe)
 R:OBJ(broad axe)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-R:OBJ(war hammer)
+R:OBJ(mace)
 
 ?:[EQU $CLASS Ninja Ninja-Lawyer]
 R:OBJ(^dagger$)

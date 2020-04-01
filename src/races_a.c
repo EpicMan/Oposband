@@ -297,7 +297,7 @@ race_t *android_get_race(void)
 }
 
 /****************************************************************
- * Archon
+ * Celestial (Archon)
  ****************************************************************/
 static void _archon_calc_bonuses(void)
 {
@@ -317,12 +317,12 @@ race_t *archon_get_race(void)
 
     if (!init)
     {
-        me.name = "Archon";
-        me.desc = "Archons are a higher class of angels. They are good at all skills, and are strong, "
-                    "wise, and are a favorite with any people. They are able to see the unseen, and "
-                    "their wings allow them to safely fly over traps and other dangerous places. However, "
-                    "belonging to a higher plane as they do, the experiences of this world do not leave "
-                    "a strong impression on them and they gain levels slowly.";
+        me.name = "Celestial";
+		me.desc = "Celestials are a race of winged humanoids from the planes of Order. They are good "
+					"at all skills, and are strong, wise, and are a favorite with any people. They are "
+					"able to see the unseen, and their wings allow them to safely fly over traps "
+					"and other dangerous places. However, belonging to another world as they do, they "
+					"stand out in the dungeons and wilds of this world.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] =  0;
@@ -806,7 +806,7 @@ static void _centaur_calc_innate_attacks(void)
 
     a.weight = 150;
     calc_innate_blows(&a, 200);
-    a.msg = "You kick.";
+    a.msg = "You kick";
     a.name = "Hooves";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -2539,6 +2539,10 @@ race_t *hobbit_get_race(void)
         me.shop_adjust = 100;
 
         me.get_powers = _hobbit_get_powers;
+
+		/* Hobbits don't wear shoes! */
+		me.equip_template = &b_info[BODY_NO_SHOES];
+
         init = TRUE;
     }
 
@@ -2613,6 +2617,174 @@ race_t *human_get_race(void)
 
     return &me;
 }
+
+/****************************************************************
+ * Icky Thing
+ ****************************************************************/
+/* Charm an immobile monster and "ride" it. */
+static void _symbiosis_spell(int cmd, variant* res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Symbiosis");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charm an immobile monster and let it ride on you.");
+		break;
+	case SPELL_FLAGS:
+		var_set_int(res, PWR_CONFUSED);
+		break;
+	case SPELL_CAST:
+	{
+		char m_name[80];
+		monster_type* m_ptr;
+		monster_race* r_ptr;
+		int rlev;
+		bool tame_success = FALSE;
+
+		var_set_bool(res, FALSE);
+		if (p_ptr->riding)
+		{
+			msg_print("You already have a symbiant.");
+			return;
+		}
+		if (!do_riding(TRUE)) return;
+
+		var_set_bool(res, TRUE);
+
+		m_ptr = &m_list[p_ptr->riding];
+		r_ptr = &r_info[m_ptr->r_idx];
+		monster_desc(m_name, m_ptr, 0);
+		/*cmsg_format(TERM_L_GREEN, "You try to attach %s to yourself.", m_name);*/
+		
+		rlev = r_ptr->level;
+		if (r_ptr->flags1 & RF1_UNIQUE) rlev = rlev * 3 / 2;
+		if (rlev > 60) rlev = 60 + (rlev - 60) / 2;
+
+		if (!(r_ptr->flags1 & (RF1_NEVER_MOVE)))
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis with a moving creature!");
+			tame_success = FALSE;
+		}
+		else if (p_ptr->inside_arena || p_ptr->inside_battle)
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis in the arena!");
+			tame_success = FALSE;
+		}
+		else if ((r_ptr->flags7 & RF7_GUARDIAN) || (r_ptr->flagsx & RFX_QUESTOR))
+		{
+			cmsg_format(TERM_RED, "It is impossible to enter symbiosis with %s!", m_name);
+			tame_success = FALSE;
+		}
+		else if (!((skills_riding_current() / 120 + p_ptr->lev) >= rlev
+			&& rlev < p_ptr->lev * 3 / 2 + (p_ptr->lev / 5)))
+		{
+			cmsg_format(TERM_RED, "You are not powerful enough for %s to grow on.", m_name);
+			tame_success = FALSE;
+		}
+		else
+		{
+			tame_success = TRUE;
+		}
+
+		if (tame_success)
+		{
+			cmsg_format(TERM_L_GREEN, "You enter symbiosis with %s.", m_name);
+			set_pet(m_ptr);
+		}
+		else
+		{
+			rakuba(1, TRUE);
+			p_ptr->riding = 0;
+		}
+	}
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+static power_info _icky_thing_powers[] =
+{
+	{ A_CON, {2, 0, 0, _symbiosis_spell}},
+	{ -1, {-1, -1, -1, NULL} }
+};
+static int _icky_thing_get_powers(spell_info* spells, int max)
+{
+	return get_powers_aux(spells, max, _icky_thing_powers);
+}
+static void _icky_thing_calc_bonuses(void)
+{
+	res_add(RES_POIS);
+	if (p_ptr->lev >= 10) res_add(RES_ACID);
+}
+static void _icky_thing_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+	add_flag(flgs, OF_RES_POIS);
+	if (p_ptr->lev >= 10)
+		add_flag(flgs, OF_RES_ACID);
+}
+static void _icky_thing_birth(void)
+{
+	py_birth_obj_aux(TV_FOOD, SV_FOOD_SLIME_MOLD, 2 + rand_range(3, 7));
+	py_birth_light();
+}
+
+race_t* icky_thing_get_race(void)
+{
+	static race_t me = { 0 };
+	static bool init = FALSE;
+
+	if (!init)
+	{
+		me.name = "Icky thing";
+		me.desc = "Icky things are smallish, slimy, icky, blobby creatures. They"
+			"are despised and ignored by other creatures, this is a blessing in"
+			"disguise as being ignored means they are stealthy. "
+			"Icky things are fairly weak overall but their slimy coatings protect"
+			"them from poisons and eventually acid.  Icky things a good friends"
+			"of molds and other dungeon growths and even allow them to grow on"
+			"themselves in a symbiotic relationship (in game turns, they can 'ride'"
+			"immobile creatures, but in reverse as the icky thing walks around"
+			"instead of the mount).";
+
+		me.stats[A_STR] = -1;
+		me.stats[A_INT] = -1;
+		me.stats[A_WIS] = -1;
+		me.stats[A_DEX] = -1;
+		me.stats[A_CON] = -1;
+		me.stats[A_CHR] = -2;
+
+		me.skills.dis = -1;
+		me.skills.dev = -1;
+		me.skills.sav = 2;
+		me.skills.stl = 2;
+		me.skills.srh = 6;
+		me.skills.fos = 11;
+		me.skills.thn = 5;
+		me.skills.thb = -1;
+
+		me.life = 90;
+		me.base_hp = 10;
+		me.exp = 75;
+		me.infra = 3;
+		me.shop_adjust = 130;
+
+		me.calc_bonuses = _icky_thing_calc_bonuses;
+		me.get_flags = _icky_thing_get_flags;
+		me.get_powers = _icky_thing_get_powers;
+
+		/* Icky things have special slots */
+		me.equip_template = &b_info[BODY_ICKY_THING];
+
+		init = TRUE;
+	}
+
+	return &me;
+}
+
 
 /****************************************************************
  * Imp

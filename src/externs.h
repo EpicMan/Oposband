@@ -303,6 +303,7 @@ extern bool empty_levels;    /* Allow empty 'arena' levels */
 extern bool bound_walls_perm;    /* Boundary walls become 'permanent wall' */
 extern bool delay_autopick;  /* Always use delayed autopick */
 extern bool last_words;    /* Leave last words when your character dies */
+extern bool unified_use;	/* Use a single 'a' command to use any item */
 
 #ifdef WORLD_SCORE
 extern bool send_score;    /* Send score dump to the world score server */
@@ -355,7 +356,6 @@ extern bool no_artifacts;
 extern bool no_egos;
 extern bool no_selling;
 extern bool enable_virtues;
-extern bool easy_thalos;
 extern bool never_forget;
 extern bool no_nexus_warp;
 extern bool no_scrambling;
@@ -615,6 +615,7 @@ extern s16b feat_swamp;
 extern s16b feat_undetected;
 extern s16b feat_dark_pit;
 extern s16b feat_web;
+extern s16b feat_table;
 
 extern byte dungeon_type;
 extern s16b *max_dlv;
@@ -850,6 +851,7 @@ extern void do_cmd_aim_wand(void);
 extern void do_cmd_use_staff(void);
 extern void do_cmd_zap_rod(void);
 extern void do_cmd_activate(void);
+extern void do_cmd_unified_use(void);
 extern void do_cmd_rerate_aux(void);
 extern void do_cmd_rerate(bool display);
 extern void ring_of_power(int dir);
@@ -1890,7 +1892,7 @@ extern cptr extract_note_dies(monster_race *r_ptr);
 extern void monster_death(int m_idx, bool drop_item);
 extern bool get_monster_drop(int m_idx, object_type *o_ptr);
 extern byte get_monster_drop_ct(monster_type *m_ptr);
-extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note);
+extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note, bool sentence);
 extern void mon_check_kill_unique(int m_idx);
 extern void resize_map(void);
 extern void redraw_window(void);
@@ -2322,6 +2324,7 @@ extern race_t *high_elf_get_race(void);
 extern race_t *hobbit_get_race(void);
 extern race_t *human_get_race(void);
 extern race_t *imp_get_race(void);
+extern race_t *icky_thing_get_race(void);
 extern race_t *klackon_get_race(void);
 extern race_t *kobold_get_race(void);
 extern race_t *kutar_get_race(void);
@@ -2868,3 +2871,7 @@ extern void     chaos_choose_effect(int);
 extern bool		worships_chaos();
 extern cptr     chaos_patron_name(int);
 extern void chaos_patron_reward(int category);
+
+
+/* rooms.c */
+extern bool in_cover(int x, int y, int dir_x, int dir_y); 

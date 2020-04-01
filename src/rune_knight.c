@@ -1994,7 +1994,7 @@ static void _birth(void)
     rune_add(&forge, RUNE_ABSORPTION, FALSE);
     py_birth_obj(&forge);
 
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 
     p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;

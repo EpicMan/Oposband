@@ -17,7 +17,7 @@
 
 
 #define VER_MAJOR 0
-#define VER_MINOR 2
+#define VER_MINOR 3
 #define VER_PATCH 2
 #define VER_EXTRA 0
 #define VERSION_IS_DEVELOPMENT (FALSE)
@@ -646,7 +646,8 @@
 #define RACE_BEORNING           69
 #define RACE_TOMTE              70
 #define RACE_MON_PUMPKIN        71
-#define MAX_RACES               72
+#define RACE_ICKY_THING			72
+#define MAX_RACES               73
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1
@@ -737,6 +738,10 @@
 #define RACE_IS_MONSTER      0x0008
 #define RACE_IS_ILLITERATE   0x0010
 #define RACE_NO_POLY         0x0020
+
+/* Body type constants */
+#define BODY_ICKY_THING		5
+#define BODY_NO_SHOES		35
 
 /* Pseudo-ID: Sense1 is the traditional equipable item sensing.
  * Sense2 is jewelry, lights and magical devices (mage like sensing). */
@@ -984,7 +989,9 @@ enum {
 #define FF_FLOOR         25
 #define FF_WALL          26
 #define FF_PERMANENT     27
-/* #define FF_XXX00         28 */
+/* New feature flags with Halls of Mist features */
+/* Tables are hard to move onto (but not through) and give a tactical advantage */
+#define FF_TABLE         28
 /* #define FF_XXX01         29 */
 /* #define FF_XXX02         30 */
 #define FF_HIT_TRAP      31
@@ -1752,6 +1759,7 @@ enum {
 
 /* The "sval" codes for TV_AXE */
 #define SV_HATCHET                       1    /* 1d5 */
+#define SV_CLEAVER                       2    /* 2d5 */
 #define SV_BROAD_AXE                   10    /* 2d6 */
 #define SV_BEAKED_AXE                    11    /* 2d6 */
 #define SV_BATTLE_AXE                   22    /* 2d8 */
@@ -1762,6 +1770,7 @@ enum {
 
 /* The "sval" codes for TV_SWORD */
 #define SV_BROKEN_SWORD                  2  /* 1d2 */ /* Now only used for death sword */
+#define SV_THRUSTING_SWORD               7  /* 1d6 */ /* Was rapier */
 #define SV_SHORT_SWORD                   8  /* 1d6 */ /*Was small sword */
 #define SV_MEDIUM_SWORD                 12  /* 1d7 */
 #define SV_WAKIZASHI                    13  /* 2d4 */
@@ -1779,10 +1788,10 @@ enum {
 
 /* The "sval" codes for TV_DAGGER */
 #define SV_DAGGER                        4  /* 1d4 */
-#define SV_MAIN_GAUCHE                   5  /* 1d5 */
-#define SV_TANTO                         6  /* 1d5 */
-#define SV_RAPIER                        7  /* 1d6 */
-#define SV_SABRE                        11  /* 1d7 */
+#define SV_DIRK                   5  /* 1d5 */
+#define SV_CAT_CLAW                         6  /* 1d5 */
+#define SV_MITHRIL_DAGGER				7
+#define SV_CRYSKNIFE                        11  /* 1d7 */ /* Was Sabre */
 #define SV_NINJATO                      19  /* 1d9 */
 #define SV_POISON_NEEDLE                32  /* 1d1 */
 #define SV_FALCON_SWORD                 33  /* 1d6 */
@@ -1804,7 +1813,7 @@ enum {
 #define SV_KNIT_CAP                      1
 #define SV_HARD_LEATHER_CAP              2
 #define SV_METAL_CAP                     3
-#define SV_JINGASA                       4  /* 4 */
+#define SV_SKULL_HELM                    4  /* 4 */
 #define SV_IRON_HELM                     5
 #define SV_STEEL_HELM                    6
 #define SV_DRAGON_HELM                   8
@@ -1845,41 +1854,27 @@ enum {
 #define SV_T_SHIRT                       0
 #define SV_FILTHY_RAG                    1
 #define SV_ROBE                          2
-#define SV_PAPER_ARMOR                   3  /* 4 */
-#define SV_SOFT_LEATHER_ARMOR            4
-#define SV_SOFT_STUDDED_LEATHER          5
-#define SV_HARD_LEATHER_ARMOR            6
-#define SV_HARD_STUDDED_LEATHER          7
-#define SV_RHINO_HIDE_ARMOR              8
-#define SV_CORD_ARMOR                    9  /*  6 */
-#define SV_PADDED_ARMOR                 10  /*  4 */
-#define SV_LEATHER_SCALE_MAIL           11
-#define SV_LEATHER_JACK                 12
-#define SV_BLACK_CLOTHES                 13  /* Black Clothes */
-#define SV_BLACK_CLOTHES                13
-#define SV_STONE_AND_HIDE_ARMOR         15  /* 15 */
-#define SV_SWIMSUIT                50  /* Swimsuit */
+#define SV_CLOTH_ARMOR					 4
+#define SV_LEATHER_ARMOR				 6
+#define SV_STUDDED_LEATHER_ARMOR         7
+#define SV_SALAMANDER_HIDE_ARMOR		 9  /*  6 */
+#define SV_MUMAK_HIDE_ARMOR				11
+#define SV_SPIDERHIDE_JACKET            12
+#define SV_BLACK_CLOTHES                13  /* Black Clothes */
+#define SV_AMBERCLOTH_ARMOR				15  /* 15 */
+#define SV_SWIMSUIT						50  /* Swimsuit */
 #define SV_YOIYAMI_ROBE                 60  /* Robe of Twilight */
 #define SV_NAMAKE_ARMOR                 63
 
 /* The "sval" codes for TV_HARD_ARMOR */
-#define SV_RUSTY_CHAIN_MAIL              1  /* 14- */
-#define SV_RING_MAIL                     2  /* 12  */
-#define SV_METAL_SCALE_MAIL              3  /* 13  */
-#define SV_CHAIN_MAIL                    4  /* 14  */
-#define SV_DOUBLE_RING_MAIL              5  /* 15  */
-#define SV_AUGMENTED_CHAIN_MAIL          6  /* 16  */
-#define SV_DOUBLE_CHAIN_MAIL             7  /* 16  */
-#define SV_BAR_CHAIN_MAIL                8  /* 18  */
-#define SV_METAL_BRIGANDINE_ARMOR       9  /* 19  */
-#define SV_SPLINT_MAIL                  10  /* 19  */
-#define SV_DO_MARU                      11  /* 20  */
-#define SV_PARTIAL_PLATE_ARMOR         12  /* 22  */
-#define SV_METAL_LAMELLAR_ARMOR        13  /* 23  */
-#define SV_HARAMAKIDO                   14  /* 17  */
-#define SV_FULL_PLATE_ARMOR            15  /* 25  */
-#define SV_O_YOROI                      16  /* 24  */
-#define SV_RIBBED_PLATE_ARMOR          18  /* 28  */
+#define SV_BREASTPLATE                   2  /* 12  */
+#define SV_CHAIN_MAIL					 5  /* 15  */
+#define SV_AUGMENTED_CHAIN_MAIL			 7  /* 16  */
+#define SV_BRIGANDINE_ARMOR				10  /* 19  */
+#define SV_SAMURAI_ARMOR				11  /* 20  */
+#define SV_USED_SAMURAI_ARMOR			14  /* 17  */
+#define SV_FULL_PLATE_ARMOR				15  /* 25  */
+#define SV_KNIGHT_ARMOR					18  /* 28  */
 #define SV_MITHRIL_CHAIN_MAIL           20  /* 28+ */
 #define SV_MITHRIL_PLATE_MAIL           25  /* 35+ */
 #define SV_ADAMANTITE_PLATE_MAIL        30  /* 40+ */
@@ -2569,6 +2564,10 @@ enum summon_specific_e {
     SUMMON_SPECIAL, /* mon->id specific code */
     SUMMON_REPTILE,
     SUMMON_DEAD_UNIQ,
+	SUMMON_WERERAT,
+	SUMMON_WEREWOLF,
+	SUMMON_WEREWORM,
+	SUMMON_WEREBEAR,
 };
 
 #define DAMAGE_FORCE    1
@@ -3117,6 +3116,7 @@ enum {
     RBE_DRAIN_CHARGES,
     RBE_DRAIN_EXP,
     RBE_CUT,
+	RBE_HALLUCINATE,
 };
 
 /*** Monster flag values (hard-coded) ***/
@@ -3952,7 +3952,7 @@ extern int PlayerUID;
 #define BACT_REST                   17
 #define BACT_FOOD                   18
 #define BACT_RUMORS                 19
-#define BACT_RESEARCH_MONSTER       20
+#define BACT_THALOS_FERRY			20
 #define BACT_COMPARE_WEAPONS        21
 #define BACT_LEGENDS                22
 #define BACT_ENCHANT_WEAPON         23
@@ -4288,7 +4288,7 @@ extern int PlayerUID;
 #define MON_HILL_GIANT          255
 #define MON_CLAY_GOLEM          261
 #define MON_MAGIC_MUSHROOM      267
-#define MON_WERERAT             270
+#define MON_WERERAT2            270
 #define MON_LIGHT_HOUND         271
 #define MON_SHADOW_HOUND        272
 #define MON_FROST_GIANT         278
@@ -4315,10 +4315,10 @@ extern int PlayerUID;
 #define MON_PHASE_SPIDER        331
 #define MON_EARTH_HOUND         337
 #define MON_AIR_HOUND           338
-#define MON_WATER_HOUND         340
+#define MON_ACID_HOUND			340
 #define MON_QUYLTHULG           342
 #define MON_SASQUATCH           343
-#define MON_WEREWOLF            347
+#define MON_WEREWOLF2           347
 #define MON_D_ELF_LORD          348
 #define MON_CLOUD_GIANT         349
 #define MON_FIRE_VORTEX         354
@@ -4342,6 +4342,7 @@ extern int PlayerUID;
 #define MON_D_ELF_DRUID         400
 #define MON_STONE_TROLL         401
 #define MON_TROLL_PRIEST        403
+#define MON_WEREWORM2			404
 #define MON_GWAIHIR             410
 #define MON_ANGEL               417
 #define MON_ALBERICH            419
@@ -4758,6 +4759,47 @@ extern int PlayerUID;
 #define MON_DEATH_PUMPKIN       1300
 #define MON_JACK_LANTERN        1302
 #define MON_R_MACHINE           1303
+#define MON_SPOOKY_TREE			1304
+#define MON_HASTY_ENT			1305
+#define MON_BLACK_HEARTED_HUORN	1306
+#define MON_GRAY_MUSHROOM_PATCH	1307
+#define MON_CAVE_BEAR			1308
+#define MON_DISENCHANTER_BAT	1309
+#define MON_WEREBEAR2			1310
+#define MON_BLOOD_FALCON		1311
+#define MON_GIANT_ROC			1312
+#define MON_BLACK_SCORPION		1313
+#define MON_GIANT_FIREFLY		1314
+#define MON_NEEKERBREEKER		1315
+#define MON_STEGOCENTIPEDE		1316
+#define MON_HORNED_REAPER		1317
+#define MON_BABY_GOLD_DRAGON	1318
+#define MON_EARTH_ELEMENTAL_2	1319
+#define MON_FIRE_ELEMENTAL_2	1320
+#define MON_WATER_ELEMENTAL_2	1321
+#define MON_AIR_ELEMENTAL_2		1322
+#define MON_BABY_BRONZE_DRAGON	1323
+#define MON_BABY_SILVER_DRAGON	1324
+#define MON_ELDRITCH_WYRM		1325
+#define MON_VOID_DRAGON			1326
+#define MON_ELDER_VOID_DRAGON	1327
+#define MON_EVIL_EYE			1328
+#define MON_KOBOLD_SHAMAN		1329
+#define MON_NECROMANCER			1330
+#define MON_GREAT_WYRM_SILVER	1331
+#define MON_GREAT_WYRM_BRONZE	1332
+#define MON_GREAT_WYRM_GOLD		1333
+#define MON_WATER_HOUND			1334
+#define MON_TOMTE				1335
+#define MON_TOMTE_WARRIOR		1336
+#define MON_TOMTE_SHAMAN		1337
+#define MON_TIKSRVZLLAT			1338
+#define MON_WERERAT1			1339
+#define MON_WEREWOLF1			1340
+#define MON_WEREWORM1			1341
+#define MON_WEREBEAR1			1342
+#define MON_ARANEA				1343
+#define MON_ELDER_ARANEA		1344
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle
@@ -4858,7 +4900,7 @@ extern int PlayerUID;
 
 #define WEAPONMASTER_FRENZY 31
 #define WEAPONMASTER_RETALIATION 32
-#define WEAPONMASTER_CRUSADERS_STRIKE 33
+#define WEAPONMASTER_VITALITY_STRIKE 33
 #define WEAPONMASTER_VICIOUS_STRIKE 35
 #define WEAPONMASTER_MANY_STRIKE 36
 #define WEAPONMASTER_WHIRLWIND 37

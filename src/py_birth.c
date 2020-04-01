@@ -719,7 +719,7 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
     { "Angel/Demon",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orc/Troll/Giant",
+    { "Monstrous Humanoid",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_OGRE, RACE_HALF_ORC,
          RACE_HALF_TITAN, RACE_HALF_TROLL, RACE_KOBOLD, RACE_SNOTLING, -1} },
     { "Shapeshifter",
@@ -728,7 +728,8 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_EINHERI, RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
     { "Other",
         {RACE_ANDROID, RACE_BEASTMAN, RACE_BOIT, RACE_CENTAUR, RACE_DRACONIAN, RACE_ENT,
-         RACE_GOLEM, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
+         RACE_GOLEM, RACE_ICKY_THING, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, 
+		 RACE_TONBERRY, RACE_YEEK,-1 } },
 };
 
 static void _race_group_ui(void)
@@ -2159,10 +2160,7 @@ static cptr _stat_desc(int stat)
     static char buf[10];
     if (stat < 3) stat = 3;
     if (stat > 40) stat = 40;
-    if (stat < 19)
-        sprintf(buf, "%2d", stat);
-    else
-        sprintf(buf, "18/%d", 10 * (stat - 18));
+    sprintf(buf, "%2d", stat);
     return buf;
 }
 
