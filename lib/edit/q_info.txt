@@ -262,7 +262,7 @@ G:KILL(magic mushroom, 5)
 F:q_mushrooms.txt
 
 N:64:50:The Renegade Sorcerer (Thalos)
-T:TOWN | GENERATE
+T:TOWN | GENERATE | DANGER_LEVEL_55
 G:KILL(old sorcerer)
 F:q_sorcerer.txt
 
@@ -453,5 +453,9 @@ T:RETAKE | INVIS
 W:angband
 G:KILL(tik'srvzllat)
 F:q_tik.txt
+
+N:99:30:The Angwilian Stables (Outpost)
+T:TOWN | GENERATE
+F:q_stable.txt
 
 # vim: filetype=qi :

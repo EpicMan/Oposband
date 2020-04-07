@@ -17,6 +17,9 @@ N:*:Default
 'Zephyrlight'
 of Drawmij
 of Phantasmagoria
+of Olympus
+of Prometheus
+of Eldamar
 of Tenser
 of Transcendence
 of the Trapped Genie

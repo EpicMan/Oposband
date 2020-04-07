@@ -129,4 +129,6 @@ R:OBJ(^pike$)
 ?:[EQU $RACE Filthy-Rag]
 R:OBJ(robe):EGO(protection)
 
+?:[EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage]
+R:OBJ(WAND_BOLT_ELEC)
 # vim: filetype=q :

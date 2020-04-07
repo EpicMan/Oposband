@@ -2723,8 +2723,9 @@ int reforge_limit(void)
 static bool _reforge_artifact(void)
 {
     int  cost, extra_cost = 0, value;
+	bool is_copy = FALSE;
     char o_name[MAX_NLEN];
-    object_type *src, *dest;
+    object_type *src, *dest, copy;
     int src_max_power = reforge_limit();
     int dest_max_power = 0;
     int src_weight = 80;
@@ -3098,7 +3099,7 @@ static bool _reforge_artifact(void)
             obj_identify_fully(&forge);
             score = obj_value_real(&forge);
             total += score;
-            object_desc(buf, &forge, OD_COLOR_CODED);
+            object_desc(buf, &forge, OD_COLOR_CODED | OD_SINGULAR);
             doc_printf(doc, "%d) <indent><style:indent>%s (%d%%)</style></indent>\n",
                 i + 1, buf, score * 100 / base);
         }
@@ -3108,11 +3109,21 @@ static bool _reforge_artifact(void)
         doc_free(doc);
         return FALSE;
     }
-    if (!reforge_artifact(src, dest, p_ptr->fame))
-    {
-        msg_print("The reforging failed!");
-        return _reforge_artifact_exit();
-    }
+	if ((dest->number > 1) && (!p_ptr->wizard))
+	{
+		copy = *dest;
+		obj_dec_number(&copy, 1, TRUE);
+		is_copy = TRUE;
+		/*        msg_print("Don't be greedy! You may only reforge a single object.");
+				return _reforge_artifact_exit();*/
+	}
+	if (!reforge_artifact(src, dest, p_ptr->fame))
+	{
+		msg_print("The reforging failed!");
+		return _reforge_artifact_exit();
+	}
+	else
+		dest->number = 1;
 
     src->number = 0;
     obj_release(src, OBJ_RELEASE_QUIET);
@@ -3999,8 +4010,9 @@ static void bldg_process_command(building_type *bldg, int i)
         /* Limit depth in Angband */
         if (select_dungeon == DUNGEON_ANGBAND)
         {
-            if (quests_get(QUEST_OBERON)->status != QS_FINISHED) max_depth = 98;
-            else if(quests_get(QUEST_SERPENT)->status != QS_FINISHED) max_depth = 99;
+			if (quests_get(QUEST_OBERON)->status != QS_FINISHED) max_depth = 98;
+			else if (quests_get(QUEST_SERPENT)->status != QS_FINISHED) max_depth = 99;
+			else if ((select_dungeon == DUNGEON_HEAVEN) && (quests_get(QUEST_METATRON)->status != QS_FINISHED)) max_depth = 585;
         }
 
         amt = get_quantity(format("Teleport to which level of %s? ", d_name + d_info[select_dungeon].name), max_depth);
