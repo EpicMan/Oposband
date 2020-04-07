@@ -3462,22 +3462,10 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     }
                 }
 
-				/* If target is in cover, then there is a 60% chance to hit the cover instead */
-				if (hit && in_cover(x, y, x - sx, y - sy) && randint1(100) <= 60)
-				{
-					if (visible)
-					{
-						char m_name[80];
-						monster_desc(m_name, m_ptr, 0);
-						msg_format("%^s takes cover behind the table!", m_name);
-					}
-					else
-						msg_print("Something takes cover behind the table!");
-						
-					hit = FALSE;
-				}
+				/* TODO: Too had to cover all possibilities today, need to streamline shooting/casting/projecting functions */
+				/* Also, 60% block is probably OP. */
 
-                if (hit)
+				if (hit)
                 {
                     bool fear = FALSE;
                     int  tdam;

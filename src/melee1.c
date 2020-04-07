@@ -244,15 +244,16 @@ bool make_attack_normal(int m_idx)
         if (stun)
             skill -= skill*MIN(100, stun) / 150;
 
+		/* TODO: Not until ranged combat is similarly hampered. Also 40% is OP, maybe half that is good. */
 		/* If attacking from floor onto a table, 40% miss chance */
-		if (have_flag(f_info[cave[py][px].feat].flags, FF_TABLE) && !have_flag(f_info[cave[m_ptr->fy][m_ptr->fx].feat].flags, FF_TABLE))
+		/*if (have_flag(f_info[cave[py][px].feat].flags, FF_TABLE) && !have_flag(f_info[cave[m_ptr->fy][m_ptr->fx].feat].flags, FF_TABLE))
 		{
 			if (randint1(100) <= 40)
 			{
 				msg_format("%s hit the table!", m_name);
 				continue;
 			}
-		}
+		}*/
 
         /* Monster hits player */
         if ( !blow->effects[0].effect  /* XXX B:BEG or B:INSULT */
