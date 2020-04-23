@@ -2719,7 +2719,8 @@ static void calc_spells(void)
     if (levels < 0) levels = 0;
 
     /* Extract total allowed spells */
-    num_allowed = (adj_mag_study[p_ptr->stat_ind[get_spell_stat()]] * levels / 2);
+    /* Used to be lookup in adj_mag_study */
+    num_allowed = (p_ptr->stat_use[get_spell_stat()] - 3) / 6;
 
     if ((p_ptr->pclass != CLASS_SAMURAI) && (mp_ptr->spell_book != TV_LIFE_BOOK))
     {
@@ -2969,7 +2970,7 @@ static void calc_mana(void)
 
     if (caster_ptr->options & CASTER_SUPERCHARGE_MANA)
     {
-        msp = (adj_mag_mana[p_ptr->stat_ind[caster_ptr->which_stat]] + 10) * 2;
+        msp = p_ptr->stat_use[caster_ptr->which_stat] * 3 / 2 + 20;
         if (msp) msp += (msp * _racial_mana_adjust(caster_ptr->which_stat) / 20);
     }
     else if (p_ptr->pclass == CLASS_WILD_TALENT)
@@ -2981,7 +2982,7 @@ static void calc_mana(void)
     {
         int idx = p_ptr->stat_ind[caster_ptr->which_stat];
 
-        msp = adj_mag_mana[idx] * (lvl + 3)/4;
+        msp = (p_ptr->stat_use[caster_ptr->which_stat] * 3 / 4) * (lvl + 3) / 4;
         if (msp) msp++;
         if (msp)
         {

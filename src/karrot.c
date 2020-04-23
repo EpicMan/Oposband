@@ -303,7 +303,7 @@ static void _device_focus_spell(int cmd, variant *res)
         var_set_bool(res, TRUE);
 
         fire_ball_hide(GF_MANA, dir, spell_power(7*device_level(prompt.obj)), 0);
-        if (randint1(106) >= p_ptr->lev + adj_mag_mana[p_ptr->stat_ind[A_INT]])
+        if (randint1(106) >= p_ptr->lev + (p_ptr->stat_use[A_INT] * 3)/4)
         {
             char o_name[MAX_NLEN];
             object_desc(o_name, prompt.obj, OD_OMIT_PREFIX | OD_COLOR_CODED);

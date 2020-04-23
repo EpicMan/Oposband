@@ -21237,7 +21237,7 @@ W:98:3:999:50000:0:0
 B:GAZE:TIME(10d10)
 B:GAZE:BLIND(10d10)
 B:GAZE:CONFUSE(10d10)
-B:GAZE:TERRIFY(10d10)
+B:GAZE:TERRIFY(5d10):HALLU(5d10)
 F:UNIQUE |
 F:FORCE_SLEEP | FORCE_MAXHP | CAN_SPEAK | CAN_FLY | HAS_DARK_2 |
 F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD | DROP_GREAT |
@@ -24467,6 +24467,103 @@ S:DARKNESS | BA_DARK | BO_ACID | BO_FIRE | BO_COLD | S_KIN | ROCKET(400)
 D:An ancient undead beholder, it appears to have been mechanically 
 D:augmented similar to what was done to the cyberdemons...
 
+N:1346:Blood Hound
+G:C:r
+I:120:60d15:30:100:0:150
+W:48:2:999:2000:0:0
+B:BITE:HURT(2d12):POISON(10d1):CUT(2d3, 30%)
+B:BITE:HURT(3d12):CUT(2d3, 30%)
+B:CLAW:HURT(3d3)
+B:SPIT:HURT(3d12)
+F:FORCE_SLEEP | FRIENDS(3d3) |
+F:ANIMAL | NO_CONF | NO_SLEEP
+F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS
+P:Copy:Barbarian:Warrior
+P:Body:Hound
+D:A crimson hound, slavering green spittle and dripping with blood. It
+D:thirsts for your blood!
+
+N:1347:Spectral Lion
+G:f:B
+I:120:20d19:40:50:0:100
+W:50:2:70:120:20000:987
+B:CLAW:HURT(2d10)
+B:CLAW:HURT(2d10)
+B:BITE:HURT(2d10)
+B:BITE:HURT(2d10)
+F:WILD_WOOD | WILD_GRASS | ANIMAL | INVISIBLE | PASS_WALL
+F:DROP_SKELETON | DROP_CORPSE | POS_GAIN_AC | RIDING
+F:MOVE_BODY
+P:Copy:Dunadan:Rogue
+P:Skills:0:-7:0:0:0:0:0:0
+P:ExtraSkills:0:-4:0:0:0:0:0:0
+P:Body:Hound
+D:A weird blue tiger from some alternate dimension, it stalks you through
+D:time and space.
+
+N:1348:White Elephant
+G:q:w
+# I: speed : hit points : vision : armor class : alertness : weight (lbs)
+I:110:90d15:20:75:100:800
+# W: depth : rarity : max_depth : exp : next_exp : next_mon
+W:50:6:100:1000:50000:716
+B:BUTT:HURT(5d6)
+B:BUTT:HURT(5d6)
+B:CRUSH:HURT(5d6):HURT(5d6, 20%)
+F:DROP_1D2 | DROP_GREAT
+F:BASH_DOOR |
+F:ANIMAL | RIDING
+F:DROP_CORPSE | POS_GAIN_AC
+P:Copy:Human:Mauler
+P:Body:Elephant
+S:BERSERK
+D:A massive elephantine form with eyes twisted by madness.
+
+N:1349:Heffalump
+G:q:v
+# I: speed : hit points : vision : armor class : alertness : weight (lbs)
+I:110:110d25:25:135:100:800
+# W: depth : rarity : max_depth : exp : next_exp : next_mon
+W:101:2:999:1000:0:0
+B:BUTT:HURT(8d12)
+B:BUTT:HURT(8d12)
+B:CRUSH:HURT(8d12):STUN(1d4, 20%)
+F:FRIENDS(3d2)
+F:BASH_DOOR | KILL_BODY | FORCE_DEPTH
+F:ANIMAL | RIDING | RES_CHAO
+F:DROP_CORPSE | POS_GAIN_AC
+P:Copy:Human:Mauler
+P:Body:Elephant
+S:1_IN_6
+S:BERSERK | BR_FIRE | BR_CHAOS
+D:A massive elephantine form maddened by chaos.
+
+#Horrible monster for players in the post-Serpent dungeon
+N:1350:Apocalypse Drolem
+G:g:G
+I:125:100d100:80:120:100:500
+W:110:7:999:45000:0:0
+B:CLAW:HURT(10d10)
+B:CLAW:HURT(10d10)
+B:BITE:HURT(13d13):CUT(3d13)
+F:FORCE_SLEEP | FORCE_MAXHP | RES_TELE | KILL_WALL | FORCE_DEPTH
+F:EMPTY_MIND | COLD_BLOOD | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
+F:DRAGON | RES_FIRE | RES_COLD | RES_ELEC | RES_COLD | IM_POIS | CAN_SWIM |
+F:NO_CONF | NO_SLEEP | NO_FEAR | NONLIVING | RIDING |
+F:RES_LITE | RES_DARK | RES_NEXU | RES_NETH | RES_SHAR | RES_SOUN | RES_CHAO |
+F:RES_DISE | RES_ACID | REFLECTING | AURA_ELEC
+F:DROP_3D2 | DROP_4D2 | DROP_2D2 | DROP_1D2 | DROP_GOOD |
+F:POS_GAIN_AC | POS_HOLD_LIFE
+F:DROP_CORPSE |
+P:Copy:Golem:Mauler
+P:Body:Dragon
+S:1_IN_3 |
+S:BO_PLASMA | BR_POISON | ROCKET
+D:Before you stands a huge automated guardian of the depths made
+D:to look like a dragon. Its deflector shield humms and crackles noisily, 
+D:its eyes glow with laser light and when it opens its mechanical jaws 
+D:you see rows of rockets instead of teeth...
+
 # New monsters for Oposband 0.3
 #Gnome trickster (shoot, traps, blink, otherwise annoy)
 #Gnome worm mage (summon worms)
@@ -24492,8 +24589,6 @@ D:augmented similar to what was done to the cyberdemons...
 #Rat King
 #Hrungnir, the Stone Giant
 #Death orb
-#Aranea
-#Elder Aranea
 #Blood sprout
 #Water demon
 #Merrow

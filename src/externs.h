@@ -52,8 +52,6 @@ extern s16b ddy_cdd[8];
 extern char hexsym[16];
 extern char listsym[];
 extern cptr color_char;
-extern byte adj_mag_study[];
-extern byte adj_mag_mana[];
 extern byte adj_mag_fail[];
 extern byte adj_mag_stat[];
 extern byte adj_gold[];
