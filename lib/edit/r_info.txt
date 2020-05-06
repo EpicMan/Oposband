@@ -310,7 +310,7 @@ P:Stats:0:-10:0:0:-5:0
 P:Life:50
 D:You feel it isn't safe to touch him.
 
-N:14:Agent of black market
+N:14:Agent of the black market
 G:t:D
 I:110:2d8:10:8:99:160
 W:0:1:0:0:10:44
@@ -5025,7 +5025,7 @@ D:A repulsive being which leaps on long hind legs like a kangaroo.
 D:Its face is curiously human despite the absence of a nose, a
 D:forehead, and "other important particulars".
 
-N:328:Devil ray priest
+N:328:Devil ray shaman
 G:l:s
 I:110:10d10:20:40:20:100
 W:19:1:80:80:0:0
@@ -5478,8 +5478,8 @@ S:1_IN_6 |
 S:BR_FIRE
 D:A whirling maelstrom of fire.
 
-N:355:Water vortex
-G:v:b
+N:355:Acid vortex
+G:v:G
 I:110:9d9:100:30:0:50
 W:21:2:999:60:0:0
 B:ENGULF:ACID(3d3)
@@ -5492,7 +5492,7 @@ P:Stats:-5:0:0:0:0:0
 P:Body:Vortex4
 S:1_IN_6 |
 S:BR_ACID
-D:A caustic spinning whirlpool of water.
+D:A caustic spinning whirlpool of acid.
 
 N:356:Lugdush, the Uruk
 G:o:r
@@ -13255,7 +13255,7 @@ B:HIT:VAMP(6d6)
 B:HIT:VAMP(8d8)
 B:HIT:VAMP(10d10)
 F:UNIQUE | MALE | CAN_SPEAK | HAS_LITE_2 | HUMAN |
-F:FORCE_SLEEP | FORCE_MAXHP | SMART |
+F:FORCE_SLEEP | FORCE_MAXHP | SMART | AMBERITE
 F:ONLY_ITEM | DROP_1D2 | DROP_4D2 | DROP_GOOD |
 F:OPEN_DOOR | BASH_DOOR | RES_NEXU | RES_NETH | RES_CHAO | EVIL |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | NO_CONF | NO_SLEEP |
@@ -20704,7 +20704,7 @@ D:It is a demon made almost entirely out of bones. It is humanoid, but with
 D:a large tail similar to that of a giant scorpion, and emits a foul smell
 D:of decay and rot. They are despised even in the courts.
 
-N:1152:Frost grue
+N:1152:Abominable Snowman
 G:U:w
 I:130:45d100:20:120:40:250
 W:69:3:999:14000:0:0
@@ -20762,7 +20762,7 @@ D:and massive fangs dripping a foul green liquid, the Pit Fiend is a
 D:dreadful enemy from the lowest depths of the hells. They are often the
 D:commanders of vast demon armies.
 
-N:1155:Void crab
+N:1155:Imp lord
 G:U:U
 I:110:60d20:20:60:70:250
 W:43:2:125:3000:0:0
@@ -20796,7 +20796,7 @@ P:Copy:Imp:Chaos-Warrior
 D:It is a large demon with the head of a giant boar.  Flames run up and down
 D: its length and it wields a huge cleaver.
 
-N:1157:Barbed slayer
+N:1157:Monopod
 G:U:G
 I:120:70d20:25:90:70:250
 W:55:4:999:3000:0:0
@@ -20808,12 +20808,12 @@ F:DROP_90
 F:IM_POIS | FRIENDS(3d4)
 F:EVIL | DEMON | OPEN_DOOR | FORCE_SLEEP
 S:1_IN_10
-S:SCARE
+S:SCARE | BLINK
 S:S_DEMON
 P:Copy:Imp:Mauler
-D:A foul, humanoid creature with a long tail, clawed hands and feet, and a
-D: disgusting, wiry, snaky beard.  They are the elite shock troops of the
-D: hells, capable of a terrifying berserk fury.
+D:A foul, humanoid creature with a long tail, clawed hands, a single thick leg 
+D:ending in a massive foot, and a disgusting, wiry, snaky beard.  They are the
+D:elite shock troops of the hells, capable of a terrifying berserk fury.
 
 N:1158:Vrock
 G:U:s
@@ -20831,7 +20831,7 @@ P:Copy:Imp:Mauler
 D:It is a demon with a long neck and raking claws.
 
 # Tomenet
-N:1159:Cave Gorm
+N:1159:Stygian Crocodile
 G:R:D
 I:125:40d100:25:150:50:500
 W:60:5:999:18000:0:0
@@ -24564,6 +24564,111 @@ D:Before you stands a huge automated guardian of the depths made
 D:to look like a dragon. Its deflector shield humms and crackles noisily, 
 D:its eyes glow with laser light and when it opens its mechanical jaws 
 D:you see rows of rockets instead of teeth...
+
+#New monsters for 0.3.4
+N:1351:Anti-magic hound
+G:Z:v
+I:110:25d15:30:30:0:150
+W:49:4:999:1000:0:0
+B:BITE:HURT(2d12):DISENCHANT
+B:BITE:HURT(3d12):DISENCHANT
+B:CLAW:HURT(3d3)
+B:CLAW:HURT(3d3)
+F:FORCE_SLEEP |
+F:FRIENDS(3d3) | RES_NETH |
+F:ANIMAL | NO_CONF | NO_SLEEP
+F:DROP_CORPSE | POS_GAIN_AC
+P:Copy:Kutar:Rogue
+P:Skills:0:-7:0:0:0:0:0:0
+P:ExtraSkills:0:-4:0:0:0:0:0:0
+P:SpellStat:Dex
+P:Body:Hound
+S:FREQ_10 | BR_DISENCHANT | DETECT_MONSTERS
+D:A field of static energy surrounds this hound. Its presence seems 
+D:to dampen all other energies...
+
+N:1352:Auto-mobile
+G:g:R
+I:130:36d23:10:50:12:1000
+W:55:5:0:18500:0:0
+B:BUTT:HURT(8d3)
+B:CRUSH:HURT(8d7)
+F:FORCE_SLEEP | FORCE_MAXHP | RES_TELE | KILL_BODY | KILL_ITEM | 
+F:EMPTY_MIND | BASH_DOOR | IM_COLD | IM_ELEC | IM_POIS | RIDING
+F:NO_FEAR | NO_CONF | NO_SLEEP | NONLIVING | HAS_LITE_1 | NO_STUN
+D:It is a streamlined metal demon, moving under its own power to crush you.
+D:It rumbles hungrily.
+
+N:1353:Bakeneko
+G:f:B
+I:120:12d7:25:22:40:100
+W:15:2:0:60:0:0
+B:CLAW:HURT(1d6)
+B:CLAW:HURT(1d6)
+B:BITE:ELEC(1d10)
+F:ANIMAL | FRIENDS | IM_ELEC | AURA_ELEC | EVIL
+F:POS_GAIN_AC
+S:1_IN_10
+S:HEAL
+P:Copy:Kutar:Rogue
+P:Skills:0:-7:0:0:0:0:0:0
+P:ExtraSkills:0:-4:0:0:0:0:0:0
+P:Body:Hound
+D:A feline surrounded by a strange energy.
+
+N:1354:Maelstrom
+G:v:B
+I:120:32d10:100:40:0:50
+W:45:3:999:800:0:0
+B:ENGULF:HURT(5d5)
+F:FORCE_SLEEP |
+F:RAND_50 | RAND_25 | RES_WATE | IM_FIRE | CAN_FLY |
+F:EMPTY_MIND | BASH_DOOR | RES_TELE |
+F:NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
+F:POS_GAIN_AC | POS_HOLD_LIFE
+P:Copy:Zombie:Rage-Mage
+P:Stats:-4:0:0:0:0:0
+P:Body:Vortex6
+S:1_IN_5 |
+S:BA_WATER | BO_WATER
+D:A wirling vortex of water
+
+N:1355:Chaos vortex
+G:v:v
+I:120:32d10:100:40:0:50
+W:40:3:999:800:0:0
+B:ENGULF:HURT(5d5)
+B:ENGULF:HALLU(5d5)
+F:FORCE_SLEEP |
+F:RAND_50 | RAND_25 | RES_CHAO | CAN_FLY |
+F:EMPTY_MIND | BASH_DOOR | RES_TELE |
+F:NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
+F:POS_GAIN_AC | POS_HOLD_LIFE
+P:Copy:Zombie:Rage-Mage
+P:Stats:-4:0:0:0:0:0
+P:Body:Vortex6
+S:1_IN_5 |
+S:BR_CHAOS
+D:Void, nothingness, spinning destructively.
+
+N:1356:Storm of Unmaagic
+G:v:B
+I:120:32d10:100:40:0:50
+W:45:3:999:800:0:0
+B:ENGULF:DISENCHANT(5d5)
+B:ENGULF:DRAIN_MANA(3d10)
+F:FORCE_SLEEP |
+F:RAND_50 | RAND_25 | RES_WATE | IM_FIRE | CAN_FLY |
+F:EMPTY_MIND | BASH_DOOR | RES_TELE |
+F:NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
+F:POS_GAIN_AC | POS_HOLD_LIFE
+P:Copy:Zombie:Rage-Mage
+P:Stats:-4:0:0:0:0:0
+P:Body:Vortex6
+S:1_IN_5 |
+S:BR_DISENCHANT
+D:Howling through the disintegrating dungeon, this whirlpool of Unmagic rips 
+D:the enchantments from everything it touches.
 
 # New monsters for Oposband 0.3
 # Diver, Deep Sea Diver (deeper, storng), Holy Diver - priest version - 3 monsters for one joke

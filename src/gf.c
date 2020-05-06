@@ -4226,10 +4226,14 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
     if (p_ptr->riding && (mon->id == p_ptr->riding)) do_poly = FALSE;
 
     /* "Unique" and "quest" monsters can only be "killed" by the player. */
-    if (((race->flags1 & RF1_UNIQUE) || (race->flags7 & RF7_NAZGUL) || (mon->mflag2 & MFLAG2_QUESTOR))
+    /*if (((race->flags1 & RF1_UNIQUE) || (race->flags7 & RF7_NAZGUL) || (mon->mflag2 & MFLAG2_QUESTOR))
       && !p_ptr->inside_battle
-      && !prace_is_(RACE_MON_QUYLTHULG))
+      && !prace_is_(RACE_MON_QUYLTHULG))*/
+    /* CJR: Experimental - Let pets/friendlies kill it, note when it happens */
+    if (race->flags1 & RF1_UNIQUE)
     {
+        /* Alert us */
+        seen = obvious = TRUE;
         if (who && (dam > mon->hp)) dam = mon->hp;
     }
 

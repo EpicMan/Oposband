@@ -371,11 +371,13 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     /* It is dead now... or is it? */
     if (m_ptr->hp < 0)
     {
-        if ( ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
-          && !p_ptr->inside_battle
-          && !prace_is_(RACE_MON_QUYLTHULG))
+        /* CJR - Experimental: Lets pets/friendlies kill questors/uniques as well, also make it obvious whenever they die */
+        if /*(*/ ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
+          /*&& !p_ptr->inside_battle
+          && !prace_is_(RACE_MON_QUYLTHULG))*/
         {
-            m_ptr->hp = 1;
+            known = TRUE; seen = TRUE;
+            /*m_ptr->hp = 1;*/
         }
         else
         {
@@ -4642,32 +4644,32 @@ void monster_gain_exp(int m_idx, int s_idx)
     if (!dun_level) new_exp /= 5;
 
     /* Experimental: Share the xp with the player */
+    /* CJR: do not subtract % from pet, they should get full xp from kill */
     if (is_pet(m_ptr))
     {
         int  div = 5;
-        bool penalty = TRUE;
         int  exp;
         int  pmult = 1;
 
-        if ( prace_is_(RACE_MON_QUYLTHULG)
-          || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx) )
+        if ( prace_is_(RACE_MON_QUYLTHULG) || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx) 
+            || ((prace_is_(RACE_ICKY_THING) && p_ptr->riding == m_idx) && r_info[m_ptr->r_idx].flags1 & (RF1_NEVER_MOVE))
+            )
         {
             div = 1;
-            penalty = FALSE;
         }
 
         if ((coffee_break) && (p_ptr->lev < 50))
         {
             if (py_in_dungeon()) pmult = coffee_break + 1;
             if ((prace_is_(RACE_MON_QUYLTHULG))
-              || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx)) pmult += (py_in_dungeon() ? 2 : (coffee_break - 1));
+                    || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx)
+                    || ((prace_is_(RACE_ICKY_THING) && p_ptr->riding == m_idx) && r_info[m_ptr->r_idx].flags1 & (RF1_NEVER_MOVE))) 
+                pmult += (py_in_dungeon() ? 2 : (coffee_break - 1));
         }
 
         exp = new_exp / div;
         gain_exp(exp * pmult);
         p_ptr->pet_lv_kills++;
-        if (penalty)
-            new_exp -= exp;
         if (pmult > 1) new_exp *= 2;
         if (new_exp < 0) new_exp = 0;
     }
