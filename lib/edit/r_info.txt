@@ -6490,7 +6490,7 @@ S:1_IN_8 |
 S:SCARE | CAUSE_2 | DARKNESS
 D:It is a tangible but ghostly form made of white fog.
 
-N:417:Lesser celestiel
+N:417:Angel
 G:A:b
 I:110:30d10:30:60:255:170
 W:26:4:999:220:2000:456
@@ -6503,11 +6503,11 @@ F:ONLY_ITEM | DROP_2D2 | GOOD | CAN_FLY |
 F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR |
 F:RES_ACID | RES_POIS | NO_CONF | NO_SLEEP
 F:POS_HOLD_LIFE | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 |
 S:BLIND | CONFUSE | SCARE | AMNESIA | DETECT_EVIL | BLESS
 O:DROP_PALADIN
-D:A lesser celestial wearing little more than a loincloth - its steely skin
+D:A lesser angel wearing little more than a loincloth - its steely skin
 D:provides all the protection it needs.
 
 N:418:Ghoul
@@ -7180,7 +7180,7 @@ D:A gigantic worm dripping with acid. "...even as he looked, one
 D:reared up several hundred feet and leveled a bleached, viscous end
 D:at him."
 
-N:456:Celestial
+N:456:Archangel
 G:A:B
 I:110:40d10:30:68:255:190
 W:29:4:999:400:2500:511
@@ -7193,11 +7193,11 @@ F:ONLY_ITEM | DROP_2D2 | CAN_FLY | SELF_LITE_1 |
 F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR |
 F:RES_FIRE | RES_COLD | RES_POIS | NO_CONF | NO_SLEEP | RES_TELE
 F:POS_HOLD_LIFE | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 |
 S:HEAL | HASTE | BLIND | CONFUSE | SCARE | DETECT_EVIL | BLESS
 O:DROP_PALADIN
-D:A lesser celestial protected by an aura of holiness. Its muscular form looks
+D:A lesser angel protected by an aura of holiness. Its muscular form looks
 D:extremely powerful next to your own frail body.
 
 N:457:Ring mimic
@@ -8143,7 +8143,7 @@ S:1_IN_6 |
 S:BO_FIRE
 D:It is a towering inferno of flames.
 
-N:511:Astral Celestial
+N:511:Cherub
 G:A:W
 I:120:45d10:30:68:255:170
 W:33:4:999:400:5000:605
@@ -8157,12 +8157,12 @@ F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS |
 F:NO_CONF | NO_SLEEP | SELF_LITE_2 |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 |
 S:HEAL | HASTE | BLIND | SCARE | MIND_BLAST | BO_FIRE(18d8+22) |
 S:S_MONSTER | DETECT_EVIL | BLESS
 O:DROP_PALADIN
-D:It is a celestial moving very quickly, wielding a holy war hammer and casting
+D:It is an angel moving very quickly, wielding a holy war hammer and casting
 D:a volley of powerful spells in your direction.
 
 N:512:Water elemental
@@ -9833,7 +9833,7 @@ S:PARALYZE | SCARE | CAUSE_3 | BO_NETHER
 D:Your life force is torn from your body as this powerful unearthly being
 D:approaches.
 
-N:605:Planar Celestial
+N:605:Seraph
 G:A:w
 I:120:50d10:30:68:255:160
 W:38:4:999:1800:8000:661
@@ -9847,12 +9847,12 @@ F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS |
 F:NO_CONF | NO_SLEEP | SELF_LITE_2 |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_11 |
 S:HEAL | HASTE | TELE_OTHER | CONFUSE | BO_MANA | BO_PLASMA |
 S:S_MONSTER | DETECT_EVIL | BLESS | HEROISM | MAPPING
 O:DROP_PALADIN
-D:It is a celestial, fast and strong. You are stunned by its extreme holiness
+D:It is an angel, fast and strong. You are stunned by its extreme holiness
 D:and try to resist all desires to obey it.
 
 N:606:Loge, Spirit of Fire
@@ -10731,7 +10731,7 @@ D:growing out of its forehead. Nude, its flesh was a uniform ash-gray
 D:in color. It appeared to be sexless, and it had gray, leathery wings
 D:extending far out behind it'.
 
-N:652:Corrupted celestial
+N:652:Fallen angel
 G:A:D
 I:130:100d35:30:140:255:190
 W:41:5:999:8000:0:0
@@ -10745,12 +10745,12 @@ F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY | RES_DARK |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_TELE | RES_NETH |
 F:CAN_FLY | SELF_LITE_2 |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 | TELE_TO | BLIND | SCARE | CAUSE_2 | CAUSE_4 | BO_MANA |
 S:S_DEMON | BO_NETHER(5d5+111) | INVULN | DETECT_MONSTERS | BLESS |
 S:HEROISM | MAPPING
-D:An celestial being who was has betrayed order and joined forces with Chaos.
-
+D:An angelic being who was mighty once but dared defy the Omnipotent
+D:to arms.
 N:653:Giant headless
 G:H:u
 I:110:30d25:20:50:40:250
@@ -10913,7 +10913,7 @@ D:The madman's son is a Logrus Master, almost as great a
 D:menace as his father.
 P:Copy:Amberite:Beastmaster
 
-N:661:Solar Celestial
+N:661:Archon
 G:A:v
 I:130:100d35:30:140:255:170
 W:41:5:999:8000:50000:942
@@ -10926,13 +10926,13 @@ F:ONLY_ITEM | DROP_2D2 | DROP_3D2 | DROP_GOOD | GOOD | REFLECTING |
 F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY | RES_LITE |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_TELE | CAN_FLY
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 | TELE_TO | BLIND | SCARE | CAUSE_2 | CAUSE_4 | BO_MANA |
 S:S_MONSTER | INVULN | DETECT_MONSTERS | BLESS | HEROISM | MAPPING
 O:DROP_PALADIN
-D:Never a more glorious being have you seen. The very holiness of its
+D:Never a more heavenly being have you seen. The very holiness of its
 D:presence makes you deeply respect it. Few creatures can match the powers
-D:of a solar celestial; fewer still live to tell the tale after attacking one.
+D:of an Archon; fewer still live to tell the tale after attacking one.
 
 N:662:Formless spawn of Tsathoggua
 G:U:D
@@ -13102,7 +13102,7 @@ F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | IM_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_LITE | RES_TELE |
 F:NO_CONF | NO_SLEEP | SELF_LITE_2 |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:1:0:3:1:1:3
 S:FREQ_40 | TELE_TO | BLIND | BO_MANA | BA_FIRE(1d511+20) | BR_FIRE | BR_MANA
 S:INVULN | BO_PLASMA | BR_PLASMA | S_ANGEL | PSY_SPEAR | HEAL | BA_LITE
@@ -13128,7 +13128,7 @@ F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_DARK | RES_TELE
 F:NO_CONF | NO_SLEEP |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:1:0:3:1:1:3
 S:FREQ_40 | TELE_TO | BLIND | BO_MANA | BA_NETHER(10d10+210) | BR_NETHER
 S:PSY_SPEAR | S_MONSTER | HEAL | S_ANGEL | BR_MANA | BR_COLD | S_DRAGON
@@ -13232,7 +13232,7 @@ F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | IM_ELEC | IM_POIS | RES_LITE |
 F:NO_CONF | NO_SLEEP | AURA_FEAR
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC |
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:2:2:5:2:2:5
 P:Speed:+10
 S:FREQ_40 | BR_HOLY_FIRE
@@ -13242,7 +13242,7 @@ S:BR_MANA | BR_LITE | BR_ELEC | MANA_STORM | HAND_DOOM | S_HI_DRAGON |
 S:BRAIN_SMASH | S_MONSTER | HEAL | BR_DISENCHANT | BA_LITE
 S:DETECT_MONSTERS | BLESS | HEROISM | MAPPING
 O:DROP_PALADIN
-D:Commanding a legion of celestials, Raphael will destroy you for your sins. He
+D:Commanding a legion of angels, Raphael will destroy you for your sins. He
 D:will crush you like the pitiful insignificant being he sees you to be.
 D:Your very soul will be taken into judgement by his supreme authority as he
 D:cleanses the world of evil.
@@ -14331,7 +14331,7 @@ F:RES_POIS | RES_FIRE | FORCE_SLEEP | FORCE_MAXHP | NONLIVING
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
 P:Copy:Balrog:Mauler
 S:FREQ_15 | ROCKET(600)
-D:Reverbrant metal steps announce the arrival of this huge creature,
+D:Reverberant metal steps announce the arrival of this huge creature,
 D:half demon half machine. It has an unsurpassable firepower.
 
 N:817:Hela, Queen of the Dead
@@ -14687,7 +14687,7 @@ D:A legion of evil undead druj animating the skeleton of a once mighty
 D:sorcerer. His power is devastating and his speed unmatched in the
 D:underworld. Flee his wrath!
 
-N:831:Mephistopheles, Duke of Chaos
+N:831:Mephistopheles, Lord of Mayhem
 G:U:r
 I:140:30d222:20:150:50:1000
 W:84:2:999:42500:0:0
@@ -14914,7 +14914,7 @@ B:BITE:HURT(8d12):POISON(4d12)
 F:UNIQUE | MALE | CAN_SPEAK | ANIMAL | EVIL |
 F:FORCE_SLEEP | FORCE_MAXHP | ESCORT
 F:TAKE_ITEM | MOVE_BODY | RAND_25 |
-F:ONLY_ITEM | DROP_1D2 | DROP_GOOD |
+F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | NO_CONF
 F:RES_POIS
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Barbarian:Mauler
@@ -15397,7 +15397,7 @@ F:REGENERATE | NONLIVING | CAN_FLY |
 F:GOOD | RES_ACID | RES_FIRE | IM_COLD | IM_ELEC | RES_POIS |
 F:NO_CONF | NO_SLEEP | RES_TELE | RIDING | AURA_FEAR
 F:POS_GAIN_AC | POS_SEE_INVIS | POS_TELEPATHY
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:1:0:3:1:0:3
 P:Body:Unicorn
 S:1_IN_3 |
@@ -15684,7 +15684,7 @@ P:Speed:+7
 
 N:871:Metal Babble
 G:j:s
-I:120:3d2:200:10000:0:2
+I:190:3d2:200:10000:0:2
 W:80:30:999:400000:0:0
 B:HIT:DISENCHANT(1d10)
 B:HIT:DISENCHANT(1d10)
@@ -16904,7 +16904,7 @@ P:Copy:Barbarian:Beastmaster
 P:Body:Dragon
 D:An undead dragon skeleton.
 
-N:942:Galactic Celestial
+N:942:Planetar
 G:A:r
 I:130:22d100:30:150:255:180
 W:50:6:999:10000:100000:943
@@ -16918,15 +16918,15 @@ F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_LITE |
 F:NO_CONF | NO_SLEEP | CAN_FLY |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_4 | HEAL | HASTE | TELE_OTHER | BO_MANA | BO_PLASMA(8d7+85) | CAUSE_4 |
 S:S_MONSTER | S_ANGEL | INVULN | PSY_SPEAR(1d100+150) | S_DRAGON | DISPEL_MAGIC |
 S:ANTI_MAGIC | DETECT_MONSTERS | BLESS | HEROISM | MAPPING
 O:DROP_PALADIN
-D:It is a celestial, fast and strong. You are stunned by its extreme holiness
+D:It is an angel, fast and strong. You are stunned by its extreme holiness
 D:and try to resist all desires to obey it.
 
-N:943:Cosmic Celestial
+N:943:Solar
 G:A:y
 I:130:100d30:30:160:255:180
 W:64:6:999:22000:0:0
@@ -16940,16 +16940,16 @@ F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD |
 F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_LITE |
 F:NO_CONF | NO_SLEEP | CAN_FLY |
-F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC |
-P:Copy:Celestial:Paladin
+F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC | 
+P:Copy:Archon:Paladin
 S:1_IN_3 |
 S:TELE_TO | BLIND | SCARE | CAUSE_4 | BO_MANA | PSY_SPEAR(1d128+150) | INVULN
 S:S_ANGEL | S_DRAGON | BA_LITE | HEAL | DISPEL_MAGIC | ANTI_MAGIC
 S:DETECT_MONSTERS | BLESS | HEROISM | MAPPING
 O:DROP_PALADIN
-D:Never a more glorious being have you seen. The very holiness of its
+D:Never a more heavenly being have you seen. The very holiness of its
 D:presence makes you deeply respect it. Few creatures can match the powers
-D:of a Cosmic Celestial; fewer still live to tell the tale after attacking one.
+D:of a Solar; fewer still live to tell the tale after attacking one.
 
 N:944:Deep puddle
 G:~:b
@@ -17688,7 +17688,7 @@ F:RES_ACID | IM_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_TELE |
 F:RES_DISE | RES_NEXU | RES_NETH | RES_PLAS | RES_LITE | RES_SOUN |
 F:NO_CONF | NO_SLEEP | RIDING
 F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS | POS_TELEPATHY
-P:Copy:Celestial:Priest
+P:Copy:Archon:Priest
 P:Body:Giant Bird
 S:FREQ_25 |
 S:SCARE | BRAIN_SMASH | DRAIN_MANA |
@@ -17708,7 +17708,7 @@ F:RES_ACID | RES_FIRE | RES_COLD | IM_ELEC | RES_POIS | RES_TELE |
 F:RES_DISE | RES_NETH | RES_PLAS |
 F:NO_CONF | NO_SLEEP | RIDING
 F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS | POS_TELEPATHY
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Body:Unicorn
 S:1_IN_6 |
 S:BLIND | SHRIEK | DISPEL_MAGIC | ANTI_MAGIC | INVULN | S_ANGEL | HEAL
@@ -18058,7 +18058,7 @@ F:CAN_FLY | UNIQUE2 |
 F:TAKE_ITEM | OPEN_DOOR |
 F:RES_FIRE | RES_COLD | RES_ELEC | RES_ACID | RES_POIS | NO_CONF | NO_SLEEP
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Rogue
+P:Copy:Archon:Rogue
 P:Speed:+15
 S:1_IN_3 |
 S:TELE_SELF | HASTE | TELE_OTHER | TELE_LEVEL | BLINK
@@ -18075,7 +18075,7 @@ F:CAN_FLY | UNIQUE2 |
 F:TAKE_ITEM | OPEN_DOOR | SILVER |
 F:RES_FIRE | RES_COLD | RES_ELEC | RES_ACID | RES_POIS | NO_CONF | NO_SLEEP
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Rogue
+P:Copy:Archon:Rogue
 P:Speed:+10
 S:1_IN_3 |
 S:TELE_SELF | HASTE | TELE_OTHER | TELE_LEVEL | BLINK
@@ -19242,7 +19242,7 @@ F:SMART | REGENERATE |
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_POIS | RES_COLD | NO_CONF | NO_SLEEP |
 F:RES_LITE | RES_DARK | RES_NETH | RES_CHAO | RES_NEXU |
 F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS | POS_TELEPATHY
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Body:Unicorn
 P:Speed:+15
 S:1_IN_3 |
@@ -19835,7 +19835,7 @@ D:A giant ant with a greatly enlarged mandibular gland.
 
 N:1110:Metal Babble
 G:j:s
-I:100:3d2:200:10000:0:2
+I:190:3d2:200:10000:0:2
 W:80:10:999:400000:0:0
 B:HIT:DISENCHANT(1d10)
 B:HIT:DISENCHANT(1d10)
@@ -20762,7 +20762,7 @@ D:and massive fangs dripping a foul green liquid, the Pit Fiend is a
 D:dreadful enemy from the lowest depths of the hells. They are often the
 D:commanders of vast demon armies.
 
-N:1155:Demon crab
+N:1155:Void crab
 G:U:U
 I:110:60d20:20:60:70:250
 W:43:2:125:3000:0:0
@@ -20777,7 +20777,7 @@ S:S_DEMON
 P:Copy:Imp:Chaos-Warrior
 D:It is demon with arms and pincers, its form a true mockery of life.
 
-N:1156:Butcher demon
+N:1156:Satyr
 G:U:r
 I:110:80d20:20:60:80:250
 W:45:2:125:5000:0:0
@@ -20796,7 +20796,7 @@ P:Copy:Imp:Chaos-Warrior
 D:It is a large demon with the head of a giant boar.  Flames run up and down
 D: its length and it wields a huge cleaver.
 
-N:1157:Barbed mauler
+N:1157:Barbed slayer
 G:U:G
 I:120:70d20:25:90:70:250
 W:55:4:999:3000:0:0
@@ -21194,7 +21194,7 @@ F:SMART | KILL_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_LITE | AURA_FEAR
 F:NO_CONF | NO_SLEEP | CAN_FLY | KILL_WALL | NO_FEAR | REFLECTING | RES_TELE | NO_STUN |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:1_IN_3 |
 S:TELE_TO | BR_MANA | BR_DISENCHANT | S_ANGEL
 D:An undeviable presence, designated to watch the stars and the void and maintain
@@ -21202,7 +21202,7 @@ D:their balance. Its aura is pure beyond expression, its eyes reflect supreme
 D:laws beyond comprehension, daring to look at it will drive you insane,
 D:let alone fighting it!
 
-N:1179:Zuriel, the Guardian Overlord
+N:1179:Michael, the Guardian Overlord
 G:A:U
 I:130:69d199:100:175:255:255
 W:98:3:999:77777:0:0
@@ -21216,7 +21216,7 @@ F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_LITE | AURA_FEAR
 F:AURA_ELEC | ESCORT | UNIQUE | REGENERATE | NO_STUN | MALE
 F:NO_CONF | NO_SLEEP | CAN_FLY | KILL_WALL | NO_FEAR | REFLECTING | RES_TELE
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC |
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:2:2:5:2:2:5
 P:Speed:+10
 S:1_IN_3 |
@@ -21224,9 +21224,9 @@ S:TELE_TO | BR_MANA | BR_DISENCHANT | BR_CONF | S_ANGEL | S_MONSTER
 S:BA_LITE | BO_MANA | BO_WATER | BRAIN_SMASH |
 S:HASTE | HEAL | ANTI_MAGIC | DRAIN_MANA
 D:Through many succeeding cycles of time, as ray after ray provided the pathway
-D:for the descent of new spirits, lord Zuriel has remained as the guardian
-D:overlord of the celestial host, the elemental kingdom and humanity. He shall
-D:not fold his cosmic wings about him to return home until the final celestial
+D:for the descent of new spirits, lord Michael has remained as the guardian
+D:overlord of the angelic host, the elemental kingdom and humanity. He shall
+D:not fold his cosmic wings about him to return home until the final angelic
 D:being is freed, the last man is redeemed and the last elemental returned to
 D:its perfect state.
 
@@ -21535,7 +21535,7 @@ S:1_IN_4 |
 S:BR_DARK | BR_CONF | BR_INERTIA | S_DEMON |
 D:The prince of evil.
 
-N:1195:sUrGoL lOgRuS, lOrD oF cHaOs
+N:1195:Melkor, Lord of Darkness
 G:A:v
 I:140:192d100:50:242:25:235
 W:100:2:999:80586:0:0
@@ -21543,7 +21543,7 @@ B:HIT:HURT(20d20):DISENCHANT(5d5, 50%):SLOW(3d3, 40%)
 B:TOUCH:DRAIN_CHARGES:UNLIFE(2d12, 50%):SLOW(3d3, 40%)
 B:GAZE:HURT(7d7):LOSE_WIS:CONFUSE
 B:GAZE:HURT(7d7):LOSE_CHR:DRAIN_EXP(10d6, 25%)
-A:CHAOS(3d4):FIRE(2d3):COLD(2d3)
+A:DARK(3d4)
 F:UNIQUE | MALE | CAN_SPEAK | CAN_FLY | AURA_REVENGE |
 F:FORCE_SLEEP | FORCE_MAXHP | REGENERATE | SELF_LITE_2 |
 F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD | DROP_GREAT |
@@ -21551,15 +21551,16 @@ F:OPEN_DOOR | BASH_DOOR | MOVE_BODY | SMART | IM_FIRE |
 F:AURA_COLD | AURA_FIRE | EVIL | RES_TELE | NO_STUN |
 F:IM_COLD | RES_POIS | NO_CONF | NO_SLEEP | RES_TIME | RES_CHAO |
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC | POS_TELEPATHY
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 S:FREQ_30 |
 S:BR_COLD | BR_NETHER | BR_SHARDS | PSY_SPEAR(1d200+150) | S_ANGEL | BA_LITE
 S:S_HI_DEMON
-D:The heart and soul of the courts of chaos, Surgol is the embodiment of 
-D:chaos and madness; he twists reality around him and appears
-D:cloaked in both ice and flames. He looks remarkably like a Celestial,
-D:normally the antithesis of Chaos. How could a being of order be the
-D:ruler of chaos? 
+D:He was the most powerful of the Valar, the equal of Manwe. 
+D:You banned him here, in the Void, and now you must destroy him 
+D:forever. However here in the Void, his spirit gained much power 
+D:for he is closer to the Flame Imperishable. He is coming to you in pure 
+D:madness, which makes him even more dangerous. You are on the verge 
+D:of dying! 
 
 N:1196:The Lurking Horror
 G:H:D
@@ -22679,7 +22680,7 @@ P:Copy:Human:Warrior
 P:Body:Fish
 D:It always grows louder when it's about to feed.
 
-N:1253:Metatron, Lord of Infinity
+N:1253:Metatron, the High Angel
 G:A:G
 I:136:108d148:100:192:2:250
 W:100:1:999:80586:0:0
@@ -22695,17 +22696,17 @@ F:RES_ACID | IM_FIRE | IM_COLD | RES_ELEC | RES_POIS | RES_LITE | RES_DARK |
 F:AURA_FEAR | ESCORT | UNIQUE | REGENERATE | NO_STUN | MALE | RES_NEXU
 F:NO_CONF | NO_SLEEP | CAN_FLY | KILL_WALL | NO_FEAR | REFLECTING | RES_TELE
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC |
-P:Copy:Celestial:Paladin
+P:Copy:Archon:Paladin
 P:Stats:2:2:2:2:2:6
 P:Speed:+10
 S:FREQ_36 |
 S:TELE_TO | INVULN | BR_FIRE | BR_DISENCHANT | BR_MANA | S_ANGEL
 S:BA_LITE | BO_MANA | BRAIN_SMASH | HASTE | HEAL | ANTI_MAGIC | BR_GRAVITY
 S:BLINK | BR_NEXUS | MANA_STORM | BA_DARK | S_HI_DRAGON | PSY_SPEAR(1d200+150)
-D:You assume that, as the leading celestial, he must be officially good;
+D:You assume that, as the leading angel in Heaven, he must be officially good;
 D:but you sense in him a ruthless scheming manipulator, one who has remained
-D:home and ruled in absolute comfort as Zuriel and Raphiel have led the
-D:celestial legions to the world outside in their fight against evil.
+D:home and ruled in absolute comfort as Michael and Raphael have led the
+D:heavenly legions to the world outside in their fight against evil.
 D:Surrounded by light and darkness, master of contradictions and opposites,
 D:Metatron is an imposing and immensely powerful figure... but it is his low
 D:cunning you truly fear.
@@ -23634,7 +23635,7 @@ P:Speed:+7
 P:Body:Puppy
 D:A great purple rat with sharp teeth and sorcerous powers.
 
-N:1300:Death pumpkin 
+N:1300:Death pumpkin
 G:#:o
 I:120:66d44:30:75:15:500
 W:45:4:999:2178:0:0
@@ -23710,7 +23711,7 @@ F:DROP_CORPSE |
 P:Copy:Golem:Sorcerer
 S:1_IN_1 |
 S:S_DEAD_UNIQ
-D:The ultimate secret weapon of the hosts of Amber, this machine stores
+D:The ultimate secret weapon of the Angel hosts, this machine stores
 D:the memory of hundreds of bodies and is capable of reproducing them
 D:perfectly, down to the last molecule on the flaming sword. You wonder
 D:what mad scientist designed this contraption, and whether he was also
@@ -24565,6 +24566,7 @@ D:its eyes glow with laser light and when it opens its mechanical jaws
 D:you see rows of rockets instead of teeth...
 
 # New monsters for Oposband 0.3
+# Diver, Deep Sea Diver (deeper, storng), Holy Diver - priest version - 3 monsters for one joke
 #Gnome trickster (shoot, traps, blink, otherwise annoy)
 #Gnome worm mage (summon worms)
 #Gnome Munchkin (blink and shoot seeker bolts, very high spell chance (1-in-3 or 1-in-2)

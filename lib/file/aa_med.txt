@@ -42,12 +42,13 @@ of the Void
 of Loopiness
 'Day of the Dove'
 'Nameless Thing'
+'Revengebender'
 
 N:14:BIAS_NECROMANTIC
 of Rituals
 of Tynian
 'Necrologia'
-'Spirit Armor'
+'Spirit Armour'
 'Black Mail'
 
 N:15:BIAS_LAW

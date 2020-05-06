@@ -303,7 +303,7 @@ static void _device_focus_spell(int cmd, variant *res)
         var_set_bool(res, TRUE);
 
         fire_ball_hide(GF_MANA, dir, spell_power(7*device_level(prompt.obj)), 0);
-        if (randint1(106) >= p_ptr->lev + (p_ptr->stat_use[A_INT] * 3)/4)
+        if (randint1(106) >= p_ptr->lev + adj_mag_mana[p_ptr->stat_ind[A_INT]])
         {
             char o_name[MAX_NLEN];
             object_desc(o_name, prompt.obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
@@ -633,7 +633,7 @@ quest_ptr karrot_get_quest(int dungeon, int level)
     _kt_quests[_q_idx].goal_idx = q->goal_idx;
     _kt_quests[_q_idx].goal_ct = q->goal_count;
     _kt_quests[_q_idx].dungeon = q->dungeon;
-    _kt_quests[_q_idx].start_lev = (byte_hack)p_ptr->max_plv;
+    _kt_quests[_q_idx].start_lev = p_ptr->max_plv;
     _kt_quests[_q_idx].killed = 0;
     _kt_quests[_q_idx].completed_lev = 0;
     _kt_quests[_q_idx].completed_turn = 0;
@@ -963,7 +963,7 @@ bool karrot_replace_art(object_type *o_ptr)
 static void _birth(void)
 {
     disciple_birth();
-    py_birth_obj_aux(TV_SWORD, SV_MEDIUM_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_CUTLASS, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     _karrot_ini_quests();
 }

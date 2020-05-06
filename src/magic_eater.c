@@ -21,23 +21,7 @@ static void _birth(void)
     }
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
 }
 
 static object_type *_which_list(int tval)
@@ -220,7 +204,8 @@ static object_type *_choose(cptr verb, int tval, int options)
 
         if (REPEAT_PULL(&cmd))
         {
-            slot = A2I(cmd);
+            _magic_eater_calculate_labels(_which_list(which_tval), TRUE);
+            slot = _magic_eater_label_slot(tolower((unsigned char)cmd));
             if (0 <= slot && slot < _MAX_SLOTS)
                 return _which_obj(which_tval, slot);
         }
@@ -271,7 +256,7 @@ static object_type *_choose(cptr verb, int tval, int options)
         if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q')
             done = TRUE;
 
-        if (options & _ALLOW_SWITCH)
+        if ((options & _ALLOW_SWITCH) && (_magic_eater_label_slot((unsigned char)cmd) == -1))
         {
             if (cmd == 'w' || cmd == 'W')
                 which_tval = TV_WAND;
@@ -488,6 +473,7 @@ static bool gain_magic(void)
     obj_prompt_t prompt = {0};
     object_type *dest_ptr;
     char o_name[MAX_NLEN];
+    u16b _auto_insc = 0;
 
     prompt.prompt = "Absorb which device?";
     prompt.error = "You have nothing to absorb magic from.";
@@ -509,6 +495,11 @@ static bool gain_magic(void)
         sprintf(prompt, "Really replace %s? <color:y>[y/n]</color>", o_name);
         if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
             return FALSE;
+        if (dest_ptr->inscription)
+        {
+            sprintf(prompt, "Copy inscription from %s? <color:y>[y/n]</color>", o_name);
+            if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y') _auto_insc = dest_ptr->inscription;
+        }
     }
 
     object_desc(o_name, prompt.obj, OD_COLOR_CODED);
@@ -518,7 +509,7 @@ static bool gain_magic(void)
 
     dest_ptr->loc.where = 0;
     dest_ptr->loc.slot = 0;
-    dest_ptr->inscription = 0;
+    if (_auto_insc) dest_ptr->inscription = _auto_insc;
     obj_identify_fully(dest_ptr);
     stats_on_identify(dest_ptr);
 
@@ -844,22 +835,20 @@ class_t *magic_eater_get_class(void)
                     "used whenever charges are available. In effect, it is as "
                     "if the Magic-Eater had extra inventory slots for devices. "
                     "However, absorbed magic can not be drained the way normal "
-                    "devices can, nor can these objects be destroyed. There are "
-                    "fixed number of slots for each kind of device, and the Magic-Eater "
+                    "devices can, nor can these objects be destroyed. The number of "
+                    "slots for each kind of device is limited, and the Magic-Eater "
                     "will need to choose which object to replace once the slots are "
-                    "all used. Absorbed magic can not be recharged the way normal "
-                    "devices can. Instead, the Magic-Eater must rest to regain "
-                    "charges the way a normal spellcaster must rest to regain "
-                    "mana. Similarly, the Magic-Eater may quaff a potion to restore "
-                    "mana to speed this process, though this will not necessarily "
-                    "restore all of their absorbed magic.";
+                    "all used. Absorbed magic cannot be recharged through scrolls, "
+                    "spells, potions or activations; the Magic-Eater must rest to "
+                    "regain charges. The rate at which absorbed devices recharge "
+                    "is affected by Regeneration.";
 
         me.stats[A_STR] = -1;
         me.stats[A_INT] =  2;
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = 1;
+        me.stats[A_CHR] =  1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 103;

@@ -170,7 +170,6 @@ cptr do_law_spell(int spell, int mode)
     case 6:
         if (name) return "Identify";
         if (desc) return "Identifies an item.";
-
         {
             if (cast)
             {
@@ -557,13 +556,13 @@ cptr do_law_spell(int spell, int mode)
                 if (r_ptr->flagsr & RFR_RES_ALL)
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
-                    msg_format("%s is unaffected!", m_name);
+                    msg_format("%^s is unaffected!", m_name);
                     break;
                 }
                 else if (r_ptr->level > (p_ptr->pclass == CLASS_LAWYER ? randint1(100) + plev : randint1(100)))
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
-                    msg_format("%s resists!", m_name);
+                    msg_format("%^s resists!", m_name);
                     break;
                 }
             }
@@ -643,29 +642,12 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_PHASE_DOOR, 3 + randint1(3));
     py_birth_spellbooks();
 
     p_ptr->au += 200;
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 /****************************************************************************
@@ -688,7 +670,7 @@ class_t *lawyer_get_class(void)
                   " avoid dangerous fights, to acquire knowledge about the world around"
                   " him, and to make friends and influence people. As he relies on his"
                   " familiarity with Law and with tricks and approaches that have"
-                  " worked in the past, the lawyer uses WIS as his spellcasting stat.";
+                  " worked in the past, the lawyer uses Wisdom as his spellcasting stat.";
 
         me.stats[A_STR] = -3;
         me.stats[A_INT] =  2;

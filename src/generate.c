@@ -139,6 +139,7 @@ static int next_to_walls(int y, int x)
     return (k);
 }
 
+
 /*
  *  Helper function for alloc_stairs().
  *

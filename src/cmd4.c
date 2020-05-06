@@ -534,7 +534,7 @@ static option_type cheat_info[CHEAT_MAX] =
  */
 static void do_cmd_options_cheat(cptr info)
 {
-    char    ch;
+    int    ch;
 
     int        i, k = 0, n = CHEAT_MAX;
 
@@ -574,16 +574,21 @@ static void do_cmd_options_cheat(cptr info)
         /* Hilite current option */
         move_cursor(k + 2, 50);
 
+        autopick_inkey_hack = 1;
+
         /* Get a key */
-        ch = inkey();
+        ch = inkey_special(TRUE);
 
         /*
          * HACK - Try to translate the key into a direction
          * to allow using the roguelike keys for navigation.
          */
-        dir = get_keymap_dir(ch, FALSE);
-        if ((dir == 2) || (dir == 4) || (dir == 6) || (dir == 8))
-            ch = I2D(dir);
+        if (ch < 256)
+        {
+            dir = get_keymap_dir(ch, FALSE);
+            if ((dir == 2) || (dir == 4) || (dir == 6) || (dir == 8) || (dir == 9) || (dir == 1))
+                ch = I2D(dir);
+        }
 
         /* Analyze */
         switch (ch)
@@ -595,6 +600,7 @@ static void do_cmd_options_cheat(cptr info)
 
             case '-':
             case '8':
+            case SKEY_UP:
             {
                 k = (n + k - 1) % n;
                 break;
@@ -604,14 +610,28 @@ static void do_cmd_options_cheat(cptr info)
             case '\n':
             case '\r':
             case '2':
+            case SKEY_DOWN:
             {
                 k = (k + 1) % n;
+                break;
+            }
+
+            case SKEY_TOP:
+            {
+                k = MAX(0, k - 10);
+                break;
+            }
+
+            case SKEY_BOTTOM:
+            {
+                k = MIN(n - 1, k + 10);
                 break;
             }
 
             case 'y':
             case 'Y':
             case '6':
+            case SKEY_RIGHT:
             {
                 p_ptr->noscore |= (cheat_info[k].o_set * 256 + cheat_info[k].o_bit);
                 (*cheat_info[k].o_var) = TRUE;
@@ -622,6 +642,7 @@ static void do_cmd_options_cheat(cptr info)
             case 'n':
             case 'N':
             case '4':
+            case SKEY_LEFT:
             {
                 (*cheat_info[k].o_var) = FALSE;
                 k = (k + 1) % n;
@@ -676,7 +697,7 @@ static s16b toggle_frequency(s16b current)
 
 
 /*
- * Interact with some options for cheating
+ * Interact with some options for autosaving
  */
 static void do_cmd_options_autosave(cptr info)
 {
@@ -800,7 +821,7 @@ static void do_cmd_options_autosave(cptr info)
  */
 void do_cmd_options_aux(int page, cptr info)
 {
-    char    ch;
+    int     ch;
     int     i, k = 0, n = 0, l;
     int     opt[40];
     char    buf[80];
@@ -839,7 +860,7 @@ void do_cmd_options_aux(int page, cptr info)
 
 
         /* HACK -- description for easy-auto-destroy options */
-        if (page == OPT_PAGE_AUTODESTROY) c_prt(TERM_YELLOW, "Following options will protect items from easy auto-destroyer.", 9, 3);
+        if (page == OPT_PAGE_AUTODESTROY) c_prt(TERM_YELLOW, "Following options will protect items from easy auto-destroyer.", 10, 3);
 
         /* Display the options */
         for (i = option_offset; i < n; i++)
@@ -892,29 +913,34 @@ void do_cmd_options_aux(int page, cptr info)
                     (*option_info[opt[i]].o_var ? "yes" : "no "),
                     option_info[opt[i]].o_text);
             }
-            if ((page == OPT_PAGE_AUTODESTROY) && i > 5) rivi = i + 5 - option_offset;
+            if ((page == OPT_PAGE_AUTODESTROY) && i > 6) rivi = i + 5 - option_offset;
             else rivi = i + 2 - option_offset;
             if ((scroll_mode) && (rivi == Term->hgt - 1) && (i < n - 1)) c_prt(TERM_YELLOW, " (scroll down for more options)", rivi, 0);
             else if ((scroll_mode) && (rivi == 2) && (i > 0)) c_prt(TERM_YELLOW, " (scroll up for more options)", rivi, 0);
             else if (((rivi >= 2) && (rivi < Term->hgt - 1)) || ((rivi == Term->hgt - 1) && ((i == n - 1) || (!scroll_mode)))) c_prt(a, buf, rivi, 0);
         }
 
-        if ((page == OPT_PAGE_AUTODESTROY) && (k > 5)) l = 3;
+        if ((page == OPT_PAGE_AUTODESTROY) && (k > 6)) l = 3;
         else l = 0;
 
         /* Hilite current option */
         move_cursor(k + 2 + l - option_offset, 50);
 
+        autopick_inkey_hack = 1;
+
         /* Get a key */
-        ch = inkey();
+        ch = inkey_special(TRUE);
 
         /*
          * HACK - Try to translate the key into a direction
          * to allow using the roguelike keys for navigation.
          */
-        dir = get_keymap_dir(ch, FALSE);
-        if ((dir == 2) || (dir == 4) || (dir == 6) || (dir == 8))
-            ch = I2D(dir);
+        if (ch < 256)
+        {
+            dir = get_keymap_dir(ch, FALSE);
+            if ((dir == 2) || (dir == 4) || (dir == 6) || (dir == 8) || (dir == 9) || (dir == 1))
+                ch = I2D(dir);
+        }
 
         /* Analyze */
         switch (ch)
@@ -926,6 +952,7 @@ void do_cmd_options_aux(int page, cptr info)
 
             case '-':
             case '8':
+            case SKEY_UP:
             {
                 k = (n + k - 1) % n;
                 if (scroll_mode)
@@ -940,8 +967,37 @@ void do_cmd_options_aux(int page, cptr info)
             case '\n':
             case '\r':
             case '2':
+            case SKEY_DOWN:
             {
                 k = (k + 1) % n;
+                if (scroll_mode)
+                {
+                    if (k > bottom_opt - 2 + option_offset) option_offset = k - bottom_opt + ((k == n - 1) ? 1 : 2);
+                    else if ((k < option_offset) || ((k > 0) && (k == option_offset))) option_offset = MAX(0, k - 3);
+                }
+                break;
+            }
+
+            case '7':
+            case '9':
+            case SKEY_PGUP:
+            case SKEY_TOP:
+            {
+                k = MAX(0, k - 10);
+                if (scroll_mode)
+                {
+                    if (k > bottom_opt - 1 + option_offset) option_offset = k - bottom_opt + 1; /* ((k == n - 1) ? 1 : 2); */
+                    else if ((k < option_offset) || ((k > 0) && (k == option_offset))) option_offset = MAX(0, k - 3);
+                }
+                break;
+            }
+
+            case '1':
+            case '3':
+            case SKEY_PGDOWN:
+            case SKEY_BOTTOM:
+            {
+                k = MIN(n - 1, k + 10);
                 if (scroll_mode)
                 {
                     if (k > bottom_opt - 2 + option_offset) option_offset = k - bottom_opt + ((k == n - 1) ? 1 : 2);
@@ -953,6 +1009,7 @@ void do_cmd_options_aux(int page, cptr info)
             case 'y':
             case 'Y':
             case '6':
+            case SKEY_RIGHT:
             {
                 if (browse_only) break;
                 if (option_info[opt[k]].o_var == &random_artifacts)
@@ -1027,6 +1084,7 @@ void do_cmd_options_aux(int page, cptr info)
             case 'n':
             case 'N':
             case '4':
+            case SKEY_LEFT:
             {
                 if (browse_only) break;
                 if (option_info[opt[k]].o_var == &random_artifacts)
@@ -1325,7 +1383,7 @@ option_fields[OPT_NUM] =
     { '5', "Disturbance Options", 7 },
     { '6', "Auto-Destroyer Options", 8 },
 
-    { 'p', "Auto-picker/destroyer editor", 11 },
+    { 'p', "Mogaminator Preferences", 11 },
     { 'd', "Base Delay Factor", 12 },
     { 'h', "Hitpoint Warning", 13 },
     { 'm', "Mana Color Threshold", 14 },
@@ -1665,7 +1723,7 @@ void do_cmd_reload_autopick(void)
     if (!get_check("Reload auto-pick preference file? ")) return;
 
     /* Load the file with messages */
-    autopick_load_pref(TRUE);
+    autopick_load_pref(ALP_DISP_MES);
 }
 
 #ifdef ALLOW_MACROS
@@ -1943,11 +2001,10 @@ void do_cmd_macros(void)
         prt("(1) Load a user pref file", 4, 5);
 
 #ifdef ALLOW_MACROS
-        prt("(2) Append macros to a file", 5, 5);
+        prt("(2) Append macros and keymaps to a file", 5, 5);
         prt("(3) Query a macro", 6, 5);
         prt("(4) Create a macro", 7, 5);
         prt("(5) Remove a macro", 8, 5);
-        prt("(6) Append keymaps to a file", 9, 5);
         prt("(7) Query a keymap", 10, 5);
         prt("(8) Create a keymap", 11, 5);
         prt("(9) Remove a keymap", 12, 5);
@@ -1979,7 +2036,7 @@ void do_cmd_macros(void)
 
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Ask for a file */
             if (!askfor(tmp, 80)) continue;
@@ -2007,7 +2064,7 @@ void do_cmd_macros(void)
         else if (i == '2')
         {
             /* Prompt */
-            prt("Command: Append macros to a file", 16, 0);
+            prt("Command: Append macros and keymaps to a file", 16, 0);
 
 
             /* Prompt */
@@ -2015,16 +2072,17 @@ void do_cmd_macros(void)
 
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Ask for a file */
             if (!askfor(tmp, 80)) continue;
 
             /* Dump the macros */
             (void)macro_dump(tmp);
+            (void)keymap_dump(tmp);
 
             /* Prompt */
-            msg_print("Appended macros.");
+            msg_print("Appended macros and keymaps.");
 
         }
 
@@ -2134,31 +2192,6 @@ void do_cmd_macros(void)
 
             /* Prompt */
             msg_print("Removed a macro.");
-
-        }
-
-        /* Save keymaps */
-        else if (i == '6')
-        {
-            /* Prompt */
-            prt("Command: Append keymaps to a file", 16, 0);
-
-
-            /* Prompt */
-            prt("File: ", 18, 0);
-
-
-            /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
-
-            /* Ask for a file */
-            if (!askfor(tmp, 80)) continue;
-
-            /* Dump the macros */
-            (void)keymap_dump(tmp);
-
-            /* Prompt */
-            msg_print("Appended keymaps.");
 
         }
 
@@ -2427,7 +2460,7 @@ void do_cmd_visuals(void)
             prt("File: ", 17, 0);
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Query */
             if (!askfor(tmp, 70)) continue;
@@ -2452,7 +2485,7 @@ void do_cmd_visuals(void)
             prt("File: ", 17, 0);
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Get a filename */
             if (!askfor(tmp, 70)) continue;
@@ -2503,7 +2536,7 @@ void do_cmd_visuals(void)
             prt("File: ", 17, 0);
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Get a filename */
             if (!askfor(tmp, 70)) continue;
@@ -2572,7 +2605,7 @@ void do_cmd_visuals(void)
             prt("File: ", 17, 0);
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Get a filename */
             if (!askfor(tmp, 70)) continue;
@@ -3018,7 +3051,7 @@ void do_cmd_colors(void)
 
 
             /* Default file */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Query */
             if (!askfor(tmp, 70)) continue;
@@ -3049,7 +3082,7 @@ void do_cmd_colors(void)
 
 
             /* Default filename */
-            sprintf(tmp, "%s.prf", player_base);
+            sprintf(tmp, "%s.prf", pref_save_base);
 
             /* Get a filename */
             if (!askfor(tmp, 70)) continue;
@@ -3355,8 +3388,7 @@ void do_cmd_version(void)
     cptr xtra = "";
     if (VER_MINOR == 0)
     {
-        if (VER_PATCH == 0) xtra = " (Alpha)";
-		else xtra = " (Beta)";
+		xtra = " (Beta)";
     }
     msg_format("You are playing <color:B>Oposband</color> <color:r>%d.%d.%d%s</color>.",
         VER_MAJOR, VER_MINOR, VER_PATCH, xtra);
@@ -3833,7 +3865,7 @@ static cptr object_group_text[] =
     NULL
 };
 
-/*INVESTIGATE*/
+
 /*
  * TVALs of items in each group
  */
@@ -3862,11 +3894,8 @@ static byte object_group_tval[] =
     TV_SKELETON,
     TV_CORPSE, */
     TV_SWORD,
-    TV_DAGGER,
     TV_HAFTED,
-    TV_STAVES,
     TV_POLEARM,
-    TV_AXE,
     TV_DIGGING,
     TV_BOW,
     TV_SHOT,
@@ -3932,16 +3961,14 @@ static int collect_objects(int grp_cur, int object_idx[], byte mode)
         }
         else
         {
-            if (!no_id)
-            {
-                if (!k_ptr->flavor)
-                {
-                    if (!k_ptr->counts.found && !k_ptr->counts.bought) continue;
-                }
+            if (!k_ptr->flavor)
+			{
+				if (!k_ptr->counts.found && !k_ptr->counts.bought) continue;
+			}
 
-                /* Require objects ever seen */
-                if (!k_ptr->aware) continue;
-            }
+			/* Require objects ever seen */
+			if (!k_ptr->aware) continue;
+
             /* Skip items with no distribution (special artifacts) */
             for (j = 0, k = 0; j < 4; j++) k += k_ptr->chance[j];
             if (!k) continue;
@@ -4151,7 +4178,7 @@ static int _collect_arts(int grp_cur, int art_idx[], bool show_all)
         object_type    forge;
 
         if (!a_ptr->name) continue;
-        if (!a_ptr->found && !no_id)
+        if (!a_ptr->found)
         {
             if (!show_all) continue;
             /*if (!a_ptr->generated) continue;*/
@@ -4611,102 +4638,63 @@ static cptr _prof_weapon_heading(int tval)
 {
     switch (tval)
     {
-    case 0: return "Current Proficiency";
-    case 1: return "Maximum Proficiency";
-    case 2: return "Progress towards Max";
-    case 3: return "Current vs Mastery";
-    /*case TV_SWORD: return "Long Blades";
+    case TV_SWORD: return "Swords";
     case TV_POLEARM: return "Polearms";
     case TV_HAFTED: return "Hafted";
     case TV_DIGGING: return "Diggers";
     case TV_BOW: return "Bows";
-    case TV_DAGGER: return "Short Blades";
-    case TV_STAVES: return "Staves";
-    case TV_AXE: return "Axes";*/
     }
     return "";
 }
 
-static void _prof_weapon_doc(doc_ptr doc, int mode)
+static void _prof_weapon_doc(doc_ptr doc, int tval, int mode)
 {
+    vec_ptr v = _prof_weapon_alloc(tval);
     int     i;
 
-    doc_insert_text(doc, TERM_RED, _prof_weapon_heading(mode));
+    doc_insert_text(doc, TERM_RED, _prof_weapon_heading(tval));
     doc_newline(doc);
 
-    for (i = 0; i < MAX_PROFICIENCIES; i++)
+    for (i = 0; i < vec_length(v); i++)
     {
-        int  exp = p_ptr->proficiency[i];
-        int  max = p_ptr->proficiency_cap[i];
-        int  max_lvl = weapon_exp_level(max);
-        int  exp_lvl = weapon_exp_level(exp);
+        object_kind *k_ptr = vec_get(v, i);
+        int          exp = skills_weapon_current(k_ptr->tval, k_ptr->sval);
+        int          max = skills_weapon_max(k_ptr->tval, k_ptr->sval);
+        int          max_lvl = weapon_exp_level(max);
+        int          exp_lvl = weapon_exp_level(exp);
+        char         name[MAX_NLEN];
 
-        char color = 'w';
-
-        switch (i)
-        {
-        case PROF_DIGGER:
-        case PROF_BLUNT:
-        case PROF_POLEARM:
-        case PROF_SWORD:
-        case PROF_STAVE:
-        case PROF_AXE:
-        case PROF_DAGGER:
-            if (equip_find_obj(TV_DIGGING + i, SV_ANY)) color = 'B';
-            break;
-        case PROF_BOW:
-            if (equip_find_obj(TV_BOW, SV_SHORT_BOW) || equip_find_obj(TV_BOW, SV_LONG_BOW) || equip_find_obj(TV_BOW, SV_NAMAKE_BOW)) color = 'B';
-            break;
-        case PROF_CROSSBOW:
-            if (equip_find_obj(TV_BOW, SV_LIGHT_XBOW) || equip_find_obj(TV_BOW, SV_HEAVY_XBOW)) color = 'B';
-            break;
-        case PROF_SLING:
-            if (equip_find_obj(TV_BOW, SV_SLING)) color = 'B';
-            break;
-        case PROF_MARTIAL_ARTS:
-            if (p_ptr->weapon_info[0].bare_hands) color = 'B';
-            break;
-        case PROF_DUAL_WIELDING:
-            if (p_ptr->weapon_info[0].dual_wield_pct < 1000) color = 'B';
-            break;
-        case PROF_RIDING:
-            if (p_ptr->riding) color = 'B';
-            break;
-        case PROF_INNATE_ATTACKS:
-            if (p_ptr->innate_attack_ct) color = 'B';
-            break;
-        }
-
-        doc_printf(doc, "<color:%c>%-15s</color> ", color, PROFICIENCIES[i]);
-
+        strip_name(name, k_ptr->idx);
+        doc_printf(doc, "<color:%c>%-19s</color> ", equip_find_obj(k_ptr->tval, k_ptr->sval) ? 'B' : 'w', name);
         switch (mode)
         {
-        case 1:
-            doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
-            break;
-        case 2:
-        {
-            s32b pct = 0;
-            int pct_lvl;
-            if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
-            pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-            break;
-        }
-        case 3:
-        {
-            s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
-            int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-            break;
-        }
-        default:
-            doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
-            break;
+            case 1:
+                doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
+                break;
+            case 2:
+                {
+                    s32b pct = 0;
+                    int pct_lvl;
+                    if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
+                    pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+                    break;
+                }
+            case 3:
+                {
+                    s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
+                    int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+                    break;
+                }
+            default:
+                doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
+                break;
         }
         doc_newline(doc);
     }
     doc_newline(doc);
+    vec_free(v);
 }
 
 static void _prof_skill_aux(doc_ptr doc, int skill, int mode)
@@ -4789,19 +4777,28 @@ static int _do_cmd_knowledge_weapon_exp_aux(int mode, int *huippu)
     for (i = 0; i < 3; i++)
         cols[i] = doc_alloc(26);
 
-    /* REWRITE */
-    _prof_weapon_doc(cols[0], 0);
-    _prof_weapon_doc(cols[0], 1);
-    _prof_weapon_doc(cols[1], 2);
-    _prof_weapon_doc(cols[1], 3);
+    _prof_weapon_doc(cols[0], TV_SWORD, mode);
+    _prof_weapon_doc(cols[1], TV_POLEARM, mode);
+    _prof_weapon_doc(cols[1], TV_BOW, mode);
+    _prof_weapon_doc(cols[2], TV_HAFTED, mode);
+    _prof_weapon_doc(cols[2], TV_DIGGING, mode);
+    _prof_skill_doc(cols[2], mode);
 
     doc_insert_cols(doc, cols, 3, 1);
-
-    class_t* class_ptr = get_class();
-    char buf[64];
-    strcpy(buf, class_ptr->name);
-    strcat(buf, " Weapon & Skill Proficiencies");
-    tulos = weapon_exp_display(doc, buf, huippu);
+    switch (mode)
+    {   
+        case 1:
+        {
+            class_t *class_ptr = get_class();
+            char buf[64];
+            strcpy(buf, class_ptr->name);
+            strcat(buf, " Proficiency Caps");
+            tulos = weapon_exp_display(doc, buf, huippu); break;
+        }
+        case 2: tulos = weapon_exp_display(doc, "Current Proficiency as % of Caps", huippu); break;
+        case 3: tulos = weapon_exp_display(doc, "Current Proficiency as % of Full Mastery", huippu); break;
+        default: tulos = weapon_exp_display(doc, "Current Proficiency", huippu); break;
+    }
 
     doc_free(doc);
     for (i = 0; i < 3; i++)
@@ -6194,7 +6191,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
 
         if (!e_ptr->name) continue;
         /*if (!e_ptr->aware) continue;*/
-        if (!no_id && !ego_has_lore(e_ptr) && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
+        if (!ego_has_lore(e_ptr) && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
         if (!(e_ptr->type & type)) continue;
 
         ego_idx[cnt++] = i;
@@ -7123,7 +7120,7 @@ static void do_cmd_knowledge_kubi(void)
 
         if (!listed)
         {
-            fprintf(fff,"\n%s\n", "There is no more wanted monster.");
+            fprintf(fff,"\n%s\n", "You have turned in all wanted monsters.");
         }
     }
 
@@ -7182,7 +7179,9 @@ static void do_cmd_knowledge_stat(void)
     for (i = 0; i < MAX_STATS; i++)
     {
         if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[i] == p_ptr->stat_max_max[i])
+        {
             doc_printf(doc, "%s <color:G>%d</color>\n", stat_names[i], p_ptr->stat_max_max[i]);
+        }
         else
             doc_printf(doc, "%s <color:y>\?\?\?</color>\n", stat_names[i]);
     }
@@ -7239,54 +7238,65 @@ static void do_cmd_knowledge_autopick(void)
     int k;
     doc_ptr doc = doc_alloc(80);
 
-    if (!max_autopick)
+    if (no_mogaminator)
     {
-        doc_insert(doc, "There are no preferences for automatic pickup/destruction.");
+        doc_insert(doc, "You have disabled the Mogaminator.\n");
+    }
+    else if (!max_autopick)
+    {
+        doc_insert(doc, "You have not yet activated the Mogaminator.\n");
+    }
+    else if (max_autopick == 1)
+    {
+        doc_insert(doc, "There is 1 registered line for automatic object management.\n");
     }
     else
     {
-        doc_printf(doc, "There are %d registered lines for automatic pickup/destruction.\n", max_autopick);
+        doc_printf(doc, "There are %d registered lines for automatic object management.\n", max_autopick);
     }
-    doc_insert(doc, "For help on the auto-picker, see <link:editor.txt>\n\n");
+    doc_insert(doc, "For help on the Mogaminator, see <link:editor.txt>.\n\n");
 
-    for (k = 0; k < max_autopick; k++)
+    if (!no_mogaminator)
     {
-        cptr tmp;
-        string_ptr line = 0;
-        char color = 'w';
-        byte act = autopick_list[k].action;
-        if (act & DONT_AUTOPICK)
+        for (k = 0; k < max_autopick; k++)
         {
-            tmp = "Leave";
-            color = 'U';
-        }
-        else if (act & DO_AUTODESTROY)
-        {
-            tmp = "Destroy";
-            color = 'r';
-        }
-        else if (act & DO_AUTOPICK)
-        {
-            tmp = "Pickup";
-            color = 'B';
-        }
-        else /* if (act & DO_QUERY_AUTOPICK) */ /* Obvious */
-        {
-            tmp = "Query";
-            color = 'y';
-        }
+            cptr tmp;
+            string_ptr line = 0;
+            char color = 'w';
+            byte act = autopick_list[k].action;
+            if (act & DONT_AUTOPICK)
+            {
+                tmp = "Leave";
+                color = 'U';
+            }
+            else if (act & DO_AUTODESTROY)
+            {
+                tmp = "Destroy";
+                color = 'r';
+            }
+            else if (act & DO_AUTOPICK)
+            {
+                tmp = "Pick Up";
+                color = 'B';
+            }
+            else /* if (act & DO_QUERY_AUTOPICK) */ /* Obvious */
+            {
+                tmp = "Query";
+                color = 'y';
+            }
 
-        if (act & DO_DISPLAY)
-            doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("[%s]", tmp));
-        else
-            doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("(%s)", tmp));
+            if (act & DO_DISPLAY)
+                doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("[%s]", tmp));
+            else
+                doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("(%s)", tmp));
 
-        line = autopick_line_from_entry(&autopick_list[k], AUTOPICK_COLOR_CODED);
-        doc_printf(doc, " <indent><style:indent>%s</style></indent>\n", string_buffer(line));
-        string_free(line);
+            line = autopick_line_from_entry(&autopick_list[k], AUTOPICK_COLOR_CODED);
+            doc_printf(doc, " <indent><style:indent>%s</style></indent>\n", string_buffer(line));
+            string_free(line);
+        }
     }
 
-    doc_display(doc, "Automatic Pickup and Destroy Preferences", 0);
+    doc_display(doc, "Mogaminator Preferences", 0);
     doc_free(doc);
 }
 
@@ -7333,7 +7343,7 @@ void do_cmd_knowledge(void)
         c_prt(TERM_RED, "Dungeon Knowledge", row++, col - 2);
         prt("(d) Dungeons", row++, col);
         prt("(q) Quests", row++, col);
-        prt("(t) Terrain Symbols.", row++, col);
+        prt("(t) Terrain Symbols", row++, col);
         row++;
 
         c_prt(TERM_RED, "Self Knowledge", row++, col - 2);
@@ -7347,7 +7357,7 @@ void do_cmd_knowledge(void)
         if (enable_virtues)
             prt("(v) Virtues", row++, col);
         if (class_ptr->character_dump || race_ptr->character_dump)
-            prt("(x) Extra info", row++, col);
+            prt("(x) Extra Info", row++, col);
         prt("(H) High Score List", row++, col);
         row++;
 

@@ -491,7 +491,7 @@ static void _nether_storm_spell(int cmd, variant *res)
 /****************************************************************
  * Spell Table and Exports
  ****************************************************************/
-#define MAX_POLI_SKILL 14
+#define MAX_POLI_SKILL 15
 
 static spell_info _spells[MAX_POLI_SKILL] =
 {
@@ -510,6 +510,7 @@ static spell_info _spells[MAX_POLI_SKILL] =
     {39,  39,   0, _filibuster_spell},
     {42,  42,  60, _create_chaos_spell},
     {45,  45,  60, _nether_storm_spell},
+    {-1,  -1,  -1, NULL}
 };
 
 static int _get_toggle(void)
@@ -699,24 +700,7 @@ static power_info _powers[] =
 
 static int _get_spells(spell_info* spells, int max)
 {
-    int i, ct = 0;
-
-    for (i = 0; i < MAX_POLI_SKILL; i++)
-    {
-        spell_info *base = &_spells[i];
-        if (ct >= max) break;
-        if (base->level <= p_ptr->lev)
-        {
-            spell_info* current = &spells[ct];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-            current->fail = calculate_fail_rate(base->level, base->fail, p_ptr->stat_ind[A_CHR]);
-
-            ct++;
-        }
-    }
-    return ct;
+    return get_spells_aux(spells, MIN(max, MAX_POLI_SKILL), _spells);
 }
 
 static void _character_dump(doc_ptr doc)
@@ -906,7 +890,7 @@ static void _save_player(savefile_ptr file)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SWORD, SV_RAPIER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CURE_LIGHT, 3 + randint1(3));
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_PHASE_DOOR, 3 + randint1(3));
@@ -919,26 +903,6 @@ static void _birth(void)
     _ini_friend_list();
     ini_statup_list();
     _politician_check_magic(TRUE);
-
-    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
-
 }
 
 class_t *politician_get_class(void)

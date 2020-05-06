@@ -667,25 +667,9 @@ static void _character_dump(doc_ptr doc)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *mindcrafter_get_class(void)
@@ -700,18 +684,18 @@ class_t *mindcrafter_get_class(void)
     skills_t xs = { 10,  11,  10,   0,   0,   0,  12,  17 };
 
         me.name = "Mindcrafter";
-        me.desc = "The Mindcrafter is a unique class that uses the powers of the mind "
-                    "instead of magic. These powers are unique to Mindcrafters, and "
-                    "vary from simple extrasensory powers to mental domination of "
-                    "others. Since these powers are developed by the practice of "
-                    "certain disciplines, a Mindcrafter requires no spellbooks to use "
-                    "them. The available powers are simply determined by the "
-                    "character's level. Wisdom determines a Mindcrafter's ability to "
+        me.desc = "Mindcrafters rely not on book magic, but on the powers of the mind. "
+                    "These mind powers are specific to this class, and range "
+                    "from extrasensory perception to psychic attacks and the mental domination "
+                    "of others. Most mind powers become accessible fairly early, but gain in "
+                    "strength with more experience. Wisdom determines a Mindcrafter's ability to "
                     "use mind powers.\n \n"
-                    "Mindcrafters gain new mindcrafting powers and their existing ones "
-                    "become stronger as they gain levels. They can use their power "
-                    "even when blinded. They have a class power - 'Clear Mind' - which "
-                    "allows them to rapidly regenerate their mana.";
+                    "Mindcrafters' combat skills are reasonably good but far from outstanding; "
+                    "a combination of physical and mental attacks often works better "
+                    "for them than either one alone. A seasoned mindcrafter is very hard to "
+                    "confuse, and can effortlessly detect the minds of others. Mindcrafters "
+                    "have a class power, 'Clear Mind', which allows them to rapidly regenerate "
+                    "mana."; 
         me.stats[A_STR] = -1;
         me.stats[A_INT] =  0;
         me.stats[A_WIS] =  3;

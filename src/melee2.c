@@ -154,7 +154,7 @@ static bool get_enemy_dir(int m_idx, int *mm)
         { /* Pathfind aggressively
            * Potentially slow, so only applied in specific situations */
             if (_mon_travel_flow(m_ptr, &y, &x)) valmis = TRUE;
-        }                                                                                              
+        }
     }
     else
     {
@@ -335,6 +335,8 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     (void)set_monster_csleep(m_idx, 0);
 
     if (p_ptr->riding && (m_idx == p_ptr->riding)) disturb(1, 0);
+
+    if ((melee_challenge) && (!is_pet(m_ptr))) dam = 0;
 
     if (MON_INVULNER(m_ptr) && randint0(PENETRATE_INVULNERABILITY))
     {
@@ -699,8 +701,8 @@ static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
     if ( p_ptr->action == ACTION_GLITTER
-        && !m_ptr->parent_m_idx
-        && mon_is_type(m_ptr->r_idx, SUMMON_RING_BEARER) )
+      && !m_ptr->parent_m_idx
+      && mon_is_type(m_ptr->r_idx, SUMMON_RING_BEARER) )
     {
         rng = AAF_LIMIT_RING;
     }
@@ -1698,6 +1700,8 @@ bool mon_attack_mon(int m_idx, int t_idx)
 
     if (d_info[dungeon_type].flags1 & DF1_NO_MELEE) return (FALSE);
 
+    if ((melee_challenge) && (!is_pet(t_ptr))) return FALSE;
+
     /* Total armor */
     ac = mon_ac(t_ptr);
 
@@ -1775,17 +1779,6 @@ bool mon_attack_mon(int m_idx, int t_idx)
             cmsg_format(TERM_GREEN, "(<color:o>%^s</color> retaliates:", m_name);
             mon_lore_2(m_ptr, RF2_AURA_REVENGE);
         }
-
-		/* If attacking from floor onto a table, 40% miss chance */
-		if (have_flag(f_info[cave[t_ptr->fy][t_ptr->fx].feat].flags, FF_TABLE) && !have_flag(f_info[cave[m_ptr->fy][m_ptr->fx].feat].flags, FF_TABLE))
-		{
-			if (randint1(100) <= 40)
-			{
-				if (see_either)
-					msg_format("%s^ attacks but hits the table!", m_name);
-				continue;
-			}
-		}
 
         /* Monster hits */
         if ( !r_ptr->blows[ap_cnt].effects[0].effect  /* XXX B:BEG or B:INSULT */
@@ -2212,7 +2205,6 @@ static int monster_jump_chance(monster_race *r_ptr, monster_type *m_ptr)
 	/* Default chance is 40% */
 	return 40;
 }
-
 /*
  * Process a monster
  *
@@ -2440,7 +2432,10 @@ static void process_monster(int m_idx)
         return;
 
     if (m_ptr->r_idx == MON_SHURYUUDAN)
+    {
         mon_take_hit_mon(m_idx, 1, &fear, " explodes into tiny shreds.", m_idx);
+        if (!m_list[m_idx].r_idx) return;
+    }
 
     if (((is_pet(m_ptr)) || (is_friendly(m_ptr))) && (!p_ptr->inside_battle))
     {
@@ -3021,7 +3016,6 @@ static void process_monster(int m_idx)
     did_move_body = FALSE;
     did_pass_wall = FALSE;
     did_kill_wall = FALSE;
-
 
     /* Take a zero-terminated array of "directions" */
     for (i = 0; mm[i]; i++)
@@ -4653,6 +4647,7 @@ void monster_gain_exp(int m_idx, int s_idx)
         int  div = 5;
         bool penalty = TRUE;
         int  exp;
+        int  pmult = 1;
 
         if ( prace_is_(RACE_MON_QUYLTHULG)
           || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx) )
@@ -4661,10 +4656,19 @@ void monster_gain_exp(int m_idx, int s_idx)
             penalty = FALSE;
         }
 
+        if ((coffee_break) && (p_ptr->lev < 50))
+        {
+            if (py_in_dungeon()) pmult = coffee_break + 1;
+            if ((prace_is_(RACE_MON_QUYLTHULG))
+              || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx)) pmult += (py_in_dungeon() ? 2 : (coffee_break - 1));
+        }
+
         exp = new_exp / div;
-        gain_exp(exp);
+        gain_exp(exp * pmult);
+        p_ptr->pet_lv_kills++;
         if (penalty)
             new_exp -= exp;
+        if (pmult > 1) new_exp *= 2;
         if (new_exp < 0) new_exp = 0;
     }
 

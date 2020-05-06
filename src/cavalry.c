@@ -118,27 +118,9 @@ static int _get_powers(spell_info* spells, int max)
 static void _birth(void)
 {
     py_birth_obj_aux(TV_POLEARM, SV_BROAD_SPEAR, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(15, 25));
-
-    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_RIDING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_MASTER;
 }
 
 class_t *cavalry_get_class(void)
@@ -152,21 +134,18 @@ class_t *cavalry_get_class(void)
     skills_t xs = { 10,   7,  10,   0,   0,   0,  22,  26};
 
         me.name = "Cavalry";
-        me.desc = "Cavalry ride on horses into battle. Although they cannot cast "
-                    "spells, they are proud of their overwhelming offensive strength on "
-                    "horseback. They are good at shooting. At high levels, they learn "
-                    "to forcibly saddle and tame wild monsters. Since they take pride "
-                    "in the body and the soul, they don't use magical devices well.\n \n"
-                    "Like Warriors and Archers, the cavalry don't use magic. Since "
-                    "they are very good at riding, they have a class power - 'Rodeo' - "
-                    "which allows them to forcibly saddle and tame wild monsters.";
+        me.desc = "Cavalry are masters of horsemanship and enjoy riding to battle. Being good at "
+                    "both melee and archery, they take pride in their overwhelming offensive strength "
+                    "on horseback; but spellcasting is a closed book to them, and magical devices "
+                    "difficult to use. High-level Cavalry learn to forcibly saddle and "
+                    "tame wild monsters with their 'Rodeo' class power.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] = -2;
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  2;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 111;

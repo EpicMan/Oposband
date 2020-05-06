@@ -1302,9 +1302,7 @@ static void random_misc(object_type * o_ptr)
             int bonus_h;
             add_flag(o_ptr->flags, OF_SHOW_MODS);
             bonus_h = 4 + (randint1(11));
-            if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && 
-                (o_ptr->tval != TV_DAGGER) && (o_ptr->tval != TV_STAVES) && (o_ptr->tval != TV_AXE) &&
-				(o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
+            if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && (o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
             {
                 bonus_h /= 2;
             }
@@ -1453,7 +1451,7 @@ static void random_slay_aux(object_type *o_ptr)
         case 17:
         case 18:
         case 19:
-            if (o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER)
+            if (o_ptr->tval == TV_SWORD)
             {
                 add_flag(o_ptr->flags, OF_VORPAL);
                 if (!artifact_bias && one_in_(9))
@@ -1463,7 +1461,7 @@ static void random_slay_aux(object_type *o_ptr)
                 random_slay_aux(o_ptr);
             break;
         case 20:
-            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES || o_ptr->tval == TV_DIGGING)
+            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_DIGGING)
                 add_flag(o_ptr->flags, OF_IMPACT);
             else
                 random_slay_aux(o_ptr);
@@ -1547,12 +1545,12 @@ static void random_slay_aux(object_type *o_ptr)
             {
                 if (randint1(1250) <= object_level - 50)
                     add_flag(o_ptr->flags, OF_KILL_EVIL);
-                else if ((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER) && randint1(625) <= object_level - 50)
+                else if (o_ptr->tval == TV_SWORD && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_VORPAL2);
                     break;
                 }
-                else if ((o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES) && randint1(625) <= object_level - 50)
+                else if (o_ptr->tval == TV_HAFTED && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_STUN);
                     break;
@@ -1630,7 +1628,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_PRIESTLY:
-        if(o_ptr->tval != TV_HAFTED && o_ptr->tval == TV_STAVES &&
+        if((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_POLEARM) &&
            !(have_flag(o_ptr->flags, OF_BLESSED)))
         {
             /* A free power for "priestly" random artifacts */
@@ -1660,7 +1658,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_ROGUE:
-        if ((((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_DAGGER)) ||
+        if ((((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_DAGGER)) ||
              ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_SPEAR))) &&
              !(have_flag(o_ptr->flags, OF_THROWING)))
         {
@@ -1736,6 +1734,33 @@ static void random_slay(object_type *o_ptr)
     random_slay_aux(o_ptr);
 }
 
+static void get_random_name_aux_aux(cptr file_name, int entry, int yrkka, char *output)
+{
+    int i;
+    if (yrkka < 10) yrkka = 10;
+    if (yrkka > 1000) yrkka = 1000;
+    while (1)
+    {
+        bool sopii = TRUE;
+        get_rnd_line(file_name, entry, output);
+        if (quark__num == QUARK_MAX) return;
+
+        /* Try to avoid quark duplication */
+        for (i = 1; i < quark__num; i++)
+        {
+            /* Check for equality */
+            if (streq(quark__str[i], output))
+            {
+                sopii = FALSE;
+                break;
+            }
+        }
+        if (sopii) return;
+        yrkka--;
+        if (yrkka < 1) return;
+    }
+}
+
 static void get_random_name_aux(char *return_name, object_type *o_ptr, int power)
 {
     /* Hack: BIAS_* got converted to bits but the artifact name files still use
@@ -1770,7 +1795,7 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
         default:
             filename = "lite_high.txt";
         }
-        get_rnd_line(filename, bias_hack, return_name);
+        get_random_name_aux_aux(filename, bias_hack, 40, return_name);
     }
     else if (o_ptr->tval == TV_RING)
     {
@@ -1789,7 +1814,7 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
         default:
             filename = "ring_high.txt";
         }
-        get_rnd_line(filename, bias_hack, return_name);
+        get_random_name_aux_aux(filename, bias_hack, 60, return_name);
     }
     else if (o_ptr->tval == TV_AMULET)
     {
@@ -1808,12 +1833,12 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
         default:
             filename = "amulet_high.txt";
         }
-        get_rnd_line(filename, bias_hack, return_name);
+        get_random_name_aux_aux(filename, bias_hack, 80, return_name);
     }
     else if (object_is_bow(o_ptr))
     {
         cptr filename = "ranged.txt";
-        get_rnd_line(filename, one_in_(2) ? o_ptr->sval : 0, return_name);
+        get_random_name_aux_aux(filename, one_in_(2) ? o_ptr->sval : 0, 60, return_name);
     }
     else
     {
@@ -1865,23 +1890,48 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
                 }
             }
         }
-        else
+        else /* weapon/digger */
         {
-            switch (power)
+            int _odds = (bias_hack <= 0) ? 6 : 17;
+            if (o_ptr->tval == TV_DIGGING) _odds = 2;
+            if (one_in_(_odds))
             {
-            case 0:
-                filename = "w_cursed.txt";
-                break;
-            case 1:
-            case 2:
-                filename = "w_med.txt";
-                break;
-            default:
-                filename = "w_high.txt";
+                filename = "w_types.txt";
+                bias_hack = (100 * o_ptr->tval) + o_ptr->sval;
+            }
+            else if ((o_ptr->tval != TV_DIGGING) && (magik((power == 2) ? 33 : 55)))
+            {
+                switch (o_ptr->tval)
+                {
+                    case TV_SWORD:
+                        filename = "w_sword.txt";
+                        break;
+                    case TV_HAFTED:
+                        filename = "w_hafted.txt";
+                        break;
+                    default:
+                        filename = "w_pole.txt";
+                        break;
+                }
+            }
+            else
+            {
+                switch (power)
+                {
+                case 0:
+                    filename = "w_cursed.txt";
+                    break;
+                case 1:
+                case 2:
+                    filename = "w_med.txt";
+                    break;
+                default:
+                    filename = "w_high.txt";
+                }
             }
         }
 
-        get_rnd_line(filename, bias_hack, return_name);
+        get_random_name_aux_aux(filename, bias_hack, 25, return_name);
     }
 }
 
@@ -2077,7 +2127,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (have_flag(o_ptr->flags, OF_NO_REMOVE)) return 0;
     if (o_ptr->tval == TV_QUIVER) return 0;
 
-    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_FALCON_SWORD)
+    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_FALCON_SWORD)
         is_falcon_sword = TRUE;
 
     immunity_hack = FALSE;
@@ -2171,7 +2221,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_HIGH_MAGE:
             case CLASS_SORCERER:
             case CLASS_MAGIC_EATER:
-			case CLASS_BLUE_MAGE:
+            case CLASS_BLUE_MAGE:
             case CLASS_WARLOCK:
             case CLASS_BLOOD_MAGE:
             case CLASS_NECROMANCER:
@@ -2213,10 +2263,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 artifact_bias = BIAS_CHAOS;
                 warrior_artifact_bias = 60;
                 break;
-			case CLASS_HEXBLADE:
-				artifact_bias = BIAS_CHR;
-				warrior_artifact_bias = 60;
-				break;
             case CLASS_LAWYER:
             case CLASS_POLITICIAN:
             case CLASS_MONK:
@@ -2444,9 +2490,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
-        case TV_DAGGER:
-        case TV_AXE:
-        case TV_STAVES:
         case TV_DIGGING:
             switch (randint1(7))
             {
@@ -2938,8 +2981,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (have_flag(o_ptr->flags, OF_BRAND_FIRE))
         add_flag(o_ptr->flags, OF_LITE);
 
-    if ( !obj_has_effect(o_ptr)
-      && !object_is_ammo(o_ptr) )
+    if ( !obj_has_effect(o_ptr) && !object_is_ammo(o_ptr) )
     {
         int odds = object_is_armor(o_ptr) ? ACTIVATION_CHANCE * 2 : ACTIVATION_CHANCE;
         if (one_in_(odds))
@@ -2995,7 +3037,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         o_ptr->to_h = o_ptr->to_h * bow_energy(o_ptr->sval) / 7150;
     }
 
-    if ((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_POISON_NEEDLE))
+    if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_POISON_NEEDLE))
     {
         o_ptr->to_h = 0;
         remove_flag(o_ptr->flags, OF_BLOWS);
@@ -3083,8 +3125,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         obj_display(o_ptr);
         no_karrot_hack = FALSE;
 
-        if (!get_string(ask_msg, dummy_name, sizeof dummy_name)
-            || !dummy_name[0])
+        if (!get_string(ask_msg, dummy_name, sizeof dummy_name) || !dummy_name[0])
         {
             get_random_name(new_name, o_ptr, power_level);
         }
@@ -3468,6 +3509,7 @@ bool reforge_artifact(object_type *src, object_type *dest, int fame)
                 strcat(buf, ((oldname[0] == '&') && (strlen(oldname) > 2)) ? oldname + 2 : oldname);
                 strcat(buf, minibuf);
             }
+            (void)clip_and_locate("~", buf);
             dest->art_name = quark_add(buf);
         }
         else dest->art_name = quark_add(a_name + a_info[src->name1].name);

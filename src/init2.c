@@ -635,6 +635,26 @@ static errr init_d_info(void)
 
 
 /*
+ * Initialize the "s_info" array
+ */
+static errr init_s_info(void)
+{
+    /* Init the header */
+    init_header(&s_head, MAX_CLASS, sizeof(skill_table));
+
+#ifdef ALLOW_TEMPLATES
+
+    /* Save a pointer to the parsing function */
+    s_head.parse_info_txt = parse_s_info;
+
+#endif /* ALLOW_TEMPLATES */
+
+    return init_info("s_info", &s_head,
+             (void*)&s_info, NULL, NULL, NULL);
+}
+
+
+/*
  * Initialize the "m_info" array
  */
 static errr init_m_info(void)
@@ -1386,47 +1406,6 @@ static void _display_file(cptr name)
     }
 }
 
-void display_news_win(int n)
-{
-	bool done = FALSE;
-	const int max_n = 19;
-
-	while (!done)
-	{
-		char name[100];
-		int  cmd;
-		sprintf(name, "news%d.txt", n);
-		_display_file(name);
-
-		/* Windows is an odd duck, indeed! */
-		if (strcmp(ANGBAND_SYS, "win") == 0)
-			break;
-
-		cmd = inkey_special(TRUE);
-		switch (cmd)
-		{
-		case '?':
-			_display_file("credits.txt");
-			inkey();
-			break;
-		case SKEY_DOWN:
-		case '2':
-			n++;
-			if (n > max_n)
-				n = 1;
-			break;
-		case SKEY_UP:
-		case '8':
-			n--;
-			if (n == 0)
-				n = max_n;
-			break;
-		default:
-			done = TRUE;
-		}
-	}
-}
-
 void display_news(void)
 {
     const int max_n = 19;
@@ -1435,6 +1414,47 @@ void display_news(void)
 
     srand(time(NULL));
     n = (rand() % max_n) + 1;
+
+    while (!done)
+    {
+        char name[100];
+        int  cmd;
+        sprintf(name, "news%d.txt", n);
+        _display_file(name);
+
+        /* Windows is an odd duck, indeed! */
+        if (strcmp(ANGBAND_SYS, "win") == 0)
+            break;
+
+        cmd = inkey_special(TRUE);
+        switch (cmd)
+        {
+        case '?':
+            _display_file("credits.txt");
+            inkey();
+            break;
+        case SKEY_DOWN:
+        case '2':
+            n++;
+            if (n > max_n)
+                n = 1;
+            break;
+        case SKEY_UP:
+        case '8':
+            n--;
+            if (n == 0)
+                n = max_n;
+            break;
+        default:
+            done = TRUE;
+        }
+    }
+}
+
+void display_news_win(int n)
+{
+    bool done = FALSE;
+    const int max_n = 19;
 
     while (!done)
     {
@@ -1600,6 +1620,10 @@ void init_angband(void)
     /* Initialize magic info */
     note("[Initializing arrays... (magic)]");
     if (init_m_info()) quit("Cannot initialize magic");
+
+    /* Initialize weapon_exp info */
+    note("[Initializing arrays... (skill)]");
+    if (init_s_info()) quit("Cannot initialize skill");
 
     /* Initialize wilderness array */
     note("[Initializing arrays... (wilderness)]");

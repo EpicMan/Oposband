@@ -696,25 +696,6 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_TWO_HANDED_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS, 1);
-
-    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *mauler_get_class(void)
@@ -733,16 +714,16 @@ class_t *mauler_get_class(void)
         "The Mauler favors extremely heavy weapons, and possesses powerful abilities whose "
             "effectiveness depends on the weight of the weapon. While they only gain a limited "
             "number of blows which can never be magically increased, they are capable of "
-            "hitting opponents very hard to make the most of each strike. The Mauler is "
-            "required to use both hands on a single weapon when wielding if they wish their "
-            "talents to function properly.",
+            "hitting opponents exceptionally hard to make the most of each strike. Maulers "
+            "must wield a single weapon with two hands for their talents to "
+            "function properly.",
 
         me.stats[A_STR] =  5;
         me.stats[A_INT] = -2;
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  -1;
+        me.stats[A_CHR] = -1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 110;

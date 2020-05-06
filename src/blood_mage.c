@@ -18,6 +18,12 @@ static void _blood_rite_spell(int cmd, variant *res)
             msg_print("The Blood Rite is already active.");
             return;
         }
+        if ((get_race()->flags & RACE_IS_NONLIVING) || (p_ptr->no_cut))
+        {
+            if (get_true_race()->flags & RACE_IS_NONLIVING) msg_print("You can no longer use blood magic!");
+            else msg_print("You cannot use blood magic while transformed into a nonliving creature.");
+            return;
+        }
         set_tim_blood_rite(10, FALSE);
         var_set_bool(res, TRUE);
         break;
@@ -79,26 +85,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *blood_mage_get_class(void)
@@ -112,14 +101,14 @@ class_t *blood_mage_get_class(void)
     skills_t xs = {  7,  15,  11,   0,   0,   0,   6,   7};
 
         me.name = "Blood-Mage";
-        me.desc = "A Blood Mage is similar to a normal mage in his selection and "
+        me.desc = "A Blood-Mage is similar to a normal mage in his selection and "
                     "variety of spells, but differs in that he has no separate "
-                    "mana pool. Instead, all his spells are powered by "
-                    "his health. Moreover, due to the Blood Mage's abnormal constitution, "
-                    "all healing is much less effective than normal. In fact, the Blood "
-                    "Mage completely eschews all healing magic as this disrupts the flow "
-                    "of blood that is the essence of their power. They completely shun "
-                    "the realm of Life as anathema to all that is sacred.";
+                    "mana pool; instead, spells are powered by hit points. "
+                    "Moreover, due to the Blood-Mage's abnormal constitution, "
+                    "all healing is much less effective than normal; indeed, Blood-Mages "
+                    "completely eschew healing spells to not disrupt the flow "
+                    "of blood that is the essence of their power. They shun the realm of "
+                    "Life as anathema to all they hold sacred.";
 
         me.stats[A_STR] = -4;
         me.stats[A_INT] =  3;

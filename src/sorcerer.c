@@ -22,13 +22,13 @@ static void _calc_bonuses(void)
 static bool _sorcerer_weapon_is_icky(object_type *o_ptr)
 {
     if (!object_is_weapon(o_ptr)) return FALSE;
-    if (object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
+    if (object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
     return TRUE;
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
-    if ( object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF)
+    if ( object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF)
       || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER) )
     {
         info_ptr->to_h -= 30;
@@ -66,8 +66,10 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     int i;
+    /*for (i = 0; i < 64; i++)
+        p_ptr->spell_exp[i] = SPELL_EXP_MASTER; */
 
-    py_birth_obj_aux(TV_STAVES, SV_WIZSTAFF, 1);
+    py_birth_obj_aux(TV_HAFTED, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
 
@@ -76,20 +78,6 @@ static void _birth(void)
         if (i == TV_NECROMANCY_BOOK) continue;
         py_birth_obj_aux(i, 0, 1);
     }
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *sorcerer_get_class(void)
@@ -103,21 +91,21 @@ class_t *sorcerer_get_class(void)
     skills_t xs = {  7,  18,  13,   0,   0,   0,   0,   0};
 
         me.name = "Sorcerer";
-        me.desc = "Sorcerers are the all-around best magicians, being able to cast "
-                    "any spell from most magic realms without having to learn it. On "
-                    "the downside, they are the worst fighters in the dungeon, being "
-                    "unable to use any weapon but a Wizardstaff.\n \n"
-                    "Sorcerers can cast any spell from any spellbooks of all magic "
-                    "realms with 'Master' proficiency level without having to learn it. "
-                    "They have a class power - 'Eat Magic' - which absorbs mana from "
-                    "wands, staves or rods.";
+        me.desc = "Sorcerers are the all-around best magicians, being able to master "
+                    "all spells from almost any magic realm without needing to study them or "
+                    "gain proficiency with them. On the downside, they have by far the "
+                    "fewest hit points of any class; they are also the worst fighters in the "
+                    "dungeon, being unable to use any weapon but a Wizardstaff.\n \n"
+                    "Sorcerers have a class power - 'Eat Magic' - which absorbs mana from "
+                    "wands, staves or rods. Unlike other mages, they rely on Charisma as "
+                    "their spell stat.";
 
         me.stats[A_STR] = -5;
         me.stats[A_INT] =  6;
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  -2;
+        me.stats[A_CHR] = -2;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 65;

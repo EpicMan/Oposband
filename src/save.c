@@ -491,6 +491,7 @@ static void wr_quick_start(savefile_ptr file)
     int i;
 
     savefile_write_byte(file, previous_char.game_mode);
+    savefile_write_byte(file, previous_char.coffee_break);
     savefile_write_byte(file, previous_char.psex);
     savefile_write_byte(file, previous_char.prace);
     savefile_write_byte(file, previous_char.psubrace);
@@ -511,7 +512,7 @@ static void wr_quick_start(savefile_ptr file)
 
 static void wr_extra(savefile_ptr file)
 {
-    int i;
+    int i,j;
     byte tmp8u;
 
     savefile_write_s32b(file, p_ptr->id);
@@ -521,6 +522,7 @@ static void wr_extra(savefile_ptr file)
     wr_quick_start(file);
 
     savefile_write_s32b(file, game_mode);
+    savefile_write_byte(file, coffee_break);
     savefile_write_byte(file, game_pantheon);
     savefile_write_byte(file, p_ptr->prace);
     savefile_write_byte(file, p_ptr->pclass);
@@ -547,8 +549,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->lev);
     savefile_write_u32b(file, p_ptr->quest_seed);
 
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency[i]);
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency_cap[i]);
+    for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) savefile_write_s16b(file, p_ptr->weapon_exp[i][j]);
+    for (i = 0; i < 10; i++) savefile_write_s16b(file, p_ptr->skill_exp[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_s32b(file, p_ptr->magic_num1[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_byte(file, p_ptr->magic_num2[i]);
 
@@ -775,6 +777,9 @@ static void wr_extra(savefile_ptr file)
     savefile_write_byte(file, p_ptr->wait_report_score);
     savefile_write_u32b(file, seed_flavor);
     savefile_write_u32b(file, seed_town);
+
+    if (p_ptr->personality == PERS_SPLIT) split_save(file);
+
     savefile_write_u16b(file, p_ptr->panic_save);
     savefile_write_u16b(file, p_ptr->total_winner);
     savefile_write_u16b(file, p_ptr->noscore);
@@ -796,6 +801,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_byte(file, p_ptr->filibuster);
     savefile_write_byte(file, p_ptr->upset_okay);
     savefile_write_byte(file, p_ptr->py_summon_kills);
+    savefile_write_s16b(file, p_ptr->lv_kills);
+    savefile_write_s16b(file, p_ptr->pet_lv_kills);
     for (i = 0; i < 16; i++)
         savefile_write_s32b(file, 0); /* Future use */
 
@@ -1262,6 +1269,7 @@ static bool wr_savefile_new(savefile_ptr file)
         savefile_write_cptr(file, "");
 
     spell_stats_on_save(file);
+    skills_on_save(file);
     stats_on_save(file);
 
     if (!p_ptr->is_dead)
@@ -1703,7 +1711,7 @@ bool load_player(void)
 
     /* Message */
     msg_format("Error (%s) reading %d.%d.%d savefile.",
-           what, (z_major>9) ? z_major - 10 : z_major, z_minor, z_patch);
+           what, z_major, z_minor, z_patch);
     msg_print(NULL);
 
     /* Oops */

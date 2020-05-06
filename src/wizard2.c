@@ -276,19 +276,29 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b < WEAPON_EXP_UNSKILLED) tmp_s16b = WEAPON_EXP_UNSKILLED;
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
-    /* Max out player weapon proficiencies */
-    for (j = PROF_DIGGER; j <= PROF_DAGGER; j++)
-        p_ptr->proficiency[j] = MIN(tmp_s16b, skills_weapon_max(j));
-    
-    p_ptr->proficiency[PROF_BOW] = MIN(tmp_s16b, skills_bow_max(SV_SHORT_BOW));
-    p_ptr->proficiency[PROF_CROSSBOW] = MIN(tmp_s16b, skills_bow_max(SV_LIGHT_XBOW));
-    p_ptr->proficiency[PROF_SLING] = MIN(tmp_s16b, skills_bow_max(SV_SLING));
+    for (j = 0; j <= TV_WEAPON_END - TV_WEAPON_BEGIN; j++)
+    {
+        for (i = 0;i < 64;i++)
+        {
+            int max = skills_weapon_max(TV_WEAPON_BEGIN + j, i);
+            p_ptr->weapon_exp[j][i] = tmp_s16b;
+            if (p_ptr->weapon_exp[j][i] > max) p_ptr->weapon_exp[j][i] = max;
+        }
+    }
 
-    p_ptr->proficiency[PROF_MARTIAL_ARTS] = MIN(tmp_s16b, skills_martial_arts_max());
-    p_ptr->proficiency[PROF_DUAL_WIELDING] = MIN(tmp_s16b, skills_dual_wielding_max());
-    p_ptr->proficiency[PROF_RIDING] = MIN(tmp_s16b, skills_riding_max());
+    for (j = 0; j < 10; j++)
+    {
+        p_ptr->skill_exp[j] = tmp_s16b;
+        if (p_ptr->skill_exp[j] > s_info[p_ptr->pclass].s_max[j]) p_ptr->skill_exp[j] = s_info[p_ptr->pclass].s_max[j];
+    }
 
-    p_ptr->proficiency[PROF_INNATE_ATTACKS] = MIN(tmp_s16b, skills_weapon_max(PROF_INNATE_ATTACKS));
+    /* Hack for WARLOCK_DRAGONS. Of course, reading skill tables directly is forbidden, so this code is inherently wrong! */
+    p_ptr->skill_exp[SKILL_RIDING] = MIN(skills_riding_max(), tmp_s16b);
+
+    for (j = 0; j < 32; j++)
+        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_MASTER ? SPELL_EXP_MASTER : tmp_s16b);
+    for (; j < 64; j++)
+        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_EXPERT ? SPELL_EXP_EXPERT : tmp_s16b);
 
     /* Default */
     sprintf(tmp_val, "%d", p_ptr->au);
@@ -348,6 +358,14 @@ static void do_cmd_wiz_change(void)
     do_cmd_redraw();
 }
 
+/* Blue-Mage - learn spells for free */
+static void do_cmd_wiz_blue_mage(void)
+{
+    int n = get_quantity("Which type? ", MST_COUNT - 1);
+    int e = get_quantity("Which effect? ", 200);
+    blue_mage_learn_spell_aux(n, e, 0, 0, TRUE);
+}
+
 /*
  * A structure to hold a tval and its description
  */
@@ -365,9 +383,6 @@ static tval_desc tvals[] =
     { TV_SWORD,             "Sword"                },
     { TV_POLEARM,           "Polearm"              },
     { TV_HAFTED,            "Hafted Weapon"        },
-    { TV_DAGGER,            "Dagger"               },
-    { TV_AXE,               "Axe"                  },
-    { TV_STAVES,            "Staff Weapon"         },
     { TV_BOW,               "Bow"                  },
     { TV_ARROW,             "Arrows"               },
     { TV_BOLT,              "Bolts"                },
@@ -623,7 +638,10 @@ static void wiz_create_item(void)
     /* Apply magic */
     apply_magic(q_ptr, dun_level, AM_NO_FIXED_ART);
     if (k_info[k_idx].tval == TV_CORPSE)
-        q_ptr->pval = n;
+    {
+        if ((k_info[k_idx].sval >= SV_BODY_HEAD) && (k_info[k_idx].sval < SV_BODY_EARS)) q_ptr->xtra4 = n;
+        else q_ptr->pval = n;
+    }
     else
         q_ptr->number = n;
 
@@ -883,7 +901,7 @@ static void do_cmd_wiz_zap(void)
         if (m_ptr->cdis <= MAX_SIGHT)
         {
             bool fear = FALSE;
-            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL, FALSE);
+            mon_take_hit(i, m_ptr->hp + 1, DAM_TYPE_WIZARD, &fear, NULL);
             /*delete_monster_idx(i);*/
         }
     }
@@ -1179,7 +1197,7 @@ static void _wiz_stats_kill(int level)
 
         r_ptr->r_sights++;
         _stats_note_monster_level(level, r_ptr->level);
-        mon_take_hit(i, m_ptr->hp + 1, &fear, NULL, FALSE);
+        mon_take_hit(i, m_ptr->hp + 1, DAM_TYPE_WIZARD, &fear, NULL);
         if (slot) rune_sword_kill(equip_obj(slot), r_ptr);
     }
 }
@@ -1444,19 +1462,6 @@ static void _wiz_stats_gather(int which_dungeon, int level, int reps)
     }
 }
 
-/* debug command for blue mage */
-static void do_cmd_wiz_blue_mage(void)
-{
-
-	int                i = 0;
-	int                j = 0;
-
-	for (int i = 0; i < MS_MAX; i++)
-	{
-		p_ptr->magic_num2[i] = 1;
-	}
-}
-
 /*************************************************************************
  * Handle the ^A wizard commands. Perhaps there should be a UI for this?
  ************************************************************************/
@@ -1488,7 +1493,7 @@ void do_cmd_debug(void)
 
     /* Hack -- Generate Spoilers */
     case '"':
-	    do_cmd_spoilers();
+        do_cmd_spoilers();
         break;
 
 #endif /* ALLOW_SPOILERS */
@@ -1550,13 +1555,15 @@ void do_cmd_debug(void)
         do_cmd_wiz_change();
         break;
 
-	/* Blue Mage Only */
-	case 'E':
-		if (p_ptr->pclass == CLASS_BLUE_MAGE)
-		{
-			do_cmd_wiz_blue_mage();
-		}
-		break;
+    /* Blue-Mage spells */
+    case 'E':
+        if (p_ptr->pclass == CLASS_BLUE_MAGE) do_cmd_wiz_blue_mage();
+        break;
+
+    /* View item info */
+    case 'f':
+        identify_fully(NULL);
+        break;
 
     /* Create desired feature */
     case 'F':
@@ -1796,6 +1803,35 @@ void do_cmd_debug(void)
         gain_exp(command_arg ? command_arg : (p_ptr->exp + 1));
         break;
 
+    case 'X':
+    {
+        char tmp_val[80];
+        long tmp_long;
+
+        sprintf(tmp_val, "%d", p_ptr->exp);
+        /* Query */
+        if (!get_string("Experience: ", tmp_val, 9)) break;
+
+        /* Extract */
+        tmp_long = atol(tmp_val);
+
+        /* Verify */
+        if (tmp_long < 0) tmp_long = 0L;
+        if (tmp_long > 99999999L) tmp_long = 99999999L;
+        if (p_ptr->prace != RACE_ANDROID)
+        {
+            /* Save */
+            p_ptr->max_exp = tmp_long;
+            p_ptr->exp = tmp_long;
+
+            /* Update */
+            check_experience();
+            p_ptr->max_plv = p_ptr->lev;
+            do_cmd_redraw();
+        }
+        break;
+    }
+
     /* Zap Monsters (Genocide) */
     case 'z':
         do_cmd_wiz_zap();
@@ -1933,3 +1969,5 @@ static int i = 0;
 #endif
 
 #endif
+
+

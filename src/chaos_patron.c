@@ -102,76 +102,84 @@ void chaos_forge_weapon() {
 	switch (randint1(p_ptr->lev))
 	{
 	case 0: case 1:
-		dummy = TV_DAGGER;
 		dummy2 = SV_DAGGER;
 		break;
 	case 2: case 3:
-		dummy = TV_DAGGER; 
-		dummy2 = SV_DIRK;
+		dummy2 = SV_MAIN_GAUCHE;
 		break;
 	case 4:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CAT_CLAW;
+		dummy2 = SV_TANTO;
 		break;
 	case 5: case 6:
-		dummy = TV_SWORD;
-		dummy2 = SV_THRUSTING_SWORD;
+		dummy2 = SV_RAPIER;
 		break;
 	case 7: case 8:
-		dummy2 = SV_SHORT_SWORD;
+		dummy2 = SV_SMALL_SWORD;
 		break;
 	case 9: case 10:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CAT_CLAW;
+		dummy2 = SV_BASILLARD;
 		break;
 	case 11: case 12: case 13:
 		dummy2 = SV_SHORT_SWORD;
 		break;
 	case 14: case 15:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CRYSKNIFE;
+		dummy2 = SV_SABRE;
 		break;
 	case 16: case 17:
-		dummy2 = SV_MEDIUM_SWORD;
+		dummy2 = SV_CUTLASS;
 		break;
 	case 18:
 		dummy2 = SV_WAKIZASHI;
 		break;
 	case 19:
-	case 20:
-		dummy2 = SV_CURVED_SWORD;
+		dummy2 = SV_KHOPESH;
 		break;
-	case 21: case 22: case 23:
-	case 24: case 25:
+	case 20:
+		dummy2 = SV_TULWAR;
+		break;
+	case 21:
+		dummy2 = SV_BROAD_SWORD;
+		break;
+	case 22: case 23:
 		dummy2 = SV_LONG_SWORD;
 		break;
+	case 24: case 25:
+		dummy2 = SV_SCIMITAR;
+		break;
 	case 26:
-		dummy = TV_DAGGER;
 		dummy2 = SV_NINJATO;
 		break;
 	case 27:
 		dummy2 = SV_KATANA;
 		break;
 	case 28: case 29:
-		dummy2 = SV_BROAD_SWORD;
+		dummy2 = SV_BASTARD_SWORD;
 		break;
 	case 30:
-		dummy2 = SV_EXECUTIONERS_SWORD;
+		dummy2 = SV_GREAT_SCIMITAR;
 		break;
-	case 31: case 32: case 33:
+	case 31:
+		dummy2 = SV_CLAYMORE;
+		break;
+	case 32:
+		dummy2 = SV_ESPADON;
+		break;
+	case 33:
 		dummy2 = SV_TWO_HANDED_SWORD;
 		break;
-	case 34: case 35:
-		dummy2 = SV_GREATSWORD;
+	case 34:
+		dummy2 = SV_FLAMBERGE;
+		break;
+	case 35:
+		dummy2 = SV_NO_DACHI;
 		break;
 	case 36:
 		dummy2 = SV_EXECUTIONERS_SWORD;
 		break;
 	case 37:
-		dummy2 = SV_BUSTER_SWORD;
+		dummy2 = SV_ZWEIHANDER;
 		break;
 	case 38:
-		dummy = TV_DAGGER;
 		dummy2 = SV_FALCON_SWORD;
 		break;
 	default:

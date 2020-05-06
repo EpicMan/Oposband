@@ -18,7 +18,7 @@ cptr duelist_equip_error(void)
     if (p_ptr->weapon_ct > 1)
         return "Dual wielding is disrupting your talents.";
 
-    if (equip_find_obj(TV_DAGGER, SV_POISON_NEEDLE))
+    if (equip_find_obj(TV_SWORD, SV_POISON_NEEDLE))
         return "The Poison Needle is not an honorable dueling weapon.";
 
     if (p_ptr->anti_magic)
@@ -488,7 +488,7 @@ void strafing_spell(int cmd, variant *res)
  * Spell Table
  ****************************************************************/
 
-#define MAX_DUELIST_SPELLS    8
+#define MAX_DUELIST_SPELLS    9
 
 static spell_info _spells[MAX_DUELIST_SPELLS] = 
 {
@@ -501,13 +501,11 @@ static spell_info _spells[MAX_DUELIST_SPELLS] =
     { 40,  60,  0, _isolation_spell },
     { 45,  60,  0, _darting_duel_spell },
     { 48,  80,  0, _phase_charge_spell },
+    {-1,  -1,  -1, NULL}
 }; 
 
 static int _get_spells(spell_info* spells, int max)
 {
-    int i;
-    int ct = 0;
-    int stat_idx = p_ptr->stat_ind[A_DEX];
     cptr msg = duelist_equip_error();
 
     if (msg)
@@ -516,23 +514,7 @@ static int _get_spells(spell_info* spells, int max)
         return 0;
     }
     
-    /* Initialize a (copied) spell list with current casting costs and fail rates */
-    for (i = 0; i < MAX_DUELIST_SPELLS; i++)
-    {
-        spell_info *base = &_spells[i];
-        if (ct >= max) break;
-        if (base->level <= p_ptr->lev)
-        {
-            spell_info* current = &spells[ct];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-
-            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);            
-            ct++;
-        }
-    }
-    return ct;
+    return get_spells_aux(spells, MIN(max, MAX_DUELIST_SPELLS), _spells);
 }
 
 static void _calc_bonuses(void)
@@ -608,25 +590,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_THRUSTING_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_RAPIER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *duelist_get_class(void)
@@ -642,21 +608,20 @@ class_t *duelist_get_class(void)
 
         me.name = "Duelist";
         me.desc = "The duelist is the ultimate one-on-one fighter, but finds himself at a severe "
-                  "disadvantage when facing numerous strong foes. When facing an enemy, the duelist "
-                  "first issues a challenge, marking that foe for a one on one duel. Of course, this "
-                  "wakes the monster up (There is no honor in dueling a sleeping enemy). And while "
-                  "the duelist will honor the fight as a one on one affair, many monsters have no "
-                  "such scruples.\n \n"
-                  "Against a challenged foe, the duelist is very strong gaining a bonus to saving "
+                  "disadvantage when facing numerous strong foes at once. To start a duel, the duelist "
+                  "first issues a challenge to his intended foe; of course, this will wake the monster "
+                  "up, as there is no honor in dueling a sleeping enemy! And while the duelist will "
+                  "honor the fight as a one-on-one affair, many monsters have no such scruples.\n \n"
+                  "Against a challenged foe the duelist is extremely strong, gaining bonuses to saving "
                   "throws, armor class, damage reduction and combat prowess. On the other hand, due "
                   "to the single-mindedness of their focus, the duelist is quite vulnerable to unchallenged "
-                  "opponents. Most of the techniques of this class aim at enforcing the sanctity of the "
+                  "opponents. Most of the special techniques of this class aim at enforcing the sanctity of the "
                   "duel.\n \n"
                   "The duelist only ever gains a single attack in combat, but they make the most of this "
                   "blow by gaining enhanced effects as they gain experience. Able to wound, stun, and even "
-                  "hamstring their foes, the prowess of the duelist in a one on one encounter is legendary!\n \n"
-                  "Duelists favor light armors and cannot equip a shield. They gain no extra bonus when "
-                  "wielding a weapon with both hands. For their techniques the duelist relies on dexterity.";
+                  "hamstring their foes, the prowess of the duelist in a one-on-one encounter is legendary!\n \n"
+                  "Duelists favor light armors and weapons, and cannot equip a shield. They gain no extra bonus for "
+                  "wielding a weapon with both hands. For their techniques, the duelist relies on Dexterity.";
         me.stats[A_STR] =  2;
         me.stats[A_INT] =  1;
         me.stats[A_WIS] = -2;

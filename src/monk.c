@@ -127,7 +127,7 @@ int monk_get_attack_idx(void)
     return _get_attack_idx(p_ptr->monk_lvl, p_ptr->special_defense);
 }
 
-static int _calc_damage_per_hit(int dice_dmg, int xtra_dmg, int mult, int force)
+static int _calc_damage_per_hit(int dice_dmg, int xtra_dmg, int mult, bool force)
 {
     if (force)
         mult = mult * 12 / 10 + 5;
@@ -720,25 +720,8 @@ bool skills_obj_is_icky_weapon(object_type *o_ptr)
 static void _birth(void)
 {
     py_birth_obj_aux(TV_POTION, SV_POTION_HEROISM, randint1(5));
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *monk_get_class(void)
@@ -752,20 +735,21 @@ class_t *monk_get_class(void)
     skills_t xs = { 15,  10,  10,   0,   0,   0,  18,  18};
 
         me.name = "Monk";
-        me.desc = "The Monk character class is very different from all other classes. "
-                    "Their training in martial arts makes them much more powerful with "
-                    "no armor or weapons. To gain the resistances necessary for "
-                    "survival a monk may need to wear some kind of armor, but if the "
-                    "armor he wears is too heavy, it will severely disturb his martial "
-                    "arts maneuvers. As the monk advances levels, new, powerful forms "
-                    "of attack become available. Their defensive capabilities increase "
-                    "likewise, but if armor is being worn, this effect decreases. "
-                    "Wisdom determines a Monk's spell casting ability.\n \n"
-                    "The different sects of monks are devoted to different areas of "
-                    "magic. They select a realm from Life, Nature, Craft, Trump and Death. "
-                    "They will eventually learn all prayers in the discipline of their "
-                    "choice. They have two class powers - 'Assume a Posture' and "
-                    "'Double Attack'. They can choose different forms of postures in "
+        me.desc = "Monks are very different from most other classes in that they prefer "
+                    "to fight unarmed; while they can use a few select weapons reasonably "
+                    "well, their training in martial arts makes them more powerful with "
+                    "no weapons. Monks also gain bonuses from empty armor slots; to gain the "
+                    "resistances necessary for survival, some kind of armor will still be "
+                    "eventually needed, but if the armor is too heavy it will severely "
+                    "disturb the Monk's martial arts maneuvers. As the Monk gains levels, more "
+                    "powerful forms of unarmed attack will become available, and the defensive bonuses "
+                    "for having empty armor slots likewise increase.\n\n"
+                    "The various sects of monks are devoted to different areas of "
+                    "magic; they select one realm from Life, Nature, Craft, Trump and Death. "
+                    "Monks will eventually learn all prayers in the discipline of their "
+                    "choice. Wisdom determines their spellcasting ability.\n\n"
+                    "Monks have two class powers, 'Assume a Posture' and "
+                    "'Double Attack'; they can choose different postures for "
                     "different situations, and use powerful combinations of attacks for "
                     "the finishing blow.";
 

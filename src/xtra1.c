@@ -207,7 +207,7 @@ static int calc_adj_dex_ta(void)
  */
 void cnv_stat(int val, char *out_val)
 {
-    sprintf(out_val, "    %2d", val);
+	sprintf(out_val, "    %2d", val);
 }
 
 
@@ -1552,6 +1552,8 @@ static void prt_depth(void)
             sprintf(buf, "%s", "Monster Arena");
         else if (p_ptr->town_num)
             sprintf(buf, "%s", town_name(p_ptr->town_num));
+        else if (wilderness[p_ptr->wilderness_y][p_ptr->wilderness_x].entrance)
+            sprintf(buf, "Wilderness (%s): L%d", d_name+d_info[wilderness[p_ptr->wilderness_y][p_ptr->wilderness_x].entrance].name, base_level);
         else
             sprintf(buf, "Wilderness: L%d", base_level);
     }
@@ -1696,7 +1698,7 @@ static void prt_state(void)
             }
             case ACTION_LEARN:
             {
-                strcpy(text, "Learn");
+                strcpy(text, "Lern");
                 if (new_mane) attr = TERM_L_RED;
                 break;
             }
@@ -1788,6 +1790,7 @@ static bool prt_speed(int row, int col)
         else if ((is_fast && !hitaus) || IS_LIGHT_SPEED() || psion_speed()) attr = TERM_YELLOW;
         else if (hitaus && !is_fast) attr = TERM_VIOLET;
         else if ((is_fast) && (hitaus) && (hitaus != 10)) attr = ((hitaus > 10) ? TERM_VIOLET : TERM_YELLOW);
+        else if ((is_fast) && (hitaus) && (hitaus == 10)) attr = TERM_L_RED;
         else if (p_ptr->filibuster) attr = TERM_ORANGE;
         else attr = TERM_L_GREEN;
         if (effective_speed) sprintf(buf, "Fast (%d.%dx)", SPEED_TO_ENERGY(i) / 10, SPEED_TO_ENERGY(i) % 10);
@@ -2013,8 +2016,25 @@ static void prt_effects(void)
         sprintf(tmp, "Study (%d)", p_ptr->new_spells);
         c_put_str(TERM_L_BLUE, tmp, row++, col);
     }
-	else if (p_ptr->pclass == CLASS_IMITATOR && p_ptr->mane_num)
-		c_put_str(TERM_L_BLUE, "Imitate", row++, col);
+    if ((rogue_like_commands) && (show_rogue_keys) && (row < Term->hgt - 3))
+    {
+        if (row < Term->hgt - 5)
+        {
+            Term_erase(col, row++, r.cx);
+        }
+        c_put_str(TERM_YELLOW, "  y  k  u   ", row++, col);
+        c_put_str(TERM_YELLOW, "  h  5  l   ", row++, col);
+        c_put_str(TERM_YELLOW, "  b  j  n   ", row++, col);
+        p_ptr->redraw |= PR_ROGUE_KEYS;
+    }
+    else if (p_ptr->redraw & (PR_ROGUE_KEYS))
+    {
+        for (i = row + 1; i < Term->hgt - 1; i++)
+        {
+            Term_erase(col, i, r.cx);
+        }
+        if (!show_rogue_keys) p_ptr->redraw &= ~PR_ROGUE_KEYS;
+    }
 }
 
 /*****************************************************************************
@@ -2210,6 +2230,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         }
         else
         {
+			/*TODO Use big number formatting for monster HP?*/
 			char buf[20];
 
 			if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
@@ -2684,10 +2705,12 @@ static void fix_object(void)
  */
 static void calc_spells(void)
 {
-    int            j, k, levels;
+    int            i, j, k, levels;
     int            num_allowed;
+    int                     num_boukyaku = 0;
 
     magic_type        *s_ptr;
+    int which;
     int bonus = 0;
 
 
@@ -2719,8 +2742,7 @@ static void calc_spells(void)
     if (levels < 0) levels = 0;
 
     /* Extract total allowed spells */
-    /* Used to be lookup in adj_mag_study */
-    num_allowed = (p_ptr->stat_use[get_spell_stat()] - 3) / 6;
+    num_allowed = (adj_mag_study[p_ptr->stat_ind[get_spell_stat()]] * levels / 2);
 
     if ((p_ptr->pclass != CLASS_SAMURAI) && (mp_ptr->spell_book != TV_LIFE_BOOK))
     {
@@ -2970,7 +2992,7 @@ static void calc_mana(void)
 
     if (caster_ptr->options & CASTER_SUPERCHARGE_MANA)
     {
-        msp = p_ptr->stat_use[caster_ptr->which_stat] * 3 / 2 + 20;
+        msp = (adj_mag_mana[p_ptr->stat_ind[caster_ptr->which_stat]] + 10) * 2;
         if (msp) msp += (msp * _racial_mana_adjust(caster_ptr->which_stat) / 20);
     }
     else if (p_ptr->pclass == CLASS_WILD_TALENT)
@@ -2982,7 +3004,7 @@ static void calc_mana(void)
     {
         int idx = p_ptr->stat_ind[caster_ptr->which_stat];
 
-        msp = (p_ptr->stat_use[caster_ptr->which_stat] * 3 / 4) * (lvl + 3) / 4;
+        msp = adj_mag_mana[idx] * (lvl + 3)/4;
         if (msp) msp++;
         if (msp)
         {
@@ -3072,7 +3094,7 @@ int py_prorata_level_aux(int amt, int w1, int w2, int w3)
 
 /* Experimental: Adjust the non-linearity of extra hp distribution based on class.
    It's probably best to have all this in one place. See also the hp.ods design doc. */
-static int _calc_xtra_hp(int amt)
+static int _calc_xtra_hp_aux(int amt)
 {
     int w1 = 1, w2 = 1, w3 = 1;
     int class_idx = get_class_idx();
@@ -3096,7 +3118,6 @@ static int _calc_xtra_hp(int amt)
     case CLASS_ARCHER:
     case CLASS_WEAPONSMITH:
     case CLASS_RAGE_MAGE:
-	case CLASS_HEXBLADE:
         w1 = 2; w2 = 1; w3 = 0;
         break;
 
@@ -3126,9 +3147,9 @@ static int _calc_xtra_hp(int amt)
 
     case CLASS_LAWYER:
     case CLASS_RED_MAGE:
-	case CLASS_BLUE_MAGE:
     case CLASS_MIRROR_MASTER:
     case CLASS_TIME_LORD:
+    case CLASS_BLUE_MAGE:
     case CLASS_BLOOD_MAGE:
     case CLASS_NECROMANCER:
     case CLASS_POLITICIAN:
@@ -3187,6 +3208,27 @@ static int _calc_xtra_hp(int amt)
     }
 
     return py_prorata_level_aux(amt, w1, w2, w3);
+}
+
+int calc_xtra_hp_fake(int lev)
+{
+    int real_lev = p_ptr->lev;
+    int _hp;
+    p_ptr->lev = lev;
+    _hp = _calc_xtra_hp_aux(304);
+    p_ptr->lev = real_lev;
+    return _hp;
+}
+
+static int _calc_xtra_hp(int amt)
+{
+    int tulos = _calc_xtra_hp_aux(amt);
+    if ((coffee_break == SPEED_INSTA_COFFEE) && (tulos < p_ptr->lev * amt / 50))
+    {
+        tulos -= (tulos / 3);
+        tulos += (p_ptr->lev * amt / 150);
+    }
+    return tulos;
 }
 
 /*
@@ -3432,6 +3474,7 @@ void calc_bonuses(void)
     bool old_esp_unique = p_ptr->esp_unique;
     bool old_esp_magical = p_ptr->esp_magical;
     s16b old_see_inv = p_ptr->see_inv;
+    bool icky_lock = FALSE;
 
     /* Save the old armor class */
     s16b old_dis_ac = p_ptr->dis_ac;
@@ -3791,7 +3834,7 @@ void calc_bonuses(void)
         p_ptr->dis_to_a += 100;
     }
     /* Temporary shield */
-    else if (p_ptr->tsubureru || IS_STONE_SKIN() || p_ptr->magicdef)
+    else if (IS_STONE_SKIN() || p_ptr->magicdef)
     {
         int bonus = 10 + 40*p_ptr->lev/50;
         if (!(p_ptr->special_defense & KATA_MUSOU))
@@ -3799,6 +3842,12 @@ void calc_bonuses(void)
             p_ptr->to_a += bonus;
             p_ptr->dis_to_a += bonus;
         }
+    }
+
+    if (p_ptr->tsubureru)
+    {
+        p_ptr->to_a += 35;
+        p_ptr->dis_to_a += 35;
     }
 
     if (IS_OPPOSE_ACID()) res_add(RES_ACID);
@@ -3879,7 +3928,9 @@ void calc_bonuses(void)
     if (class_ptr->calc_stats)
         class_ptr->calc_stats(stats); /* after equip_calc_bonuses, which might dismiss the current posture */
 
-    if (race_ptr->calc_stats)
+    /* Hack - Igors calculate their body stats elsewhere, but have calc_stats
+     * for py_info to call */
+    if ((race_ptr->calc_stats) && (!prace_is_(RACE_IGOR)))
         race_ptr->calc_stats(stats);
 
     for (i = 0; i < MAX_STATS; i++)
@@ -4236,8 +4287,8 @@ void calc_bonuses(void)
             if (p_ptr->easy_2weapon)
                 pct += 100;
 
-            if ((lobj->tval == TV_DAGGER && lobj->sval == SV_DIRK) ||
-                (lobj->tval == TV_SWORD && lobj->sval == SV_WAKIZASHI))
+            if ( lobj->tval == TV_SWORD
+              && (lobj->sval == SV_MAIN_GAUCHE || lobj->sval == SV_WAKIZASHI) )
             {
                 pct += 50;
             }
@@ -4249,12 +4300,6 @@ void calc_bonuses(void)
                 p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
 
             if (lobj->tval == TV_POLEARM && lobj->weight > 100)
-                p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
-
-            if (robj->tval == TV_AXE && robj->weight > 100)
-                p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
-
-            if (lobj->tval == TV_AXE && lobj->weight > 100)
                 p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
 
             if (robj->name1 == ART_MUSASI_KATANA && lobj->name1 == ART_MUSASI_WAKIZASI)
@@ -4537,8 +4582,8 @@ void calc_bonuses(void)
 
         if ( i % 2 == 1
           && p_ptr->weapon_info[i-1].wield_how != WIELD_NONE
-          && ((o_ptr->tval == TV_SWORD && o_ptr->sval == SV_WAKIZASHI) || 
-            (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_DIRK)))
+          && o_ptr->tval == TV_SWORD
+          && (o_ptr->sval == SV_MAIN_GAUCHE || o_ptr->sval == SV_WAKIZASHI) )
         {
             p_ptr->to_a += 5;
             p_ptr->dis_to_a += 5;
@@ -4559,7 +4604,7 @@ void calc_bonuses(void)
             race_ptr->calc_weapon_bonuses(o_ptr, info_ptr);
 
         /* Hacks */
-        if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
+        if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
             info_ptr->blows_calc.max = 100;
         if (arm > 0)
             info_ptr->blows_calc.max = MAX(100, info_ptr->blows_calc.max - 100);
@@ -4576,7 +4621,7 @@ void calc_bonuses(void)
 
             if (p_ptr->special_defense & KATA_FUUJIN) info_ptr->xtra_blow -= 100;
 
-            if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
+            if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
             {
                 info_ptr->base_blow = 100;
                 info_ptr->xtra_blow = 0;
@@ -4779,7 +4824,7 @@ void calc_bonuses(void)
             else if (p_ptr->prace == RACE_MON_ARMOR) {} /* no bonus */
             else
             {
-                int bonus = skills_weapon_calc_bonus(tsvals_to_proficiency(obj->tval, obj->sval));
+                int bonus = skills_weapon_calc_bonus(obj->tval, obj->sval);
                 p_ptr->weapon_info[i].to_h += bonus;
                 p_ptr->weapon_info[i].dis_to_h += bonus;
                 if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)
@@ -4972,14 +5017,22 @@ void calc_bonuses(void)
 
         if (p_ptr->old_icky_wield[i] != p_ptr->weapon_info[i].icky_wield)
         {
-            if (p_ptr->weapon_info[i].icky_wield)
+            if (p_ptr->pclass == CLASS_WEAPONMASTER) /* Special messages elsewhere */
             {
-                msg_print("You do not feel comfortable with your weapon.");
+                icky_lock = TRUE;
+            }
+            else if (p_ptr->weapon_info[i].icky_wield)
+            {
+                if (!icky_lock) msg_print("You do not feel comfortable with your weapon.");
+                icky_lock = TRUE;
                 if (hack_mind)
                     virtue_add(VIRTUE_FAITH, -1);
             }
             else if (p_ptr->weapon_info[i].wield_how != WIELD_NONE)
-                msg_print("You feel comfortable with your weapon.");
+            {
+                if (!icky_lock) msg_print("You feel comfortable with your weapon.");
+                icky_lock = TRUE;
+            }
             else
                 msg_print("You feel more comfortable after removing your weapon.");
 
@@ -5330,6 +5383,10 @@ void redraw_stuff(void)
     if (p_ptr->redraw & (PR_EFFECTS))
     {
         p_ptr->redraw &= ~PR_EFFECTS;
+        prt_effects();
+    }
+    else if (((bool)(p_ptr->redraw & (PR_ROGUE_KEYS))) != show_rogue_keys) /* Hack */
+    {
         prt_effects();
     }
 

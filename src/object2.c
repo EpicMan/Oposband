@@ -454,8 +454,7 @@ void wipe_o_list(void)
         /* Skip dead objects */
         if (!o_ptr->k_idx) continue;
 
-        /* Mega-Hack -- preserve artifacts */
-        /* Hack -- Preserve unknown artifacts */
+        /* Mega-Hack -- preserve unknown artifacts */
         if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
         {
             /* Mega-Hack -- Preserve the artifact */
@@ -687,7 +686,8 @@ s16b get_obj_num(int level)
         k_idx = table[i].index;
         k_ptr = &k_info[k_idx];
         if (k_ptr->tval == TV_FOOD && k_ptr->sval == SV_FOOD_AMBROSIA && dungeon_type != DUNGEON_OLYMPUS) continue;
-        if (ironman_downward && k_ptr->tval == TV_SCROLL && k_ptr->sval == SV_SCROLL_RESET_RECALL) continue;
+		if (ironman_downward && k_ptr->tval == TV_SCROLL && k_ptr->sval == SV_SCROLL_RESET_RECALL) continue;
+        if ((coffee_break == SPEED_INSTA_COFFEE) && (k_ptr->tval == TV_POTION) && ((k_ptr->sval == SV_POTION_HEALING) || (k_ptr->sval == SV_POTION_STAR_HEALING) || (k_ptr->sval == SV_POTION_LIFE))) continue;
         /* Hack -- prevent embedded chests */
         if (opening_chest && (k_ptr->tval == TV_CHEST)) continue;
 
@@ -1184,7 +1184,7 @@ s32b obj_value_real(object_type *o_ptr)
     if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr, COST_REAL);
     if (o_ptr->tval == TV_QUIVER) return quiver_cost(o_ptr, COST_REAL);
     if (object_is_device(o_ptr)) return device_value(o_ptr, COST_REAL);
-
+    if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval >= SV_BODY_HEAD)) return igor_cost(o_ptr, COST_REAL);
 
     /* Hack -- "worthless" items */
     if (!k_info[o_ptr->k_idx].cost) return (0L);
@@ -1576,7 +1576,7 @@ static void dragon_resist(object_type * o_ptr)
     int ct = 0;
     do
     {
-        if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_DRAGON_FANG && one_in_(3))
+        if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_DRAGON_FANG && one_in_(3))
             one_ele_slay(o_ptr);
         else if (one_in_(4))
             one_dragon_ele_resistance(o_ptr);
@@ -2086,8 +2086,8 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
     }
     if (coffee_break)
     {
-        f1 += 3;
-        f2 += 3;
+        f1 += (5 * coffee_break) - 2;
+        f2 += (5 * coffee_break) - 2;
     }
 
     f1 += virtue_current(VIRTUE_CHANCE) / 50;
@@ -2131,11 +2131,8 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         }
 
         /* "Cursed" items become tedious in the late game ... */
-		/* CR: They're always tedious */
-        if ( power == -1
-          && o_ptr->tval != TV_RING
-          && o_ptr->tval != TV_AMULET
-          && !object_is_device(o_ptr))
+		/* CJR: They're always tedious */
+        if ( power == -1 && o_ptr->tval != TV_RING && o_ptr->tval != TV_AMULET && !object_is_device(o_ptr) )
         {
             power = 0;
         }
@@ -2148,8 +2145,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
     if (mode & AM_AVERAGE)
         power = 0;
-
-  
 
     /* Assume no rolls */
     rolls = 0;
@@ -2265,8 +2260,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
         case TV_DIGGING:
         case TV_HAFTED:
-        case TV_AXE:
-        case TV_STAVES:
         case TV_BOW:
         case TV_SHOT:
         case TV_ARROW:
@@ -2288,30 +2281,25 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
             break;
         }
 
-        case TV_DAGGER:
+        case TV_SWORD:
         {
-            if (object_is_(o_ptr, TV_DAGGER, SV_DRAGON_FANG) && !(mode & AM_CRAFTING))
+            if (object_is_(o_ptr, TV_SWORD, SV_DRAGON_FANG) && !(mode & AM_CRAFTING))
             {
                 if (cheat_peek) object_mention(o_ptr);
                 dragon_resist(o_ptr);
                 if (!one_in_(3)) power = 0;
             }
-            else if (!(o_ptr->sval == SV_POISON_NEEDLE))
-            {
-                if (power) obj_create_weapon(o_ptr, lev, power, mode);
-            }
-            break;
-        }
 
-        case TV_SWORD:
-        {
             if (o_ptr->sval == SV_RUNESWORD)
             {
                 o_ptr->curse_flags |= (OFC_PERMA_CURSE);
             }
             else
             {
-                if (power) obj_create_weapon(o_ptr, lev, power, mode);
+                if (!(o_ptr->sval == SV_POISON_NEEDLE))
+                {
+                    if (power) obj_create_weapon(o_ptr, lev, power, mode);
+                }
             }
             break;
         }
@@ -2361,7 +2349,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
     if ((o_ptr->tval == TV_SOFT_ARMOR) &&
         (o_ptr->sval == SV_SWIMSUIT) &&
-        (p_ptr->personality == PERS_SEXY || demigod_is_(DEMIGOD_APHRODITE)))
+        (personality_includes_(PERS_SEXY) || demigod_is_(DEMIGOD_APHRODITE)))
     {
         o_ptr->pval = 3;
         add_flag(o_ptr->flags, OF_STR);
@@ -2485,11 +2473,8 @@ static bool kind_is_tailored(int k_idx)
         else return equip_can_wield_kind(k_ptr->tval, k_ptr->sval);
 
     case TV_SWORD:
-    case TV_DAGGER:
     case TV_HAFTED:
-    case TV_STAVES:
     case TV_POLEARM:
-    case TV_AXE:
     case TV_DIGGING:
         return equip_can_wield_kind(k_ptr->tval, k_ptr->sval)
             && _is_favorite_weapon(k_ptr->tval, k_ptr->sval);
@@ -2584,9 +2569,6 @@ bool kind_is_great(int k_idx)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
-        case TV_DAGGER:
-        case TV_STAVES:
-        case TV_AXE:
         case TV_DIGGING:
         {
             if (k_ptr->to_h < 0) return (FALSE);
@@ -2691,9 +2673,6 @@ bool kind_is_good(int k_idx)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
-        case TV_DAGGER:
-        case TV_STAVES:
-        case TV_AXE:
         case TV_DIGGING:
         {
             if (k_ptr->to_h < 0) return (FALSE);
@@ -3075,17 +3054,11 @@ static bool _kind_theme_warrior(int k_idx) {
 
     switch (k_info[k_idx].tval)
     {
-    case TV_DAGGER:
-        if (k_info[k_idx].sval == SV_NINJATO)
-            return TRUE;
-        break;
-    case TV_STAVES:
-        if (k_info[k_idx].sval == SV_QUARTERSTAFF) 
-            return TRUE;
-        break;
     case TV_SWORD:
+        if (k_info[k_idx].sval >= SV_SABRE && k_info[k_idx].sval < SV_POISON_NEEDLE)
+            return TRUE;
+        break;
     case TV_POLEARM:
-    case TV_AXE:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -3120,7 +3093,7 @@ static bool _kind_theme_archer(int k_idx) {
     return FALSE;
 }
 static bool _kind_theme_mage(int k_idx) {
-    if ( _kind_is_(k_idx, TV_STAVES, SV_WIZSTAFF)
+    if ( _kind_is_(k_idx, TV_HAFTED, SV_WIZSTAFF)
       || _kind_is_(k_idx, TV_SOFT_ARMOR, SV_ROBE) )
     {
         return TRUE;
@@ -3195,7 +3168,6 @@ static bool _kind_theme_priest(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_HAFTED:
-    case TV_STAVES:
     case TV_LIFE_BOOK:
     case TV_CRUSADE_BOOK:
     case TV_AMULET:
@@ -3242,7 +3214,6 @@ static bool _kind_theme_priest_evil(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_HAFTED:
-    case TV_STAVES:
     case TV_DEATH_BOOK:
     case TV_DAEMON_BOOK:
     case TV_AMULET:
@@ -3320,8 +3291,7 @@ static bool _kind_theme_paladin_evil(int k_idx) {
 static bool _kind_theme_samurai(int k_idx) {
     if ( _kind_is_(k_idx, TV_SWORD, SV_KATANA)
       || _kind_is_(k_idx, TV_SWORD, SV_WAKIZASHI)
-		|| _kind_is_(k_idx, TV_HARD_ARMOR, SV_USED_SAMURAI_ARMOR)
-      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_SAMURAI_ARMOR) )
+      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_HARAMAKIDO) )
     {
         return TRUE;
     }
@@ -3334,11 +3304,11 @@ static bool _kind_theme_samurai(int k_idx) {
     return FALSE;
 }
 static bool _kind_theme_ninja(int k_idx) {
-    if ( _kind_is_(k_idx, TV_DAGGER, SV_POISON_NEEDLE)
-      || _kind_is_(k_idx, TV_DAGGER, SV_FALCON_SWORD)
-      || _kind_is_(k_idx, TV_DAGGER, SV_DAGGER)
-      || _kind_is_(k_idx, TV_DAGGER, SV_NINJATO)
-      || _kind_is_(k_idx, TV_SOFT_ARMOR, SV_BLACK_CLOTHES) )
+    if ( _kind_is_(k_idx, TV_SWORD, SV_POISON_NEEDLE)
+      || _kind_is_(k_idx, TV_SWORD, SV_FALCON_SWORD)
+      || _kind_is_(k_idx, TV_SWORD, SV_DAGGER)
+      || _kind_is_(k_idx, TV_SWORD, SV_NINJATO)
+      || _kind_is_(k_idx, TV_SOFT_ARMOR, SV_KUROSHOUZOKU) )
     {
         return TRUE;
     }
@@ -3356,7 +3326,6 @@ static bool _kind_theme_rogue(int k_idx) {
 
     switch (k_info[k_idx].tval)
     {
-    case TV_DAGGER:
     case TV_AMULET:
     case TV_SOFT_ARMOR:
     case TV_CLOAK:
@@ -3382,11 +3351,11 @@ static bool _kind_theme_hobbit(int k_idx) {
     return FALSE;
 }
 static bool _kind_theme_dwarf(int k_idx) {
-    if ( _kind_is_(k_idx, TV_AXE, SV_LOCHABER_AXE)
-      || _kind_is_(k_idx, TV_AXE, SV_BROAD_AXE)
-      || _kind_is_(k_idx, TV_AXE, SV_BEAKED_AXE)
-      || _kind_is_(k_idx, TV_AXE, SV_BATTLE_AXE)
-      || _kind_is_(k_idx, TV_AXE, SV_GREAT_AXE)
+    if ( _kind_is_(k_idx, TV_POLEARM, SV_LOCHABER_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BEAKED_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BROAD_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BATTLE_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_GREAT_AXE)
       || _kind_is_(k_idx, TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS)
       || _kind_is_(k_idx, TV_DIGGING, SV_DWARVEN_PICK)
       || _kind_is_(k_idx, TV_DIGGING, SV_DWARVEN_SHOVEL)
@@ -3732,6 +3701,10 @@ static bool _make_object_aux(object_type *j_ptr, u32b mode)
     if (!apply_magic(j_ptr, object_level, mode))
         return FALSE;
 
+    /* Hack - check for unsuitable ego, e.g. gloves of protection on a mage */
+    if ((_drop_tailored) && (object_is_icky(j_ptr, TRUE)))
+        return FALSE;
+
     /* Note: It is important to do this *after* apply_magic rather than in, say,
        object_prep() since artifacts should never spawn multiple copies. Ego ammo
        should, but other egos (e.g. lights) should not. */
@@ -3953,7 +3926,8 @@ bool make_gold(object_type *j_ptr, bool do_boost)
         int kerroin = interpolate(dun_level, skaala, 5);
         au = au * kerroin / 100;
     }
-    if (p_ptr->personality == PERS_NOBLE) au += (au / 4);
+    if (personality_is_(PERS_NOBLE)) au += (au / 4);
+    if (coffee_break == SPEED_INSTA_COFFEE) au += (au * 2 / 3);
     if (au > MAX_SHORT)
         au = MAX_SHORT - randint0(1000);
     j_ptr->pval = au;
@@ -4272,7 +4246,6 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
             /* Debug */
             if (p_ptr->wizard) msg_print("(no floor space)");
 
-            /* Mega-Hack -- preserve artifacts */
             /* Hack -- Preserve unknown artifacts */
             if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
             {

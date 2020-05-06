@@ -54,26 +54,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
-    py_birth_obj_aux(TV_HARD_ARMOR, SV_BREASTPLATE, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_HARD_ARMOR, SV_RING_MAIL, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *paladin_get_class(void)
@@ -87,21 +70,20 @@ class_t *paladin_get_class(void)
     skills_t xs = {  7,  10,  11,   0,   0,   0,  21,  18};
 
         me.name = "Paladin";
-        me.desc = "A Paladin is a combination of a warrior and a priest. Paladins "
-                    "are very good fighters, but not very good at missile weapons. A "
-                    "paladin lacks much in the way of abilities. He is poor at "
-                    "stealth, perception, searching, and magical devices but has a "
-                    "decent saving throw due to his divine alliance. Wisdom determines "
-                    "a Paladin's success at praying to his deity.\n \n"
+        me.desc = "A Paladin is a combination of a warrior and a priest. Paladins excel "
+                    "as melee fighters, but are only middling in ranged combat; their "
+                    "stealth, perception, and device skill are likewise mediocre, "
+                    "though their divine alliance gives them a decent saving throw. Wisdom "
+                    "determines a Paladin's success at praying to his deity.\n \n"
                     "Paladins can select a realm from Life, Crusade, Daemon and Death. "
                     "Like priests, they cannot select which prayers to learn, but are "
                     "rewarded with new prayers by their deities. They can learn all spells, "
                     "but not as fast as priests. They detest paganism so strongly that they "
-                    "will even gain experience for destroying high-level pagan spellbooks: "
+                    "even gain experience for destroying high-level pagan spellbooks: "
                     "'pagan' means Life or Crusade spellbooks for a Death/Daemon "
-                    "Paladin and all spellbooks other than Life or Crusade for a "
-                    "Life/Crusade Paladin. Depending on their realm, they have a class "
-                    "power - 'Holy Lance' or 'Hell Lance'.";
+                    "Paladin, and all spellbooks other than Life or Crusade for a "
+                    "Life/Crusade Paladin. Paladins receive one class power, 'Holy Lance' "
+                    "or 'Hell Lance', depending on the alignment of their realm.";
 
         me.stats[A_STR] =  3;
         me.stats[A_INT] = -3;

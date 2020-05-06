@@ -911,6 +911,12 @@ static void _whirlwind_attack_spell(int cmd, variant *res)
    does not require the book (cf The Samurai).
    Rage is a class specific realm.
 */
+/*#define _SPELLS_PER_BOOK 8
+
+typedef struct {
+    cptr name;
+    spell_info spells[_SPELLS_PER_BOOK];
+} book_t;*/
 
 static book_t _books[4] = {
     { "Anger Management",
@@ -1223,29 +1229,9 @@ static void _character_dump(doc_ptr doc)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_SKILLED;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *rage_mage_get_class(void)
@@ -1259,22 +1245,22 @@ class_t *rage_mage_get_class(void)
     skills_t xs = {  7,   8,  15,   0,   0,   0,  15,  15 };
 
         me.name = "Rage-Mage";
-        me.desc = "The Rage Mage is part of a secret sect descending from the Barbarians "
-                    "in response to their natural foes, the mages. As time passed, other "
-                    "races have also begun to learn their arts. The powers of the Rage Mage "
-                    "are spells learned from books, but they don't work the way normal spells do. "
-                    "First of all, the Rage Mage must perform a special Ritual of Anger to "
-                    "learn a spell, and this ritual destroys the spell book in the process. As a "
-                    "result, it may take a long time for the Rage Mage to learn all of their "
-                    "high level powers. Once learned, the Rage Mage no longers requires the spell "
-                    "book in order to perform the power.\n \n"
-                    "Another unique aspect of the Rage Mage concerns their Mana pool. Unlike "
-                    "normal spellcasters, the Rage Mage's mana does not regenerate on its own. "
-                    "In fact, their mana actually decreases rapidly each turn, meaning that they "
-                    "had better use their powers quickly while they still can. The Rage Mage gains "
-                    "mana whenever he is the target of a magical spell. Indeed, magic makes the "
-                    "Rage Mage very angry! The Rage Mage can also fuel their mana by hurting "
-                    "those around them. This can be quite effective in crowded situations.";
+        me.desc = "Rage-Mages are part of a secret sect, originally founded by Barbarians in "
+                    "response to their natural foes, the mages. With the passing of time, other "
+                    "races have also begun to study these arts.\n\n"
+                    "Rage techniques are learned from books, but differ from normal spells in many ways. "
+                    "First of all, the Rage-Mage must perform a special Ritual of Anger to "
+                    "learn a power, and this ritual destroys the book; as a result, it may take "
+                    "a long time for the Rage-Mage to learn all of their high-level powers. "
+                    "Books are required only for learning; the powers, once learned, can be "
+                    "used without them.\n\n"
+                    "Another unique aspect of Rage-Mages concerns their mana pool. Rage-Mage "
+                    "mana, unlike that of normal spellcasters, does not regenerate on its own; "
+                    "in fact, it actually decreases rapidly each turn, meaning Rage-Mages had "
+                    "better use their powers quickly while they still can. A Rage-Mage gains "
+                    "mana whenever he is the target of a magical spell; indeed, magic makes a "
+                    "Rage-Mage very angry! Rage-Mages can also fuel their mana by hurting "
+                    "those around them, which can be quite effective in crowded situations.";
         me.stats[A_STR] =  3;
         me.stats[A_INT] = -2;
         me.stats[A_WIS] = -2;

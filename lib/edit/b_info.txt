@@ -53,6 +53,7 @@ S:LITE:Light
 S:HELMET:Head
 
 N:4:Snake
+S:HELMET:Head
 S:RING:Ring
 S:RING:Ring
 S:RING:Ring

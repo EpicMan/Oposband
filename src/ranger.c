@@ -47,28 +47,11 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(20, 40));
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *ranger_get_class(void)
@@ -82,20 +65,24 @@ class_t *ranger_get_class(void)
     skills_t xs = {  8,  11,  10,   0,   0,   0,  18,  16};
 
         me.name = "Ranger";
-        me.desc = "A Ranger is a combination of a warrior and a mage who has "
-                    "developed a special affinity for the natural world around him. He "
-                    "is a good fighter and also excellent with a bow. A ranger has "
-                    "good stealth, perception, searching and magical resistance. Also, "
-                    "rangers are familiar with magical devices and use them well. "
-                    "Wisdom determines a Ranger's spell casting ability.\n \n"
-                    "All rangers are trained in Nature magic, and all of these spells are "
-                    "available to them. They even learn these spells almost as fast as "
-                    "mages. They can also select a secondary realm (from Sorcery, "
-                    "Chaos, Death, Trump, Arcane, and Daemon), but they are slow "
+        me.desc = "A Ranger is a seasoned wanderer from the plains or woods, attuned "
+                    "to the natural world. Rangers have few weak points; like mages they "
+                    "are excellent with magic devices, yet they are also fairly good "
+                    "at using bows and melee weapons. Their stealth, searching and "
+                    "perception have been sharpened by their time in the wilderness, "
+                    "and their alliance with the spirits of nature even gives them a "
+                    "good saving throw.\n \n"
+                    "All rangers are trained in Nature magic, and all Nature spells are "
+                    "available to them; they even learn these spells almost as fast as "
+                    "mages. They can also select a secondary realm (Sorcery, "
+                    "Chaos, Death, Trump, Arcane, and Daemon); but they are slow "
                     "learners here, and may find themselves unable to learn some of the "
-                    "highest level spells. They have a class power - 'Probe Monster' - "
-                    "which allows them to know a monster's HP, speed, and experience "
-                    "required to evolve.";
+                    "highest level spells. Another downside is that rangers, like the "
+                    "priestly classes, lack the ability to choose their own spells; "
+                    "they will learn whatever the capricious nature gods choose to teach them.\n\n"
+                    "Rangers have a class power, 'Animal Companion', "
+                    "which allows them to summon an animal to assist them."
+                    "The magical powers of a ranger depend on Wisdom.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] =  0;

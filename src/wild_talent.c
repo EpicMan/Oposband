@@ -177,7 +177,7 @@ static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] =
     /* CL27: Good Utility */
     {
         { A_DEX, "like a Rogue", {8, 12, 50, panic_hit_spell}},
-        { A_INT, "like a Half Ogre", {25, 35, 40, explosive_rune_spell}},
+        { A_INT, "like an Ogre", {25, 35, 40, explosive_rune_spell}},
         { A_CHR, "like a Wizard", {25, 20, 50, magic_mapping_spell}},
         { A_CHR, "like a Mage", {25, 40, 50, recharging_spell}},
         { A_INT, "like a Mutant", {10, 5, 50, alchemy_spell}},
@@ -623,27 +623,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *wild_talent_get_class(void)
@@ -658,16 +640,16 @@ class_t *wild_talent_get_class(void)
     skills_t xs = {  8,  11,  10,   0,   0,   0,  18,  18 };
 
         me.name = "Wild-Talent";
-        me.desc = "The Wild-Talent gains random talents and abilities as they "
+        me.desc = "Wild-Talents gain random talents and abilities as they "
                   "level up. They are good fighters, and decent with magical devices, "
                   "but their true forte is their vast array of potential random "
                   "powers. Except you never know what those might be!\n \n"
                   "Wild-Talents do not have a spell stat. Instead, each ability that "
-                  "they gain requires its own individual stat for purposes of fail "
-                  "rate calculation. For example, Tossing a Boulder requires Strength "
+                  "they gain requires its own individual stat for the purposes of fail rate "
+                  "calculation; for example, Tossing a Boulder requires Strength, "
                   "while Magic Missile requires Intelligence. Each spell requires mana "
                   "to cast, but the amount of mana available is not influenced by any "
-                  "particular stat and is simply determined by experience.";
+                  "particular stat and is determined simply by experience.";
         
         me.stats[A_STR] = -1;
         me.stats[A_INT] =  1;

@@ -1796,6 +1796,9 @@ static void _apply_room_grid_mon(point_t p, room_grid_ptr grid, room_ptr room)
     if (room->flags & ROOM_THEME_FRIENDLY)
         mode |= PM_FORCE_FRIENDLY;
 
+    if (room->type == ROOM_QUEST)
+        mode |= PM_NATIVE;
+
     /* The NIGHT theme is designed for wilderness cemeteries and 
        such, which should be populated with foul undead, but only
        in the deep, dark hours of night! */
@@ -2651,8 +2654,8 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
                         object_level = base_level + 40;
                         place_object(p.y, p.x, AM_GOOD | AM_GREAT, ORIGIN_VAULT);
                         object_level = base_level;
-                        break;
                     }
+                    break;
                 case '9':
                     if ((room->type == ROOM_VAULT) && (wacky_rooms))
                     {
@@ -2662,8 +2665,8 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
                         object_level = base_level + 9;
                         place_object(p.y, p.x, AM_GOOD, ORIGIN_VAULT);
                         object_level = base_level;
-                        break;
                     }
+                    break;
                 case 'A':
                     /* Reward for Pattern walk */
                     object_level = base_level + 12;
@@ -4487,7 +4490,6 @@ bool generate_rooms(void)
 
     return TRUE;
 }
-
 
 /*
  * Generate helper -- fill a rectangle with a table

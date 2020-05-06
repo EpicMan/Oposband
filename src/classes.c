@@ -6,11 +6,17 @@
 
 #include <assert.h>
 
+bool class_is_deprecated(int i)
+{
+    return (i == CLASS_IMITATOR);
+}
+
 int lookup_class_idx(cptr name)
 {
     int i;
     for (i = 0; i < MAX_CLASS; i++)
     {
+        if (class_is_deprecated(i)) continue;
         if (strcmp(name, get_class_aux(i, 0)->name) == 0)
             return i;
     }
@@ -75,14 +81,14 @@ class_t *result = NULL;
     case CLASS_BERSERKER:
         result = berserker_get_class();
         break;
-	case CLASS_BLUE_MAGE:
-		result = blue_mage_get_class();
-		break;
     case CLASS_BLOOD_KNIGHT:
         result = blood_knight_get_class();
         break;
     case CLASS_BLOOD_MAGE:
         result = blood_mage_get_class();
+        break;
+    case CLASS_BLUE_MAGE:
+        result = blue_mage_get_class();
         break;
     case CLASS_CAVALRY:
         result = cavalry_get_class();
@@ -108,9 +114,9 @@ class_t *result = NULL;
     case CLASS_HIGH_MAGE:
         result = high_mage_get_class();
         break;
-	case CLASS_IMITATOR:
+/*	case CLASS_IMITATOR:
 		result = imitator_get_class();
-		break;
+		break;*/
     case CLASS_LAWYER:
         result = lawyer_get_class();
         break;
@@ -218,9 +224,6 @@ class_t *result = NULL;
 		break;
 	case CLASS_CHAOS_MAGE:
 		result = chaos_mage_get_class();
-		break;
-	case CLASS_HEXBLADE:
-		result = hexblade_get_class();
         break;
     }
 

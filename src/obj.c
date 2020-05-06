@@ -180,6 +180,8 @@ void obj_release(obj_ptr obj, int options)
         if ((obj->number <= 0) && (!(obj->marked & OM_BEING_SHUFFLED)))
             special2_remove(obj->loc.slot);
         break;
+    default:
+        break;
     }
 }
 
@@ -264,9 +266,6 @@ bool obj_can_sense1(obj_ptr obj)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_DAGGER:
-    case TV_AXE:
-    case TV_STAVES:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -358,6 +357,7 @@ bool obj_is_rod(obj_ptr obj)     { return obj->tval == TV_ROD; }
 bool obj_is_staff(obj_ptr obj)   { return obj->tval == TV_STAFF; }
 bool obj_is_unknown(obj_ptr obj) { return !obj_is_known(obj); }
 bool obj_is_wand(obj_ptr obj)    { return obj->tval == TV_WAND; }
+
 bool obj_is_shooter(obj_ptr obj) { return obj->tval == TV_BOW; }
 
 bool obj_is_usable(obj_ptr obj)
@@ -468,10 +468,11 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     case TV_STATUE:
     case TV_CORPSE:
     case TV_CAPTURE:
+        if ((left->tval == TV_CORPSE) && (left->sval >= SV_BODY_HEAD)) break;
         if (r_info[left->pval].level < r_info[right->pval].level) return -1;
         if (r_info[left->pval].level > r_info[right->pval].level) return 1;
         if (left->pval < right->pval) return -1;
-        if (left->pval > right->pval) return -1;
+        if (left->pval > right->pval) return 1;
         break;
 
     case TV_SHOT:
@@ -613,6 +614,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_FIGURINE:
     case TV_CORPSE:
         if (dest->pval != obj->pval) return FALSE;
+        if ((dest->tval == TV_CORPSE) && (dest->sval >= SV_BODY_HEAD)) return FALSE;
         break;
 
     case TV_FOOD:
@@ -626,9 +628,6 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_STAVES:
-    case TV_AXE:
-    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -924,9 +923,11 @@ void obj_inspect_ui(void)
     prompt.where[2] = INV_QUIVER;
     prompt.where[3] = INV_FLOOR;
     prompt.cmd_handler = _inspector;
+    allow_special3_hack = TRUE;
     obj_prompt_add_special_packs(&prompt);
 
     obj_prompt(&prompt);
+    allow_special3_hack = FALSE;
 
     /* The '-' key autoselects a single floor object */
     if (prompt.obj)
@@ -942,7 +943,7 @@ void gear_ui(int which)
 
     s = string_alloc_format(
         "<color:w>Carrying %d.%d pounds (<color:%c>%d%%</color> capacity).</color>\n\n"
-        "Examine which item <color:w>(<color:keypress>Esc</color> to exit)</color>?\n",
+        "Examine which item <color:w>(<color:keypress>Esc</color> to exit)</color>?",
          wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
     prompt.prompt = string_buffer(s);
     prompt.where[0] = INV_PACK;
@@ -1148,7 +1149,7 @@ void obj_destroy_ui(void)
     if (!prompt.obj) return;
 
     /* Verify unless quantity given beforehand */
-    if (!force && (confirm_destroy || (obj_value(prompt.obj) > 0)))
+    if (!force && (confirm_destroy || (obj_value(prompt.obj) > 0) || ((prompt.obj->tval == TV_CORPSE) && (prace_is_(RACE_IGOR)) && (prompt.obj->sval != SV_SKELETON))))
     {
         char ch;
         int  options = OD_COLOR_CODED;
@@ -1816,6 +1817,7 @@ void special1_drop(obj_ptr obj)
         object_desc(o_name, obj, OD_COLOR_CODED);
         strcpy(i_name, inv_name(special_pack));
         i_name[0] = tolower(i_name[0]);
+        if (streq("ice Bag", i_name)) i_name[4] = tolower(i_name[4]);
         msg_format("You no longer have %s in your %s.", o_name, i_name);
     }
 
@@ -1854,4 +1856,3 @@ void special2_drop(obj_ptr obj)
 
     obj_drop(obj, amt);
 }
-

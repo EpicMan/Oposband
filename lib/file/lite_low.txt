@@ -6,6 +6,7 @@ N:*:Default
 'Bright Spark'
 'Centennial Light'
 'Corona'
+'Epic Phial'
 'Everyellow'
 'Eye of Argon'
 'Fairie Light'
@@ -14,6 +15,7 @@ N:*:Default
 'Foxfire'
 'Glow in the Dark'
 'Headlight'
+'Heart of Gundabad'
 'Hunk of Orium'
 'Lucky Star'
 'Mimosa'
@@ -30,10 +32,13 @@ N:*:Default
 'Scintillator'
 'Silverlight'
 'Skycleaver'
+'Spark of the Gods'
 'Sungazer'
 'Talisman'
 'Tarazed'
 'Trailblazer'
+'Ultralight'
+'Wyrmglow'
 'Yellow Light'
 of Alhazred
 of Mordenkainen
@@ -48,8 +53,9 @@ of Alimoit
 of the Forest Martens
 of the Illuminati
 of Feldegast
-'Spark of the Gods'
-'Ultralight'
-'Wyrmglow'
 of the Dark-Elves
+of Arien
+of Aglarond
 of Devouring Lightness
+of the Buddha
+of Mazda

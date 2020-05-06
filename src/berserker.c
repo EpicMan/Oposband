@@ -111,7 +111,7 @@ static void _calc_bonuses(void)
     p_ptr->sustain_dex = TRUE;
     p_ptr->sustain_con = TRUE;
     p_ptr->regen += 100;
-    p_ptr->free_act++;
+    p_ptr->free_act += 3;
     p_ptr->pspeed += 2;
     if (p_ptr->lev >= 30) p_ptr->pspeed++;
     if (p_ptr->lev >= 40) p_ptr->pspeed++;
@@ -187,33 +187,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_AXE, SV_BEAKED_AXE, 1);
+    py_birth_obj_aux(TV_POLEARM, SV_BROAD_AXE, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_AUGMENTED_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_HEALING, 1);
-
-    p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *berserker_get_class(void)
@@ -229,26 +205,19 @@ class_t *berserker_get_class(void)
         me.name = "Berserker";
         me.desc = "A Berserker is a fearful fighter indeed, immune to fear and "
                     "paralysis. At high levels, Berserkers can reflect bolt spells "
-                    "with their tough flesh. Furthermore, they can fight without "
-                    "weapons, can remove cursed equipment by force, and can even use "
-                    "their special combat techniques when surrounded by an anti-magic "
-                    "barrier. Berserkers, however, cannot use any magical devices or "
-                    "read any scrolls, and are hopeless at all non-combat skills. "
-                    "Since Berserker Spectres are quite easy to *win* with, their "
-                    "scores are lowered.\n \n"
-                    "Berserkers use a unique system of techniques called 'Rage'. They "
-                    "gain more techniques as they gain levels. They use no magic: "
-                    "indeed, they cannot use any magic devices or activate any "
-                    "artifacts, and cannot read scrolls. To offset these great "
-                    "disadvantages, Berserkers are allowed to have an important class "
-                    "power - 'Recall'.";
+                    "with their tough flesh. Furthermore, they can remove cursed equipment "
+                    "by force, and their special combat techniques are not affected by "
+                    "anti-magic barriers. Berserkers cannot, however, use any magical devices "
+                    "or read any scrolls, and are hopeless at all non-combat skills. To "
+                    "offset these great disadvantages, they gain an important class power - "
+                    "'Recall' - very early.";
 
         me.stats[A_STR] =   8;
         me.stats[A_INT] = -20;
         me.stats[A_WIS] = -20;
         me.stats[A_DEX] =   4;
         me.stats[A_CON] =   4;
-        me.stats[A_CHR] =   -5;
+        me.stats[A_CHR] =  -5;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 200;
