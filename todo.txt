@@ -3,7 +3,6 @@
 -Add Ghouls from Z+ angband
 -Create golem should require rubble
 -Take away berserkers remove curse & recall powers, make them buy scrolls and then eat them. Its like reading but only 67% effective
--Give everybody who doesn't have innate attacks a punch attack, 1d2
 
 How should weapon / skill proficiencies work?
 -Start at unskilled or beginner, work your way up to max:

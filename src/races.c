@@ -124,6 +124,9 @@ race_t *get_race_aux(int prace, int psubrace)
     case RACE_ENT:
         result = ent_get_race();
         break;
+    case RACE_GHOUL:
+        result = ghoul_get_race();
+        break;
     case RACE_GNOME:
         result = gnome_get_race();
         break;

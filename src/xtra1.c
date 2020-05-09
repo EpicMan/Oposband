@@ -2205,7 +2205,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         else attr = TERM_BLUE;
 
         char buf[20];
-        sprintf(buf, "HP:%5d", m_ptr->hp, pct);
+        sprintf(buf, "HP:%5d", m_ptr->hp);
         Term_putstr(col, row, strlen(buf), attr, buf);
         col += strlen(buf) + 1;
         if (MON_STUNNED(m_ptr))
@@ -2683,12 +2683,11 @@ static void fix_object(void)
  */
 static void calc_spells(void)
 {
-    int            i, j, k, levels;
+    int            j, k, levels;
     int            num_allowed;
     int                     num_boukyaku = 0;
 
     magic_type        *s_ptr;
-    int which;
     int bonus = 0;
 
 
@@ -4694,6 +4693,19 @@ void calc_bonuses(void)
         a.blows = 100;
         a.msg = "You punch";
         a.name = "Fist";
+
+        /* Hack - ghouls have better unarmed attacks */
+        if (p_ptr->prace == RACE_GHOUL)
+        {
+            a.blows = 200;
+            a.to_h = 1;
+            a.to_d = 1;
+            a.ds = 5;
+            a.msg = "You claw";
+            a.name = "Claw";
+            a.effect[1] = GF_STASIS;
+        }
+
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
     }
 

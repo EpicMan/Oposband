@@ -654,7 +654,8 @@
 #define RACE_MON_PUMPKIN        71
 #define RACE_IGOR               72
 #define RACE_ICKY_THING			73
-#define MAX_RACES               74
+#define RACE_GHOUL  			74
+#define MAX_RACES               75
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1
