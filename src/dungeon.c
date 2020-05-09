@@ -3701,7 +3701,8 @@ static void _dispatch_command(int old_now_turn)
                 spell_problem = 0;
                 if (p_ptr->prace == RACE_MON_RING)
                     ring_cast();
-                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || p_ptr->pclass == CLASS_BLUE_MAGE)
+                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || 
+                        p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR)
                     possessor_cast();
 				else if (p_ptr->pclass == CLASS_IMITATOR)
 					/*imitator_cast(FALSE)*/;
@@ -4922,7 +4923,7 @@ static void process_player(void)
             }
 			if (p_ptr->pclass == CLASS_IMITATOR)
 			{
-				/* TODO: Fix this */
+				/* TODO: Fix this - roll off older spells as newer ones are learned */
 				/*if (p_ptr->mane_num > (p_ptr->lev > 44 ? 3 : p_ptr->lev > 29 ? 2 : 1))
 				{
 					p_ptr->mane_num--;

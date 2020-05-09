@@ -361,9 +361,16 @@ static void do_cmd_wiz_change(void)
 /* Blue-Mage - learn spells for free */
 static void do_cmd_wiz_blue_mage(void)
 {
-    int n = get_quantity("Which type? ", MST_COUNT - 1);
-    int e = get_quantity("Which effect? ", 200);
-    blue_mage_learn_spell_aux(n, e, 0, 0, TRUE);
+    if (p_ptr->pclass == CLASS_BLUE_MAGE) {
+        int n = get_quantity("Which type? ", MST_COUNT - 1);
+        int e = get_quantity("Which effect? ", 200);
+        blue_mage_learn_spell_aux(n, e, 0, 0, TRUE);
+    }
+    else if (p_ptr->pclass == CLASS_IMITATOR) {
+        int n = get_quantity("Which type? ", MST_COUNT - 1);
+        int e = get_quantity("Which effect? ", 200);
+        imitator_learn_spell_aux(n, e, 0, 0, TRUE);
+    }
 }
 
 /*
@@ -1557,7 +1564,7 @@ void do_cmd_debug(void)
 
     /* Blue-Mage spells */
     case 'E':
-        if (p_ptr->pclass == CLASS_BLUE_MAGE) do_cmd_wiz_blue_mage();
+        do_cmd_wiz_blue_mage();
         break;
 
     /* View item info */

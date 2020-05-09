@@ -1232,7 +1232,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     if (arg_fiddle) note("Loaded extra information");
 
     /* Player life rating */
-    for (i = 0; i < tmp16u; i++)
 	p_ptr->life_rating = savefile_read_s16b(file);
 
     /* Important -- Initialize stuff */

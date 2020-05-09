@@ -2195,70 +2195,48 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         else
             Term_queue_bigchar(col, row, r_ptr->x_attr, r_ptr->x_char, 0, 0);
 
-        if (pct >= 100) attr = TERM_L_GREEN;
-        else if (pct >= 60) attr = TERM_YELLOW;
-        else if (pct >= 25) attr = TERM_ORANGE;
-        else if (pct >= 10) attr = TERM_L_RED;
+        /*Show HP% by color. Blue means unharmed */
+        if (pct <= 5)       attr = TERM_RED;
+        else if (pct <= 25) attr = TERM_L_RED;
+        else if (pct <= 45) attr = TERM_ORANGE;
+        else if (pct <= 65) attr = TERM_YELLOW;
+        else if (pct <= 85) attr = TERM_L_GREEN;
+        else if (pct <= 99) attr = TERM_GREEN;
+        else attr = TERM_BLUE;
 
-        if (p_ptr->wizard)
+        char buf[20];
+        sprintf(buf, "HP:%5d", m_ptr->hp, pct);
+        Term_putstr(col, row, strlen(buf), attr, buf);
+        col += strlen(buf) + 1;
+        if (MON_STUNNED(m_ptr))
         {
-            char buf[20];
-            sprintf(buf, "%3d%%", pct);
-            col += 2;
-            Term_putstr(col, row, strlen(buf), attr, buf);
+            sprintf(buf, "%d%%", MON_STUNNED(m_ptr));
+            Term_putstr(col, row, strlen(buf), TERM_L_BLUE, buf);
             col += strlen(buf) + 1;
-            if (MON_STUNNED(m_ptr))
-            {
-                sprintf(buf, "%d%%", MON_STUNNED(m_ptr));
-                Term_putstr(col, row, strlen(buf), TERM_L_BLUE, buf);
-                col += strlen(buf) + 1;
-            }
-            if (m_idx == target_who)
-                Term_queue_char(col++, row, TERM_L_RED, '*', 0, 0);
-            if (m_idx == p_ptr->riding)
-                Term_queue_char(col++, row, TERM_L_BLUE, '@', 0, 0);
-            if (MON_INVULNER(m_ptr))
-                Term_queue_char(col++, row, TERM_WHITE, 'I', 0, 0);
-            if (MON_PARALYZED(m_ptr))
-                Term_queue_char(col++, row, TERM_BLUE, 'P', 0, 0);
-            if (MON_CSLEEP(m_ptr))
-                Term_queue_char(col++, row, TERM_BLUE, 'Z', 0, 0); /* ZZZ */
-            if (MON_CONFUSED(m_ptr))
-                Term_queue_char(col++, row, TERM_UMBER, 'C', 0, 0);
-            if (MON_MONFEAR(m_ptr))
-                Term_queue_char(col++, row, TERM_VIOLET, 'F', 0, 0);
         }
-        else
-        {
-			/*TODO Use big number formatting for monster HP?*/
-			char buf[20];
+        if (m_idx == target_who)
+            Term_queue_char(col++, row, TERM_L_RED, '*', 0, 0);
+        if (m_idx == p_ptr->riding)
+            Term_queue_char(col++, row, TERM_L_BLUE, '@', 0, 0);
+        if (MON_INVULNER(m_ptr))
+            Term_queue_char(col++, row, TERM_WHITE, 'I', 0, 0);
+        if (MON_PARALYZED(m_ptr))
+            Term_queue_char(col++, row, TERM_BLUE, 'P', 0, 0);
+        if (MON_CSLEEP(m_ptr))
+            Term_queue_char(col++, row, TERM_BLUE, 'Z', 0, 0); /* ZZZ */
+        if (MON_CONFUSED(m_ptr))
+            Term_queue_char(col++, row, TERM_UMBER, 'C', 0, 0);
+        if (MON_MONFEAR(m_ptr))
+            Term_queue_char(col++, row, TERM_VIOLET, 'F', 0, 0);
 
-			if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
-			else if (MON_PARALYZED(m_ptr)) attr = TERM_BLUE;
-			else if (MON_CSLEEP(m_ptr)) attr = TERM_BLUE;
-			else if (MON_CONFUSED(m_ptr)) attr = TERM_UMBER;
-			else if (MON_STUNNED(m_ptr)) attr = TERM_L_BLUE;
-			else if (MON_MONFEAR(m_ptr)) attr = TERM_VIOLET;
-			else if (m_ptr->ego_whip_ct) attr = TERM_L_UMBER;
+        /* Label pet or target */
+		if (m_idx == target_who)
+			Term_putstr(col++, row, 1, TERM_RED, "*");
+		else if (m_idx == p_ptr->riding)
+			Term_putstr(col++, row, 1, TERM_GREEN, ">");
 
-			/* Label pet or target */
-			if (m_idx == target_who)
-				Term_putstr(col++, row, 1, TERM_RED, "*");
-			else if (m_idx == p_ptr->riding)
-				Term_putstr(col++, row, 1, TERM_GREEN, ">");
-
-            Term_putstr(col, row, 11, TERM_WHITE, "     /     ");
-			
-			/* Current / max hp */
-			sprintf(buf, "%5d", m_ptr->hp);
-			Term_putstr(col, row, 5, attr, buf);
-			sprintf(buf, "%d", m_ptr->maxhp);
-			Term_putstr(col + 6, row, 5, attr, buf);
-			/*if (m_ptr->ego_whip_ct)
-                Term_putstr(col + 2, row, len, attr, "wwwwwwwww");
-            else
-                Term_putstr(col + 2, row, len, attr, "*********");*/
-        }
+        if (m_ptr->ego_whip_ct)
+            Term_putstr(col++, row, 1, TERM_ORANGE, "W");
     }
 }
 

@@ -240,6 +240,7 @@
     <ClCompile Include="src\high_mage.c" />
     <ClCompile Include="src\home.c" />
     <ClCompile Include="src\igor.c" />
+    <ClCompile Include="src\imitator.c" />
     <ClCompile Include="src\init1.c" />
     <ClCompile Include="src\init2.c" />
     <ClCompile Include="src\int-map.c" />

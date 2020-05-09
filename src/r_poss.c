@@ -525,12 +525,32 @@ void possessor_attack(point_t where, bool *fear, bool *mdeath, int mode)
  **********************************************************************/
 void possessor_cast(void)
 {
-    mon_race_ptr race = &r_info[(p_ptr->pclass == CLASS_BLUE_MAGE) ? MON_SEXY_SWIMSUIT : p_ptr->current_r_idx];
+    mon_race_ptr race = &r_info[(p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR) ? MON_SEXY_SWIMSUIT : p_ptr->current_r_idx];
     if (!race->spells)
     {
         if (p_ptr->pclass == CLASS_BLUE_MAGE) msg_print("You have not learned any spells yet.");
+        if (p_ptr->pclass == CLASS_IMITATOR) msg_print("You don't remember any actions to imitate.");
         else msg_print("Your current body has no spells.");
         return;
+    }
+    /* Imitators forget spells, and may end up without them */
+    if (p_ptr->pclass == CLASS_IMITATOR && r_info[MON_SEXY_SWIMSUIT].spells)
+    {
+        bool has_spells = FALSE;
+        for (int i = 0; i < MST_COUNT; i++)
+        {
+            if (r_info[MON_SEXY_SWIMSUIT].spells->groups[i] && r_info[MON_SEXY_SWIMSUIT].spells->groups[i]->count > 0)
+            {
+                has_spells = TRUE;
+                i = MST_COUNT;
+            }
+        }
+
+        if (!has_spells) 
+        {
+            msg_print("You don't remember any actions to imitate.");
+            return;
+        }
     }
     if (p_ptr->confused)
     {
