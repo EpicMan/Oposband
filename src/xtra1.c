@@ -4682,6 +4682,21 @@ void calc_bonuses(void)
     if (race_ptr->calc_innate_attacks && !p_ptr->innate_attack_lock)
         race_ptr->calc_innate_attacks();
 
+    /* Gain a punch attack if body has weapon/shield slots but no wielded weapons */
+    if (p_ptr->weapon_ct == 0 && equip_can_wield_kind(TV_SWORD, SV_DAGGER) && p_ptr->monk_lvl < 1)
+    {
+        innate_attack_t a = { 0 };
+        a.dd = 1;
+        a.ds = 2;
+        a.weight = 12; /* Dagger weight */
+        a.to_h = -1;
+        a.to_d = 0;
+        a.blows = 100;
+        a.msg = "You punch";
+        a.name = "Fist";
+        p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
+    }
+
     /* Adjust Innate Attacks for Proficiency */
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
     {

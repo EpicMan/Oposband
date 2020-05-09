@@ -839,6 +839,9 @@ int skills_innate_current(cptr name)
 
     if (info)
         result = info->current;
+    /* Punching uses martial arts skill */
+    else if (name == "Fist")
+        result = skills_martial_arts_current();
 
     return result;
 }
