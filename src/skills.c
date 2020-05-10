@@ -583,6 +583,8 @@ int skills_martial_arts_max(void)
 {
     if (p_ptr->pclass == CLASS_SKILLMASTER)
         return skillmaster_martial_arts_prof();
+    else if (p_ptr->prace == RACE_GHOUL)
+        return 8000;
     return s_info[_class_idx()].s_max[SKILL_MARTIAL_ARTS];
 }
 

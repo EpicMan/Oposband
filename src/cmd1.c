@@ -3402,10 +3402,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 /* The touch of a ghoul is paralyzing */
                 if (p_ptr->prace == RACE_GHOUL)
                 {
-                    if ((randint1(p_ptr->lev) > r_ptr->level) &&
-                            (!(r_ptr->flags1 & RF1_UNIQUE) || (randint1(p_ptr->lev) > r_ptr->level))
+                    if (!m_ptr->mtimed[MTIMED_PARALYZED] &&
+                        (1 + randint1(p_ptr->lev) > r_ptr->level) &&
+                            (!(r_ptr->flags1 & RF1_UNIQUE) || (1 + randint1(p_ptr->lev) > r_ptr->level))
                             )
                         set_monster_paralyzed(m_ptr->id, 1+randint0(2));
+                        cmsg_format(TERM_VIOLET, "(Paralyzed)");
                 }
 
                 if (mode == DRACONIAN_STRIKE_STUN)

@@ -2230,9 +2230,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
             Term_queue_char(col++, row, TERM_VIOLET, 'F', 0, 0);
 
         /* Label pet or target */
-		if (m_idx == target_who)
-			Term_putstr(col++, row, 1, TERM_RED, "*");
-		else if (m_idx == p_ptr->riding)
+		if (m_idx == p_ptr->riding)
 			Term_putstr(col++, row, 1, TERM_GREEN, ">");
 
         if (m_ptr->ego_whip_ct)
