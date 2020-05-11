@@ -1992,7 +1992,7 @@ race_t* ghoul_get_race(void)
         me.skills.sav =  6;
         me.skills.stl =  1;
         me.skills.srh =  0;
-        me.skills.fos =  5;
+        me.skills.fos = 10;
         me.skills.thn =  5;
         me.skills.thb =  0;
 

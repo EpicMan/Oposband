@@ -1214,7 +1214,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     char dbg_msg[512];
 
     /* Hacks for objects with "hidden" powers */
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
         return 2500;
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD)
         return 1;
@@ -1228,7 +1228,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
-        to_h = o_ptr->to_h;
+        to_h = to_d = o_ptr->to_h;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;

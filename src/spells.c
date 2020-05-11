@@ -1340,7 +1340,7 @@ int get_spells_aux(spell_info* spells, int max, spell_info* table)
         if (ct >= max) break;
         if (!base->fn) break;
 
-        /*if ((base->level <= p_ptr->lev) || (show_future_spells))*/
+        if ((base->level <= p_ptr->lev) || (show_future_spells))
         {
             spell_info* current = &spells[ct];
             current->fn = base->fn;

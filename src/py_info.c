@@ -236,7 +236,6 @@ static void _build_general2(doc_ptr doc)
 		doc_printf(doc, "<tab:9>AC   : %3d <color:G>(%2d%c)</color>\n", ac, ac_percentage, '%');
 	else
 		doc_printf(doc, "<tab:9>AC   : %3d  <color:G>(%d%c)</color>\n", ac, ac_percentage, '%');
-    doc_printf(doc, "<tab:9>AC   : <color:G>%9d</color>\n", p_ptr->dis_ac + p_ptr->dis_to_a);
 
     /* Dump speed ... What a monster! */
     {
@@ -1036,11 +1035,11 @@ static void _build_equipment(doc_ptr doc)
 /****************************** Combat ************************************/
 static void _build_melee(doc_ptr doc)
 {
+	doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
     if (p_ptr->prace == RACE_MON_RING) return;
     if (possessor_can_attack() && !p_ptr->weapon_ct && !p_ptr->innate_attack_ct) return;
     {
         int i;
-        doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
         for (i = 0; i < MAX_HANDS; i++)
         {
             if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;

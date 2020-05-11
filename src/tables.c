@@ -1778,6 +1778,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+	CH_HEX,                 /* Hexblade */
 	(CH_CHAOS | CH_DAEMON), /* Chaos-Mage*/
 };
 
@@ -1853,6 +1854,7 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+	CH_NONE,                 /* Hexblade */
 	(CH_SORCERY | CH_NATURE |
 	 CH_CHAOS | CH_DEATH | CH_TRUMP |
 	 CH_ARCANE | CH_ENCHANT | CH_DAEMON |
@@ -2922,4 +2924,22 @@ byte feature_action_flags[FF_FLAG_MAX] =
     0, /* ROGUE_TRAP_3 */
     0, /* WEB */
     0, /* SEMI_PUN */
+};
+
+cptr PROFICIENCIES[MAX_PROFICIENCIES] =
+{
+    "Digging Tools",
+    "Hafted Weapons",
+    "Polearms",
+    "Swords",
+    "Staves",
+    "Axes",
+    "Daggers",
+    "Bows",
+    "Crossbows",
+    "Slings",
+    "Martial Arts",
+    "Dual Wielding",
+    "Riding",
+    "Innate Attacks"
 };

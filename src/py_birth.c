@@ -1028,7 +1028,7 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
     { "Angel/Demon",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orc/Troll/Giant",
+    { "Monstrous Humanoid",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_ORC, RACE_HALF_TITAN,
          RACE_HALF_TROLL, RACE_KOBOLD, RACE_OGRE, RACE_SNOTLING, -1} },
     { "Shapeshifter",
@@ -1340,7 +1340,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Devices", { CLASS_ALCHEMIST, CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
-                    CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, -1} },
+                    CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, CLASS_HEXBLADE, -1} },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
@@ -2781,7 +2781,8 @@ static void _stats_init(void)
         case CLASS_BARD:
         case CLASS_POLITICIAN:
         case CLASS_WARLOCK:
-        {
+		case CLASS_HEXBLADE:
+		{
             int stats[6] = { 16, 8, 8, 16, 11, 17 };
             _stats_init_aux(stats);
             break;

@@ -1790,8 +1790,9 @@ static void _skills_class_table(FILE* fp)
                 class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
                 class_ptr->base_skills.thb, class_ptr->extra_skills.thb,
                 class_ptr->life, class_ptr->base_hp,
-                s_info[i].s_max[SKILL_RIDING],
-                s_info[i].s_max[SKILL_DUAL_WIELDING]
+                /* TODO: How to display this? Maybe create a table in tables.c with this info, then load it in the class functions. Bleh*/
+                p_ptr->proficiency_cap[PROF_RIDING],
+                p_ptr->proficiency_cap[PROF_DUAL_WIELDING]
             );
         }
     }

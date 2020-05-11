@@ -106,6 +106,7 @@ extern cptr exp_level_str[5];
 extern cptr silly_attacks[MAX_SILLY_ATTACK];
 extern cptr ident_info[];
 extern byte feature_action_flags[FF_FLAG_MAX];
+extern cptr PROFICIENCIES[MAX_PROFICIENCIES];
 
 /* variable.c */
 extern int game_mode;

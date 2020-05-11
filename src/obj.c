@@ -266,6 +266,9 @@ bool obj_can_sense1(obj_ptr obj)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -628,6 +631,9 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_STAVES:
+    case TV_AXE:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:

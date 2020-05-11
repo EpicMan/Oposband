@@ -302,6 +302,7 @@ void virtue_init(void)
         p_ptr->vir_types[i++] = VIRTUE_VITALITY;
         break;
     case CLASS_MAGIC_EATER:
+	case CLASS_HEXBLADE:
         p_ptr->vir_types[i++] = VIRTUE_ENCHANTMENT;
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         break;

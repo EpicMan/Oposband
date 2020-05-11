@@ -326,7 +326,7 @@ static void rd_quick_start(savefile_ptr file)
 
 static void rd_extra(savefile_ptr file)
 {
-    int i,j;
+    int i;
     char buf[1024];
 
     p_ptr->id = savefile_read_s32b(file);

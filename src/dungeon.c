@@ -5612,11 +5612,6 @@ void play_game(bool new_game)
     now_turn = game_turn;
     start_time = time(NULL);
 
-    /* TODO: py_skills_init() or some such ... w_max needs to be reset each time you play, 
-     * not just on player birth */
-    if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
-        weaponmaster_adjust_skills();
-
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
 

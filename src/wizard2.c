@@ -276,29 +276,19 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b < WEAPON_EXP_UNSKILLED) tmp_s16b = WEAPON_EXP_UNSKILLED;
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
-    for (j = 0; j <= TV_WEAPON_END - TV_WEAPON_BEGIN; j++)
-    {
-        for (i = 0;i < 64;i++)
-        {
-            int max = skills_weapon_max(TV_WEAPON_BEGIN + j, i);
-            p_ptr->weapon_exp[j][i] = tmp_s16b;
-            if (p_ptr->weapon_exp[j][i] > max) p_ptr->weapon_exp[j][i] = max;
-        }
-    }
+    /* Max out player weapon proficiencies */
+    for (j = PROF_DIGGER; j <= PROF_DAGGER; j++)
+        p_ptr->proficiency[j] = MIN(tmp_s16b, skills_weapon_max(j));
+    
+    p_ptr->proficiency[PROF_BOW] = MIN(tmp_s16b, skills_bow_max(SV_SHORT_BOW));
+    p_ptr->proficiency[PROF_CROSSBOW] = MIN(tmp_s16b, skills_bow_max(SV_LIGHT_XBOW));
+    p_ptr->proficiency[PROF_SLING] = MIN(tmp_s16b, skills_bow_max(SV_SLING));
 
-    for (j = 0; j < 10; j++)
-    {
-        p_ptr->skill_exp[j] = tmp_s16b;
-        if (p_ptr->skill_exp[j] > s_info[p_ptr->pclass].s_max[j]) p_ptr->skill_exp[j] = s_info[p_ptr->pclass].s_max[j];
-    }
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = MIN(tmp_s16b, skills_martial_arts_max());
+    p_ptr->proficiency[PROF_DUAL_WIELDING] = MIN(tmp_s16b, skills_dual_wielding_max());
+    p_ptr->proficiency[PROF_RIDING] = MIN(tmp_s16b, skills_riding_max());
 
-    /* Hack for WARLOCK_DRAGONS. Of course, reading skill tables directly is forbidden, so this code is inherently wrong! */
-    p_ptr->skill_exp[SKILL_RIDING] = MIN(skills_riding_max(), tmp_s16b);
-
-    for (j = 0; j < 32; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_MASTER ? SPELL_EXP_MASTER : tmp_s16b);
-    for (; j < 64; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_EXPERT ? SPELL_EXP_EXPERT : tmp_s16b);
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = MIN(tmp_s16b, skills_weapon_max(PROF_INNATE_ATTACKS));
 
     /* Default */
     sprintf(tmp_val, "%d", p_ptr->au);
@@ -390,6 +380,9 @@ static tval_desc tvals[] =
     { TV_SWORD,             "Sword"                },
     { TV_POLEARM,           "Polearm"              },
     { TV_HAFTED,            "Hafted Weapon"        },
+    { TV_DAGGER,            "Dagger"               },
+    { TV_AXE,               "Axe"                  },
+    { TV_STAVES,            "Staff Weapon"         },
     { TV_BOW,               "Bow"                  },
     { TV_ARROW,             "Arrows"               },
     { TV_BOLT,              "Bolts"                },
@@ -1565,11 +1558,6 @@ void do_cmd_debug(void)
     /* Blue-Mage spells */
     case 'E':
         do_cmd_wiz_blue_mage();
-        break;
-
-    /* View item info */
-    case 'f':
-        identify_fully(NULL);
         break;
 
     /* Create desired feature */

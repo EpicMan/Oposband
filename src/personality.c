@@ -743,7 +743,9 @@ static void _sexy_birth(void)
         if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
             rune_add(&forge, RUNE_ABSORPTION, FALSE);
         py_birth_obj(&forge);
-        skills_weapon_init(TV_HAFTED, SV_WHIP, WEAPON_EXP_BEGINNER);
+        p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+        if (p_ptr->proficiency_cap[PROF_BLUNT] < WEAPON_EXP_EXPERT)
+            p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
     }
 }
 static void _sexy_calc_bonuses(void)

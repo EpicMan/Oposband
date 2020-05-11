@@ -536,6 +536,20 @@ Life Rating   95%       Melee       <color:y>Good         </color>
 Base HP       14        Archery     <color:y>Good         </color>
 Experience   125%
 </style></indent>
+<topic:Hexblade><color:o>Hexblade</color>
+A Hexblade is an evil fighter who employs hex magic.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +2</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:w> +1</color>        Device      <color:o>Fair         </color>
+Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:v> +2</color>        Perception  <color:R>Poor         </color>
+Life Rating  106%       Melee       <color:o>Fair         </color>
+Base HP        8        Bows        <color:o>Fair         </color>
+Experience   140%
+</style></indent>
 <topic:Ninja-Lawyer><color:o>Ninja-Lawyer</color>
 The Ninja-Lawyer moves silently in the night, combining the stealth, agility and offensive power of the ninja with the subtle practical tools of the lawyer. Ninja-Lawyers, like specialist ninjas, prefer light armor and stabbing weapons and acquire the powerful 'Quick Walk' class power. A ninja-lawyer relies on both wisdom and dexterity, requiring the former for legal tricks and the latter for ninjutsu.
 
@@ -892,6 +906,7 @@ Rogue          +1 <color:v>  +1 </color>  -1   +3   +0   -1  100%  +12  125%
 Scout          +1   -1 <color:v>  +2 </color>  +3   +0   +0  104%   +8  130%
 Chaos-Warrior  +2 <color:v>  +1 </color>  -1   +0   +2   +1  111%  +12  125%
 Disciple       -1 <color:v>  +1 </color>  -1   +0   -1   +1   95%  +14  125%
+Hexblade       +2   +1   +0   +1   +0 <color:v>  +2 </color> 106%   +8  140%
 Ninja-Lawyer   -1   +0 <color:v>  +0 </color>  +2   +0   +0   99%   +8  115%
 Paladin        +3   -3 <color:v>  +1 </color>  +0   +2   +2  111%  +12  135%
 Ranger         +2   +0 <color:v>  +2 </color>  +1   +1   +1  106%   +8  140%
@@ -949,6 +964,7 @@ Rogue         <color:G>Excellent    </color> <color:G>Excellent    </color> <col
 Scout         <color:y>Very Good    </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Chaos-Warrior <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Disciple      <color:o>Fair         </color> <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color>
+Hexblade      <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Ninja-Lawyer  <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:g>Superb       </color>
 Paladin       <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Ranger        <color:o>Fair         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color>
@@ -1006,6 +1022,7 @@ Rogue         <color:o>Fair         </color> <color:o>Fair         </color> <col
 Scout         <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:b>Heroic       </color>
 Chaos-Warrior <color:R>Poor         </color> <color:R>Poor         </color> <color:G>Excellent    </color> <color:y>Good         </color>
 Disciple      <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:y>Good         </color>
+Hexblade      <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Ninja-Lawyer  <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:R>Poor         </color>
 Paladin       <color:R>Poor         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
 Ranger        <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:y>Very Good    </color>
