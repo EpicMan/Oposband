@@ -960,8 +960,11 @@ bool psychometry(void)
     case TV_BOW:
     case TV_DIGGING:
     case TV_HAFTED:
+    case TV_STAVES:
     case TV_POLEARM:
+    case TV_AXE:
     case TV_SWORD:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -3704,8 +3707,6 @@ static void _dispatch_command(int old_now_turn)
                 else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || 
                         p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR)
                     possessor_cast();
-				else if (p_ptr->pclass == CLASS_IMITATOR)
-					/*imitator_cast(FALSE)*/;
                 else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                     magic_eater_cast(0);
                 else if (p_ptr->pclass == CLASS_SKILLMASTER)

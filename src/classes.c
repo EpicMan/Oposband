@@ -225,6 +225,9 @@ class_t *result = NULL;
 	case CLASS_CHAOS_MAGE:
 		result = chaos_mage_get_class();
         break;
+	case CLASS_HEXBLADE:
+		result = hexblade_get_class();
+        break;
     }
 
     assert(result);

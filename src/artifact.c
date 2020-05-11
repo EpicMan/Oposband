@@ -1302,7 +1302,9 @@ static void random_misc(object_type * o_ptr)
             int bonus_h;
             add_flag(o_ptr->flags, OF_SHOW_MODS);
             bonus_h = 4 + (randint1(11));
-            if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && (o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
+			if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && 
+                (o_ptr->tval != TV_DAGGER) && (o_ptr->tval != TV_STAVES) && (o_ptr->tval != TV_AXE) &&
+				(o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
             {
                 bonus_h /= 2;
             }
@@ -1451,7 +1453,7 @@ static void random_slay_aux(object_type *o_ptr)
         case 17:
         case 18:
         case 19:
-            if (o_ptr->tval == TV_SWORD)
+            if (o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER)
             {
                 add_flag(o_ptr->flags, OF_VORPAL);
                 if (!artifact_bias && one_in_(9))
@@ -1461,7 +1463,7 @@ static void random_slay_aux(object_type *o_ptr)
                 random_slay_aux(o_ptr);
             break;
         case 20:
-            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_DIGGING)
+            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES || o_ptr->tval == TV_DIGGING)
                 add_flag(o_ptr->flags, OF_IMPACT);
             else
                 random_slay_aux(o_ptr);
@@ -1545,12 +1547,12 @@ static void random_slay_aux(object_type *o_ptr)
             {
                 if (randint1(1250) <= object_level - 50)
                     add_flag(o_ptr->flags, OF_KILL_EVIL);
-                else if (o_ptr->tval == TV_SWORD && randint1(625) <= object_level - 50)
+                else if ((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER) && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_VORPAL2);
                     break;
                 }
-                else if (o_ptr->tval == TV_HAFTED && randint1(625) <= object_level - 50)
+                else if ((o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES) && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_STUN);
                     break;
@@ -1628,7 +1630,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_PRIESTLY:
-        if((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_POLEARM) &&
+        if(o_ptr->tval != TV_HAFTED && o_ptr->tval == TV_STAVES &&
            !(have_flag(o_ptr->flags, OF_BLESSED)))
         {
             /* A free power for "priestly" random artifacts */
@@ -1658,7 +1660,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_ROGUE:
-        if ((((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_DAGGER)) ||
+        if ((((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_DAGGER)) ||
              ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_SPEAR))) &&
              !(have_flag(o_ptr->flags, OF_THROWING)))
         {
@@ -2127,7 +2129,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (have_flag(o_ptr->flags, OF_NO_REMOVE)) return 0;
     if (o_ptr->tval == TV_QUIVER) return 0;
 
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_FALCON_SWORD)
+    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_FALCON_SWORD)
         is_falcon_sword = TRUE;
 
     immunity_hack = FALSE;
@@ -2263,6 +2265,10 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 artifact_bias = BIAS_CHAOS;
                 warrior_artifact_bias = 60;
                 break;
+			case CLASS_HEXBLADE:
+				artifact_bias = BIAS_CHR;
+				warrior_artifact_bias = 60;
+				break;
             case CLASS_LAWYER:
             case CLASS_POLITICIAN:
             case CLASS_MONK:
@@ -2490,6 +2496,9 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
+        case TV_DAGGER:
+        case TV_AXE:
+        case TV_STAVES:
         case TV_DIGGING:
             switch (randint1(7))
             {
@@ -3037,7 +3046,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         o_ptr->to_h = o_ptr->to_h * bow_energy(o_ptr->sval) / 7150;
     }
 
-    if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_POISON_NEEDLE))
+    if ((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_POISON_NEEDLE))
     {
         o_ptr->to_h = 0;
         remove_flag(o_ptr->flags, OF_BLOWS);

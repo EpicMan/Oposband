@@ -2588,6 +2588,9 @@ extern void strafing_spell(int cmd, variant *res);
 extern bool nemesis_hack;    /* Actually, it's in melee1.c */
 extern cptr duelist_equip_error(void);
 
+/* hexblade.c */
+extern class_t *hexblade_get_class(void);
+
 /* magic_eater.c */
 extern class_t *magic_eater_get_class(void);
 extern bool magic_eater_regen(int percent);
@@ -2829,6 +2832,7 @@ extern void skills_desc_race(race_t *race_ptr, skills_desc_t *skills);
 extern void skills_desc_pers(personality_t *pers_ptr, skills_desc_t *skills);
 extern void skills_desc_realm(dragon_realm_ptr realm_ptr, skills_desc_t *skills);
 extern void skills_desc_aux(skills_t *base, skills_t *xtra, skills_desc_t *skills);
+extern void monster_proficiencies(void);
 
 extern int skills_bow_current(int sval);
 extern int skills_bow_max(int sval);
@@ -2836,18 +2840,13 @@ extern void skills_bow_gain(int sval, int rlvl);
 extern int skills_bow_calc_bonus(int sval);
 extern cptr skills_bow_describe_current(int sval);
 
-extern int skills_weapon_current(int tval, int sval);
-extern int skills_weapon_max(int tval, int sval);
-extern void skills_weapon_gain(int tval, int sval, int rlvl);
-extern void skills_weapon_init(int tval, int sval, int skill);
+extern int skills_weapon_current(int prof);
+extern int skills_weapon_max(int prof);
+extern void skills_weapon_gain(int proficiency, int rlvl);
 extern bool skills_weapon_is_icky(int tval, int sval);
-extern int skills_weapon_calc_bonus(int tval, int sval);
-extern cptr skills_weapon_describe_current(int tval, int sval);
+extern int skills_weapon_calc_bonus(int prof);
+extern cptr skills_weapon_describe_current(int prof);
 
-extern void skills_shield_init(int sval, int current, int max);
-extern int skills_shield_current(int sval);
-extern int skills_shield_max(int sval);
-extern void skills_shield_gain(int sval, int rlvl);
 extern int skills_shield_calc_bonus(int sval);
 extern cptr skills_shield_describe_current(int sval);
 
@@ -2874,9 +2873,8 @@ extern cptr skills_innate_calc_name(innate_attack_ptr attack); /* Note: Uses a s
 extern cptr skills_innate_describe_current(cptr name);
 
 extern void skills_on_birth(void);
-extern void skills_on_load(savefile_ptr file);
-extern void skills_on_save(savefile_ptr file);
 
+extern int tsvals_to_proficiency(int tval, int sval);
 
 /* time_lord.c */
 extern class_t *time_lord_get_class(void);
@@ -2889,7 +2887,6 @@ extern void mon_change_race(mon_ptr mon, int new_r_idx, cptr verb);
 extern class_t *weaponmaster_get_class(int subclass);
 extern int weaponmaster_get_toggle(void);
 extern void weaponmaster_set_toggle(int toggle);
-extern void weaponmaster_adjust_skills(void);
 extern bool weaponmaster_is_favorite(object_type *o_ptr);
 extern int weaponmaster_wield_hack(object_type *o_ptr);
 extern void weaponmaster_do_wild_blade(void);
