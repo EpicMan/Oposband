@@ -523,7 +523,7 @@ void possessor_attack(point_t where, bool *fear, bool *mdeath, int mode)
 /**********************************************************************
  * Spells
  **********************************************************************/
-void possessor_cast(void)
+void possessor_cast()
 {
     mon_race_ptr race = &r_info[(p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR) ? MON_SEXY_SWIMSUIT : p_ptr->current_r_idx];
     if (!race->spells)

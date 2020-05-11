@@ -1,4 +1,5 @@
 #include "angband.h"
+#include "monspell.h"
 
 /* Tera-Hack: The old blue-mage spell system with semi-normal spell codes,
  * spell casting levels, mana costs, etc. is completely inapplicable in modern
@@ -60,9 +61,12 @@ static void _double_revenge_spell(int cmd, variant* res)
         var_set_string(res, "Double Revenge");
         break;
     case SPELL_DESC:
-        var_set_string(res, "");
+        var_set_string(res, "imitate a power at double the damage");
         break;
     case SPELL_CAST:
+        double_revenge = TRUE;
+        possessor_cast();
+        double_revenge = FALSE;
         handle_stuff();
         break;
     default:
@@ -124,6 +128,7 @@ static void _birth(void)
     p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
     p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
     new_mane = FALSE;
+    double_revenge = FALSE;
 }
 
 static void _save(savefile_ptr file)

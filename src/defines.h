@@ -19,7 +19,7 @@
 #define VER_MAJOR 0
 #define VER_MINOR 3
 #define VER_PATCH 3
-#define VER_EXTRA 0
+#define VER_EXTRA 1
 #define VERSION_IS_DEVELOPMENT (FALSE)
 
 #define GAME_MODE_XXX  0	/* No more beginner mode */

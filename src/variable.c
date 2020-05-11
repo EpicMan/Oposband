@@ -1231,3 +1231,5 @@ pantheon_type pant_list[PANTHEON_MAX] =
 };
 
 byte summon_pantheon_hack = 0;
+
+bool double_revenge = FALSE;

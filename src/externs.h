@@ -2455,7 +2455,7 @@ extern void    possessor_on_take_hit(void);
 extern void    possessor_on_birth(void);
 extern bool    possessor_can_attack(void);
 extern void    possessor_attack(point_t where, bool *fear, bool *mdeath, int mode);
-extern void    possessor_cast(void);
+extern void    possessor_cast();
 extern
 caster_info   *possessor_caster_info(void);
 extern void    possessor_calc_bonuses(void);
@@ -2922,3 +2922,6 @@ extern void chaos_choose_effect(int);
 extern bool worships_chaos();
 extern cptr chaos_patron_name(int);
 extern void chaos_patron_reward(int category);
+
+/* imitator.c */
+extern bool double_revenge;
