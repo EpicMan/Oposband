@@ -103,8 +103,8 @@ Animal
     Wisdom        -2        Save        Fair         
     Dexterity     +2        Stealth     Poor         
     Constitution  +3        Searching   Bad          
-    Charisma      -1        Perception  Bad          
-    Life Rating  108%       Melee       Good         
+    Charisma      -2        Perception  Bad          
+    Life Rating  109%       Melee       Good         
     Base HP       45        Archery     Bad          
     Experience   130%       Infravision 50'
     
@@ -369,7 +369,7 @@ Golem
     Wisdom        -4        Save        Superb       
     Dexterity     -3        Stealth     Bad          
     Constitution  +4        Searching   Bad          
-    Charisma      +2        Perception  Bad          
+    Charisma      +0        Perception  Bad          
     Life Rating  108%       Melee       Heroic       
     Base HP       50        Archery     Poor         
     Experience   200%       Infravision 50'
@@ -797,14 +797,14 @@ Table 1 - Race Statistic Bonus Table
              STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
 Centipede     +0   -3   -3   +0   +0   -3   90%  +15  100%  120%
 Hound         +3   -3   -5   +4   +3   +1  100%  +22  150%  110%
-Hydra         +3   -2   -2   +2   +3   -1  108%  +45  130%  130%
+Hydra         +3   -2   -2   +2   +3   -2  109%  +45  130%  130%
 Spider        +1   +0   -5   +0   +2   +0  100%  +25  200%  115%
 Angel         +2   +2   +5   +2   +2   +4   99%  +26  325%   90%
 Beholder      -3   +7   +0   +2   +0   +1  100%  +20  200%  140%
 Dragon        +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
 Elemental     +5   -5   -5   -4   +6   +0  120%  +30  170%  120%
 Vortex        +2   -5   -5   +4   +2   +0   95%  +25  125%  120%
-Golem         +4   -4   -4   -3   +4   +2  108%  +50  200%  130%
+Golem         +4   -4   -4   -3   +4   +0  108%  +50  200%  130%
 Jelly         +3   -7   -7   +2   +3   -1   99%  +40  150%  125%
 Quylthulg     -3   -3   -3   -3   -3   +8   95%   +0  150%  120%
 Leprechaun    -6   +1   +1   +7   -2   -3   80%  +15  150%   85%

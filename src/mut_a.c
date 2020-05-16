@@ -360,16 +360,16 @@ void blank_face_mut(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Blank Face");
+        var_set_string(res, "Nervious tic");
         break;
     case SPELL_GAIN_MUT:
-        msg_print("Your face becomes completely featureless!");
+        msg_print("Your face starts twitching - you have a nervous tic!");
         break;
     case SPELL_LOSE_MUT:
-        msg_print("Your facial features return.");
+        msg_print("Your facial features relax.");
         break;
     case SPELL_MUT_DESC:
-        var_set_string(res, "Your face is featureless (-1 CHR).");
+        var_set_string(res, "You have a nervous tic (-1 CHR).");
         break;
     default:
         default_spell(cmd, res);
@@ -2589,6 +2589,7 @@ void silly_voice_mut(int cmd, variant *res)
     case SPELL_GAIN_MUT:
         msg_print("Your voice turns into a ridiculous squeak!");
         break;
+
     case SPELL_LOSE_MUT:
         msg_print("Your voice returns to normal.");
         break;
