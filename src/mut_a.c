@@ -355,21 +355,21 @@ void black_marketeer_mut(int cmd, variant *res)
     }
 }
 
-void blank_face_mut(int cmd, variant *res)
+void blank_face_mut(int cmd, variant* res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Nervious tic");
+        var_set_string(res, "Blank Face");
         break;
     case SPELL_GAIN_MUT:
-        msg_print("Your face starts twitching - you have a nervous tic!");
+        msg_print("Your face becomes completely featureless!");
         break;
     case SPELL_LOSE_MUT:
-        msg_print("Your facial features relax.");
+        msg_print("Your facial features return.");
         break;
     case SPELL_MUT_DESC:
-        var_set_string(res, "You have a nervous tic (-1 CHR).");
+        var_set_string(res, "Your face is featureless (-4 CHR).");
         break;
     default:
         default_spell(cmd, res);
@@ -2594,7 +2594,7 @@ void silly_voice_mut(int cmd, variant *res)
         msg_print("Your voice returns to normal.");
         break;
     case SPELL_MUT_DESC:
-        var_set_string(res, "Your voice is a silly squeak (-4 CHR).");
+        var_set_string(res, "Your voice is a silly squeak (-1 CHR).");
         break;
     default:
         default_spell(cmd, res);

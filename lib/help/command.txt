@@ -34,7 +34,7 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    <color:y>m  Cast a spell / use mental power</color>      M  Full dungeon map
    <color:y>n  Repeat last command</color>                  <color:D>N  (unused)</color>
    <color:y>o  Open a door or chest</color>                 <color:y>O  Display object list</color>
-   p  Command your pets                    <color:D>P  (unused)</color>
+   p  Command your pets                    <color:y>P  Show previous messages</color>
    <color:y>q  Quaff a potion</color>                       <color:y>Q  Display quest info</color>
    <color:y>r  Read a scroll</color>                        <color:y>R  Rest for a period</color>
    <color:y>s  Search for traps/doors</color>               S  Toggle search mode
@@ -60,7 +60,7 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    [  Display monster list                ^M  (special - return)
    ]  Display object list                 <color:D>^N  (unused)</color>
    -  Walk (flip pickup)                  ^O  Display object list
-   _  Edit/activate Mogaminator prefs      P  Show previous messages
+   _  Edit/activate Mogaminator prefs     <color:D>^P    (unused)</color>
    <color:y>+  Alter adjacent grid</color>                 ^Q  Quit (game over)
    =  Set options                         ^R  Redraw the screen
    ;  Walk                                ^S  Save and don't quit
