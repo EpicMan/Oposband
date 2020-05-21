@@ -111,7 +111,7 @@ bool object_is_favorite(object_type *o_ptr)
         obj_flags_known(o_ptr, flgs);
 
         if (!have_flag(flgs, OF_BLESSED) && 
-            !(o_ptr->tval == TV_HAFTED))
+            !(o_ptr->tval == TV_HAFTED) && !(o_ptr->tval == TV_STAVES))
             return FALSE;
         break;
     }
@@ -174,8 +174,12 @@ bool object_is_rare(object_type *o_ptr)
         break;
 
     case TV_HAFTED:
-        if (o_ptr->sval == SV_MACE_OF_DISRUPTION ||
-            o_ptr->sval == SV_WIZSTAFF) return TRUE;
+        if (o_ptr->sval == SV_MACE_OF_DISRUPTION)
+            return TRUE;
+        break;
+
+    case TV_STAVES:
+        if (o_ptr->sval == SV_WIZSTAFF) return TRUE;
         break;
 
     case TV_POLEARM:
@@ -185,8 +189,11 @@ bool object_is_rare(object_type *o_ptr)
 
     case TV_SWORD:
         if (o_ptr->sval == SV_BLADE_OF_CHAOS ||
-            o_ptr->sval == SV_DIAMOND_EDGE ||
-            o_ptr->sval == SV_POISON_NEEDLE ||
+            o_ptr->sval == SV_DIAMOND_EDGE) return TRUE;
+        break;
+
+    case TV_DAGGER:
+        if (o_ptr->sval == SV_POISON_NEEDLE ||
             o_ptr->sval == SV_DRAGON_FANG ||
             o_ptr->sval == SV_FALCON_SWORD) return TRUE;
         break;
@@ -216,7 +223,7 @@ bool object_is_rare(object_type *o_ptr)
         break;
 
     case TV_SOFT_ARMOR:
-        if (o_ptr->sval == SV_KUROSHOUZOKU ||
+        if (o_ptr->sval == SV_BLACK_CLOTHES ||
             o_ptr->sval == SV_SWIMSUIT) return TRUE;
         break;
 
@@ -377,7 +384,7 @@ bool object_is_weapon_armor_ammo(object_type *o_ptr)
  */
 bool object_is_melee_weapon(object_type *o_ptr)
 {
-    if (TV_DIGGING <= o_ptr->tval && o_ptr->tval <= TV_SWORD) return TRUE;
+    if (TV_DIGGING <= o_ptr->tval && o_ptr->tval <= TV_DAGGER) return TRUE;
 
     return FALSE;
 }
@@ -420,7 +427,7 @@ bool object_is_unenchantable(object_type *o_ptr)
 {
     u32b flgs[OF_ARRAY_SIZE];
     if (o_ptr->name2 == EGO_ROBE_TWILIGHT) return TRUE;
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) return TRUE;
+    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE) return TRUE;
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD) return TRUE;
 
     obj_flags(o_ptr, flgs);

@@ -326,7 +326,7 @@ static void rd_quick_start(savefile_ptr file)
 
 static void rd_extra(savefile_ptr file)
 {
-    int i,j;
+    int i;
     char buf[1024];
 
     p_ptr->id = savefile_read_s32b(file);
@@ -367,8 +367,8 @@ static void rd_extra(savefile_ptr file)
     p_ptr->lev = savefile_read_s16b(file);
     p_ptr->quest_seed = savefile_read_u32b(file);
 
-    for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) p_ptr->weapon_exp[i][j] = savefile_read_s16b(file);
-    for (i = 0; i < 10; i++) p_ptr->skill_exp[i] = savefile_read_s16b(file);
+    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency[i] = savefile_read_s16b(file);
+    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency_cap[i] = savefile_read_s16b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num1[i] = savefile_read_s32b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num2[i] = savefile_read_byte(file);
     if (music_singing_any()) p_ptr->action = ACTION_SING;
@@ -1232,7 +1232,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     if (arg_fiddle) note("Loaded extra information");
 
     /* Player life rating */
-    for (i = 0; i < tmp16u; i++)
 	p_ptr->life_rating = savefile_read_s16b(file);
 
     /* Important -- Initialize stuff */
@@ -1281,7 +1280,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     }
 
     spell_stats_on_load(file);
-    skills_on_load(file);
     stats_on_load(file);
 
     /* I'm not dead yet... */

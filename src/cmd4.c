@@ -3524,7 +3524,7 @@ static cptr monster_group_text[] =
     /* "unused", */
     "Yeek",
     "Zombie/Mummy",
-    "Angel",
+    "Archon",
     "Bird",
     "Canine",
     /* "Ancient Dragon/Wyrm", */
@@ -3894,8 +3894,11 @@ static byte object_group_tval[] =
     TV_SKELETON,
     TV_CORPSE, */
     TV_SWORD,
+    TV_DAGGER,
     TV_HAFTED,
+    TV_STAVES,
     TV_POLEARM,
+    TV_AXE,
     TV_DIGGING,
     TV_BOW,
     TV_SHOT,
@@ -3961,14 +3964,16 @@ static int collect_objects(int grp_cur, int object_idx[], byte mode)
         }
         else
         {
-            if (!k_ptr->flavor)
-			{
-				if (!k_ptr->counts.found && !k_ptr->counts.bought) continue;
+			if (!no_id)
+            {
+				if (!k_ptr->flavor)
+				{
+					if (!k_ptr->counts.found && !k_ptr->counts.bought) continue;
+				}
+
+				/* Require objects ever seen */
+				if (!k_ptr->aware) continue;
 			}
-
-			/* Require objects ever seen */
-			if (!k_ptr->aware) continue;
-
             /* Skip items with no distribution (special artifacts) */
             for (j = 0, k = 0; j < 4; j++) k += k_ptr->chance[j];
             if (!k) continue;
@@ -4178,7 +4183,7 @@ static int _collect_arts(int grp_cur, int art_idx[], bool show_all)
         object_type    forge;
 
         if (!a_ptr->name) continue;
-        if (!a_ptr->found)
+        if (!a_ptr->found && !no_id)
         {
             if (!show_all) continue;
             /*if (!a_ptr->generated) continue;*/
@@ -4638,63 +4643,94 @@ static cptr _prof_weapon_heading(int tval)
 {
     switch (tval)
     {
-    case TV_SWORD: return "Swords";
-    case TV_POLEARM: return "Polearms";
-    case TV_HAFTED: return "Hafted";
-    case TV_DIGGING: return "Diggers";
-    case TV_BOW: return "Bows";
+    case 0: return "Current Proficiency";
+    case 1: return "Maximum Proficiency";
+    case 2: return "Progress towards Max";
+    case 3: return "Current vs Mastery";
     }
     return "";
 }
 
-static void _prof_weapon_doc(doc_ptr doc, int tval, int mode)
+static void _prof_weapon_doc(doc_ptr doc, int mode)
 {
-    vec_ptr v = _prof_weapon_alloc(tval);
     int     i;
 
-    doc_insert_text(doc, TERM_RED, _prof_weapon_heading(tval));
+    doc_insert_text(doc, TERM_RED, _prof_weapon_heading(mode));
     doc_newline(doc);
 
-    for (i = 0; i < vec_length(v); i++)
+    for (i = 0; i < MAX_PROFICIENCIES; i++)
     {
-        object_kind *k_ptr = vec_get(v, i);
-        int          exp = skills_weapon_current(k_ptr->tval, k_ptr->sval);
-        int          max = skills_weapon_max(k_ptr->tval, k_ptr->sval);
-        int          max_lvl = weapon_exp_level(max);
-        int          exp_lvl = weapon_exp_level(exp);
-        char         name[MAX_NLEN];
+        int  exp = p_ptr->proficiency[i];
+        int  max = p_ptr->proficiency_cap[i];
+        int  max_lvl = weapon_exp_level(max);
+        int  exp_lvl = weapon_exp_level(exp);
 
-        strip_name(name, k_ptr->idx);
-        doc_printf(doc, "<color:%c>%-19s</color> ", equip_find_obj(k_ptr->tval, k_ptr->sval) ? 'B' : 'w', name);
+        char color = 'w';
+
+        switch (i)
+        {
+        case PROF_DIGGER:
+        case PROF_BLUNT:
+        case PROF_POLEARM:
+        case PROF_SWORD:
+        case PROF_STAVE:
+        case PROF_AXE:
+        case PROF_DAGGER:
+            if (equip_find_obj(TV_DIGGING + i, SV_ANY)) color = 'B';
+            break;
+        case PROF_BOW:
+            if (equip_find_obj(TV_BOW, SV_SHORT_BOW) || equip_find_obj(TV_BOW, SV_LONG_BOW) || equip_find_obj(TV_BOW, SV_NAMAKE_BOW)) color = 'B';
+            break;
+        case PROF_CROSSBOW:
+            if (equip_find_obj(TV_BOW, SV_LIGHT_XBOW) || equip_find_obj(TV_BOW, SV_HEAVY_XBOW)) color = 'B';
+            break;
+        case PROF_SLING:
+            if (equip_find_obj(TV_BOW, SV_SLING)) color = 'B';
+            break;
+        case PROF_MARTIAL_ARTS:
+            if (p_ptr->weapon_info[0].bare_hands) color = 'B';
+            break;
+        case PROF_DUAL_WIELDING:
+            if (p_ptr->weapon_info[0].dual_wield_pct < 1000) color = 'B';
+            break;
+        case PROF_RIDING:
+            if (p_ptr->riding) color = 'B';
+            break;
+        case PROF_INNATE_ATTACKS:
+            if (p_ptr->innate_attack_ct) color = 'B';
+            break;
+        }
+
+        doc_printf(doc, "<color:%c>%-15s</color> ", color, PROFICIENCIES[i]);
+
         switch (mode)
         {
-            case 1:
-                doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
-                break;
-            case 2:
-                {
-                    s32b pct = 0;
-                    int pct_lvl;
-                    if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
-                    pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-                    break;
-                }
-            case 3:
-                {
-                    s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
-                    int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
-                    doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
-                    break;
-                }
-            default:
-                doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
-                break;
+        case 1:
+            doc_printf(doc, " <color:%c>%-4s</color>", _prof_exp_color[max_lvl], _prof_exp_str[max_lvl]);
+            break;
+        case 2:
+        {
+            s32b pct = 0;
+            int pct_lvl;
+            if (max > 0) pct = ((s32b)exp * 100L) / (s32b)max;
+            pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+            break;
+        }
+        case 3:
+        {
+            s32b pct = ((s32b)exp * 100L) / WEAPON_EXP_MASTER;
+            int pct_lvl = weapon_exp_level((WEAPON_EXP_MASTER / 100) * pct);
+            doc_printf(doc, " <color:%c>%3d%%</color>", _prof_exp_color[pct_lvl], pct);
+            break;
+        }
+        default:
+            doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
+            break;
         }
         doc_newline(doc);
     }
     doc_newline(doc);
-    vec_free(v);
 }
 
 static void _prof_skill_aux(doc_ptr doc, int skill, int mode)
@@ -4777,28 +4813,19 @@ static int _do_cmd_knowledge_weapon_exp_aux(int mode, int *huippu)
     for (i = 0; i < 3; i++)
         cols[i] = doc_alloc(26);
 
-    _prof_weapon_doc(cols[0], TV_SWORD, mode);
-    _prof_weapon_doc(cols[1], TV_POLEARM, mode);
-    _prof_weapon_doc(cols[1], TV_BOW, mode);
-    _prof_weapon_doc(cols[2], TV_HAFTED, mode);
-    _prof_weapon_doc(cols[2], TV_DIGGING, mode);
-    _prof_skill_doc(cols[2], mode);
+    /* REWRITE */
+    _prof_weapon_doc(cols[0], 0);
+    _prof_weapon_doc(cols[0], 1);
+    _prof_weapon_doc(cols[1], 2);
+    _prof_weapon_doc(cols[1], 3);
 
     doc_insert_cols(doc, cols, 3, 1);
-    switch (mode)
-    {   
-        case 1:
-        {
-            class_t *class_ptr = get_class();
-            char buf[64];
-            strcpy(buf, class_ptr->name);
-            strcat(buf, " Proficiency Caps");
-            tulos = weapon_exp_display(doc, buf, huippu); break;
-        }
-        case 2: tulos = weapon_exp_display(doc, "Current Proficiency as % of Caps", huippu); break;
-        case 3: tulos = weapon_exp_display(doc, "Current Proficiency as % of Full Mastery", huippu); break;
-        default: tulos = weapon_exp_display(doc, "Current Proficiency", huippu); break;
-    }
+
+    class_t* class_ptr = get_class();
+    char buf[64];
+    strcpy(buf, class_ptr->name);
+    strcat(buf, " Weapon & Skill Proficiencies");
+    tulos = weapon_exp_display(doc, buf, huippu);
 
     doc_free(doc);
     for (i = 0; i < 3; i++)
@@ -6191,7 +6218,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
 
         if (!e_ptr->name) continue;
         /*if (!e_ptr->aware) continue;*/
-        if (!ego_has_lore(e_ptr) && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
+        if (!no_id && !ego_has_lore(e_ptr) && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
         if (!(e_ptr->type & type)) continue;
 
         ego_idx[cnt++] = i;

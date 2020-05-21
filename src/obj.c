@@ -130,7 +130,10 @@ void obj_release(obj_ptr obj, int options)
     {
     case INV_FLOOR:
         if (!quiet)
-            msg_format("You see %s.", name);
+            if (p_ptr->blind)
+                msg_format("You feel %s.", name);
+            else
+                msg_format("You see %s.", name);
         if (obj->number <= 0)
             delete_object_idx(obj->loc.slot);
         break;
@@ -266,6 +269,9 @@ bool obj_can_sense1(obj_ptr obj)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -628,6 +634,9 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_STAVES:
+    case TV_AXE:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:

@@ -1153,7 +1153,7 @@ static parse_tbl_t _summon_type_tbl[] = {
     { SUMMON_SPIDER, "Spiders", TERM_WHITE, "", "SPIDER", 10 },
     { SUMMON_HOUND, "Hounds", TERM_WHITE, "", "HOUND", 15 },
     { SUMMON_HYDRA, "Hydras", TERM_WHITE, "", "HYDRA", 20 },
-    { SUMMON_ANGEL, "Angels", TERM_WHITE, "", "ANGEL", 60 },
+    { SUMMON_ANGEL, "Archons", TERM_WHITE, "", "ANGEL", 60 },
     { SUMMON_DEMON, "Demons", TERM_WHITE, "", "DEMON", 40 },
     { SUMMON_UNDEAD, "Undead", TERM_WHITE, "", "UNDEAD", 40 },
     { SUMMON_DRAGON, "Dragons", TERM_WHITE, "", "DRAGON", 40 },
@@ -1454,6 +1454,9 @@ static _object_type_t _object_types[] =
     { "HAFTED",             TV_HAFTED, EGO_TYPE_WEAPON },
     { "POLEARM",            TV_POLEARM, EGO_TYPE_WEAPON },
     { "SWORD",              TV_SWORD, EGO_TYPE_WEAPON },
+    { "STAVE",              TV_STAVES, EGO_TYPE_WEAPON },
+    { "AXE",                TV_AXE, EGO_TYPE_WEAPON },
+    { "DAGGER",             TV_DAGGER, EGO_TYPE_WEAPON },
     { "BOOTS",              TV_BOOTS, EGO_TYPE_BOOTS },
     { "GLOVES",             TV_GLOVES, EGO_TYPE_GLOVES },
     { "HELM",               TV_HELM, EGO_TYPE_HELMET },
@@ -2188,86 +2191,6 @@ errr init_v_info(int options)
     if (room_letters) int_map_free(room_letters);
     room_letters = int_map_alloc(free);
     return parse_edit_file("v_info.txt", parse_v_info, options);
-}
-
-/*
- * Initialize the "s_info" array, by parsing an ascii "template" file
- */
-errr parse_s_info(char *buf, header *head)
-{
-    int i;
-
-    /* Current entry */
-    static skill_table *s_ptr = NULL;
-
-
-    /* Process 'N' for "New/Number/Name" */
-    if (buf[0] == 'N')
-    {
-        /* Get the index */
-        i = atoi(buf+2);
-
-            /* Verify information */
-        if (i <= error_idx) return (4);
-
-        /* Verify information */
-        if (i >= head->info_num) return (2);
-
-        /* Save the index */
-        error_idx = i;
-
-        /* Point at the "info" */
-        s_ptr = &s_info[i];
-    }
-
-    /* There better be a current s_ptr */
-    else if (!s_ptr) return (3);
-
-    /* Process 'W' for "Weapon exp" */
-    else if (buf[0] == 'W')
-    {
-        int tval, sval, start, max;
-        const s16b exp_conv_table[] =
-        {
-            WEAPON_EXP_UNSKILLED, WEAPON_EXP_BEGINNER, WEAPON_EXP_SKILLED,
-            WEAPON_EXP_EXPERT, WEAPON_EXP_MASTER
-        };
-
-        /* Scan for the values */
-        if (4 != sscanf(buf+2, "%d:%d:%d:%d",
-                &tval, &sval, &start, &max)) return (1);
-
-        if (start < EXP_LEVEL_UNSKILLED || start > EXP_LEVEL_MASTER
-            || max < EXP_LEVEL_UNSKILLED || max > EXP_LEVEL_MASTER) return (8);
-
-        /* Save the values */
-        s_ptr->w_start[tval][sval] = exp_conv_table[start];
-        s_ptr->w_max[tval][sval] = exp_conv_table[max];
-    }
-
-    /* Process 'S' for "Skill exp" */
-    else if (buf[0] == 'S')
-    {
-        int num, start, max;
-
-        /* Scan for the values */
-        if (3 != sscanf(buf+2, "%d:%d:%d",
-                &num, &start, &max)) return (1);
-
-        if (start < WEAPON_EXP_UNSKILLED || start > WEAPON_EXP_MASTER
-            || max < WEAPON_EXP_UNSKILLED || max > WEAPON_EXP_MASTER) return (8);
-
-        /* Save the values */
-        s_ptr->s_start[num] = start;
-        s_ptr->s_max[num] = max;
-    }
-
-
-    /* Oops */
-    else return (6);
-
-    /* Success */
-    return (0);
 }
 
 

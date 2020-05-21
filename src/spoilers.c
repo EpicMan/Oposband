@@ -255,7 +255,7 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_DWARF, RACE_GNOME, RACE_HOBBIT, RACE_NIBELUNG, -1} },
     { "Fairies",
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
-    { "Angels/Demons",
+    { "Archons/Demons",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
     { "Orcs/Trolls/Giants",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_ORC, RACE_HALF_TITAN,
@@ -653,7 +653,7 @@ static _race_group_t _mon_race_groups[_MAX_MON_RACE_GROUPS] = {
     { "Animal",
         {/*RACE_MON_ANT, RACE_MON_BEETLE, RACE_MON_BIRD, RACE_MON_CAT,*/ RACE_MON_CENTIPEDE,
             RACE_MON_HOUND, /*RACE_MON_HORSE, */ RACE_MON_HYDRA, RACE_MON_SPIDER, -1} },
-    { "Angel/Demon",
+    { "Archon/Demon",
         {RACE_MON_ANGEL, RACE_MON_DEMON, -1} },
     { "Beholder",
         {RACE_MON_BEHOLDER, -1} },
@@ -1242,7 +1242,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
-    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, /*CLASS_IMITATOR,*/ CLASS_LAWYER, CLASS_POLITICIAN,
+    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_LAWYER, CLASS_POLITICIAN,
                     CLASS_RAGE_MAGE, CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
 };
 
@@ -1790,8 +1790,9 @@ static void _skills_class_table(FILE* fp)
                 class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
                 class_ptr->base_skills.thb, class_ptr->extra_skills.thb,
                 class_ptr->life, class_ptr->base_hp,
-                s_info[i].s_max[SKILL_RIDING],
-                s_info[i].s_max[SKILL_DUAL_WIELDING]
+                /* TODO: How to display this? Maybe create a table in tables.c with this info, then load it in the class functions. Bleh*/
+                p_ptr->proficiency_cap[PROF_RIDING],
+                p_ptr->proficiency_cap[PROF_DUAL_WIELDING]
             );
         }
     }

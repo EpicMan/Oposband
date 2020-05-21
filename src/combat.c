@@ -279,6 +279,7 @@ void init_blows_calc(object_type *o_ptr, weapon_info_t *info_ptr)
 
     case CLASS_WARRIOR_MAGE:
     case CLASS_RED_MAGE:
+	case CLASS_HEXBLADE:
         info_ptr->blows_calc.max = 525; info_ptr->blows_calc.wgt = 70; info_ptr->blows_calc.mult = 30; break;
 
     case CLASS_CHAOS_WARRIOR:
@@ -737,7 +738,7 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     doc_printf(cols[0], " %-7.7s: %d.%d lbs\n", "Weight", o_ptr->weight/10, o_ptr->weight%10);
 
-    if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE)) /* special case */
+    if (object_is_(o_ptr, TV_DAGGER, SV_POISON_NEEDLE)) /* special case */
     {
         doc_insert(cols[0], " Blows  : 1.00\n");
         doc_insert(cols[0], " Damage : 1\n");
@@ -749,21 +750,23 @@ void display_weapon_info(doc_ptr doc, int hand)
         return;
     }
 
+    int proficiency = tsvals_to_proficiency(o_ptr->tval, o_ptr->sval);
+
     if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH)
     {
         assert(o_ptr->tval == TV_SHIELD);
         doc_printf(cols[0], " %-7.7s: %dd%d (%+d,%+d)\n", "Bash", dd, ds, to_h, to_d);
         doc_printf(cols[0], " %-7.7s: %s (%+d To Hit)\n",
                     "Profic",
-                    skills_shield_describe_current(o_ptr->sval),
-                    skills_shield_calc_bonus(o_ptr->sval));
+            skills_weapon_describe_current(proficiency),
+            skills_weapon_calc_bonus(proficiency));
     }
     else
     {
         doc_printf(cols[0], " %-7.7s: %s (%+d To Hit)\n",
                     "Profic",
-                    skills_weapon_describe_current(o_ptr->tval, o_ptr->sval),
-                    skills_weapon_calc_bonus(o_ptr->tval, o_ptr->sval));
+                    skills_weapon_describe_current(proficiency),
+                    skills_weapon_calc_bonus(proficiency));
     }
     doc_printf(cols[0], " %-7.7s: %d + %d = %d\n", "To Hit", to_h, p_ptr->weapon_info[hand].to_h, to_h + p_ptr->weapon_info[hand].to_h);
     doc_printf(cols[0], " %-7.7s: %d + %d = %d\n", "To Dam", to_d, p_ptr->weapon_info[hand].to_d, to_d + p_ptr->weapon_info[hand].to_d);

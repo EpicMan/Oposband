@@ -1236,11 +1236,11 @@ static void _dispelling_blast(int cmd, variant *res)
 }
 
 static _pact_t _angels_pact = {
-  "Angels",
-  "Angels are heavenly beings who use a variety of techniques to smite those they view as evil. "
-    "Warlocks who make pacts with Angels will also find their saving throws significantly improved, "
-    "and (eventually) their body almost immune to bolt-like effects. Since Angels are strongly aligned "
-    "with the forces of good, making a pact with Angels will reduce damage done to all good monsters "
+  "Archons",
+  "Archons are astral beings who use a variety of techniques to smite those they view as evil. "
+    "Warlocks who make pacts with Archons will also find their saving throws significantly improved, "
+    "and (eventually) their body almost immune to bolt-like effects. Since Archons are strongly aligned "
+    "with the forces of good, making a pact with Archons will reduce damage done to all good monsters "
     "by a substantial amount.",
   "A", /* + RF3_GOOD ... They are even allied with Fallen Angels! */
   _angel_calc_bonuses,
@@ -2059,14 +2059,45 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
+
     if (p_ptr->psubclass == WARLOCK_GIANTS)
     {
-        skills_weapon_init(TV_SWORD, SV_CLAYMORE, WEAPON_EXP_BEGINNER);
-        py_birth_obj_aux(TV_SWORD, SV_CLAYMORE, 1);
+        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+        py_birth_obj_aux(TV_SWORD, SV_TWO_HANDED_SWORD, 1);
+
+        p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+        p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+        p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+
+        p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    }
+    else if (p_ptr->psubclass == WARLOCK_DRAGONS)
+    {
+        py_birth_obj_aux(TV_POLEARM, SV_SPEAR, 1);
+        p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+        p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
     }
     else
+    {
         py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    }
+        
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }
 

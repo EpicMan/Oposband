@@ -1279,6 +1279,7 @@ int gf_affect_p(int who, int type, int dam, int flags)
     }
     if ((p_ptr->action == ACTION_LEARN) && (who > 0) && (flags & GF_AFFECT_SPELL) && (type != GF_ATTACK))
         blue_mage_learn_spell();
+    if ((flags & GF_AFFECT_SPELL) && (type != GF_ATTACK)) imitator_learn_spell();
     return result;
 }
 int gf_distance_hack = 1;
@@ -1427,6 +1428,14 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
     int tx = mon->fx;
 
     int caster_lev = (who > 0) ? r_info[caster_ptr->r_idx].level : spell_power(p_ptr->lev * 2);
+    
+    /* Hack imitator doubleing */
+    if (double_revenge)
+    {
+        caster_lev *= 2;
+        dam *= 2;
+        double_revenge = FALSE;
+    }
 
     byte old_ash = attack_spell_hack;
     bool ash_changed = FALSE; /* Paranoia - try to handle potential loops */

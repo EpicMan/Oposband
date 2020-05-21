@@ -85,9 +85,9 @@ static bool _object_is_allowed(object_type *o_ptr, int flags)
 
     switch (o_ptr->tval)
     {
-    case TV_SWORD: return (flags & _ALLOW_SWORD) ? TRUE : FALSE;
-    case TV_POLEARM: return (flags & _ALLOW_POLEARM) ? TRUE : FALSE;
-    case TV_HAFTED: return (flags & _ALLOW_HAFTED) ? TRUE : FALSE;
+    case TV_DAGGER: case TV_SWORD: return (flags & _ALLOW_SWORD) ? TRUE : FALSE;
+    case TV_AXE: case TV_POLEARM: return (flags & _ALLOW_POLEARM) ? TRUE : FALSE;
+    case TV_STAVES: case TV_HAFTED: return (flags & _ALLOW_HAFTED) ? TRUE : FALSE;
     case TV_DIGGING: return (flags & _ALLOW_DIGGER) ? TRUE : FALSE;
     case TV_BOW: return (flags & _ALLOW_BOW) ? TRUE : FALSE;
     }
@@ -2532,10 +2532,29 @@ static void _character_dump(doc_ptr doc)
 static void _birth(void)
 {
     _clear_essences();
-    py_birth_obj_aux(TV_POLEARM, SV_BROAD_AXE, 1);
+    py_birth_obj_aux(TV_AXE, SV_BEAKED_AXE, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(15, 25));
+
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 /**********************************************************************

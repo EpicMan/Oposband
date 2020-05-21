@@ -1213,6 +1213,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
+        case TV_DAGGER:
+        case TV_STAVES:
+        case TV_AXE:
         case TV_DIGGING:
         {
             show_weapon = TRUE;
@@ -1873,6 +1876,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
     case TV_DIGGING:
 		show_weapon = FALSE;
         if (known)
@@ -1974,14 +1980,17 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if (mode & OD_NAME_AND_DICE) goto object_desc_done;
 
+	/* Don't show pluses for these items */
+	if (o_ptr->tval == TV_BOW && (o_ptr->sval == SV_HARP || o_ptr->sval == SV_CRIMSON || o_ptr->sval == SV_RAILGUN))
+	{
+		show_weapon = FALSE;
+	}
+
     /* Add the weapon bonuses */
     if (known)
     {
-        if (o_ptr->tval == TV_BOW && (o_ptr->sval == SV_HARP || o_ptr->sval == SV_CRIMSON || o_ptr->sval == SV_RAILGUN))
-        {
-        }
         /* Show the tohit/todam on request */
-        else if (show_weapon)
+        if (show_weapon)
         {
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);

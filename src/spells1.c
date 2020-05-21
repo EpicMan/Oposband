@@ -1971,6 +1971,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
             t_x = px - 2 + randint0(5);
         }
 
+        imitator_learn_spell();
         if ((p_ptr->action == ACTION_LEARN) && (!_lukko) && (who > 0))
         {
             blue_mage_learn_spell();

@@ -246,7 +246,7 @@ static void _birth(void)
     object_type forge;
     int i;
 
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+    object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
     py_birth_obj(&forge);
 
     if (p_ptr->psubclass == GRAY_MAGE_GOOD)

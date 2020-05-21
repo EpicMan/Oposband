@@ -37,8 +37,8 @@ Y:view_bright_lite
 Y:view_granite_lite
 Y:view_special_lite
 Y:view_perma_grids
-Y:view_torch_grids
-Y:view_unsafe_grids
+X:view_torch_grids
+X:view_unsafe_grids
 Y:fresh_before
 X:fresh_after
 X:fresh_message

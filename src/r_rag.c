@@ -861,6 +861,14 @@ static void _birth(void)
     py_birth_obj(&forge);
 
     py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
+
+    for (i = 0; i < MAX_PROFICIENCIES; i++)
+    {
+        if (i == PROF_INNATE_ATTACKS)
+            p_ptr->proficiency_cap[i] = WEAPON_EXP_BEGINNER;
+        else
+            p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
+    }
 }
 
 static void _gain_level(int new_level) 

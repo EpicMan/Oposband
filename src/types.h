@@ -1252,9 +1252,17 @@ struct player_type
     u32b rage_spells_learned;      /* bit mask of spells learned */
     byte spell_order[64];      /* order spells learned/remembered/forgotten */
 
-    s16b spell_exp[64];       /* Proficiency of spells */
-    s16b weapon_exp[5][64];   /* Proficiency of weapons */
-    s16b skill_exp[10];       /* Proficiency of misc. skill */
+    /*********************************************/
+    /* Changed how weapon proficiencies are used */
+    /* Now proficiency is for an entire class of weapons, and there are only nine */
+    /* Short blades (daggermaster weapons) and Long blades (Other swords / Swordmaster weapons) */
+    /* Axes (Axemaster polearms) and Polearms (Non-axe polearms) */
+    /* Staves (Quarterstaff and such / Staffmaster) and Blunts (non-stave hafted weapons) */
+    /* Last but not least, bows, crossbows, and slings */
+    /* New Proficiency code */
+    s16b proficiency[MAX_PROFICIENCIES];
+    s16b proficiency_cap[MAX_PROFICIENCIES];
+    /*********************************************/
     s16b spells_per_round;    /* 175 = 1.75 spells per round, etc. Calculated in calc_bonuses(). Only works for book casters (do_cmd_cast) at the moment. */
 
     s32b magic_num1[MAX_MAGIC_NUM];     /* Array for non-spellbook type magic */
@@ -1958,6 +1966,7 @@ typedef void(*stats_fn)(s16b stats[MAX_STATS]);
 typedef void(*load_fn)(savefile_ptr file);
 typedef void(*save_fn)(savefile_ptr file);
 typedef int(*birth_ui_fn)(doc_ptr doc);
+typedef void(*proficiency_fn)(void);
 
 typedef struct {
     int                     id;
@@ -1998,6 +2007,7 @@ typedef struct {
     obj_p                   destroy_object;
     obj_f                   get_object;
     inv_ptr                 bonus_pack;
+    proficiency_fn          set_proficiencies;
 } class_t, *class_ptr;
 
 struct equip_template_s;

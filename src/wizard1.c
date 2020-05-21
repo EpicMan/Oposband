@@ -59,6 +59,9 @@ static grouper group_item[] =
     { TV_POLEARM,       NULL },
     { TV_HAFTED,        NULL },
     { TV_SWORD,         NULL },
+    { TV_AXE,           NULL },
+    { TV_STAVES,        NULL },
+    { TV_DAGGER,        NULL },
 
     { TV_SOFT_ARMOR,    "Armor (Body)" },
 
@@ -190,6 +193,9 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
+        case TV_AXE:
+        case TV_DAGGER:
+        case TV_STAVES:
         case TV_DIGGING:
         {
             sprintf(dam, "%dd%d", q_ptr->dd, q_ptr->ds);
@@ -362,9 +368,12 @@ static void spoil_obj_desc(cptr fname)
  */
 static grouper group_artifact[] =
 {
-    { TV_SWORD,             "Edged-Weapons" },
+    { TV_SWORD,             "Swords" },
     { TV_POLEARM,           "Polearms" },
     { TV_HAFTED,            "Hafted-Weapons" },
+    { TV_DAGGER,            "Stabbing Weapons" },
+    { TV_AXE,               "Axes" },
+    { TV_STAVES,            "Staves" },
     { TV_DIGGING,           "Diggers" },
     { TV_BOW,               "Bows" },
     { TV_ARROW,             "Ammo" },

@@ -2195,70 +2195,46 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
         else
             Term_queue_bigchar(col, row, r_ptr->x_attr, r_ptr->x_char, 0, 0);
 
-        if (pct >= 100) attr = TERM_L_GREEN;
-        else if (pct >= 60) attr = TERM_YELLOW;
-        else if (pct >= 25) attr = TERM_ORANGE;
-        else if (pct >= 10) attr = TERM_L_RED;
+        /*Show HP% by color. Blue means unharmed */
+        if (pct <= 5)       attr = TERM_RED;
+        else if (pct <= 25) attr = TERM_L_RED;
+        else if (pct <= 45) attr = TERM_ORANGE;
+        else if (pct <= 65) attr = TERM_YELLOW;
+        else if (pct <= 85) attr = TERM_L_GREEN;
+        else if (pct <= 99) attr = TERM_GREEN;
+        else attr = TERM_BLUE;
 
-        if (p_ptr->wizard)
+        char buf[20];
+        sprintf(buf, "HP:%5d", m_ptr->hp);
+        Term_putstr(col, row, strlen(buf), attr, buf);
+        col += strlen(buf) + 1;
+        if (MON_STUNNED(m_ptr))
         {
-            char buf[20];
-            sprintf(buf, "%3d%%", pct);
-            col += 2;
-            Term_putstr(col, row, strlen(buf), attr, buf);
+            sprintf(buf, "%d%%", MON_STUNNED(m_ptr));
+            Term_putstr(col, row, strlen(buf), TERM_L_BLUE, buf);
             col += strlen(buf) + 1;
-            if (MON_STUNNED(m_ptr))
-            {
-                sprintf(buf, "%d%%", MON_STUNNED(m_ptr));
-                Term_putstr(col, row, strlen(buf), TERM_L_BLUE, buf);
-                col += strlen(buf) + 1;
-            }
-            if (m_idx == target_who)
-                Term_queue_char(col++, row, TERM_L_RED, '*', 0, 0);
-            if (m_idx == p_ptr->riding)
-                Term_queue_char(col++, row, TERM_L_BLUE, '@', 0, 0);
-            if (MON_INVULNER(m_ptr))
-                Term_queue_char(col++, row, TERM_WHITE, 'I', 0, 0);
-            if (MON_PARALYZED(m_ptr))
-                Term_queue_char(col++, row, TERM_BLUE, 'P', 0, 0);
-            if (MON_CSLEEP(m_ptr))
-                Term_queue_char(col++, row, TERM_BLUE, 'Z', 0, 0); /* ZZZ */
-            if (MON_CONFUSED(m_ptr))
-                Term_queue_char(col++, row, TERM_UMBER, 'C', 0, 0);
-            if (MON_MONFEAR(m_ptr))
-                Term_queue_char(col++, row, TERM_VIOLET, 'F', 0, 0);
         }
-        else
-        {
-			/*TODO Use big number formatting for monster HP?*/
-			char buf[20];
+        if (m_idx == target_who)
+            Term_queue_char(col++, row, TERM_L_RED, '*', 0, 0);
+        if (m_idx == p_ptr->riding)
+            Term_queue_char(col++, row, TERM_L_BLUE, '@', 0, 0);
+        if (MON_INVULNER(m_ptr))
+            Term_queue_char(col++, row, TERM_WHITE, 'I', 0, 0);
+        if (MON_PARALYZED(m_ptr))
+            Term_queue_char(col++, row, TERM_BLUE, 'P', 0, 0);
+        if (MON_CSLEEP(m_ptr))
+            Term_queue_char(col++, row, TERM_BLUE, 'Z', 0, 0); /* ZZZ */
+        if (MON_CONFUSED(m_ptr))
+            Term_queue_char(col++, row, TERM_UMBER, 'C', 0, 0);
+        if (MON_MONFEAR(m_ptr))
+            Term_queue_char(col++, row, TERM_VIOLET, 'F', 0, 0);
 
-			if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
-			else if (MON_PARALYZED(m_ptr)) attr = TERM_BLUE;
-			else if (MON_CSLEEP(m_ptr)) attr = TERM_BLUE;
-			else if (MON_CONFUSED(m_ptr)) attr = TERM_UMBER;
-			else if (MON_STUNNED(m_ptr)) attr = TERM_L_BLUE;
-			else if (MON_MONFEAR(m_ptr)) attr = TERM_VIOLET;
-			else if (m_ptr->ego_whip_ct) attr = TERM_L_UMBER;
+        /* Label pet or target */
+		if (m_idx == p_ptr->riding)
+			Term_putstr(col++, row, 1, TERM_GREEN, ">");
 
-			/* Label pet or target */
-			if (m_idx == target_who)
-				Term_putstr(col++, row, 1, TERM_RED, "*");
-			else if (m_idx == p_ptr->riding)
-				Term_putstr(col++, row, 1, TERM_GREEN, ">");
-
-            Term_putstr(col, row, 11, TERM_WHITE, "     /     ");
-			
-			/* Current / max hp */
-			sprintf(buf, "%5d", m_ptr->hp);
-			Term_putstr(col, row, 5, attr, buf);
-			sprintf(buf, "%d", m_ptr->maxhp);
-			Term_putstr(col + 6, row, 5, attr, buf);
-			/*if (m_ptr->ego_whip_ct)
-                Term_putstr(col + 2, row, len, attr, "wwwwwwwww");
-            else
-                Term_putstr(col + 2, row, len, attr, "*********");*/
-        }
+        if (m_ptr->ego_whip_ct)
+            Term_putstr(col++, row, 1, TERM_ORANGE, "W");
     }
 }
 
@@ -2705,12 +2681,11 @@ static void fix_object(void)
  */
 static void calc_spells(void)
 {
-    int            i, j, k, levels;
+    int            j, k, levels;
     int            num_allowed;
     int                     num_boukyaku = 0;
 
     magic_type        *s_ptr;
-    int which;
     int bonus = 0;
 
 
@@ -3118,6 +3093,7 @@ static int _calc_xtra_hp_aux(int amt)
     case CLASS_ARCHER:
     case CLASS_WEAPONSMITH:
     case CLASS_RAGE_MAGE:
+	case CLASS_HEXBLADE:
         w1 = 2; w2 = 1; w3 = 0;
         break;
 
@@ -4287,8 +4263,8 @@ void calc_bonuses(void)
             if (p_ptr->easy_2weapon)
                 pct += 100;
 
-            if ( lobj->tval == TV_SWORD
-              && (lobj->sval == SV_MAIN_GAUCHE || lobj->sval == SV_WAKIZASHI) )
+            if ((lobj->tval == TV_DAGGER && lobj->sval == SV_DIRK) ||
+                (lobj->tval == TV_SWORD && lobj->sval == SV_WAKIZASHI))
             {
                 pct += 50;
             }
@@ -4300,6 +4276,12 @@ void calc_bonuses(void)
                 p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
 
             if (lobj->tval == TV_POLEARM && lobj->weight > 100)
+                p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
+
+            if (robj->tval == TV_AXE && robj->weight > 100)
+                p_ptr->weapon_info[rhand].dual_wield_pct -= 50;
+
+            if (lobj->tval == TV_AXE && lobj->weight > 100)
                 p_ptr->weapon_info[lhand].dual_wield_pct -= 50;
 
             if (robj->name1 == ART_MUSASI_KATANA && lobj->name1 == ART_MUSASI_WAKIZASI)
@@ -4582,8 +4564,8 @@ void calc_bonuses(void)
 
         if ( i % 2 == 1
           && p_ptr->weapon_info[i-1].wield_how != WIELD_NONE
-          && o_ptr->tval == TV_SWORD
-          && (o_ptr->sval == SV_MAIN_GAUCHE || o_ptr->sval == SV_WAKIZASHI) )
+          && ((o_ptr->tval == TV_SWORD && o_ptr->sval == SV_WAKIZASHI) || 
+            (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_DIRK)))
         {
             p_ptr->to_a += 5;
             p_ptr->dis_to_a += 5;
@@ -4604,7 +4586,7 @@ void calc_bonuses(void)
             race_ptr->calc_weapon_bonuses(o_ptr, info_ptr);
 
         /* Hacks */
-        if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+        if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
             info_ptr->blows_calc.max = 100;
         if (arm > 0)
             info_ptr->blows_calc.max = MAX(100, info_ptr->blows_calc.max - 100);
@@ -4621,7 +4603,7 @@ void calc_bonuses(void)
 
             if (p_ptr->special_defense & KATA_FUUJIN) info_ptr->xtra_blow -= 100;
 
-            if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+            if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
             {
                 info_ptr->base_blow = 100;
                 info_ptr->xtra_blow = 0;
@@ -4703,6 +4685,34 @@ void calc_bonuses(void)
     /* Stats need to be set for proper blows calculation. */
     if (race_ptr->calc_innate_attacks && !p_ptr->innate_attack_lock)
         race_ptr->calc_innate_attacks();
+
+    /* Gain a punch attack if body has weapon/shield slots but no wielded weapons */
+    if (p_ptr->weapon_ct == 0 && equip_can_wield_kind(TV_SWORD, SV_DAGGER) && p_ptr->monk_lvl < 1)
+    {
+        innate_attack_t a = { 0 };
+        a.dd = 1;
+        a.ds = 2;
+        a.weight = 12; /* Dagger weight */
+        a.to_h = -1;
+        a.to_d = 0;
+        a.blows = 100;
+        a.msg = "You punch";
+        a.name = "Fist";
+
+        /* Hack - ghouls have better unarmed attacks */
+        if (p_ptr->prace == RACE_GHOUL)
+        {
+            a.blows = 200;
+            a.to_h = 1;
+            a.to_d = 1;
+            a.ds = 5;
+            a.msg = "You claw";
+            a.name = "Claw";
+            a.effect[1] = GF_STASIS;
+        }
+
+        p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
+    }
 
     /* Adjust Innate Attacks for Proficiency */
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
@@ -4824,7 +4834,7 @@ void calc_bonuses(void)
             else if (p_ptr->prace == RACE_MON_ARMOR) {} /* no bonus */
             else
             {
-                int bonus = skills_weapon_calc_bonus(obj->tval, obj->sval);
+                int bonus = skills_weapon_calc_bonus(tsvals_to_proficiency(obj->tval, obj->sval));
                 p_ptr->weapon_info[i].to_h += bonus;
                 p_ptr->weapon_info[i].dis_to_h += bonus;
                 if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)

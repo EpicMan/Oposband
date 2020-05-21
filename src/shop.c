@@ -636,10 +636,13 @@ static bool _weapon_will_buy(obj_ptr obj)
     case TV_DIGGING:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_HAFTED:
+    case TV_AXE:
     case TV_HISSATSU_BOOK:
     case TV_RAGE_BOOK:
         break;
-    case TV_HAFTED:
+    case TV_STAVES:
         if(obj->sval == SV_WIZSTAFF) return FALSE;
         break;
     default:
@@ -657,6 +660,8 @@ static bool _weapon_stock_p(int k_idx)
     {
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
         return TRUE;
     }
     return FALSE;
@@ -747,6 +752,7 @@ static bool _temple_will_buy(obj_ptr obj)
     case TV_SCROLL:
     case TV_POTION:
     case TV_HAFTED:
+    case TV_STAVES:
         break;
     case TV_FIGURINE:
     case TV_STATUE: {
@@ -761,6 +767,8 @@ static bool _temple_will_buy(obj_ptr obj)
         return FALSE; }
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_AXE:
+    case TV_DAGGER:
         if (obj_is_blessed(obj)) break;
         return FALSE;
     default:
@@ -781,6 +789,7 @@ static bool _temple_stock_p(int k_idx)
         return TRUE;
 
     case TV_HAFTED:
+    case TV_STAVES:
         return TRUE;
 
     /* Scrolls and Potions are also stocked by the Alchemist */
@@ -915,7 +924,7 @@ static bool _magic_will_buy(obj_ptr obj)
     case TV_POTION:
     case TV_FIGURINE:
         break;
-    case TV_HAFTED:
+    case TV_STAVES:
         if(obj->sval == SV_WIZSTAFF) break;
         else return FALSE;
     case TV_LITE:

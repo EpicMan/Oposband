@@ -20,7 +20,7 @@ N:1:5:The Thieves' Hideout (Rampart)
 T:TOWN | GENERATE
 F:q_thieves.txt
 
-# Hardcoded as quest 2 in quest.h
+# Hardcoded as quest 2 in defines.h
 N:2:15:The Sewer (Rampart)
 T:TOWN | GENERATE | SUBSTITUTE_87
 F:q_sewer.txt
@@ -86,7 +86,7 @@ N:19:24:Doom Quest I (Angwil)
 T:TOWN | GENERATE
 F:q_doom1.txt
 
-N:20:25:Vapor Quest (Outpost)
+N:20:25:Vapor Quest (Rampart)
 T:TOWN | GENERATE
 #F:q_vapor.txt
 F:q_vapor2.txt
@@ -262,7 +262,7 @@ G:KILL(magic mushroom, 5)
 F:q_mushrooms.txt
 
 N:64:50:The Renegade Sorcerer (Thalos)
-T:TOWN | GENERATE | DANGER_LEVEL_55
+T:TOWN | GENERATE
 G:KILL(old sorcerer)
 F:q_sorcerer.txt
 
@@ -375,7 +375,7 @@ G:KILL(lesser titan, 10)
 F:q_giantslayer.txt
 
 # Placeholder for all side quests from Karrot or the Troika
-# Hardcoded as quest 82 in quest.h
+# Hardcoded as quest 82 in defines.h
 
 N:82:0:Purple Quest
 T:PURPLE
@@ -448,14 +448,10 @@ W:astral plane
 G:KILL(metatron)
 F:q_meta.txt
 
-N:98:30:The Angwilian Stables (Outpost)
-T:TOWN | GENERATE
-F:q_stable.txt
-
-# vim: filetype=qi :
-
-N:99:127:Tik'srvzllat
+N:98:127:Tik'srvzllat
 T:RETAKE | INVIS
 W:angband
 G:KILL(tik'srvzllat)
 F:q_tik.txt
+
+# vim: filetype=qi :

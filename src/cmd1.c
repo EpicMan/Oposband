@@ -837,7 +837,10 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
-        case TV_DIGGING:
+		case TV_DAGGER:
+        case TV_STAVES:
+        case TV_AXE:
+		case TV_DIGGING:
         case TV_GLOVES:
         {
             int hissatsu_brand = 0;
@@ -3097,9 +3100,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (o_ptr)
     {
         if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH && o_ptr->tval == TV_SHIELD)
-            skills_shield_gain(o_ptr->sval, r_ptr->level);
+            skills_weapon_gain(PROF_INNATE_ATTACKS, r_ptr->level);
         else if (!bird_recoil)
-            skills_weapon_gain(o_ptr->tval, o_ptr->sval, r_ptr->level);
+            skills_weapon_gain(tsvals_to_proficiency(o_ptr->tval, o_ptr->sval), r_ptr->level);
     }
     else
     {
@@ -3149,7 +3152,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (mode == WEAPONMASTER_FLURRY) num_blow *= 2;
     if (mode == WEAPONMASTER_CUNNING_STRIKE) num_blow = (num_blow + 1)/2;
 
-    if (o_ptr && o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+    if (o_ptr && o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE)
     {
         poison_needle = TRUE;
         num_blow = 1;
@@ -3398,6 +3401,16 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         msg_format("%^s starts limping slower.", m_name_subject);
                         m_ptr->mspeed -= 10;
                     }
+                }
+                /* The touch of a ghoul is paralyzing */
+                if (p_ptr->prace == RACE_GHOUL)
+                {
+                    if (!m_ptr->mtimed[MTIMED_PARALYZED] &&
+                        (1 + randint1(p_ptr->lev) > r_ptr->level) &&
+                            (!(r_ptr->flags1 & RF1_UNIQUE) || (1 + randint1(p_ptr->lev) > r_ptr->level))
+                            )
+                        set_monster_paralyzed(m_ptr->id, 1+randint0(2));
+                        cmsg_format(TERM_VIOLET, "(Paralyzed)");
                 }
 
                 if (mode == DRACONIAN_STRIKE_STUN)
@@ -5554,7 +5567,11 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
                 obj_ptr obj = &o_list[this_o_idx];
                 next_o_idx = obj->next_o_idx;
                 object_desc(name, obj, OD_COLOR_CODED);
-                msg_format("You see %s.", name);
+
+                if (p_ptr->blind)
+                    msg_format("You feel %s.", name);
+                else
+                    msg_format("You see %s.", name);
                 disturb(0, 0);
             }
         }

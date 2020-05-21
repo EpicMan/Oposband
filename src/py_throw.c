@@ -233,7 +233,8 @@ bool _init_context(py_throw_ptr context)
     if (player_is_ninja)
     {
         if ( context->obj->tval == TV_SPIKE
-          || (context->obj->tval == TV_SWORD && have_flag(context->flags, OF_THROWING)) )
+          || (context->obj->tval == TV_SWORD && have_flag(context->flags, OF_THROWING))
+          || (context->obj->tval == TV_DAGGER && have_flag(context->flags, OF_THROWING)) )
         {
             context->skill *= 2; /* wow! */
             context->to_d += ((p_ptr->lev+30)*(p_ptr->lev+30)-900)/55; /* +100 at CL50 */

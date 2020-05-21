@@ -960,8 +960,11 @@ bool psychometry(void)
     case TV_BOW:
     case TV_DIGGING:
     case TV_HAFTED:
+    case TV_STAVES:
     case TV_POLEARM:
+    case TV_AXE:
     case TV_SWORD:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -3493,33 +3496,46 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Go up staircase */
-        case '<':
-        {
-            if (py_on_surface())
-            {
-                if (no_wilderness) break;
-
-                if (p_ptr->food < PY_FOOD_WEAK)
-                {
-                    msg_print("You must eat something here.");
-                    break;
-                }
-
-                change_wild_mode();
-            }
-            else
-                do_cmd_go_up();
-            break;
-        }
-
-        /* Go down staircase */
+        /* Go up or down a staircase */
         case '>':
+        case '<':
         {
             if (p_ptr->wild_mode)
                 change_wild_mode();
             else
-                do_cmd_go_down();
+            {
+                /* Player grid */
+                cave_type* c_ptr = &cave[py][px];
+                feature_type* f_ptr = &f_info[c_ptr->feat];
+
+                /* Verify stairs */
+                if (have_flag(f_ptr->flags, FF_LESS))
+                {
+                    do_cmd_go_up();
+                }
+                else if (have_flag(f_ptr->flags, FF_MORE))
+                {
+                    do_cmd_go_down();
+                }
+                else if (py_on_surface())
+                {
+                    if (no_wilderness) break;
+
+                    if (p_ptr->food < PY_FOOD_WEAK)
+                    {
+                        msg_print("You must eat something here.");
+                        break;
+                    }
+
+                    change_wild_mode();
+                }
+                else /* no stair / map change is possible */
+                {
+                    msg_print("I see no staircase here.");
+
+                    return;
+                }
+            }
 
             break;
         }
@@ -3701,10 +3717,9 @@ static void _dispatch_command(int old_now_turn)
                 spell_problem = 0;
                 if (p_ptr->prace == RACE_MON_RING)
                     ring_cast();
-                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || p_ptr->pclass == CLASS_BLUE_MAGE)
+                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || 
+                        p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR)
                     possessor_cast();
-				else if (p_ptr->pclass == CLASS_IMITATOR)
-					/*imitator_cast(FALSE)*/;
                 else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                     magic_eater_cast(0);
                 else if (p_ptr->pclass == CLASS_SKILLMASTER)
@@ -4922,7 +4937,7 @@ static void process_player(void)
             }
 			if (p_ptr->pclass == CLASS_IMITATOR)
 			{
-				/* TODO: Fix this */
+				/* TODO: Fix this - roll off older spells as newer ones are learned */
 				/*if (p_ptr->mane_num > (p_ptr->lev > 44 ? 3 : p_ptr->lev > 29 ? 2 : 1))
 				{
 					p_ptr->mane_num--;
@@ -5609,11 +5624,6 @@ void play_game(bool new_game)
     world_monster = FALSE;
     now_turn = game_turn;
     start_time = time(NULL);
-
-    /* TODO: py_skills_init() or some such ... w_max needs to be reset each time you play, 
-     * not just on player birth */
-    if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
-        weaponmaster_adjust_skills();
 
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);

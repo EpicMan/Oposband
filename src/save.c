@@ -512,7 +512,7 @@ static void wr_quick_start(savefile_ptr file)
 
 static void wr_extra(savefile_ptr file)
 {
-    int i,j;
+    int i;
     byte tmp8u;
 
     savefile_write_s32b(file, p_ptr->id);
@@ -549,8 +549,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->lev);
     savefile_write_u32b(file, p_ptr->quest_seed);
 
-    for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) savefile_write_s16b(file, p_ptr->weapon_exp[i][j]);
-    for (i = 0; i < 10; i++) savefile_write_s16b(file, p_ptr->skill_exp[i]);
+    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency[i]);
+    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency_cap[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_s32b(file, p_ptr->magic_num1[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_byte(file, p_ptr->magic_num2[i]);
 
@@ -1269,7 +1269,6 @@ static bool wr_savefile_new(savefile_ptr file)
         savefile_write_cptr(file, "");
 
     spell_stats_on_save(file);
-    skills_on_save(file);
     stats_on_save(file);
 
     if (!p_ptr->is_dead)

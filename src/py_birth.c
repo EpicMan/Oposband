@@ -1026,15 +1026,15 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_DWARF, RACE_GNOME, RACE_HOBBIT, RACE_NIBELUNG, -1} },
     { "Fairy",
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
-    { "Angel/Demon",
+    { "Archon/Demon",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orc/Troll/Giant",
+    { "Monstrous Humanoid",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_ORC, RACE_HALF_TITAN,
          RACE_HALF_TROLL, RACE_KOBOLD, RACE_OGRE, RACE_SNOTLING, -1} },
     { "Shapeshifter",
         {RACE_BEORNING, RACE_DOPPELGANGER, RACE_WEREWOLF, -1} },
     { "Undead",
-        {RACE_EINHERI, RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
+        {RACE_EINHERI, RACE_GHOUL, RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
     { "Other",
         {RACE_ANDROID, RACE_BEASTMAN, RACE_BOIT, RACE_CENTAUR, RACE_DRACONIAN, RACE_ENT,
          RACE_GOLEM, RACE_ICKY_THING, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, 
@@ -1340,11 +1340,11 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Devices", { CLASS_ALCHEMIST, CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
-                    CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, -1} },
+                    CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, CLASS_HEXBLADE, -1} },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
-    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, /*CLASS_IMITATOR,*/ CLASS_LAWYER, CLASS_POLITICIAN,
+    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_LAWYER, CLASS_POLITICIAN,
                 CLASS_RAGE_MAGE, CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
 };
 
@@ -2067,7 +2067,7 @@ static _race_group_t _mon_race_groups[_MAX_MON_RACE_GROUPS] = {
     { "Animal",
         {/*RACE_MON_ANT, RACE_MON_BEETLE, RACE_MON_BIRD, RACE_MON_CAT,*/ RACE_MON_CENTIPEDE,
             RACE_MON_HOUND, /*RACE_MON_HORSE, */ RACE_MON_HYDRA, RACE_MON_SPIDER, -1} },
-    { "Angel/Demon",
+    { "Archon/Demon",
         {RACE_MON_ANGEL, RACE_MON_DEMON, -1} },
     { "Beholder",
         {RACE_MON_BEHOLDER, -1} },
@@ -2781,7 +2781,8 @@ static void _stats_init(void)
         case CLASS_BARD:
         case CLASS_POLITICIAN:
         case CLASS_WARLOCK:
-        {
+		case CLASS_HEXBLADE:
+		{
             int stats[6] = { 16, 8, 8, 16, 11, 17 };
             _stats_init_aux(stats);
             break;

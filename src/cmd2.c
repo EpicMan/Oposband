@@ -986,7 +986,10 @@ void do_cmd_open(void)
         if (!have_flag(f_info[feat].flags, FF_OPEN) && !o_idx)
         {
             /* Message */
-            msg_print("You see nothing there to open.");
+            if (p_ptr->blind)
+                msg_print("You feel nothing there to open.");
+            else
+                msg_print("You see nothing there to open.");
             if (p_ptr->confused) energy_use = 50;
         }
 
@@ -1146,7 +1149,10 @@ void do_cmd_close(void)
         if (!have_flag(f_info[feat].flags, FF_CLOSE))
         {
             /* Message */
-            msg_print("You see nothing there to close.");
+            if (p_ptr->blind)
+                msg_print("You feel nothing there to close.");
+            else
+                msg_print("You see nothing there to close.");
             if (p_ptr->confused) energy_use = 50; /* prevent free turns until the right direction is picked */
         }
 
@@ -1187,7 +1193,10 @@ static bool do_cmd_tunnel_test(int y, int x)
     if (!(c_ptr->info & CAVE_MARK))
     {
         /* Message */
-        msg_print("You see nothing there.");
+        if (p_ptr->blind)
+            msg_print("You feel nothing there.");
+        else
+            msg_print("You see nothing there.");
 
         /* Nope */
         return (FALSE);
@@ -1197,7 +1206,10 @@ static bool do_cmd_tunnel_test(int y, int x)
     if (!cave_have_flag_grid(c_ptr, FF_TUNNEL))
     {
         /* Message */
-        msg_print("You see nothing there to tunnel.");
+        if (p_ptr->blind)
+            msg_print("You feel nothing there to tunnel.");
+        else
+            msg_print("You see nothing there to tunnel.");
 
         /* Nope */
         return (FALSE);
@@ -1813,7 +1825,10 @@ void do_cmd_disarm(void)
         if (!is_trap(feat) && !o_idx)
         {
             /* Message */
-            msg_print("You see nothing there to disarm.");
+            if (p_ptr->blind)
+                msg_print("You feel nothing there to disarm.");
+            else
+                msg_print("You see nothing there to disarm.");
 
         }
 
@@ -2006,7 +2021,10 @@ void do_cmd_bash(void)
         if (!have_flag(f_info[feat].flags, FF_BASH))
         {
             /* Message */
-            msg_print("You see nothing there to bash.");
+            if (p_ptr->blind)
+                msg_print("You feel nothing there to bash.");
+            else
+                msg_print("You see nothing there to bash.");
 
         }
 
@@ -2180,7 +2198,10 @@ void do_cmd_spike(void)
         if (!have_flag(f_info[feat].flags, FF_SPIKE))
         {
             /* Message */
-            msg_print("You see nothing there to spike.");
+            if (p_ptr->blind)
+                msg_print("You feel nothing there to spike.");
+            else
+                msg_print("You see nothing there to spike.");
 
         }
         /* Is a monster in the way? */
@@ -2476,7 +2497,10 @@ static bool _travel_next_obj(int mode)
 void do_cmd_get(void)
 {
     if (!cave[py][px].o_idx)
-        msg_print("You see no objects here. Try <color:keypress>^G</color> to auto-get nearby objects.");
+        if (p_ptr->blind)
+            msg_print("You feel no objects here.");
+        else
+            msg_print("You see no objects here. Try <color:keypress>^G</color> to auto-get nearby objects.");
     (void)pack_get_floor();
 }
 void do_cmd_autoget(void)
@@ -3406,7 +3430,8 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_HONOUR, -1);
                 }
 
-                skills_bow_gain(bow->sval, r_ptr->level);
+                int proficiency_type = tsvals_to_proficiency(bow->tval, bow->sval);
+                skills_weapon_gain(proficiency_type, r_ptr->level);
                 if (p_ptr->riding)
                     skills_riding_gain_archery(r_ptr);
 
@@ -3493,9 +3518,9 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                         char m_name[80];
                         monster_desc(m_name, m_ptr, 0);
                         if (ambush)
-                            cmsg_format(TERM_VIOLET, "You cruelly shoot %s!", m_name);
+                            cmsg_format(TERM_VIOLET, "You cruelly shoot %s", m_name);
                         else
-                            msg_format("The %s hits %s.", o_name, m_name);
+                            msg_format("The %s hits %s", o_name, m_name);
 
                         if (m_ptr->ml)
                         {

@@ -205,5 +205,8 @@ extern int  blue_mage_spell_order(byte type, s16b effect);
 extern void blue_mage_learn_spell(void);
 extern void blue_mage_learn_spell_aux(byte type, s16b effect, s16b lore, s16b seniority, bool noisy);
 extern void blue_mage_update_parms(vec_ptr spells);
+/* Imitators too */
+extern void imitator_learn_spell(void);
+extern void imitator_learn_spell_aux(byte type, s16b effect, s16b lore, s16b seniority, bool noisy);
 #endif
 

@@ -1870,7 +1870,7 @@ static void _ego_create_weapon_armageddon(object_type *o_ptr, int level)
                 o_ptr->ds = 5; /* Muramasa */
             }
         }
-        if (object_is_(o_ptr, TV_HAFTED, SV_WAR_HAMMER) && one_in_(2))
+        if (object_is_(o_ptr, TV_HAFTED, SV_MACE) && one_in_(2))
             o_ptr->dd = 9; /* Aule */
     }
     else
@@ -1900,7 +1900,7 @@ static void _ego_create_weapon_armageddon(object_type *o_ptr, int level)
         }
     }
 
-    if (o_ptr->tval == TV_SWORD)
+    if (o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER)
     {
         if (one_in_(3))
             add_flag(o_ptr->flags, OF_VORPAL);
@@ -1908,7 +1908,7 @@ static void _ego_create_weapon_armageddon(object_type *o_ptr, int level)
             add_flag(o_ptr->flags, OF_VORPAL2);
     }
 
-    if (o_ptr->tval == TV_HAFTED)
+    if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES)
     {
         if (one_in_(7))
             add_flag(o_ptr->flags, OF_IMPACT);
@@ -2057,7 +2057,7 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
             break;
 
         case EGO_WEAPON_ARCANE:
-            if (o_ptr->tval != TV_HAFTED || o_ptr->sval != SV_WIZSTAFF)
+            if (o_ptr->tval != TV_STAVES || o_ptr->sval != SV_WIZSTAFF)
                 done = FALSE;
             else
             {
@@ -2209,7 +2209,7 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
                 add_flag(o_ptr->flags, OF_RES_FEAR);
             break;
         case EGO_WEAPON_NOLDOR:
-            if ( o_ptr->tval != TV_SWORD
+            if ( (o_ptr->tval != TV_SWORD)
               || o_ptr->sval == SV_BLADE_OF_CHAOS
               || o_ptr->dd * o_ptr->ds < 10 )
             {
@@ -2271,7 +2271,7 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
             }
             break;
         case EGO_WEAPON_TROIKA:
-            if ( o_ptr->tval != TV_SWORD )
+            if ( o_ptr->tval != TV_SWORD && o_ptr->tval != TV_DAGGER)
             {
                 done = FALSE;
             }
@@ -2394,7 +2394,7 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
     {
         if (!crafting && power >= 2 && !one_in_(7)) return;
     }
-    if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE)) return;
+    if (object_is_(o_ptr, TV_DAGGER, SV_POISON_NEEDLE)) return;
     if (obj_is_ammo(o_ptr))
     {
         tohit2 = (tohit2 + 1)/2;
@@ -2494,6 +2494,9 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
         if (_check_rand_art(40, level, power, mode))
             _art_create_random(o_ptr, level, power);
         else
@@ -2830,7 +2833,7 @@ static void _ego_create_body_armor(object_type *o_ptr, int level)
             _ego_create_armor_elvenkind(o_ptr, level);
             break;
         case EGO_BODY_DWARVEN:
-            if (o_ptr->tval != TV_HARD_ARMOR || o_ptr->sval == SV_RUSTY_CHAIN_MAIL)
+            if (o_ptr->tval != TV_HARD_ARMOR)
                 done = FALSE;
             else
             {
@@ -3551,7 +3554,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
                 else
                 {
                     o_ptr->pval = randint1(2);
-                    if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_FALCON_SWORD))
+                    if ((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_FALCON_SWORD))
                         o_ptr->pval += randint1(2);
                     if ((level > 60) && one_in_(3) && ((o_ptr->dd*(o_ptr->ds+1)) < 15)) o_ptr->pval += randint1(2);
                 }
@@ -3564,7 +3567,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
                 else if (o_ptr->pval > 5 && !one_in_(odds)) o_ptr->pval = 5;
                 else if (o_ptr->pval > 6) o_ptr->pval = 6;
 
-                if (object_is_(o_ptr, TV_SWORD, SV_FALCON_SWORD))
+                if (object_is_(o_ptr, TV_DAGGER, SV_FALCON_SWORD))
                     o_ptr->pval += randint1(2);
 
                 if (o_ptr->dd*o_ptr->ds > 30)
@@ -3623,7 +3626,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
             if (one_in_(30)) o_ptr->pval++;
         }
 
-        if ( object_is_(o_ptr, TV_SWORD, SV_FALCON_SWORD)
+        if ( object_is_(o_ptr, TV_DAGGER, SV_FALCON_SWORD)
           && o_ptr->pval > 2
           && o_ptr->name2 != EGO_WEAPON_EXTRA_ATTACKS )
         {

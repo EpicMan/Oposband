@@ -4004,14 +4004,7 @@ static cptr do_death_spell(int spell, int mode)
         {
             if (cast)
             {
-                if (randint1(50) > spell_power(plev))
-                {
-                    if (!ident_spell(NULL)) return NULL;
-                }
-                else
-                {
-                    if (!ident_spell(NULL)) return NULL;
-                }
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -5317,7 +5310,7 @@ static cptr do_arcane_spell(int spell, int mode)
 }
 
 static bool _can_enchant(obj_ptr obj) {
-    if (object_is_(obj, TV_SWORD, SV_POISON_NEEDLE)) return FALSE;
+    if (object_is_(obj, TV_DAGGER, SV_POISON_NEEDLE)) return FALSE;
     return object_is_weapon_armor_ammo(obj);
 }
 bool craft_enchant(int max, int inc)
@@ -6841,7 +6834,7 @@ static cptr do_crusade_spell(int spell, int mode)
         break;
 
     case 18:
-        if (name) return "Angelic Cloak";
+        if (name) return "Astral Cloak";
         if (desc) return "Gives resistance to acid, cold and lightning. Gives aura of holy power which injures evil monsters which attacked you for a while.";
 
         {
@@ -6926,8 +6919,8 @@ static cptr do_crusade_spell(int spell, int mode)
         break;
 
     case 23:
-        if (name) return "Summon Angel";
-        if (desc) return "Summons an angel.";
+        if (name) return "Summon Archon";
+        if (desc) return "Summons an archon.";
 
         {
             if (cast)
@@ -8023,6 +8016,9 @@ static bool item_tester_hook_weapon_except_bow(object_type *o_ptr)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
+        case TV_DAGGER:
+        case TV_AXE:
+        case TV_STAVES:
         case TV_DIGGING:
         {
             return (TRUE);

@@ -1442,7 +1442,7 @@ player_pact pact_info[WARLOCK_MAX] =
         "Dd"
     },
     {
-        "Angel",
+        "Archon",
         "A"
     },
     {
@@ -1778,6 +1778,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+	CH_HEX,                 /* Hexblade */
 	(CH_CHAOS | CH_DAEMON), /* Chaos-Mage*/
 };
 
@@ -1853,6 +1854,7 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+	CH_NONE,                 /* Hexblade */
 	(CH_SORCERY | CH_NATURE |
 	 CH_CHAOS | CH_DEATH | CH_TRUMP |
 	 CH_ARCANE | CH_ENCHANT | CH_DAEMON |
@@ -2595,23 +2597,23 @@ cptr lv_size_options[SMALL_LVL_MAX + 1] =
 
 martial_arts ma_blows[MAX_MA] =
 {
-    { "Punch",         "You punch.",                                 1, 0, 1, 4, 0 },
-    { "Kick",          "You kick.",                                  2, 0, 1, 6, 0 },
-    { "Strike",        "You strike.",                                3, 0, 1, 7, 0 },
-    { "Knee",          "You knee.",                                  5, 5, 2, 3, MA_KNEE },
-    { "Elbow",         "You elbow.",                                 7, 5, 1, 8, 0 },
-    { "Butt",          "You <color:U>butt</color>.",                 9, 10, 2, 5, 0 },
-    { "Kick",          "You <color:U>kick</color>.",                 11, 10, 3, 4, MA_SLOW },
-    { "Uppercut",      "You <color:U>uppercut</color>.",             13, 12, 4, 4, 6 },
-    { "Double Kick",   "You <color:y>double-kick</color>.",          16, 15, 5, 4, 8 },
-    { "Cat's Claw",    "You land a <color:y>Cat's Claw</color>.",     20, 20, 5, 5, 0 },
-    { "Jump Kick",     "You <color:y>jump kick</color>.",            25, 25, 5, 6, 10 },
-    { "Eagle's Claw",  "You land an <color:o>Eagle's Claw</color>.", 29, 25, 6, 6, 0 },
-    { "Circle Kick",   "You <color:o>circle kick</color>.",          33, 30, 6, 8, 10 },
-    { "Iron Fist",     "You land an <color:R>Iron Fist</color>.",    37, 35, 8, 8, 10 },
-    { "Flying Kick",   "You land a <color:R>flying kick</color>.",   41, 35, 8, 10, 12 },
-    { "Dragon Fist",   "You land a <color:r>Dragon Fist</color>.",   45, 35, 10, 10, 16 },
-    { "Crushing Blow", "You land a <color:v>Crushing Blow</color>.", 48, 35, 10, 12, 18 },
+    { "Punch",         "You punch",                                 1, 0, 1, 4, 0 },
+    { "Kick",          "You kick",                                  2, 0, 1, 6, 0 },
+    { "Strike",        "You strike",                                3, 0, 1, 7, 0 },
+    { "Knee",          "You knee",                                  5, 5, 2, 3, MA_KNEE },
+    { "Elbow",         "You elbow",                                 7, 5, 1, 8, 0 },
+    { "Butt",          "You <color:U>butt</color>",                 9, 10, 2, 5, 0 },
+    { "Kick",          "You <color:U>kick</color>",                 11, 10, 3, 4, MA_SLOW },
+    { "Uppercut",      "You <color:U>uppercut</color>",             13, 12, 4, 4, 6 },
+    { "Double Kick",   "You <color:y>double-kick</color>",          16, 15, 5, 4, 8 },
+    { "Cat's Claw",    "You land a <color:y>Cat's Claw</color>",     20, 20, 5, 5, 0 },
+    { "Jump Kick",     "You <color:y>jump kick</color>",            25, 25, 5, 6, 10 },
+    { "Eagle's Claw",  "You land an <color:o>Eagle's Claw</color>", 29, 25, 6, 6, 0 },
+    { "Circle Kick",   "You <color:o>circle kick</color>",          33, 30, 6, 8, 10 },
+    { "Iron Fist",     "You land an <color:R>Iron Fist</color>",    37, 35, 8, 8, 10 },
+    { "Flying Kick",   "You land a <color:R>flying kick</color>",   41, 35, 8, 10, 12 },
+    { "Dragon Fist",   "You land a <color:r>Dragon Fist</color>",   45, 35, 10, 10, 16 },
+    { "Crushing Blow", "You land a <color:v>Crushing Blow</color>", 48, 35, 10, 12, 18 },
 };
 
 /*
@@ -2731,7 +2733,7 @@ cptr ident_info[] =
     ">:A down staircase",
     "?:A scroll",
     "@:You",
-    "A:Angel",
+    "A:Archon",
     "B:Bird",
     "C:Canine",
     "D:Ancient Dragon/Wyrm",
@@ -2922,4 +2924,22 @@ byte feature_action_flags[FF_FLAG_MAX] =
     0, /* ROGUE_TRAP_3 */
     0, /* WEB */
     0, /* SEMI_PUN */
+};
+
+cptr PROFICIENCIES[MAX_PROFICIENCIES] =
+{
+    "Digging Tools",
+    "Hafted Weapons",
+    "Polearms",
+    "Swords",
+    "Staves",
+    "Axes",
+    "Daggers",
+    "Bows",
+    "Crossbows",
+    "Slings",
+    "Martial Arts",
+    "Dual Wielding",
+    "Riding",
+    "Innate Attacks"
 };

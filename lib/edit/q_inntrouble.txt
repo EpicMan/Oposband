@@ -12,7 +12,7 @@ D:Here is a reward for your good work.
 
 # Description for quest failed
 ?:[EQU $QUEST50 Failed]
-D:You have failed me, beware you do not do so again!
+Q:You have failed me, beware you do not do so again!
 ?:1
 
 T:QUEST:NORMAL
@@ -45,10 +45,10 @@ M:#............#.....##.....##b....##..#
 M:#............+.......................#
 M:#............#...........<...........#
 M:######################################
-R:OBJ(hard studded leather)
+R:OBJ(studded leather armor)
 
 ?:[EQU $CLASS Monk Mystic Force-Trainer Ninja Ninja-Lawyer Scout]
-R:OBJ(padded armour)
+R:OBJ(leather armor)
 
 ?:[EQU $CLASS Warrior Blood-Knight Mauler Samurai]
 R:OBJ(set of studded leather gloves)
@@ -57,7 +57,7 @@ R:OBJ(set of studded leather gloves)
 R:OBJ(^ring$):EGO(protection)
 
 ?:[EQU $RACE Death-Sword]
-R:OBJ(broad sword)
+R:OBJ(long sword)
 
 ?:[EQU $RACE Hydra]
 R:OBJ(^cloak$)

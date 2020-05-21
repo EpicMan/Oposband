@@ -302,6 +302,7 @@ void virtue_init(void)
         p_ptr->vir_types[i++] = VIRTUE_VITALITY;
         break;
     case CLASS_MAGIC_EATER:
+	case CLASS_HEXBLADE:
         p_ptr->vir_types[i++] = VIRTUE_ENCHANTMENT;
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         break;
@@ -430,7 +431,7 @@ void virtue_init(void)
     case RACE_ZOMBIE: case RACE_SKELETON:
     case RACE_VAMPIRE: case RACE_SPECTRE:
     case RACE_EINHERI: case RACE_MON_VAMPIRE:
-    case RACE_MON_PUMPKIN:
+    case RACE_MON_PUMPKIN: case RACE_GHOUL:
         p_ptr->vir_types[i++] = VIRTUE_UNLIFE;
         break;
     case RACE_BEASTMAN:

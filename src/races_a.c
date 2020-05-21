@@ -317,8 +317,8 @@ race_t *archon_get_race(void)
     if (!init)
     {
         me.name = "Archon";
-        me.desc = "Archons are a higher class of angels. They are good at all skills, and are strong, "
-                    "wise, and a favorite with any people. They are able to see the unseen, and "
+        me.desc = "Archons are winged humanoids from the Astral Plane. They are good at all skills, and are "
+                    "strong, wise, and a favorite with any people. They are able to see the unseen, and "
                     "their wings allow them to safely fly over traps and other dangerous places. However, "
                     "belonging to a higher plane as they do, the experiences of this world do not leave "
                     "a strong impression on them and they gain levels slowly.";
@@ -1929,6 +1929,85 @@ race_t *ent_get_race(void)
         me.stats[A_DEX] -= amount;
         me.stats[A_CON] += amount;
     }
+    return &me;
+}
+
+/****************************************************************
+ * Ghoul
+ ****************************************************************/
+static power_info _ghoul_powers[] =
+{
+    { A_DEX, {30, 2, 40, detect_life_spell}},
+    { -1, {-1, -1, -1, NULL} }
+};
+static int _ghoul_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _ghoul_powers);
+}
+
+static void _ghoul_calc_bonuses(void)
+{
+    res_add(RES_NETHER);
+    p_ptr->hold_life++;
+    p_ptr->see_inv++;
+    res_add(RES_POIS);
+    p_ptr->slow_digest = TRUE;
+    if (p_ptr->lev >= 10) res_add(RES_COLD);
+}
+static void _ghoul_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_RES_NETHER);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SLOW_DIGEST);
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, OF_RES_COLD);
+}
+race_t* ghoul_get_race(void)
+{
+    static race_t me = { 0 };
+    static bool init = FALSE;
+
+    if (!init)
+    {
+        me.name = "Ghoul";
+        me.desc = "This race of undead preys upon the dead and dying. Ghouls can learn"
+        "to sense living creatures around them and, having killed them, can"
+        "feast upon their corpses gaining nourishment. As an undead being,"
+        "Ghouls naturally resist the effects of cold, poison and life-draining"
+        "attacks.  As they grow stronger the effects of darkness and nether"
+        "upon them decreases.  In addition, the Ghoul's touch may paralyze"
+        "some oponents. Ghoul's make adequate fighters and poor spell casters.";
+
+        me.stats[A_STR] =  0;
+        me.stats[A_INT] = -1;
+        me.stats[A_WIS] = -1;
+        me.stats[A_DEX] = -1;
+        me.stats[A_CON] =  1;
+        me.stats[A_CHR] = -5;
+
+        me.skills.dis = -3;
+        me.skills.dev = -3;
+        me.skills.sav =  6;
+        me.skills.stl =  1;
+        me.skills.srh =  0;
+        me.skills.fos = 10;
+        me.skills.thn =  5;
+        me.skills.thb =  0;
+
+        me.life = 95;
+        me.base_hp = 18;
+        me.exp = 125;
+        me.infra = 2;
+        me.shop_adjust = 125;
+
+        me.calc_bonuses = _ghoul_calc_bonuses;
+        me.get_powers = _ghoul_get_powers;
+        me.get_flags = _ghoul_get_flags;
+        init = TRUE;
+    }
+
     return &me;
 }
 

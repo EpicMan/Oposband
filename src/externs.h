@@ -106,6 +106,7 @@ extern cptr exp_level_str[5];
 extern cptr silly_attacks[MAX_SILLY_ATTACK];
 extern cptr ident_info[];
 extern byte feature_action_flags[FF_FLAG_MAX];
+extern cptr PROFICIENCIES[MAX_PROFICIENCIES];
 
 /* variable.c */
 extern int game_mode;
@@ -2353,7 +2354,8 @@ extern race_t *draconian_get_race(int psubrace);
 extern race_t *dunadan_get_race(void);
 extern race_t *dwarf_get_race(void);
 extern race_t *einheri_get_race(void);
-extern race_t *ent_get_race(void);
+extern race_t* ent_get_race(void);
+extern race_t *ghoul_get_race(void);
 extern race_t *gnome_get_race(void);
 extern race_t *golem_get_race(void);
 extern race_t *half_giant_get_race(void);
@@ -2453,7 +2455,7 @@ extern void    possessor_on_take_hit(void);
 extern void    possessor_on_birth(void);
 extern bool    possessor_can_attack(void);
 extern void    possessor_attack(point_t where, bool *fear, bool *mdeath, int mode);
-extern void    possessor_cast(void);
+extern void    possessor_cast();
 extern
 caster_info   *possessor_caster_info(void);
 extern void    possessor_calc_bonuses(void);
@@ -2586,6 +2588,9 @@ extern int duelist_skill_sav(int m_idx);
 extern void strafing_spell(int cmd, variant *res);
 extern bool nemesis_hack;    /* Actually, it's in melee1.c */
 extern cptr duelist_equip_error(void);
+
+/* hexblade.c */
+extern class_t *hexblade_get_class(void);
 
 /* magic_eater.c */
 extern class_t *magic_eater_get_class(void);
@@ -2828,6 +2833,7 @@ extern void skills_desc_race(race_t *race_ptr, skills_desc_t *skills);
 extern void skills_desc_pers(personality_t *pers_ptr, skills_desc_t *skills);
 extern void skills_desc_realm(dragon_realm_ptr realm_ptr, skills_desc_t *skills);
 extern void skills_desc_aux(skills_t *base, skills_t *xtra, skills_desc_t *skills);
+extern void monster_proficiencies(void);
 
 extern int skills_bow_current(int sval);
 extern int skills_bow_max(int sval);
@@ -2835,18 +2841,13 @@ extern void skills_bow_gain(int sval, int rlvl);
 extern int skills_bow_calc_bonus(int sval);
 extern cptr skills_bow_describe_current(int sval);
 
-extern int skills_weapon_current(int tval, int sval);
-extern int skills_weapon_max(int tval, int sval);
-extern void skills_weapon_gain(int tval, int sval, int rlvl);
-extern void skills_weapon_init(int tval, int sval, int skill);
+extern int skills_weapon_current(int prof);
+extern int skills_weapon_max(int prof);
+extern void skills_weapon_gain(int proficiency, int rlvl);
 extern bool skills_weapon_is_icky(int tval, int sval);
-extern int skills_weapon_calc_bonus(int tval, int sval);
-extern cptr skills_weapon_describe_current(int tval, int sval);
+extern int skills_weapon_calc_bonus(int prof);
+extern cptr skills_weapon_describe_current(int prof);
 
-extern void skills_shield_init(int sval, int current, int max);
-extern int skills_shield_current(int sval);
-extern int skills_shield_max(int sval);
-extern void skills_shield_gain(int sval, int rlvl);
 extern int skills_shield_calc_bonus(int sval);
 extern cptr skills_shield_describe_current(int sval);
 
@@ -2873,9 +2874,8 @@ extern cptr skills_innate_calc_name(innate_attack_ptr attack); /* Note: Uses a s
 extern cptr skills_innate_describe_current(cptr name);
 
 extern void skills_on_birth(void);
-extern void skills_on_load(savefile_ptr file);
-extern void skills_on_save(savefile_ptr file);
 
+extern int tsvals_to_proficiency(int tval, int sval);
 
 /* time_lord.c */
 extern class_t *time_lord_get_class(void);
@@ -2888,7 +2888,6 @@ extern void mon_change_race(mon_ptr mon, int new_r_idx, cptr verb);
 extern class_t *weaponmaster_get_class(int subclass);
 extern int weaponmaster_get_toggle(void);
 extern void weaponmaster_set_toggle(int toggle);
-extern void weaponmaster_adjust_skills(void);
 extern bool weaponmaster_is_favorite(object_type *o_ptr);
 extern int weaponmaster_wield_hack(object_type *o_ptr);
 extern void weaponmaster_do_wild_blade(void);
@@ -2923,3 +2922,6 @@ extern void chaos_choose_effect(int);
 extern bool worships_chaos();
 extern cptr chaos_patron_name(int);
 extern void chaos_patron_reward(int category);
+
+/* imitator.c */
+extern bool double_revenge;
