@@ -380,7 +380,6 @@ bool jelly_eat_object(object_type *o_ptr)
 {
     char o_name[MAX_NLEN];
     object_desc(o_name, o_ptr, OD_COLOR_CODED);
-    set_food(MIN(PY_FOOD_FULL - 1, p_ptr->food + o_ptr->weight * 50 * o_ptr->number));
     msg_format("You assimilate %s into your gelatinous frame.", o_name);
     /* TODO: Consider giving timed benefits based on what is absorbed.
        For example, TR_RES_FIRE might give temp fire resistance and 

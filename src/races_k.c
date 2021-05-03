@@ -164,7 +164,7 @@ race_t *kutar_get_race(void)
         me.name = "Kutar";
         me.desc = "A Kutar is not a dog, cat or bear. Despite their characteristic "
                     "vacant expression, Kutars are beautiful and so have a high charisma. "
-                    "Their absent-mindedness hurts their searching and perception skills, "
+                    "Their absent-mindedness hurts their searching and navigation skills, "
                     "but renders them resistant to being confused. Due to their unearthly "
                     "calmness and serenity, Kutars are extremely stealthy. They learn the "
                     "special ability to expand their body horizontally; this increases "
@@ -569,7 +569,6 @@ static void _devour_flesh_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!get_check("It might hurt a bit. Are you sure?")) return;
         msg_print("You devour your own flesh!");
-        set_food(PY_FOOD_MAX - 1);
         set_cut(p_ptr->cut + CUT_SEVERE, FALSE);
         take_hit(DAMAGE_USELIFE, p_ptr->mhp / 3, "devouring your own flesh");
         var_set_bool(res, TRUE);
@@ -598,7 +597,7 @@ static void _snotling_get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _snotling_birth(void)
 {
     py_birth_obj_aux(TV_FOOD, SV_FOOD_FAST_RECOVERY, randint1(3));
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 race_t *snotling_get_race(void)
@@ -858,7 +857,7 @@ static void _tomte_get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _tomte_birth(void)
 {
     py_birth_obj_aux(TV_HELM, SV_KNIT_CAP, 1);
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 race_t *tomte_get_race(void)
@@ -917,7 +916,7 @@ static void _tonberry_birth(void)
     p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
     p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
 
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 static void _tonberry_calc_bonuses(void)

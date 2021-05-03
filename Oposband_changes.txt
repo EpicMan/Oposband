@@ -74,6 +74,12 @@ J: New Races & Classes
 K: Speed changes
 -Split speed into movement speed, blows (melee attack speed), shots (ranged attack speed), casting speed (yellow mages ability, rare otherwise). Monsters will be rebalanced, fast caster monsters will probably be normal move speed but have a casting bonus.
 
+0.3.7.0
+-Replaced Warrens with Yeek Cave for purely nostalgia's sake
+-Removed hunger mechanic
+-Upstairs take you all the way to the surface. But upstairs only have a 1/3 chance to generate.
+-You only have a (1d00<Navigation(old perception skill)) chance to appear on an upstairs when you descend.
+
 0.3.X
 Rejiggered the weapon types, adding a couple of new axes and removing a number of weapons that were outclassed by other weapons of the same type that were better and shallower / less rare.
 Removed / replaced *Identify* spells: 

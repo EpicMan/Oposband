@@ -525,14 +525,6 @@ bool make_attack_normal(int m_idx)
                         break;
                     }
 
-                    if ( !drained
-                      && (((!(get_race()->flags & RACE_IS_NONLIVING))
-                      && (!prace_is_(RACE_MON_JELLY)) ) || (prace_is_(RACE_EINHERI))))
-                    {
-                        msg_print("Food drains from your belly!");
-                        set_food(MAX(0, MIN(p_ptr->food - 1000, p_ptr->food*2/3)));
-                    }
-
                     break; }
 
                 case RBE_EAT_GOLD:

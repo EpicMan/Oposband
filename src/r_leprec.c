@@ -38,7 +38,7 @@ static void _birth(void)
 
     p_ptr->au = 50000;
 
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 

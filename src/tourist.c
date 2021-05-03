@@ -104,12 +104,6 @@ static void _save_player(savefile_ptr file)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_WAYBREAD, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_JERKY, rand_range(1, 3));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_ALE, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_WINE, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, rand_range(2, 4));
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, rand_range(2, 5));
     py_birth_obj_aux(TV_BOW, SV_SLING, 1);
     py_birth_obj_aux(TV_SHOT, SV_PEBBLE, rand_range(20, 40));

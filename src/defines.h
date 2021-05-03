@@ -20,7 +20,7 @@
 #define VER_MINOR 3
 #define VER_PATCH 6
 #define VER_EXTRA 0
-#define VERSION_IS_DEVELOPMENT (FALSE)
+#define VERSION_IS_DEVELOPMENT (TRUE)
 
 #define GAME_MODE_XXX  0	/* No more beginner mode */
 #define GAME_MODE_NORMAL    1
@@ -1583,6 +1583,7 @@ enum {
 #define TV_JUNK          3      /* Sticks, Pottery, etc ('~') */
 #define TV_WHISTLE       4
 #define TV_SPIKE         5
+#define TV_MUSHROOM      6
 #define TV_CHEST         7
 #define TV_FIGURINE      8
 #define TV_STATUE        9

@@ -1095,7 +1095,7 @@ static cptr do_life_spell(int spell, int mode)
         if (name) return "Satisfy Hunger";
         if (desc) return "Satisfies hunger.";
         if (cast)
-            set_food(PY_FOOD_MAX - 1);
+            return "You feel full!";
         break;
     case 8:
         if (name) return "Remove Curse";
@@ -1125,7 +1125,6 @@ static cptr do_life_spell(int spell, int mode)
                 return NULL;
             }
             msg_print("You begin to fast.");
-            set_food(p_ptr->food/2);
             p_ptr->redraw |= PR_STATUS;
             p_ptr->fasting = TRUE;
         }
@@ -2140,18 +2139,19 @@ static cptr do_nature_spell(int spell, int mode)
         break;
 
     case 3:
-        if (name) return "Produce Food";
-        if (desc) return "Produces a Ration of Food.";
+        if (name) return "Grow Mushrooms";
+        if (desc) return "Produces a mushroom.";
 
         {
             if (cast)
             {
                 object_type forge, *q_ptr = &forge;
 
-                msg_print("A food ration is produced.");
+                msg_print("A mushroom suddenly sprouts from the ground.");
 
                 /* Create the food ration */
-                object_prep(q_ptr, lookup_kind(TV_FOOD, SV_FOOD_RATION));
+                int which_one = randint0(1 + SV_FOOD_MAX_MUSHROOM);
+                object_prep(q_ptr, lookup_kind(TV_FOOD, which_one));
                 object_origins(q_ptr, ORIGIN_ACQUIRE);
 
                 /* Drop the object from heaven */
@@ -3741,23 +3741,6 @@ static cptr do_death_spell(int spell, int mode)
                     virtue_add(VIRTUE_VITALITY, -1);
 
                     hp_player(dam);
-
-                    /*
-                     * Gain nutritional sustenance:
-                     * 150/hp drained
-                     *
-                     * A Food ration gives 5000
-                     * food points (by contrast)
-                     * Don't ever get more than
-                     * "Full" this way But if we
-                     * ARE Gorged, it won't cure
-                     * us
-                     */
-                    dam = p_ptr->food + MIN(5000, 100 * dam);
-
-                    /* Not gorged already */
-                    if (p_ptr->food < PY_FOOD_MAX)
-                        set_food(dam >= PY_FOOD_MAX ? PY_FOOD_MAX - 1 : dam);
                 }
             }
         }
@@ -5158,7 +5141,7 @@ static cptr do_arcane_spell(int spell, int mode)
         {
             if (cast)
             {
-                set_food(PY_FOOD_MAX - 1);
+                return "You feel full!";
             }
         }
         break;
@@ -5429,7 +5412,7 @@ static cptr do_craft_spell(int spell, int mode)
         {
             if (cast)
             {
-                set_food(PY_FOOD_MAX - 1);
+                return "You feel full!";
             }
         }
         break;

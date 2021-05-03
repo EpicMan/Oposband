@@ -34,7 +34,7 @@ static void _birth(void)
     forge.to_a = 5;
     py_birth_obj(&forge);
 
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 

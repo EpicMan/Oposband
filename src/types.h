@@ -1243,8 +1243,6 @@ struct player_type
 
     s16b energy_need;      /* Energy needed for next move */
 
-    s16b food;          /* Current nutrition */
-
     u32b special_attack;      /* Special attack capacity -LM- */
     u32b special_defense;      /* Special block capacity -LM- */
     byte action;          /* Current action */
@@ -1331,8 +1329,6 @@ struct player_type
 
     s16b new_spells;    /* Number of spells available */
     s16b old_spells;
-
-    s16b old_food_aux;    /* Old value of food */
 
     bool old_cumber_armor;
     bool old_cumber_glove;
@@ -2026,8 +2022,8 @@ typedef struct {
     s16b                    base_hp;
     s16b                    exp;
     s16b                    infra;
-    birth_fn                birth; /* Note: If specified, give starting food and light as well
-                                      See: py_birth_food() and py_birth_light() for defaults */
+    birth_fn                birth; /* Note: If specified, give starting scrolls and light as well
+                                      See: py_birth_scrolls() and py_birth_light() for defaults */
     calc_bonuses_fn         calc_bonuses;    /* Do flag related bonuses here ... */
     stats_fn                calc_stats;      /* ... and stat related stuff here */
     calc_weapon_bonuses_fn  calc_weapon_bonuses;

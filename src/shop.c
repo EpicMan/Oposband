@@ -568,8 +568,6 @@ static bool _general_create(obj_ptr obj, u32b mode)
     if (one_in_(50))
         k_idx = lookup_kind(TV_CAPTURE, 0);
     else if (one_in_(3))
-        k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
-    else if (one_in_(3))
         k_idx = lookup_kind(TV_POTION, SV_POTION_WATER);
     else if (one_in_(3))
         k_idx = lookup_kind(TV_FLASK, SV_FLASK_OIL);

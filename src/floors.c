@@ -949,12 +949,6 @@ void leave_floor(void)
     /* Extract current floor info or NULL */
     sf_ptr = get_sf_ptr(p_ptr->floor_id);
 
-    /* Choose random stairs */
-    if ((change_floor_mode & CFM_RAND_CONNECT) && p_ptr->floor_id)
-    {
-        locate_connected_stairs(sf_ptr);
-    }
-
     /* Extract new dungeon level */
     if (change_floor_mode & CFM_SAVE_FLOORS)
     {
@@ -1012,11 +1006,7 @@ void leave_floor(void)
         }
         else if (change_floor_mode & CFM_UP)
         {
-            if ( dun_level + move_num < d_info[dungeon_type].mindepth
-              || (d_info[dungeon_type].flags1 & DF1_RANDOM) )
-            {
-                move_num = -dun_level;
-            }
+            move_num = -dun_level;
         }
 
         dun_level += move_num;

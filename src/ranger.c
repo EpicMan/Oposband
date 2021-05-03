@@ -86,7 +86,7 @@ class_t *ranger_get_class(void)
                     "to the natural world. Rangers have few weak points; like mages they "
                     "are excellent with magic devices, yet they are also fairly good "
                     "at using bows and melee weapons. Their stealth, searching and "
-                    "perception have been sharpened by their time in the wilderness, "
+                    "navigation have been sharpened by their time in the wilderness, "
                     "and their alliance with the spirits of nature even gives them a "
                     "good saving throw.\n \n"
                     "All rangers are trained in Nature magic, and all Nature spells are "

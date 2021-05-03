@@ -262,7 +262,7 @@ class_t *archer_get_class(void)
                     "class around with any bow, crossbow, or sling. They need a lot of "
                     "ammunition, but will learn how to make it from junk found in the "
                     "dungeon. An archer is better than a warrior at stealth, "
-                    "perception, searching and magical devices.\n \n"
+                    "navigation, searching and magical devices.\n \n"
                     "Archers have a class power - 'Create Ammo' - which creates pebbles "
                     "or shots from rubble, and arrows and crossbow bolts from bones.";
 

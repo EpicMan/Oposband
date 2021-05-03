@@ -436,7 +436,6 @@ static void rd_extra(savefile_ptr file)
     p_ptr->blind = savefile_read_s16b(file);
     p_ptr->paralyzed = savefile_read_s16b(file);
     p_ptr->confused = savefile_read_s16b(file);
-    p_ptr->food = savefile_read_s16b(file);
     p_ptr->energy_need = savefile_read_s16b(file);
     p_ptr->fast = savefile_read_s16b(file);
     p_ptr->slow = savefile_read_s16b(file);

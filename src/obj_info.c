@@ -248,10 +248,10 @@ bool display_origin(object_type *o_ptr, doc_ptr doc)
         }
         case ORIGIN_ACQUIRE:
         {
-            if ((o_ptr->tval == TV_FOOD) && (o_ptr->sval == SV_FOOD_RATION)) /* Produce Food/Create Food */
+            if ((o_ptr->tval == TV_FOOD) && (o_ptr->sval <= SV_FOOD_MAX_MUSHROOM)) /* Produce Food/Create Food */
             {
-                if (p_ptr->prace == RACE_HOBBIT) doc_printf(doc, "Conjured forth by an expert cook %s.", paikka_text);
-                else doc_printf(doc, "Manna from heaven.");
+                if (p_ptr->prace == RACE_HOBBIT) doc_printf(doc, "Found forth by an expert forager %s.", paikka_text);
+                else doc_printf(doc, "Grown by magic.");
             }
             else
                 doc_printf(doc, "Conjured forth by magic %s.", paikka_text);

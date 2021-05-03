@@ -230,10 +230,6 @@ static void player_wipe(void)
         r_ptr->r_flagsr &= ~(RFR_PACT_MONSTER);
     }
 
-
-    /* Hack -- Well fed player */
-    p_ptr->food = PY_FOOD_FULL - 1;
-
     for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
     p_ptr->learned_spells = 0;
     p_ptr->add_spells = 0;

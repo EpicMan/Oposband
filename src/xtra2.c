@@ -726,15 +726,6 @@ static bool _kind_is_basic(int k_idx)
     object_kind *k_ptr = &k_info[k_idx];
     switch (k_ptr->tval)
     {
-    case TV_FOOD:
-        switch (k_ptr->sval)
-        {
-        case SV_FOOD_RATION:
-        case SV_FOOD_WAYBREAD:
-            return TRUE;
-        }
-        break;
-
     case TV_SCROLL:
         switch (k_ptr->sval)
         {

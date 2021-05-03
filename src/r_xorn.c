@@ -20,7 +20,7 @@ static void _birth(void)
 
     equip_on_change_race();
 
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 

@@ -6,7 +6,7 @@ static void _birth(void)
     equip_on_change_race();
     skills_innate_init("Gaze", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
-    py_birth_food();
+    py_birth_scrolls();
     py_birth_light();
 }
 
@@ -380,7 +380,7 @@ race_t *mon_beholder_get_race(void)
                     "Beholders gain powers as they evolve, including some strong offensive spells; "
                     "but their primary offense will always be their powerful gaze. Intelligence is their "
                     "spell stat, and beholders are quite intelligent indeed. Their searching and "
-                    "perception are legendary, and they are quite capable with magical devices. "
+                    "navigation are legendary, and they are quite capable with magical devices. "
                     "However, they are not very strong and must be careful when surrounded by "
                     "foes.\n \n"
                     "The attack of the beholder is unique. Since their gaze is not a normal physical "

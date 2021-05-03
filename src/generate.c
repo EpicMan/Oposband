@@ -339,6 +339,7 @@ static void alloc_object(int set, int typ, int num)
     {
         object_type forge;
         int         k_idx;
+        int     which_one;
 
         if (!_get_loc(set, &x, &y))
         {
@@ -382,10 +383,8 @@ static void alloc_object(int set, int typ, int num)
             break;
 
         case ALLOC_TYP_FOOD:
-            if (prace_is_(RACE_ENT))
-                k_idx = lookup_kind(TV_POTION, SV_POTION_WATER);
-            else
-                k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
+            which_one = randint0(1 + SV_FOOD_MAX_MUSHROOM);
+            k_idx = lookup_kind(TV_FOOD, which_one);
             object_prep(&forge, k_idx);
             obj_make_pile(&forge);
             object_origins(&forge, ORIGIN_FLOOR);

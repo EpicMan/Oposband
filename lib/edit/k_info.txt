@@ -2746,7 +2746,7 @@ P:0:1d1:0:0
 F:TOWN
 M:100:1d5
 
-N:*:Cure Light Wounds:Gold
+N:*:Fine Ale:Gold
 G:!:y
 I:75:34:50
 W:0:0:20:4:20
@@ -2755,7 +2755,7 @@ P:0:1d1:0:0
 F:TOWN
 M:100:2d4
 
-N:*:Cure Serious Wounds:Gold Speckled
+N:*:Cure Light Wounds:Gold Speckled
 G:!:y
 I:75:35:100
 W:10:0:30:4:50
@@ -2764,7 +2764,7 @@ P:0:1d1:0:0
 F:TOWN
 M:100:2d4
 
-N:*:Cure Critical Wounds:Gray
+N:*:Cure Serious Wounds:Gray
 G:!:s
 I:75:36:100
 W:20:0:60:4:150
@@ -2773,7 +2773,7 @@ P:0:1d1:0:0
 F:TOWN
 M:100:2d4
 
-N:*:Healing:Gray Speckled
+N:*:Cure Critical Wounds:Gray Speckled
 G:!:s
 I:75:37:200
 W:31:0:0:4:500
@@ -2782,7 +2782,7 @@ P:0:1d1:0:0
 F:NO_SHUFFLE
 M:70:1d5
 
-N:*:*Healing*:Oily Yellow
+N:*:Healing:Oily Yellow
 G:!:y
 I:75:38:0
 W:80:0:0:4:1500
