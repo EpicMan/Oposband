@@ -437,7 +437,7 @@ typedef struct {
     s16b sav;            /* saving throw */
     s16b stl;            /* stealth */
     s16b srh;            /* search ability */
-    s16b fos;            /* search frequency */ /* navigation skill? */
+    s16b fos;            /* search frequency */
     s16b thn;            /* combat (normal) */
     s16b thb;            /* combat (shooting) */
 } skills_t, *skills_ptr;

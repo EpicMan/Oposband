@@ -89,7 +89,7 @@ class_t *paladin_get_class(void)
         me.name = "Paladin";
         me.desc = "A Paladin is a combination of a warrior and a priest. Paladins excel "
                     "as melee fighters, but are only middling in ranged combat; their "
-                    "stealth, navigation, and device skill are likewise mediocre, "
+                    "stealth, perception, and device skill are likewise mediocre, "
                     "though their divine alliance gives them a decent saving throw. Wisdom "
                     "determines a Paladin's success at praying to his deity.\n \n"
                     "Paladins can select a realm from Life, Crusade, Daemon and Death. "

@@ -153,7 +153,7 @@ static cptr _race_srh_skill_desc(race_t *race_ptr) { return _srh_skill_desc2(rac
 static cptr _pers_srh_skill_desc(personality_ptr pers_ptr) { return _srh_skill_desc2(pers_ptr->skills.srh * 17 / 10); }
 static cptr _realm_srh_skill_desc(dragon_realm_ptr realm_ptr) { return _srh_skill_desc2(realm_ptr->skills.srh); }
 
-/* Navigation */
+/* Perception */
 static cptr _fos_skill_desc(int base, int xtra) { return _skill_desc(base + 4*xtra, 6); }
 static cptr _class_fos_skill_desc(class_t *class_ptr) { return _fos_skill_desc(class_ptr->base_skills.fos, class_ptr->extra_skills.fos); }
 static cptr _mon_race_fos_skill_desc(race_t *race_ptr) { return _fos_skill_desc(race_ptr->skills.fos, race_ptr->extra_skills.fos); }
@@ -293,7 +293,7 @@ static void _race_help_table(FILE *fp, race_t *race_ptr)
         race_ptr->stats[A_CON],
         _race_srh_skill_desc(race_ptr));
 
-    fprintf(fp, "Charisma     %+3d        Navigation  %s\n",
+    fprintf(fp, "Charisma     %+3d        Perception  %s\n",
         race_ptr->stats[A_CHR],
         _race_fos_skill_desc(race_ptr));
 
@@ -400,7 +400,7 @@ static void _races_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Race Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
         for (j = 0; ; j++)
@@ -488,7 +488,7 @@ static void _demigods_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Demigod Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < DEMIGOD_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
@@ -591,7 +591,7 @@ static void _draconians_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Draconian Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
@@ -705,7 +705,7 @@ static void _mon_race_help_table(FILE *fp, race_t *race_ptr)
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         race_ptr->stats[A_CON],
         _mon_race_srh_skill_desc(race_ptr));
-    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Navigation  %s\n",
+    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CHR) ? 'v' : 'w',
         race_ptr->stats[A_CHR],
         _mon_race_fos_skill_desc(race_ptr));
@@ -837,7 +837,7 @@ static void _monster_races_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Race Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
     {
         for (j = 0; ; j++)
@@ -906,7 +906,7 @@ static void _demons_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Demon Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < DEMON_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_MON_DEMON, i);
@@ -967,7 +967,7 @@ static void _dragons_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Dragon Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < DRAGON_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, i);
@@ -1019,7 +1019,7 @@ static void _dragon_realms_help(FILE* fp)
             (realm->spell_stat == A_CON) ? 'v' : 'w',
             realm->stats[A_CON],
             _realm_srh_skill_desc(realm));
-        fprintf(fp, "Charisma     <color:%c>%+3d</color>        Navigation  %s\n",
+        fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
             (realm->spell_stat == A_CHR) ? 'v' : 'w',
             realm->stats[A_CHR],
             _realm_fos_skill_desc(realm));
@@ -1072,7 +1072,7 @@ static void _dragon_realms_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Dragon Realm Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-14.14s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-14.14s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = 1; i < DRAGON_REALM_MAX; i++)
     {
         dragon_realm_ptr realm = dragon_get_realm(i);
@@ -1131,7 +1131,7 @@ static void _orcs_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Orc Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Navigation", "Melee", "Archery", "Infra");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Archery", "Infra");
     for (i = 0; i < ORC_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_MON_ORC, i);
@@ -1177,7 +1177,7 @@ static void _class_help_table(FILE *fp, class_t *class_ptr)
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         class_ptr->stats[A_CON],
         _class_srh_skill_desc(class_ptr));
-    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Navigation  %s\n",
+    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CHR) ? 'v' : 'w',
         class_ptr->stats[A_CHR],
         _class_fos_skill_desc(class_ptr));
@@ -1334,7 +1334,7 @@ static void _classes_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Class Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-13.13s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-13.13s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
         for (j = 0; ; j++)
@@ -1406,7 +1406,7 @@ static void _disciples_help(FILE *fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Disciple Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = MIN_PURPLE_PATRON; i < MAX_PURPLE_PATRON; i++)
     {
         class_t *class_ptr = get_class_aux(CLASS_DISCIPLE, i);
@@ -1467,7 +1467,7 @@ static void _weaponmasters_help(FILE *fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Weaponmaster Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = 0; i < WEAPONMASTER_MAX; i++)
     {
         class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
@@ -1526,7 +1526,7 @@ static void _warlocks_help(FILE *fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Warlock Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = 0; i < WARLOCK_MAX; i++)
     {
         class_t *class_ptr = get_class_aux(CLASS_WARLOCK, i);
@@ -1571,7 +1571,7 @@ static void _personality_help(FILE *fp, int idx)
         pers_ptr->stats[A_CON],
         _pers_srh_skill_desc(pers_ptr));
 
-    fprintf(fp, "Charisma     %+3d        Navigation  %s\n",
+    fprintf(fp, "Charisma     %+3d        Perception  %s\n",
         pers_ptr->stats[A_CHR],
         _pers_fos_skill_desc(pers_ptr));
 
@@ -1643,7 +1643,7 @@ static void _personalities_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Personality Skill Bonus Table II</style>\n<style:table>\n", fp);
-    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Navigation", "Melee", "Archery");
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Archery");
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
@@ -1664,7 +1664,7 @@ static void _personalities_help(FILE* fp)
 static void _possessor_stats_table(FILE* fp)
 {
     int i;
-    fprintf(fp, "Name,Idx,Lvl,Speed,AC,Attacks,Dam,Body,Str,Int,Wis,Dex,Con,Chr,Life,Disarm,Device,Save,Stealth,Search,Navigation,Melee,Bows\n");
+    fprintf(fp, "Name,Idx,Lvl,Speed,AC,Attacks,Dam,Body,Str,Int,Wis,Dex,Con,Chr,Life,Disarm,Device,Save,Stealth,Search,Perception,Melee,Bows\n");
     for (i = 0; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
