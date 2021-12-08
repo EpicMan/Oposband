@@ -1,4 +1,8 @@
 0.4.0
+-Implemented FrogComposband Salmiak commits up to "Mother of all updates"
+
+IDEAS:
+
 A:Implement tables from Halls of Mist
 X-Define Feature 
 X-Generate on maps 
