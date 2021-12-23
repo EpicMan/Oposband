@@ -34,12 +34,7 @@ bool restore_mana(void)
     bool   result = FALSE;
     slot_t slot;
 
-    if (p_ptr->pclass == CLASS_MAGIC_EATER)
-    {
-        magic_eater_restore();
-        result = TRUE;
-    }
-    else if ((p_ptr->csp < p_ptr->msp) && (!elemental_is_(ELEMENTAL_WATER)) && (p_ptr->pclass != CLASS_RAGE_MAGE))
+    if ((p_ptr->csp < p_ptr->msp) && (!elemental_is_(ELEMENTAL_WATER)) && (p_ptr->pclass != CLASS_RAGE_MAGE))
     {
         if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
             p_ptr->csp += (p_ptr->msp - p_ptr->csp) / 3;
@@ -71,14 +66,23 @@ bool restore_mana(void)
     return result;
 }
 
+bool mortal_food_check(void)
+{
+    if (((get_race()->flags & RACE_IS_NONLIVING) &&
+        (!prace_is_(RACE_MON_PUMPKIN)) &&
+        (!prace_is_(RACE_MON_BEHOLDER)) &&
+        (!prace_is_(RACE_EINHERI))) ||
+        (prace_is_(RACE_ENT)) ||
+        (prace_is_(RACE_MON_ARMOR))) return FALSE;
+    return TRUE;
+}
+
 static void do_cmd_eat_food_aux(obj_ptr obj)
 {
     int  lev = k_info[obj->k_idx].level;
     bool ident = FALSE, no_food = FALSE;
 
-    if (music_singing_any()) bard_stop_singing();
-    if (hex_spelling_any()) stop_hex_spell_all();
-    warlock_stop_singing();
+    stop_mouth();
 
     if (object_is_mushroom(obj) && obj->art_name && obj->timeout)
     {
@@ -297,6 +301,7 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
                 if (mut_present(MUT_WAYBREAD_INTO))
                 {
                     msg_print("The waybread makes you vomit!");
+                    set_food(PY_FOOD_STARVE - 1);
                     set_paralyzed(randint1(4), FALSE);
                     set_poisoned(0, TRUE);
                     ident = TRUE;
@@ -351,8 +356,105 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
         p_ptr->notice |= PN_OPTIMIZE_PACK;
     }
 
+    /* Food can feed the player */
+    if (no_food)
+    {
+    }
+    else if ( prace_is_(RACE_VAMPIRE)
+      || prace_is_(RACE_MON_VAMPIRE)
+      || p_ptr->mimic_form == MIMIC_VAMPIRE )
+    {
+        /* Reduced nutritional benefit */
+        set_food(p_ptr->food + obj->pval / 10);
+        msg_print("Mere victuals hold scant sustenance for a being such as yourself.");
+        if (p_ptr->food < PY_FOOD_ALERT)   /* Hungry */
+            msg_print("Your hunger can only be satisfied with fresh blood!");
+    }
+    else if (prace_is_(RACE_ANDROID))
+    {
+        if (obj->tval == TV_FLASK)
+        {
+            msg_print("You replenish yourself with the oil.");
+            set_food(p_ptr->food + 5000);
+        }
+    }
+    else if (prace_is_(RACE_MON_JELLY))
+    {
+        int luku = obj->number;
+        obj->number = 1;
+        if (!jelly_eat_object(obj)) return; /* this is okay - only happens with artifacts */
+        obj->number = luku;
+    }
+    else if ((get_race()->flags & RACE_EATS_DEVICES)
+           && object_is_device(obj) )
+    {
+        int amt = obj->activation.cost;
+
+        if (amt > device_sp(obj))
+            amt = device_sp(obj);
+
+        if (!amt)
+        {
+            msg_print("The device has no energy left.");
+            return;
+        }
+
+        device_decrease_sp(obj, amt);
+        set_food(p_ptr->food + 5000);
+
+        obj_describe_charges(obj);
+        p_ptr->window |= PW_INVEN;
+
+        /* Don't consume the object */
+        return;
+    }
+    else if ( (get_race()->flags & RACE_IS_DEMON)
+           && obj->tval == TV_CORPSE
+           && obj->sval == SV_CORPSE
+           && my_strchr("pht", r_info[obj->pval].d_char) )
+    {
+        /* Drain vitality of humanoids */
+        char o_name[MAX_NLEN];
+
+        object_desc(o_name, obj, (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_SINGULAR));
+
+        msg_format("<color:%c>The %^s</color> is burnt to ashes. You absorb its vitality!", tval_to_attr_char(obj->tval), o_name);
+        set_food(PY_FOOD_MAX - 1);
+    }
+    else if (prace_is_(RACE_SKELETON))
+    {
+        if (!(obj->sval == SV_FOOD_WAYBREAD ||
+              obj->sval < SV_FOOD_BISCUIT))
+        {
+            int luku = obj->number;
+            msg_print("The food falls through your jaws!");
+            obj->number = 1;
+            drop_near(obj, -1, py, px);
+            obj->number = luku;
+        }
+        else
+        {
+            msg_print("The food falls through your jaws and vanishes!");
+        }
+    }
+    else if (!mortal_food_check())
+    {
+        msg_print("The food of mortals is poor sustenance for you.");
+        set_food(p_ptr->food + obj->pval / 20);
+    }
+    else if (obj->tval == TV_FOOD && (obj->sval == SV_FOOD_WAYBREAD || obj->sval == SV_FOOD_AMBROSIA))
+    {
+        /* Waybread is always fully satisfying. */
+        set_food(MAX(p_ptr->food, PY_FOOD_MAX - 1));
+    }
+    else
+    {
+        /* Food can feed the player */
+        set_food(p_ptr->food + obj->pval);
+    }
+
     /* Consume the object */
-    if (obj->art_name) /* Hack: Artifact Food does not get destroyed! */
+    if ((obj->art_name) && (p_ptr->prace != RACE_MON_JELLY)) /* Hack: Artifact Food does not get destroyed! */
         obj->timeout += 99;
     else
     {
@@ -371,21 +473,7 @@ static bool _can_eat(object_type *o_ptr)
 {
     if (o_ptr->tval==TV_FOOD) return TRUE;
 
-    if (prace_is_(RACE_SKELETON) ||
-        prace_is_(RACE_GOLEM) ||
-        prace_is_(RACE_MON_GOLEM) ||
-        prace_is_(RACE_MON_SWORD) ||
-        prace_is_(RACE_MON_ARMOR) ||
-        prace_is_(RACE_MON_RING) ||
-        p_ptr->mimic_form == MIMIC_CLAY_GOLEM ||
-        p_ptr->mimic_form == MIMIC_IRON_GOLEM ||
-        p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM ||
-        p_ptr->mimic_form == MIMIC_COLOSSUS ||
-        prace_is_(RACE_ZOMBIE) ||
-        prace_is_(RACE_MON_LICH) ||
-        prace_is_(RACE_MON_VORTEX) ||
-        prace_is_(RACE_SPECTRE) ||
-        elemental_is_(ELEMENTAL_AIR))
+    if (get_race()->flags & RACE_EATS_DEVICES)
     {
         if (object_is_device(o_ptr))
             return TRUE;
@@ -506,6 +594,76 @@ static void do_cmd_quaff_potion_aux(obj_ptr obj)
     }
 
     water_mana_action(FALSE, (obj->sval == SV_POTION_WATER) ? 20 : 10);
+
+    /* Potions can feed the player */
+    switch (p_ptr->mimic_form)
+    {
+    case MIMIC_NONE:
+        switch (p_ptr->prace)
+        {
+            case RACE_VAMPIRE:
+            case RACE_MON_VAMPIRE:
+                set_food(p_ptr->food + obj->pval / 10);
+                break;
+            case RACE_SKELETON:
+            case RACE_MON_JELLY:
+                break;
+            case RACE_GOLEM:
+            case RACE_MON_GOLEM:
+            case RACE_MON_VORTEX:
+            case RACE_ZOMBIE:
+            case RACE_MON_LICH:
+            case RACE_BALROG:
+            case RACE_SPECTRE:
+            case RACE_MON_DEMON:
+            case RACE_MON_SWORD:
+            case RACE_MON_ARMOR:
+            case RACE_MON_RING:
+            case RACE_MON_MUMMY:
+                set_food(p_ptr->food + obj->pval / 20);
+                break;
+            case RACE_ANDROID:
+                if (obj->tval == TV_FLASK)
+                {
+                    msg_print("You replenish yourself with the oil.");
+                    set_food(p_ptr->food + 5000);
+                }
+                else
+                {
+                    set_food(p_ptr->food + obj->pval / 20);
+                }
+                break;
+            case RACE_ENT:
+                msg_print("You are moistened.");
+                set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                break;
+            default:
+                if (elemental_is_(ELEMENTAL_WATER))
+                {
+                    msg_print("That tastes delicious.");
+                    set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                }
+                else if (elemental_is_(ELEMENTAL_FIRE) && obj->tval == TV_FLASK)
+                {
+                    msg_print("Your body flames up with renewed vigor.");
+                    set_food(p_ptr->food + 5000);
+                }
+                else
+                    set_food(p_ptr->food + obj->pval);
+                break;
+        }
+        break;
+    case MIMIC_DEMON:
+    case MIMIC_DEMON_LORD:
+        set_food(p_ptr->food + obj->pval / 20);
+        break;
+    case MIMIC_VAMPIRE:
+        set_food(p_ptr->food + obj->pval / 10);
+        break;
+    default:
+        set_food(p_ptr->food + obj->pval);
+        break;
+    }
 
     /* Consume Item */
     if (devicemaster_is_(DEVICEMASTER_POTIONS) && !devicemaster_desperation && randint1(3*p_ptr->lev/2) > MAX(10, lev))
@@ -1431,48 +1589,3 @@ void do_cmd_activate(void)
     do_cmd_activate_aux(prompt.obj);
 }
 
-/* Unified use command */
-void do_cmd_unified_use(void)
-{
-	obj_prompt_t prompt = { 0 };
-
-	if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-		set_action(ACTION_NONE);
-
-	if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find_obj(TV_STAFF, SV_ANY))
-	{
-		magic_eater_cast(TV_STAFF);
-		return;
-	}
-
-	prompt.prompt = "Apply which item?";
-	prompt.error = "You have no items to use.";
-	prompt.filter = obj_is_usable;
-	prompt.where[0] = INV_PACK;
-	prompt.where[1] = INV_EQUIP;
-	prompt.where[2] = INV_FLOOR;
-	prompt.flags = INV_SHOW_FAIL_RATES;
-
-	obj_prompt(&prompt);
-	if (!prompt.obj) return;
-
-	switch (prompt.obj->tval)
-	{
-	case TV_POTION:
-		do_cmd_quaff_potion_aux(prompt.obj);
-		break;
-	case TV_SCROLL:
-		do_cmd_read_scroll_aux(prompt.obj);
-		break;
-	case TV_WAND:
-	case TV_STAFF:
-	case TV_ROD:
-		do_cmd_device_aux(prompt.obj);
-		break;
-	case TV_FOOD:
-		do_cmd_eat_food_aux(prompt.obj);
-		break;
-	default:
-		do_cmd_activate_aux(prompt.obj);
-	}
-}

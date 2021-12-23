@@ -111,7 +111,7 @@ static void _birth(void)
     _werewolf_form = 0;
     skills_innate_init("Claw", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 
@@ -133,7 +133,7 @@ void _werewolf_calc_innate_attacks(void)
 
         a.weight = 100;
         calc_innate_blows(&a, 300);
-        a.msg = "You claw";
+        a.msg = "You claw.";
         a.name = "Claw";
 
         if (psion_combat()) psion_combat_innate_blows(&a);
@@ -153,7 +153,7 @@ void _werewolf_calc_innate_attacks(void)
         a.effect[0] = GF_MISSILE;
 
         calc_innate_blows(&a, 300);
-        a.msg = "You bite";
+        a.msg = "You bite.";
         a.name = "Bite";
         if (psion_combat()) psion_combat_innate_blows(&a);
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -185,8 +185,8 @@ void werewolf_change_shape_spell(int cmd, variant *res)
         }
         _werewolf_form = 1 - _werewolf_form;
         _equip_on_change_form();
-        if (_werewolf_form == WEREWOLF_FORM_WOLF) msg_print("You turn into a wolf!");
-        else msg_print("You turn into a human!");
+        if (_werewolf_form == WEREWOLF_FORM_WOLF) msg_format("You turn into %s wolf!", ((one_in_(8)) && (p_ptr->food < PY_FOOD_ALERT)) ? "a ravenous" : "a");
+        else msg_format("You turn into %s human!", ((one_in_(8)) && (p_ptr->food < PY_FOOD_ALERT)) ? "a ravenous" : "a");
         if ((_werewolf_form == WEREWOLF_FORM_HUMAN) && (p_ptr->action == ACTION_STALK)) set_action(ACTION_NONE);
         var_set_bool(res, TRUE);
         handle_stuff();
@@ -197,25 +197,24 @@ void werewolf_change_shape_spell(int cmd, variant *res)
     }
 }
 
-/**********************************************************************
- * Hounds: Evolution is tier based with a random choice from each tier.
- **********************************************************************/
 static power_info _wolfpowers[] = {
+    { A_NONE,{  1,  0,  0, werewolf_change_shape_spell}},
     { A_DEX, {  1,  1, 30, hound_sniff_spell } },
     { A_DEX, { 10,  0,  0, hound_stalk_spell}},
     { A_DEX, { 25, 18, 30, hound_leap_spell}},
     {    -1, { -1, -1, -1, NULL}}
 };
-static power_info _default_power[] = {
-    { A_DEX, {  1,  0,  0, werewolf_change_shape_spell}},
+static power_info _manpowers[] = {
+    { A_NONE, {  1,  0,  0, werewolf_change_shape_spell}},
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static int _get_powers(spell_info* spells, int max) {
-    int ct = get_powers_aux(spells, max, _default_power);
+static power_info *_get_powers(void)
+{
     if (_werewolf_form == WEREWOLF_FORM_WOLF)
-        ct += get_powers_aux(spells + ct, max - ct, _wolfpowers);
-    return ct;
+        return _wolfpowers;
+    else
+        return _manpowers;
 }
 static void _calc_bonuses(void) {
     int to_a = py_prorata_level_aux(25, 1, 2, 2);
@@ -521,7 +520,7 @@ race_t *werewolf_get_race(void)
             me.exp = 140;
             me.base_hp = 27;
             me.calc_bonuses = _calc_bonuses;
-            me.get_powers = _get_powers;
+            me.get_powers_fn = _get_powers;
             me.get_flags = _get_flags;
             me.birth = _birth;
             me.boss_r_idx = MON_CARCHAROTH;
@@ -559,7 +558,7 @@ race_t *werewolf_get_race(void)
             me.stats[A_WIS] =  -1;
             me.stats[A_DEX] =  0;
             me.stats[A_CON] =  2;
-            me.stats[A_CHR] =  -2;
+            me.stats[A_CHR] =  -1;
             me.shop_adjust = 120;
 
             me.life = 105;

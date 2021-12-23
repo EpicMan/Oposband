@@ -173,7 +173,7 @@ static bool _equip_body_part(bool surgery)
     prompt.filter = _object_is_body_part;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_FLOOR;
-    if (!surgery) prompt.where[2] = INV_SPECIAL1;
+//    if (!surgery) prompt.where[2] = INV_SPECIAL1;
     obj_prompt(&prompt);
     if (!prompt.obj) return FALSE;
     if (surgery) return _igor_carry(prompt.obj);
@@ -343,6 +343,7 @@ bool igor_dissect_corpse(object_type *w_ptr)
         q_ptr->xtra5 = 0;
         q_ptr->pval = 0;
         q_ptr->to_h = 0;
+        q_ptr->to_d = 0;
         q_ptr->to_a = 0;
         q_ptr->dd = 0;
         q_ptr->ds = 0;
@@ -801,7 +802,7 @@ bool igor_dissect_corpse(object_type *w_ptr)
                     {
                         _my_pval = m_bonus(_thd, merkki ? MIN(taito, voima + 35) : 80);
                         _my_pval = trim(_my_pval, 5, 10, merkki ? voima : 70);
-                        q_ptr->to_h = MAX(q_ptr->to_h, merkki ? _my_pval : (0 - _my_pval));
+                        q_ptr->to_d = merkki ? _my_pval : (0 - _my_pval);
                     }
                 }
                 if ((r_ptr->flags2 & RF2_KILL_WALL) && (_igor_prob(3, unique, taito)))
@@ -909,14 +910,14 @@ bool igor_dissect_corpse(object_type *w_ptr)
         }
         if (_wizard)
         {
-            obj_identify_fully(q_ptr);
+            obj_identify(q_ptr);
             return TRUE;
         }
         prompt.obj->number--;
         obj_release(prompt.obj, 0);
         if ((_wanted) && (unique) && (tyyppi != _IB_HEAD) && (tyyppi != _IB_EARS)) _ears_of(q_ptr->xtra4);
         _igor_set_origins(q_ptr);
-        obj_identify_fully(q_ptr);
+        obj_identify(q_ptr);
         pack_carry(q_ptr);
         p_ptr->window |= (PW_INVEN);
     }
@@ -958,7 +959,7 @@ static void _birth(void)
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
     skills_innate_init("Claw", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
     _igor_birth_hack = TRUE;
     for (i = 0; i < _IB_MAX_ACTIVE; i++)
@@ -969,12 +970,12 @@ static void _birth(void)
         q_ptr->number = 1;
         if (i == (_IB_HANDS - 1))
         {
-            q_ptr->pval = 2;
+            q_ptr->pval = 1;
             add_flag(q_ptr->flags, OF_DEX);
         }
         object_origins(q_ptr, ORIGIN_BIRTH);
         q_ptr->loc.where = INV_TMP_ALLOC;
-        obj_identify_fully(q_ptr);
+        obj_identify(q_ptr);
         (void)_igor_carry(q_ptr);
         /* No need to call obj_release() to free the memory (indeed, it causes crashes on Linux) */
     }
@@ -1411,15 +1412,23 @@ static power_info _igor_stomach_spell[] = {
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static int _get_powers(spell_info* spells, int max) {
-    int ct = get_powers_aux(spells, max, _igor_powers);
+static power_info *_get_powers(void)
+{
+    static power_info spells[MAX_SPELLS] = {0};
+    int max = MAX_SPELLS;
+    int ct = get_powers_aux(spells, max, _igor_powers, FALSE);
     object_type *o1_ptr, *o2_ptr;
-    if (!_pack_initialized) return ct;
+    if (!_pack_initialized)
+    {
+        spells[ct].spell.fn = NULL;
+        return spells;
+    }
     o1_ptr = inv_obj(_igor_body, _IB_STOMACH);
-    if ((o1_ptr) && (o1_ptr->xtra5)) ct += get_powers_aux(spells + ct, max - ct, _igor_stomach_spell);
+    if ((o1_ptr) && (o1_ptr->xtra5)) ct += get_powers_aux(spells + ct, max - ct, _igor_stomach_spell, FALSE);
     o2_ptr = inv_obj(_igor_body, _IB_HEAD);
-    if ((o2_ptr) && (o2_ptr->xtra5) && ((!o1_ptr) || (o2_ptr->xtra5 != o1_ptr->xtra5))) ct += get_powers_aux(spells + ct, max - ct, _igor_head_spell);
-    return ct;
+    if ((o2_ptr) && (o2_ptr->xtra5) && ((!o1_ptr) || (o2_ptr->xtra5 != o1_ptr->xtra5))) ct += get_powers_aux(spells + ct, max - ct, _igor_head_spell, FALSE);
+    spells[ct].spell.fn = NULL;
+    return spells;
 }
 
 static slot_t _igor_fake_slot(slot_t slot)
@@ -1648,7 +1657,7 @@ race_t *igor_get_race(void)
 
         me.exp = 145;
         me.calc_bonuses = _calc_bonuses;
-        me.get_powers = _get_powers;
+        me.get_powers_fn = _get_powers;
         me.get_flags = _get_flags;
         me.birth = _birth;
         me.load_player = _igor_load;
@@ -1658,7 +1667,7 @@ race_t *igor_get_race(void)
         me.stats[A_STR] = -3;
         me.stats[A_INT] = 0;
         me.stats[A_WIS] = -1;
-        me.stats[A_DEX] = -1;
+        me.stats[A_DEX] = 0;
         me.stats[A_CON] = -1;
         me.stats[A_CHR] = -1;
         me.life = 97;

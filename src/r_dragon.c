@@ -38,12 +38,13 @@ static void _dragon_birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.to_h = 3;
+    forge.to_d = 3;
     forge.pval = 1;
     add_flag(forge.flags, OF_STR);
     add_flag(forge.flags, OF_DEX);
     py_birth_obj(&forge);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 
@@ -364,7 +365,7 @@ static void _calc_innate_attacks(void)
 
         a.weight = 100 + l;
         calc_innate_blows(&a, 400);
-        a.msg = "You claw";
+        a.msg = "You claw.";
         a.name = "Claw";
 
         /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
@@ -392,7 +393,7 @@ static void _calc_innate_attacks(void)
             calc_innate_blows(&a, 150);
         else
             a.blows = 100;
-        a.msg = "You bite";
+        a.msg = "You bite.";
         a.name = "Bite";
 
         /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
@@ -534,9 +535,9 @@ static spell_info _lore_spells[] = {
     { 12, 10, 60, identify_spell },
     { 15, 12, 60, sense_surroundings_spell },
     { 20, 15, 60, detection_spell },
-    { 22, 17, 60, word_of_power_spell },
+    { 22, 17, 60, probing_spell },
     { 25, 20, 65, self_knowledge_spell },
-    { 30, 25, 70, alter_reality_spell },
+    { 30, 25, 70, identify_fully_spell },
     { 40, 50, 90, clairvoyance_spell },
     { -1, -1, -1, NULL}
 };
@@ -900,7 +901,7 @@ static obj_ptr _get_reforge_dest(int max_power)
     sprintf(buf, "Reforge which object (Max Power = %d)? ", max_power);
     prompt.prompt = buf;
     prompt.error = "You have nothing to reforge.";
-    prompt.filter = item_tester_hook_nameless_weapon_armor;
+    prompt.filter = item_tester_hook_nameless_weapon_armour;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -999,7 +1000,7 @@ static void _reforging_spell(int cmd, variant *res)
         dest->mitze_type = 0;
         object_mitze(dest, MITZE_REFORGE);
 
-        obj_identify_fully(dest);
+        obj_identify(dest);
 
         p_ptr->update |= PU_BONUS;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
@@ -1911,28 +1912,28 @@ static spell_info _domination_spells[] = {
     { -1, -1, -1, NULL}
 };
 
-int _realm_get_spells(spell_info* spells, int max)
+static spell_info *_realm_get_spells(void)
 {
     switch (p_ptr->dragon_realm)
     {
     case DRAGON_REALM_LORE:
-        return get_spells_aux(spells, max, _lore_spells);
+        return _lore_spells;
     case DRAGON_REALM_BREATH:
-        return get_spells_aux(spells, max, _breath_spells);
+        return _breath_spells;
     case DRAGON_REALM_ATTACK:
-        return get_spells_aux(spells, max, _attack_spells);
+        return _attack_spells;
     case DRAGON_REALM_ARMOR:
-        return get_spells_aux(spells, max, _armor_spells);
+        return _armor_spells;
     case DRAGON_REALM_CRAFT:
-        return get_spells_aux(spells, max, _craft_spells);
+        return _craft_spells;
     case DRAGON_REALM_CRUSADE:
-        return get_spells_aux(spells, max, _crusade_spells);
+        return _crusade_spells;
     case DRAGON_REALM_DEATH:
-        return get_spells_aux(spells, max, _death_spells);
+        return _death_spells;
     case DRAGON_REALM_DOMINATION:
-        return get_spells_aux(spells, max, _domination_spells);
+        return _domination_spells;
     }
-    return 0;
+    return NULL;
 }
 
 static void _realm_calc_bonuses(void)
@@ -2141,7 +2142,7 @@ void dragon_tail_sweep_spell(int cmd, variant *res)
 
             a.weight = 100 + l;
             a.blows = 100;
-            a.msg = "You hit";
+            a.msg = "You hit.";
             a.name = "Tail";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -2179,25 +2180,19 @@ void dragon_wing_storm_spell(int cmd, variant *res)
     }
 }
 
-static power_info _dragon_powers[] = {
+static power_info _dragon_get_powers[] = {
     { A_CON, {  1,  0, 30, _breathe_spell}},
     { A_DEX, { 20,  7,  0, dragon_reach_spell}},
     { A_DEX, { 25, 10,  0, dragon_tail_sweep_spell}},
     { A_DEX, { 30, 20,  0, dragon_wing_storm_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-static power_info _steel_powers[] = {
+static power_info _steel_get_powers[] = {
     { A_DEX, { 20,  7,  0, dragon_reach_spell}},
     { A_DEX, { 25, 10,  0, dragon_tail_sweep_spell}},
     { A_DEX, { 30, 20,  0, dragon_wing_storm_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-static int _dragon_get_powers(spell_info* spells, int max) {
-    if (p_ptr->psubrace == DRAGON_STEEL)
-        return get_powers_aux(spells, max, _steel_powers);
-    else
-        return get_powers_aux(spells, max, _dragon_powers);
-}
 
 /**********************************************************************
  * Elemental Dragon (Red, White, Blue, Black, Green)
@@ -3310,7 +3305,7 @@ static race_t *_steel_get_race_t(void)
         me.birth = _steel_birth;
         me.calc_bonuses = _steel_calc_bonuses;
         me.get_flags = _steel_get_flags;
-        me.get_powers = _dragon_get_powers;
+        me.get_powers = _steel_get_powers;
         me.gain_level = _steel_gain_level;
         init = TRUE;
     }
@@ -3387,12 +3382,12 @@ race_t *mon_dragon_get_race(int psubrace)
             result->stats[i] += realm->stats[i];
 
         result->caster_info = _caster_info;
-        result->get_spells = _realm_get_spells;
+        result->get_spells_fn = _realm_get_spells;
     }
     else
     {
         result->caster_info = NULL;
-        result->get_spells = NULL;
+        result->get_spells_fn = NULL;
     }
 
     result->name = "Dragon";

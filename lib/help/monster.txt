@@ -1,6 +1,6 @@
 <style:title>Monsters</style>
 
-Encounters with monsters are the backbone of FrogComposband. It is mostly by killing monsters that you acquire treasures, gain experience and become more powerful; but not all monsters are hateful enemies who need to die.
+Encounters with monsters are the backbone of Oposband. It is mostly by killing monsters that you acquire treasures, gain experience and become more powerful; but not all monsters are hateful enemies who need to die.
 
 <indent><color:U>Monster Races</color>
 
@@ -45,7 +45,7 @@ The symbols for all monster species are listed below.</indent>
   <color:U>$</color>   Creeping Coins                  <color:U>,</color>   Mushroom Patch
   <color:U>#</color>   Ent/Mist creature
 
-Unlike the race, the species of a monster does not tell you anything about how dangerous a monster is; the almost harmless giant green frog is a reptile/amphibian with the symbol <color:g>R</color>... but so is Godzilla. The species does, however, allow some generic assumptions; for example, nearly all dragons and zephyr hounds breathe something or other. You can also assume something with the <color:y>d</color> or <color:y>D</color> symbol will take extra damage from a weapon that slays dragons.
+Unlike the race, the species of a monster does not tell you anything about how dangerous a monster is; the almost harmless giant green frog is a reptile/amphibian with the symbol <color:g>R</color>... but so is a tyrannosaurus. The species does, however, allow some generic assumptions; for example, nearly all dragons and zephyr hounds breathe something or other. You can also assume something with the <color:y>d</color> or <color:y>D</color> symbol will take extra damage from a weapon that slays dragons.
 
 <topic:Assessment><style:heading>Assessing a Monster</style>
 
@@ -258,7 +258,7 @@ Although all player characters have some chance to resist sanity blasting, only 
 
 <topic:Pets><style:heading>Pets and Riding</style>
 
-What could be nicer than a loyal pet? People sometimes worry their pets will trample them underfoot; but in FrogComposband, <color:G>pets will never attack you by mistake</color>. You can walk around safely as your pet Great Hell Wyrm obliterates your enemies. Better still, some pets can summon new pets.
+What could be nicer than a loyal pet? People sometimes worry their pets will trample them underfoot; but in Oposband, <color:G>pets will never attack you by mistake</color>. You can walk around safely as your pet Great Hell Wyrm obliterates your enemies. Better still, some pets can summon new pets.
 
 One might think that pets can make the game much easier. It is of course highly satisfying to send your pet Wyrm into a troll pit and wait outside listening for the howls of agony and terror, the sounds of guts splattering, bones crunching and so on; but one should not expect to gain much experience from this. You only earn full experience when you deliver the death blow yourself.
 
@@ -293,7 +293,7 @@ Your pets are fairly well trained and will respond to a variety of commands such
 Here is a list of available pet commands:
 
 <style:keyword>Dismiss Pets</style>
-  <indent>Dismiss specified pets. Dismissed pets will immediately disappear from the current level. FrogComposband asks you whether you want to dismiss each pet in order from high level named pets to low level unnamed pets. You can press 'U' to dismiss all unnamed pets.</indent>
+  <indent>Dismiss specified pets. Dismissed pets will immediately disappear from the current level. Oposband asks you whether you want to dismiss each pet in order from high level named pets to low level unnamed pets. You can press 'U' to dismiss all unnamed pets.</indent>
 
 <style:keyword>Specify Target of Pet</style>
   <indent>Choose a target monster; all your pets will begin to chase the target. This command causes pets to pathfind much more aggressively in cases where enemies are not in their line of sight.</indent>
@@ -444,6 +444,8 @@ Two other spell effects are closely related and follow the same basic rules as G
 
 Genocide is based on the underlying "true" letter symbols of monsters, and ignores any changes made by the player to the visual appearance of a monster. For example, casting genocide on the symbol <color:o>x</color> would have no effect on mimics even if you turned the easy_mimics option on, because <color:o>x</color> is not these mimics' true symbol. Similarly, genociding <color:o>D</color> would affect ancient dragons even if you had changed their visual appearance to something else.
 
+Chameleons are genocided as if they truly belonged to their current, apparent race. Tanuki and Shadowers, on the other hand, are genocided by their underlying species, which for Tanuki is quadrupeds (<color:U>q</color>) and for Shadowers the species of the race the shadower actually belongs to.
+
 Friendly monsters will always be turned hostile by a failed attempt to genocide them, even if they are uniques and there was no chance the genocide would harm them personally. Genocide can affect pets (it will not turn them hostile), although your mount will never be affected.
 
 New players with previous experience in other roguelikes, but not in Angband variants, sometimes expect Genocide or Mass Genocide to remove a monster race or species from the game permanently. This does not happen; genocide only affects monsters on a single level, and even there, they have a chance to resist. In spite of these limitations, sources of Genocide and Mass Genocide are extremely valuable, and many players stockpile them for the end fights.
@@ -477,11 +479,5 @@ The coloring of the empty slots and surrounding brackets provides some additiona
 </style>
 
 <color:D>
-Original   : (??)
-Updated    : (??)
-Updated    : Zangband DevTeam
-Updated    : Hengband 1.0.11
-Updated    : PosChengband 4.0.0
-Updated    : FrogComposband 7.1.liquorice
-Updated    : FrogComposband 7.1.salmiak
+Last Updated: Oposband 0.4.0
 </color>

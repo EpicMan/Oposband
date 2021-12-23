@@ -298,7 +298,11 @@ static errr path_temp(char *buf, int max)
     if (!s) return (-1);
 
     /* Format to length */
+#ifndef WIN32
     (void)strnfmt(buf, max, "%s", s);
+#else
+    (void)strnfmt(buf, max, ".%s", s);
+#endif
 
     /* Success */
     return (0);
@@ -768,7 +772,7 @@ errr fd_copy(cptr file, cptr what)
             has occurred if this isn't equal to the number requested." */
         if (write_num != read_num)
         {
-            rc = ERROR_UNKOWN_FAILURE;
+            rc = ERROR_UNKNOWN_FAILURE;
             break;
         }
     }
@@ -2707,10 +2711,10 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
     if (len < 1) len = 1;
 
     /* Paranoia -- check column */
-    if ((x < 0) || (x >= 80)) x = 0;
+    if ((x < 0) || (x >= Term->wid - 2)) x = 0;
 
     /* Restrict the length */
-    if (x + len > 80) len = 80 - x;
+    if (x + len > Term->wid - 2) len = Term->wid - 2 - x;
 
     /* Paranoia -- Clip the default entry */
     buf[len] = '\0';
@@ -3377,7 +3381,7 @@ menu_naiyou menu_info[10][10] =
         {"Dump screen dump(()", ')', TRUE},
         {"Load screen dump())", '(', TRUE},
         {"Version info(V)", 'V', TRUE},
-        {"Quit(Q)", 'Q', TRUE},
+        {"Commit suicide(Q)", 'Q', TRUE},
         {"", 0, FALSE}
     },
 };

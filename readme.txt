@@ -9,7 +9,7 @@
 
 --- LINUX (instructions by Chris Kousky; lightly edited)
   Download and unpack the source archive, or clone the git repository:
-    $ git clone https://github.com/sulkasormi/oposband.git
+    $ git clone https://github.com/EpicMan/oposband.git
 
   Make sure you have the appropriate development packages installed.
   For example, you might run (Ubuntu or Mint):
@@ -31,8 +31,9 @@
   or
     $ oposband -g -- -n<# of windows>    ## for 8x8 tile graphics 
 
-  If make install fails, or the game does not run properly after make install,
-  try bypassing make install and just running the game from root.
+  NOTE: some users have reported installation problems when compiling under
+  Linux (and Mac). Running ./configure using the --with-no-install parameter
+  will bypass this issue by building an executable to run in-place.
 
   You can change game windows' font, location, and size, by environment 
   variables, for example:
@@ -65,7 +66,7 @@
     your compiler, rather than gcc. Of course, 3.5 should be replaced with latest version of clang.).
 
     ***Fonts on Linux: My experience with linux has been that the fonts are just plain awful. Here, I document
-    how I managed to install better fonts and use them in Oposband. I spent nearly a day on this, so I'm
+    how I managed to install better fonts and use them in FrogComposband. I spent nearly a day on this, so I'm
     hoping this might prove useful to somebody else. But mostly, it is here to remind me how I did so I don't
     stumble so much next time.
 
@@ -187,7 +188,7 @@
 
 ----------  Basics  ------------
 
-  The in-game documentation has been updated for Oposband 7.1.liquorice.
+  The in-game documentation has been updated for Oposband 0.4.0.
   Press '?' to activate the help system, then select your favorite topic; e.g.
   press 'a' twice for General Information; press 'a' followed by 'b' for an
   introduction to the help files and how to best read them [yes, this is that
@@ -210,4 +211,4 @@
 
   Or open lib/help/html/command.html or lib/help/html/commdesc.html in your browser.
 
---- Most of this file inherited from PosChengband, updated for Oposband 7.1.liquorice.
+--- Most of this file inherited from PosChengband, updated for FrogComposband.

@@ -1,8 +1,8 @@
-The FrogComposband Glossary
+The Oposband Glossary
 
-While playing FrogComposband, discussing it with other players, or even 
-just reading the help files, you are likely to run into many esoteric 
-game concepts, mysterious abbreviations, or words that have specific 
+While playing Oposband, discussing it with other players, or even just 
+reading the help files, you are likely to run into many esoteric game 
+concepts, mysterious abbreviations, or words that have specific 
 meanings within the game. It is by no means necessary for a new player 
 to read this file before starting play - most players can (and do) just 
 figure things out as they go along, the glossary includes many advanced 
@@ -59,6 +59,15 @@ electricity; occasionally used in an extended sense to include poison.
 beam: An effect that affects all squares and monsters in its path, does 
 not stop at the first monster it hits, and cannot be reflected. Compare 
 bolt, ball.
+
+berserk strength: Also berserk rage, super-heroism; a mixed-blessing 
+effect. Gives +30 max-HP, a melee to-hit bonus (usually +24 to-hit), 
+level-dependent melee damage bonuses (up to +13 to-dam at CL 50), and 
+complete immunity to fear; but also reduces all non-melee skills, gives 
+a small AC penalty, prevents the player from casting book spells, and 
+blocks most other spell-like abilities. Permanent for Berserkers and 
+bear-formed Beornings, otherwise temporary. Most magical healing or 
+curing effects remove Berserk Strength. Compare heroism.
 
 blessed: 1) An item attribute; makes the item somewhat resistant to 
 being cursed, and allows priests to use it with no penalties if it is a 
@@ -128,13 +137,16 @@ selected.
 confusion: 1) A status effect, affects both players and monsters. See 
 [b]. 2) An element, causes the status effect if not resisted.
 
+critical hit: An exceptionally damaging hit; multiplies the damage dice 
+of the weapon or projectile.
+
 curse: 1) Item curse; a negative, usually removable object attribute 
 that prevents you from unequipping that object while it remains cursed. 
 2) A monster or player-monster spell attack, particularly one that 
-offers a saving throw and deals non-elemental damage; one of Cause 
-Light Wounds, Cause Serious Wounds, Cause Critical Wounds, Cause Mortal 
-Wounds or Hand of Doom. 3) One of a number of special effects with 
-similarity to item curses, such as the Amberite blood curse.
+offers a saving throw, deals non-elemental damage and may cause item 
+curses; one of Wounding Curse, Evil Curse, Mighty Curse, Death Curse or 
+Hand of Doom. 3) One of a number of special effects with similarity to 
+item curses, such as the Amberite blood curse.
 
 dazed: Stunned; afflicted with the Stun status effect.
 
@@ -274,10 +286,10 @@ option for how telepathy works.
 genocide: An attempt to remove a monster species (all monsters sharing 
 the same glyph) from a dungeon level. Does not affect uniques. See [f].
 
-global map: Also overworld map; a scaled map of the FrogComposband 
-world, accessible in towns and the wilderness through the '<' command 
-and generally used for travelling from towns to dungeons or from 
-dungeon to dungeon.
+global map: Also overworld map; a scaled map of the Oposband world, 
+accessible in towns and the wilderness through the '<' command and 
+generally used for travelling from towns to dungeons or from dungeon to 
+dungeon.
 
 good object: An item that has some magical enchantments on it, but is 
 not an artifact or ego item.
@@ -290,6 +302,11 @@ similar, optional bar for the player. See [g].
 
 heavy curse: An item curse that cannot be removed with normal Remove 
 Curse, but can be removed with a Scroll of *Remove Curse*.
+
+heroism: A positive effect, gives +10 max-HP, +12 to-hit (both melee 
+and ranged), and one level of resistance to fear. Usually temporary, 
+but can be permanently gained by player-monsters by killing their 
+racial boss.
 
 high resist: A resistance to an element other than the base elements 
 and poison.
@@ -366,21 +383,21 @@ sometimes dungeon bosses.
 
 levitation: The ability to float. Levitation gives access to dark pits 
 and mountainous areas of the wilderness, allows you to avoid some 
-traps, eliminates movement speed penalties in wooded areas, and reduces 
-damage from standing in or over dangerous terrain. See [i].
+traps, eliminates movement speed penalties in wooded and snowy areas, 
+and reduces damage from standing in or over dangerous terrain. See [i].
 
 life points: A measure of your attachment to life, displayed on a range 
 of 0% to 99% if depleted. Losing life points reduces effective maximum 
 HP; if life points drop below 0, the character will transform into an 
 undead race, or die outright if this is not possible. See [j].
 
-life rating: 1) Random life rating; a measure, ranging from 87% to 
-117%, of how lucky you got with random hit-point gain rolls in your 
-current life; life rating as revealed by Self Knowledge. See [k]. 2) 
-Life rating multiplier; a fixed non-random HP multiplier based on your 
-race, class or personality, not directly related to the random life 
-rating. 3) +Life and -Life; item attributes that modify a 
-constitution-based HP multiplier.
+life rating: 1) Random life rating; a measure, ranging from 0 to 76, of 
+how lucky you got with random hit-point gain rolls in your current 
+life; life rating as revealed by Self Knowledge. See [k]. 2) Life 
+multiplier; a fixed non-random HP multiplier based on your race, class 
+or personality, not directly related to the random life rating. 3) 
++Life and -Life; item attributes that modify a constitution-based HP 
+multiplier.
 
 lightning: A synonym for the element electricity.
 
@@ -445,6 +462,13 @@ does not have a Weaponsmith essence on it.
 nexus: An element, seldom deadly but often highly annoying due to its 
 side effects.
 
+nice: A monster status; nice monsters will not use breath or spell 
+attacks, and damage from exceptionally powerful melee hits is reduced. 
+Nice monsters also never resist destruction. Nearly all high-level 
+monsters are initially nice when summoned; the main exceptions are the 
+Olympian gods and playing in Nightmare Mode. Niceness stops when the 
+player has had a chance to react to the monster's presence.
+
 non-ego: An item that is neither ego nor an artifact; a nameless item. 
 "Reforging, Crafting and Artifact Creation only work on non-ego items."
 
@@ -460,6 +484,12 @@ overworld map: See global map.
 
 pack: 1) The player's backpack; the inventory. 2) A group of similar 
 monsters acting together.
+
+parent monster: A monster's parent is either the monster who summoned 
+it, or the monster whose escort it belongs to. Not all monsters have a 
+parent. Monsters with living parents feel some loyalty to the parent, 
+and therefore make poor pets and unreliable mounts. Pets summoned by 
+other pets often leave the level if their parent dies or disappears.
 
 permanent curse: An item curse that can only be removed with Mundanity. 
 Other curses on an item with a permanent curse may still be removable.
@@ -590,6 +620,9 @@ level and the surface. Differs from stairs in that most shafts skip a
 depth; downstairs on DL 8 will always lead to DL 9, while a shaft down 
 will lead to DL 10 unless there is a quest on level 9.
 
+sharpness: A weapon attribute; allows the weapon to score vorpal 
+criticals. See [n].
+
 shop: Also store; a building where thematic objects can be bought and 
 sold. Compare building.
 
@@ -601,12 +634,12 @@ unpredictable effects.
 skill: 1) One of the eight primary skills your character has; Melee, 
 Archery, Saving Throw, Stealth, Perception, Searching, Disarming or 
 Device Skill; in an extended sense, any similar improvable attribute 
-like Digging or Infravision. See [n]. 2) Your level of mastery with a 
-particular weapon or spell; proficiency. See [o]. 3) Anything a 
+like Digging or Infravision. See [o]. 2) Your level of mastery with a 
+particular weapon or spell; proficiency. See [p]. 3) Anything a 
 Skillmaster is or can be proficient in.
 
 slay: A multiplier to the damage dice of a weapon, applied only against 
-monsters of a particular type. Compare brand. See [p].
+monsters of a particular type. Compare brand. See [q].
 
 SP: Spell points; mana.
 
@@ -623,7 +656,7 @@ but not necessarily for racial or mutation powers.
 
 stat: One of the six basic statistics your character has; Strength 
 (STR), Intelligence (INT), Wisdom (WIS), Dexterity (DEX), Constitution 
-(CON) or Charisma (CHR). See [q].
+(CON) or Charisma (CHR). See [r].
 
 stat base: The value of a stat before race, class, personality, 
 equipment and mutation bonuses are accounted for.
@@ -646,7 +679,7 @@ status bar: See health bar.
 
 status effect: A temporary condition, especially a negative one such as 
 confusion, blindness, poisoning, stunning or hallucination. Both the 
-player and monsters can be affected by status effects. See [r].
+player and monsters can be affected by status effects. See [s].
 
 subwindow: A window other than the main (Term-0) game window, used by 
 some players for convenient display of monster and object lists, 
@@ -721,6 +754,8 @@ of permanent walls and a high concentration of both dangerous monsters
 and exceptional loot. In an extended sense, any special dungeon room 
 with many out-of-depth monsters.
 
+vorpal weapon: A weapon with the Sharpness attribute. See sharpness.
+
 vulnerability: An attribute that causes you to take more damage from an 
 element, and makes your items more likely to be damaged or destroyed by 
 that element. The opposite of a resistance.
@@ -753,7 +788,7 @@ you, especially one that zigzags, to limit space for summons and reduce
 the number of monsters that can attack you at once.
 
 band/*band: Any game descended from the original Angband, including 
-FrogComposband.
+Oposband.
 
 bravery: The quality displayed by your friend when he did something 
 that by all rights should have got his character killed, but actually 
@@ -769,8 +804,8 @@ but not much else." Bump class: a class that relies on melee.
 
 cheese: A strategy that works but is considered uncool, usually because 
 it either is extremely dull or relies on some exploit in game mechanics 
-(or both). "LOS cheese is a lot less effective in FrogComposband than 
-V, but still works at times."
+(or both). "LOS cheese is a lot less effective in Oposband than V, but 
+still works at times."
 
 CLW/CSW/CCW: Cure Light Wounds/Cure Serious Wounds/Cure Critical 
 Wounds; the three common minor healing potions, staple items of the 
@@ -812,8 +847,8 @@ Indy/Indy's whip: An artifact found in the I Hate Snakes! quest. "Do
 snakes for Indy if you don't get any decent weapons early."
 
 J/the J: The Serpent of Chaos, the final boss of the Angband dungeon 
-and the monster you must kill to win a game of FrogComposband. "Going 
-to J tonight?"
+and the monster you must kill to win a game of Oposband. "Going to J 
+tonight?"
 
 loot: 1) All items and money discovered. 2) A particularly valuable 
 item; an item worth picking up. "Don't forget to pick up Sam's hat, 
@@ -856,9 +891,9 @@ especially on a strong character who has most or all other resistances
 covered. "Fighting Nebiros with dark and nether holes is brave."
 
 rfe: Request for enhancement; a serious or sarcastic request for 
-FrogComposband to be changed in a particular way. "RFE: New mut that 
-gives a flat chance of just teleing right next to the highest-DL 
-monster on the level."
+Oposband to be changed in a particular way. "RFE: New mut that gives a 
+flat chance of just teleing right next to the highest-DL monster on the 
+level."
 
 rip: Rest In Peace; in an extended sense, to die. "RIP me"; "rip 
 Oberon"; "rip tourists being OP"; "argh, just ripped to J again".
@@ -877,8 +912,9 @@ Narya as a swap in case I find balrog uniques."
 tag: To very briefly visit a dungeon for the sole purpose of 
 establishing a recall point there.
 
-telefail: Failure to use a Scroll of Teleportation, Staff of Teleport 
-or some other means of teleport self. A common cause of player death.
+telefail: A failed attempt to use a Scroll of Teleportation, Staff of 
+Teleport or some other means of teleport self. A common cause of player 
+death.
 
 TO: Teleport Other. "TO the summons and easily kill Glaurung."
 
@@ -899,6 +935,6 @@ annoying, dangerous or a mild inconvenience, but not literally the
 worst thing due to Keepers of Secrets being the worst.
 
 
-Original   : FrogComposband 7.1.liquorice
+Last Updated: Oposband 0.4.0
 
 

@@ -1,5 +1,10 @@
 0.4.0
--Implemented FrogComposband Salmiak commits up to "Mother of all updates"
+-Rebuilt codebase from FrogComposband 7.1.Salmiak to take advantage of new colors and other improvements.
+-Undid item changes, want to take items in a new direction (more Diablo-like with multiple egos possible on items (e.g. flaming rapier of force)
+-Chaos Mage rebranded Logrus Master
+?-Rebrand High Mage of hex as a witch? take hex realm from high mage, make Witch a high mage in stats/skills/etc but only has Hex realm. Maybe hex should be intrinsic magic and not books? Witch could get a familiar or at least start with a raven, frog or snake pet. Maybe have a witch's brew power where she can cook corpses into random potions?
+-Pack monsters with EMPTY_MIND now behave like animals (which is reversed from normal Angband (and copied from Sil), they hunt you down instead of waiting in rooms).
+-Zombies (and sometimes skeletons) now come in packs
 
 IDEAS:
 

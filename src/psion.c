@@ -264,7 +264,7 @@ bool psion_process_monster(int m_idx)
         }
         else
         {
-            msg_format("Your ego whip lashes %s", m_name);
+            msg_format("Your ego whip lashes %s!", m_name);
             result = mon_take_hit(m_idx, spell_power(30*m_ptr->ego_whip_pow), DAM_TYPE_SPELL, &fear, NULL);
             m_ptr->ego_whip_ct--;
             if (!projectable(py, px, m_ptr->fy, m_ptr->fx))
@@ -845,7 +845,7 @@ void _psionic_crafting_spell(int power, int cmd, variant *res)
 
         prompt.prompt = "Enchant which item?";
         prompt.error = "You have nothing to enchant.";
-        prompt.filter = object_is_weapon_armor_ammo;
+        prompt.filter = object_is_weapon_armour_ammo;
         prompt.where[0] = INV_PACK;
         prompt.where[1] = INV_EQUIP;
         prompt.where[2] = INV_QUIVER;
@@ -867,9 +867,9 @@ void _psionic_crafting_spell(int power, int cmd, variant *res)
                     okay = TRUE;
                 }
             }
-            else if (object_is_armor(prompt.obj))
+            else if (object_is_armour(prompt.obj))
             {
-                if (brand_armor_aux(prompt.obj))
+                if (brand_armour_aux(prompt.obj))
                 {
                     prompt.obj->discount = 99;
                     okay = TRUE;
@@ -1621,8 +1621,8 @@ static _spell_t __spells[] =
         { 69, 100, _psionic_healing4_spell }, /* 430hp */
         {102, 125, _psionic_healing5_spell }},/* 550hp */
         "Psionic Healing is a recovery spell. By focusing your mind, you will be able "
-          "to heal your wounds, cuts, stunning and poisoning; with "
-          "total focus, you can even restore your stats."
+          "to heal your wounds, cuts and stunning; with sufficient focus, you can cure "
+          "hallucination and even restore your stats."
     },
     { "Brain Smash", _PSION_BRAIN_SMASH, 30, {  
         { 10,  60, _brain_smash1_spell },
@@ -1890,17 +1890,16 @@ static void _gain_level(int new_level)
         _study(new_level);
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info *_get_powers(void)
 {
-    int ct = 0;
+    static power_info psion_powers[2] =
+    {
+        { A_NONE, { 15, 0, 30, clear_mind_spell}},
+        { -1, { -1, -1, -1, NULL}}
+    };
+    psion_powers[0].stat = _spell_stat();
 
-    spell_info* spell = &spells[ct++];
-    spell->level = 15;
-    spell->cost = 0;
-    spell->fail = calculate_fail_rate(spell->level, 30, _spell_stat_idx());
-    spell->fn = clear_mind_spell;
-
-    return ct;
+    return psion_powers;
 }
 
 static void _choose_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -1931,10 +1930,11 @@ static int _choose_spell(void)
     return i;
 }
 
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
     int       i, id, stat, ct = 0;
     _spell_t *base;
+    static spell_info spells[MAX_SPELLS];
 
     /* First Choose which Psionic Spell to use */
     id = _choose_spell();
@@ -1946,7 +1946,6 @@ static int _get_spells(spell_info* spells, int max)
     /* Then Choose which power level of that spell to use */
     for (i = 0; i < _MAX_POWER; i++)
     {
-        if (ct >= max) break;
         if (base->level <= p_ptr->lev)
         {
             spell_info* current = &spells[ct];
@@ -1973,7 +1972,8 @@ static int _get_spells(spell_info* spells, int max)
             ct++;
         }
     }
-    return ct;
+    spells[ct].fn = NULL;
+    return spells;
 }
 
 static void _calc_bonuses(void)
@@ -2220,25 +2220,9 @@ static void _player_action(int energy_use)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(5, 10));
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *psion_get_class(void)
@@ -2285,8 +2269,8 @@ class_t *psion_get_class(void)
         me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
-        me.get_spells = _get_spells;
-        me.get_powers = _get_powers;
+        me.get_spells_fn = _get_spells;
+        me.get_powers_fn = _get_powers;
         me.character_dump = _character_dump;
         me.gain_level = _gain_level;
         me.player_action = _player_action;

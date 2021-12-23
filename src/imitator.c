@@ -1,3 +1,5 @@
+#ifdef FIXED_IMITATOR
+
 #include "angband.h"
 #include "monspell.h"
 
@@ -247,3 +249,5 @@ class_t* imitator_get_class(void)
 
     return &me;
 }
+
+#endif /*FIXED_IMITATOR*/

@@ -1,6 +1,6 @@
-<style:title>The FrogComposband Glossary</style>
+<style:title>The Oposband Glossary</style>
 
-While playing FrogComposband, discussing it with other players, or even just reading the help files, you are likely to run into many esoteric game concepts, mysterious abbreviations, or words that have specific meanings within the game. It is by no means necessary for a new player to read this file before starting play - most players can (and do) just figure things out as they go along, the glossary includes many advanced topics in addition to the basics, and all the important concepts are also covered elsewhere in the help. But you can refer to this list as a quick cheat-sheet if you are unsure about a particular word or game concept, or just read the whole thing for your amusement :)
+While playing Oposband, discussing it with other players, or even just reading the help files, you are likely to run into many esoteric game concepts, mysterious abbreviations, or words that have specific meanings within the game. It is by no means necessary for a new player to read this file before starting play - most players can (and do) just figure things out as they go along, the glossary includes many advanced topics in addition to the basics, and all the important concepts are also covered elsewhere in the help. But you can refer to this list as a quick cheat-sheet if you are unsure about a particular word or game concept, or just read the whole thing for your amusement :)
 
 See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 
@@ -61,6 +61,8 @@ See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 <color:keyword>coffee-break mode</color>: A birth option that accelerates the game and turns the wilderness off. Automatically turned on if Beginner Mode is selected.
 
 <color:keyword>confusion</color>: 1) A status effect, affects both players and monsters. See <link:status.txt#Confusion>. 2) An element, causes the status effect if not resisted.
+
+<color:keyword>critical hit</color>: An exceptionally damaging hit; multiplies the damage dice of the weapon or projectile.
 
 <color:keyword>curse</color>: 1) Item curse; a negative, usually removable object attribute that prevents you from unequipping that object while it remains cursed. 2) A monster or player-monster spell attack, particularly one that offers a saving throw, deals non-elemental damage and may cause item curses; one of Wounding Curse, Evil Curse, Mighty Curse, Death Curse or Hand of Doom. 3) One of a number of special effects with similarity to item curses, such as the Amberite blood curse.
 
@@ -128,7 +130,7 @@ See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 
 <color:keyword>genocide</color>: An attempt to remove a monster species (all monsters sharing the same glyph) from a dungeon level. Does not affect uniques. See <link:monster.txt#Genocide>.
 
-<color:keyword>global map</color>: Also <color:keyword>overworld map</color>; a scaled map of the FrogComposband world, accessible in towns and the wilderness through the '<' command and generally used for travelling from towns to dungeons or from dungeon to dungeon.
+<color:keyword>global map</color>: Also <color:keyword>overworld map</color>; a scaled map of the Oposband world, accessible in towns and the wilderness through the '<' command and generally used for travelling from towns to dungeons or from dungeon to dungeon.
 
 <color:keyword>good object</color>: An item that has some magical enchantments on it, but is not an artifact or ego item.
 
@@ -178,7 +180,7 @@ See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 
 <color:keyword>life points</color>: A measure of your attachment to life, displayed on a range of 0% to 99% if depleted. Losing life points reduces effective maximum HP; if life points drop below 0, the character will transform into an undead race, or die outright if this is not possible. See <link:faq.txt#LifePoints>.
 
-<color:keyword>life rating</color>: 1) Random life rating; a measure, ranging from 87% to 117%, of how lucky you got with random hit-point gain rolls in your current life; life rating as revealed by Self Knowledge. See <link:faq.txt#LifeRating>. 2) Life rating multiplier; a fixed non-random HP multiplier based on your race, class or personality, not directly related to the random life rating. 3) +Life and -Life; item attributes that modify a constitution-based HP multiplier.
+<color:keyword>life rating</color>: 1) Random life rating; a measure, ranging from 0 to 76, of how lucky you got with random hit-point gain rolls in your current life; life rating as revealed by Self Knowledge. See <link:faq.txt#LifeRating>. 2) Life multiplier; a fixed non-random HP multiplier based on your race, class or personality, not directly related to the random life rating. 3) +Life and -Life; item attributes that modify a constitution-based HP multiplier.
 
 <color:keyword>lightning</color>: A synonym for the element electricity.
 
@@ -284,6 +286,8 @@ See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 
 <color:keyword>shaft</color>: A connection between two dungeon levels or between a dungeon level and the surface. Differs from stairs in that most shafts skip a depth; downstairs on DL 8 will always lead to DL 9, while a shaft down will lead to DL 10 unless there is a quest on level 9.
 
+<color:keyword>sharpness</color>: A weapon attribute; allows the weapon to score vorpal criticals. See <link:attack.txt#Sharpness>.
+
 <color:keyword>shop</color>: Also <color:keyword>store</color>; a building where thematic objects can be bought and sold. Compare <color:keyword>building</color>.
 
 <color:keyword>shuffle</color>: 1) Shop shuffle; paying a shopkeeper to restock the store with new items. 2) Equipment shuffle; updating multiple pieces of equipment at once. 3) The Shuffle spell, a spell in the Trump realm with highly unpredictable effects.
@@ -350,6 +354,8 @@ See <link:objects.txt#InscriptionAbbrev> for item attribute abbreviations.
 
 <color:keyword>vault</color>: A special area of a dungeon level, characterized by the presence of permanent walls and a high concentration of both dangerous monsters and exceptional loot. In an extended sense, any special dungeon room with many out-of-depth monsters.
 
+<color:keyword>vorpal weapon</color>: A weapon with the Sharpness attribute. See <color:keyword>sharpness</color>.
+
 <color:keyword>vulnerability</color>: An attribute that causes you to take more damage from an element, and makes your items more likely to be damaged or destroyed by that element. The opposite of a resistance.
 
 <color:keyword>wanted monster</color>: A monster whose corpse, skeleton or ears can be turned in at various town locations to collect a reward. <color:o>Daily wanted</color>: a non-unique wanted monster with monetary rewards, changing from day to day. <color:o>Wanted unique</color>: any of the 20 uniques on the list of wanted monsters for that game, with an item reward when the unique is turned in.
@@ -367,7 +373,7 @@ The following terms are either slang, informal expressions or terms used in the 
 
 <color:keyword>ASC</color>: Anti-summoning corridor. A tunnel dug into the dungeon walls by you, especially one that zigzags, to limit space for summons and reduce the number of monsters that can attack you at once.
 
-<color:keyword>band</color>/<color:keyword>*band</color>: Any game descended from the original Angband, including FrogComposband.
+<color:keyword>band</color>/<color:keyword>*band</color>: Any game descended from the original Angband, including Oposband.
 
 <color:keyword>bravery</color>: The quality displayed by your friend when he did something that by all rights should have got his character killed, but actually didn't because your friend is a lucky bastard. "That was pretty brave."
 
@@ -375,7 +381,7 @@ The following terms are either slang, informal expressions or terms used in the 
 
 <color:keyword>bump</color>: Melee; to hit things in melee. "Warriors get great bump attacks but not much else." Bump class: a class that relies on melee.
 
-<color:keyword>cheese</color>: A strategy that works but is considered uncool, usually because it either is extremely dull or relies on some exploit in game mechanics (or both). "LOS cheese is a lot less effective in FrogComposband than V, but still works at times."
+<color:keyword>cheese</color>: A strategy that works but is considered uncool, usually because it either is extremely dull or relies on some exploit in game mechanics (or both). "LOS cheese is a lot less effective in Oposband than V, but still works at times."
 
 <color:keyword>CLW/CSW/CCW</color>: Cure Light Wounds/Cure Serious Wounds/Cure Critical Wounds; the three common minor healing potions, staple items of the early game.
 
@@ -399,7 +405,7 @@ The following terms are either slang, informal expressions or terms used in the 
 
 <color:keyword>Indy</color>/<color:keyword>Indy's whip</color>: An artifact found in the I Hate Snakes! quest. "Do snakes for Indy if you don't get any decent weapons early."
 
-<color:keyword>J</color>/<color:keyword>the J</color>: The Serpent of Chaos, the final boss of the Angband dungeon and the monster you must kill to win a game of FrogComposband. "Going to J tonight?"
+<color:keyword>J</color>/<color:keyword>the J</color>: The Serpent of Chaos, the final boss of the Angband dungeon and the monster you must kill to win a game of Oposband. "Going to J tonight?"
 
 <color:keyword>loot</color>: 1) All items and money discovered. 2) A particularly valuable item; an item worth picking up. "Don't forget to pick up Sam's hat, that's loot."
 
@@ -427,7 +433,7 @@ The following terms are either slang, informal expressions or terms used in the 
 
 <color:keyword>resist hole</color>: The condition of lacking a particular resistance, especially on a strong character who has most or all other resistances covered. "Fighting Nebiros with dark and nether holes is brave."
 
-<color:keyword>rfe</color>: Request for enhancement; a serious or sarcastic request for FrogComposband to be changed in a particular way. "RFE: New mut that gives a flat chance of just teleing right next to the highest-DL monster on the level."
+<color:keyword>rfe</color>: Request for enhancement; a serious or sarcastic request for Oposband to be changed in a particular way. "RFE: New mut that gives a flat chance of just teleing right next to the highest-DL monster on the level."
 
 <color:keyword>rip</color>: Rest In Peace; in an extended sense, to die. "RIP me"; "rip Oberon"; "rip tourists being OP"; "argh, just ripped to J again".
 
@@ -452,6 +458,5 @@ The following terms are either slang, informal expressions or terms used in the 
 <color:keyword>the worst</color>: Used in the set phrase <color:o>keepers of secrets are the worst</color> to indicate that Keepers of Secrets are literally the worst possible thing a character can run into. Otherwise used to mean that a thing is annoying, dangerous or a mild inconvenience, but not literally the worst thing due to Keepers of Secrets being the worst.
 
 <color:D>
-Original   : FrogComposband 7.1.liquorice
-Updated    : FrogComposband 7.1.salmiak
+Last Updated: Oposband 0.4.0
 </color>

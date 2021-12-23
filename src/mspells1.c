@@ -186,6 +186,7 @@ u32b get_curse(int power, object_type *o_ptr)
     while(1)
     {
         new_curse = (1 << (randint0(MAX_CURSE)+4));
+        if (new_curse & TRC_FLAGGY_MASK) continue;
         if (power == 2)
         {
             if (!(new_curse & TRC_HEAVY_MASK)) continue;
@@ -199,7 +200,7 @@ u32b get_curse(int power, object_type *o_ptr)
             if (new_curse & TRC_HEAVY_MASK) continue;
         }
         if (new_curse == OFC_LOW_MELEE && !object_is_weapon(o_ptr)) continue;
-        if (new_curse == OFC_LOW_AC && !object_is_armor(o_ptr)) continue;
+        if (new_curse == OFC_LOW_AC && !object_is_armour(o_ptr)) continue;
         break;
     }
     return new_curse;
@@ -261,6 +262,7 @@ void curse_equipment(int chance, int heavy_chance)
             o_ptr->feeling = FEEL_NONE;
         }
         p_ptr->update |= PU_BONUS;
+        p_ptr->window |= PW_INVEN;
     }
 }
 
@@ -295,7 +297,6 @@ int anti_magic_check(void)
     case CLASS_PALADIN:
     case CLASS_WARRIOR_MAGE:
     case CLASS_CHAOS_WARRIOR:
-	case CLASS_CHAOS_MAGE:
     case CLASS_MONK:
     case CLASS_MYSTIC:
     case CLASS_BEASTMASTER:
@@ -305,7 +306,6 @@ int anti_magic_check(void)
         return 20;
 
     case CLASS_MINDCRAFTER:
-	case CLASS_IMITATOR:
     case CLASS_FORCETRAINER:
     case CLASS_PSION:
         return 30;

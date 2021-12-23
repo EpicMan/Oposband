@@ -1,21 +1,21 @@
 Level Size Options
 
-The size of FrogComposband levels varies from dungeon to dungeon, and 
-from depth to depth, but the same basic system applies: the width of a 
-level is always a multiple of 66 grids (no greater than 198), and the 
-height of a level is always a multiple of 22 grids (no greater than 
-66). Some dungeons are flagged big, meaning they normally always 
-generate the largest possible levels (198x66), while Labyrinth, Warrens 
-and Mine are marked smallest, meaning they always generate the smallest 
-possible levels (66x22). Some dungeons (notably the main dungeon, 
-Angband) obey coffee-break level generation, which means the average 
-size of levels increases with depth; small levels are very frequently 
-created, but by the time the player reaches the deep dungeons, these 
-"small" levels start approaching big levels in size and are typically 
-198x44 or 132x66. The remaining dungeons follow standard generation, 
-which means there is a 1 in 5 chance of generating a smallish level 
-(very small levels are excluded) and a 4 in 5 chance of generating a 
-big 198x66 level.
+The size of Oposband levels varies from dungeon to dungeon, and from 
+depth to depth, but the same basic system applies: the width of a level 
+is always a multiple of 66 grids (no greater than 198), and the height 
+of a level is always a multiple of 22 grids (no greater than 66). Some 
+dungeons are flagged big, meaning they normally always generate the 
+largest possible levels (198x66), while Labyrinth, Warrens and Mine are 
+marked smallest, meaning they always generate the smallest possible 
+levels (66x22). Some dungeons (notably the main dungeon, Angband) obey 
+coffee-break level generation, which means the average size of levels 
+increases with depth; small levels are very frequently created, but by 
+the time the player reaches the deep dungeons, these "small" levels 
+start approaching big levels in size and are typically 198x44 or 
+132x66. The remaining dungeons follow standard generation, which means 
+there is a 1 in 5 chance of generating a smallish level (very small 
+levels are excluded) and a 4 in 5 chance of generating a big 198x66 
+level.
 
 Modifying the level size birth option allows you to choose from 10 
 slightly different methods to generate level sizes, in addition to the 
@@ -94,6 +94,6 @@ Tiny
    even in "big" dungeons, is guaranteed to be 1x1.
 
 
-Updated    : FrogComposband 7.1.chocolate
+Last Updated: FrogComposband 7.1.chocolate
 
 

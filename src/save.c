@@ -83,6 +83,7 @@ void updatecharinfoS(void)
 	if (p_ptr->dragon_realm > 0)fprintf(oFile, "mRealm1: \"%s\",\n", drealm->name);
 	fprintf(oFile, "cLvl: \"%i\",\n", p_ptr->lev);
 	fprintf(oFile, "isDead: \"%i\",\n", p_ptr->is_dead);
+	fprintf(oFile, "isThrall: \"%i\",\n", thrall_mode ? 1 : 0);
 	fprintf(oFile, "killedBy: \"%s\"\n", p_ptr->died_from);
 	fprintf(oFile, "}");
 	fclose(oFile);
@@ -106,6 +107,7 @@ static void wr_monster(savefile_ptr file, monster_type *m_ptr)
     savefile_write_s16b(file, m_ptr->max_maxhp);
     savefile_write_byte(file, m_ptr->mspeed);
     savefile_write_s16b(file, m_ptr->energy_need);
+    savefile_write_byte(file, m_ptr->ml);
 
     if (!is_original_ap(m_ptr))
     {
@@ -160,6 +162,11 @@ static void wr_monster(savefile_ptr file, monster_type *m_ptr)
     {
         savefile_write_byte(file, SAVE_MON_PARENT);
         savefile_write_s16b(file, m_ptr->parent_m_idx);
+    }
+    if (m_ptr->parent_r_idx)
+    {
+        savefile_write_byte(file, SAVE_MON_PARENT_RACE);
+        savefile_write_s16b(file, m_ptr->parent_r_idx);
     }
     if (m_ptr->pack_idx)
     {
@@ -443,6 +450,9 @@ static void wr_options(savefile_ptr file)
     savefile_write_byte(file, mana_warn);
     savefile_write_byte(file, random_artifact_pct);
     savefile_write_byte(file, reduce_uniques_pct);
+    savefile_write_byte(file, object_list_width);
+    savefile_write_byte(file, monster_list_width);
+    savefile_write_byte(file, generate_empty);
     savefile_write_byte(file, small_level_type);
 
     /*** Cheating options ***/
@@ -502,7 +512,6 @@ static void wr_quick_start(savefile_ptr file)
     savefile_write_byte(file, previous_char.realm2);
     savefile_write_byte(file, previous_char.dragon_realm);
     savefile_write_s32b(file, previous_char.au);
-    savefile_write_s16b(file, previous_char.chaos_patron);
 
     for (i = 0; i < 6; i++)
         savefile_write_s16b(file, previous_char.stat_max[i]);
@@ -510,9 +519,31 @@ static void wr_quick_start(savefile_ptr file)
     savefile_write_byte(file, previous_char.quick_ok);
 }
 
+static void wr_mystery(savefile_ptr file)
+{
+    if ((no_wilderness) || (!seed_dungeon) || (d_info[DUNGEON_MYSTERY].flags1 & DF1_SUPPRESSED))
+    {
+        savefile_write_byte(file, 0xFD);
+        return;
+    }
+    else
+    {
+        dungeon_info_type *d_ptr = &d_info[DUNGEON_MYSTERY];
+        savefile_write_byte(file, 0xFF);
+        savefile_write_byte(file, d_ptr->dy);
+        savefile_write_byte(file, d_ptr->dx);
+        savefile_write_s16b(file, d_ptr->mindepth);
+        savefile_write_s16b(file, d_ptr->maxdepth);
+        savefile_write_s16b(file, (s16b)d_ptr->final_guardian);
+        savefile_write_s16b(file, (s16b)d_ptr->initial_guardian);
+        savefile_write_byte(file, d_ptr->wild_type);
+        savefile_write_byte(file, d_ptr->min_plev);
+    }
+}
+
 static void wr_extra(savefile_ptr file)
 {
-    int i;
+    int i,j;
     byte tmp8u;
 
     savefile_write_s32b(file, p_ptr->id);
@@ -523,7 +554,9 @@ static void wr_extra(savefile_ptr file)
 
     savefile_write_s32b(file, game_mode);
     savefile_write_byte(file, coffee_break);
+    savefile_write_byte(file, pantheon_count);
     savefile_write_byte(file, game_pantheon);
+    savefile_write_byte(file, active_pantheon);
     savefile_write_byte(file, p_ptr->prace);
     savefile_write_byte(file, p_ptr->pclass);
     savefile_write_byte(file, p_ptr->personality);
@@ -549,8 +582,9 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->lev);
     savefile_write_u32b(file, p_ptr->quest_seed);
 
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency[i]);
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) savefile_write_s16b(file, p_ptr->proficiency_cap[i]);
+    for (i = 0; i < 64; i++) savefile_write_s16b(file, p_ptr->spell_exp[i]);
+    for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) savefile_write_s16b(file, p_ptr->weapon_exp[i][j]);
+    for (i = 0; i < 10; i++) savefile_write_s16b(file, p_ptr->skill_exp[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_s32b(file, p_ptr->magic_num1[i]);
     for (i = 0; i < MAX_MAGIC_NUM; i++) savefile_write_byte(file, p_ptr->magic_num2[i]);
 
@@ -601,10 +635,13 @@ static void wr_extra(savefile_ptr file)
     for (i = 0; i < tmp8u; i++)
         savefile_write_u32b(file, dungeon_flags[i]);
 
+    wr_mystery(file);
+
     savefile_write_s16b(file, p_ptr->concent);
     savefile_write_s16b(file, p_ptr->blind);
     savefile_write_s16b(file, p_ptr->paralyzed);
     savefile_write_s16b(file, p_ptr->confused);
+    savefile_write_s16b(file, p_ptr->food);
     savefile_write_s16b(file, p_ptr->energy_need);
     savefile_write_s16b(file, p_ptr->fast);
     savefile_write_s16b(file, p_ptr->slow);
@@ -630,6 +667,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->alter_reality);
     savefile_write_s16b(file, p_ptr->see_infra);
     savefile_write_s16b(file, p_ptr->tim_infra);
+    savefile_write_s16b(file, p_ptr->tim_poet);
+    savefile_write_s16b(file, p_ptr->tim_understanding);
     savefile_write_s16b(file, p_ptr->oppose_fire);
     savefile_write_s16b(file, p_ptr->oppose_cold);
     savefile_write_s16b(file, p_ptr->oppose_acid);
@@ -727,6 +766,10 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->entrench_ct);
     savefile_write_byte(file, p_ptr->sense_artifact);
     savefile_write_s16b(file, p_ptr->duelist_target_idx);
+    savefile_write_s16b(file, p_ptr->health_who);
+    savefile_write_s16b(file, target_who);
+    savefile_write_s16b(file, pet_t_m_idx);
+    savefile_write_s16b(file, riding_t_m_idx);
 
     /* by henkma */
     savefile_write_s16b(file, p_ptr->tim_reflect);
@@ -776,6 +819,13 @@ static void wr_extra(savefile_ptr file)
     savefile_write_byte(file, p_ptr->wait_report_score);
     savefile_write_u32b(file, seed_flavor);
     savefile_write_u32b(file, seed_town);
+    savefile_write_u32b(file, seed_dungeon);
+
+    /* It probably isn't possible to save during a time stop, so world_monster
+     * should always be 0 */
+    savefile_write_byte(file, world_monster);
+    savefile_write_s16b(file, p_ptr->no_air);
+    if (p_ptr->no_air) savefile_write_byte(file, no_air_monster);
 
     if (p_ptr->personality == PERS_SPLIT) split_save(file);
 
@@ -789,11 +839,13 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s32b(file, game_turn);
     savefile_write_s32b(file, player_turn);
     savefile_write_s32b(file, dungeon_turn);
+    savefile_write_s32b(file, image_turn);
     savefile_write_s32b(file, old_battle);
     savefile_write_s16b(file, today_mon);
     savefile_write_s16b(file, p_ptr->today_mon);
     savefile_write_s16b(file, p_ptr->riding);
     savefile_write_s16b(file, p_ptr->floor_id);
+    savefile_write_byte(file, overworld_visit);
     savefile_write_u32b(file, playtime);
     savefile_write_u32b(file, p_ptr->count);
     savefile_write_byte(file, p_ptr->coffee_lv_revisits);
@@ -1244,8 +1296,17 @@ static bool wr_savefile_new(savefile_ptr file)
 
     wr_extra(file);
 
-    savefile_write_s16b(file, p_ptr->life_rating);
+    tmp16u = PY_MAX_LEVEL;
+    savefile_write_u16b(file, tmp16u);
+    for (i = 0; i < tmp16u; i++)
+        savefile_write_s16b(file, p_ptr->player_hp[i]);
 
+    savefile_write_u32b(file, p_ptr->spell_learned1);
+    savefile_write_u32b(file, p_ptr->spell_learned2);
+    savefile_write_u32b(file, p_ptr->spell_worked1);
+    savefile_write_u32b(file, p_ptr->spell_worked2);
+    savefile_write_u32b(file, p_ptr->spell_forgotten1);
+    savefile_write_u32b(file, p_ptr->spell_forgotten2);
     savefile_write_s16b(file, p_ptr->learned_spells);
     savefile_write_s16b(file, p_ptr->add_spells);
 
@@ -1268,6 +1329,7 @@ static bool wr_savefile_new(savefile_ptr file)
         savefile_write_cptr(file, "");
 
     spell_stats_on_save(file);
+    skills_on_save(file);
     stats_on_save(file);
 
     if (!p_ptr->is_dead)
@@ -1292,14 +1354,9 @@ static bool save_player_aux(char *name)
     if (file)
     {
         /* Hack: Wiping the monster list clears the current duel! */
-        int tmp_ix = p_ptr->duelist_target_idx;
-
+        handle_tmp_indices(TRUE, TRUE);
         ok = wr_savefile_new(file);
-        if (tmp_ix)
-        {
-            p_ptr->duelist_target_idx = tmp_ix;
-            p_ptr->redraw |= PR_STATUS;
-        }
+        handle_tmp_indices(FALSE, TRUE);
 
         if (!savefile_close(file)) ok = FALSE;
     }
@@ -1591,9 +1648,8 @@ bool load_player(void)
         /* Extract version */
         z_major = vvv[0];
         z_minor = vvv[1];
-		z_patch = vvv[2];
+        z_patch = vvv[2];
         sf_extra = vvv[3];
-
 
         /* Clear screen */
         Term_clear();
@@ -1642,10 +1698,9 @@ bool load_player(void)
         /* Give a conversion warning */
         if ((VER_MAJOR != z_major) ||
             (VER_MINOR != z_minor) ||
-			(VER_PATCH != z_patch))
+            (VER_PATCH != z_patch))
         {
-            msg_format("Converted a %d.%d.%d savefile.",
-                (z_major > 9) ? z_major-10 : z_major , z_minor, z_patch);
+            msg_format("Converted a %d.%d.%d savefile.", z_major , z_minor, z_patch);
             msg_print(NULL);
         }
 
@@ -1708,8 +1763,8 @@ bool load_player(void)
 
 
     /* Message */
-    msg_format("Error (%s) reading %d.%d.%d savefile.",
-           what, z_major, z_minor, z_patch);
+    msg_format("Error (%s) reading %d.%d.%s savefile.",
+           what, (z_major>9) ? z_major - 10 : z_major, z_minor, z_patch);
     msg_print(NULL);
 
     /* Oops */

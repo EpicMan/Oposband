@@ -173,6 +173,9 @@
     <ClInclude Include="src\z-virt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\chaos_patron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\alky.c">
@@ -223,7 +226,7 @@
     <ClCompile Include="src\cave.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\chaos_mage.c">
+    <ClCompile Include="src\logrus_master.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\chaos_warrior.c">
@@ -748,9 +751,6 @@
     <ClCompile Include="src\z-doc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\z-doc-test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\z-form.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -784,8 +784,11 @@
     <ClCompile Include="src\imitator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\hexblade.c">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="src\hissatsu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_mummy.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

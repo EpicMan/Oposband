@@ -366,12 +366,12 @@ Enchanted      <indent>an enchanted item (includes good ego items and artifacts)
   Dx : affects dexterity              Li : resistance to light
   Cn : affects constitution           Dk : resistance to darkness
   Ch : affects charisma               Cf : resistance to confusion
-  Md : affects magic devices          Nt : resistance to nether
+  Md : affects device skill           Nt : resistance to nether
   Sl : affects stealth                Nx : resistance to nexus
   Sr : affects searching ability      So : resistance to sound
   If : affects infravision            Sh : resistance to shards
   Dg : affects tunneling ability      Ca : resistance to chaos
-  Lf : affects your life rating       Di : resistance to disenchantment
+  Lf : affects life multiplier        Di : resistance to disenchantment
   *Ac: immune to acid                 Ti : resistance to time
   *El: immune to electricity          Bl : resistance to blindness
   *Fi: immune to fire                 Fe : resistance to fear
@@ -388,7 +388,7 @@ Enchanted      <indent>an enchanted item (includes good ego items and artifacts)
   Rg : regeneration                   [Mr: magic resistance
   Rm : mana recovery                  |A : acid brand
   Lv : levitation                     |E : electricity brand
- Nv : night vision                   |F : fire brand
+  Nv : night vision                   |F : fire brand
   Lu : extra light                    |Co: cold brand
   Wr : provides warning               |P : poison brand
   Xm : extra might when shooting      |Dk: darkness brand
@@ -429,6 +429,8 @@ Enchanted      <indent>an enchanted item (includes good ego items and artifacts)
 </style>
 For example, armor with base resistance would display as {AcElFiCo} while a really good weapon might display as {Cn;LuAg|VS/XU/*~U}, meaning it gives a bonus to Constitution, grants increased light radius, aggravates monsters, is both vampiric and sharp (|V and |S; notice the second | does not repeat), has *slay* demons, also slays evil and grants ESP demons as well. (Quick quiz: which item is it?)
 
+See <link:objflags.txt#Flags> for a more detailed explanation of these object properties.
+
 <topic:InscriptionSummary><style:heading>Inscriptions: Summary</style>
 
 <color:U>Inscription Form     Meaning</color>
@@ -455,11 +457,5 @@ $                    <indent>Disable warning prompt.</indent>
 Be sure to read <link:objects.txt#Inscriptions> if this is unclear to you.
 <color:D>
 --
-Original   : (??)
-Updated    : (??)
-Updated    : Zangband DevTeam
-Updated    : Hengband 1.3.0
-Updated    : PosChengband 4.0.0
-Updated    : FrogComposband 7.1.chocolate
-Updated    : FrogComposband 7.1.liquorice
+Last Updated: FrogComposband 7.1.liquorice
 </color>

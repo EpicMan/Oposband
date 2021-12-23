@@ -260,7 +260,9 @@ discuss each of these in turn.
   ~  Leave on the floor
   
   These are the primary actions. Pick-up is assumed if the rule does 
-  not begin with !, ; or ~.
+  not begin with !, ; or ~. Note that if the always_pickup option is 
+  on, then ; and ~ will be overridden by it; and even ! is overridden 
+  unless the leave_mogaminator option is also on.
   
   In addition, there are the following action letters that augment the 
   primary action:
@@ -725,13 +727,13 @@ and edit them in-game, which you cannot do with the global defaults.)
 Once you activate the Mogaminator, your preferences are stored in a 
 separate file in a system-dependent location. On Windows, they will be 
 stored at lib/user/pickpref-NAME.prf, while on Linux they might be 
-moved to ~/.angband/FrogComposband/pickpref-NAME.prf (outside the 
-game's directory structure). Here, NAME is replaced with your player's 
-current name. So if you want to edit your character's preferences using 
-an outside text editor, this is the file you need to change. It's 
-usually simpler to just use the in-game editor; but if you do edit 
-preferences outside the game while you are playing, be sure to use the 
-$ command to force the game to reload the preference file.
+moved to ~/.angband/Oposband/pickpref-NAME.prf (outside the game's 
+directory structure). Here, NAME is replaced with your player's current 
+name. So if you want to edit your character's preferences using an 
+outside text editor, this is the file you need to change. It's usually 
+simpler to just use the in-game editor; but if you do edit preferences 
+outside the game while you are playing, be sure to use the $ command to 
+force the game to reload the preference file.
 
 The promised reference tables follow below... enjoy!
 
@@ -1159,7 +1161,6 @@ Table X: Conditionals: Literals
               the Filthy Rag race).
   
 --
-Original   : PosChengband 4.0.0
-Updated    : FrogComposband 7.1.liquorice
+Last Updated: Oposband 0.4.0
 
 

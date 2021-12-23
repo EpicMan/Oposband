@@ -61,7 +61,7 @@
 # N: section type (1 for Tolkienish names, 2 for scroll names)
 # D: data
 
-# In FrogComposband, these names are used for random player name generation
+# In Oposband, these names are used for random player name generation
 # at birth. (Scroll names have a 1-in-8 chance of being used, otherwise
 # Tolkien names are used.)
 

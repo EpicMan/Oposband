@@ -1,6 +1,6 @@
 Creating a Character
 
-Please choose one of the following help sections:
+Please choose one of the following help topics:
 
     [a] Creating a Character
     [b] The Welcome Screen
@@ -12,6 +12,7 @@ Please choose one of the following help sections:
     [h] Additional Abilities
     [i] Birth Options
     [j] Reference
+    [k] Game Speed Modes
 
     (?) Help System Commands
 

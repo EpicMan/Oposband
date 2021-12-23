@@ -48,6 +48,14 @@ void bard_check_music(void)
             p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
         }
     }
+    if (p_ptr->spell_exp[spell] < SPELL_EXP_BEGINNER)
+        p_ptr->spell_exp[spell] += 5;
+    else if(p_ptr->spell_exp[spell] < SPELL_EXP_SKILLED)
+    { if (one_in_(2) && (dun_level > 4) && ((dun_level + 10) > p_ptr->lev)) p_ptr->spell_exp[spell] += 1; }
+    else if(p_ptr->spell_exp[spell] < SPELL_EXP_EXPERT)
+    { if (one_in_(5) && ((dun_level + 5) > p_ptr->lev) && ((dun_level + 5) > s_ptr->slevel)) p_ptr->spell_exp[spell] += 1; }
+    else if(p_ptr->spell_exp[spell] < SPELL_EXP_MASTER)
+    { if (one_in_(5) && ((dun_level + 5) > p_ptr->lev) && (dun_level > s_ptr->slevel)) p_ptr->spell_exp[spell] += 1; }
 
     /* Do any effects of continual song */
     do_spell(REALM_MUSIC, spell, SPELL_CONT);
@@ -120,20 +128,11 @@ static void _stop_singing_spell(int cmd, variant *res)
     }
 }
 
-
-
-static int _get_powers(spell_info* spells, int max)
+static power_info _bard_powers[] =
 {
-    int ct = 0;
-
-    spell_info* spell = &spells[ct++];
-    spell->level = 1;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = _stop_singing_spell;
-
-    return ct;
-}
+    { A_NONE, { 1, 0,  0, _stop_singing_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static caster_info * _caster_info(void)
 {
@@ -164,7 +163,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
 }
 
@@ -208,7 +207,7 @@ class_t *bard_get_class(void)
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/
-        me.get_powers = _get_powers;
+        me.get_powers = _bard_powers;
         me.character_dump = spellbook_character_dump;
         init = TRUE;
     }

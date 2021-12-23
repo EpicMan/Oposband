@@ -94,6 +94,7 @@ bool creating_savefile;        /* New savefile is currently created */
 
 u32b seed_flavor;        /* Hack -- consistent object colors */
 u32b seed_town;            /* Hack -- consistent town layout */
+u32b seed_dungeon;       /* Seed for dungeon selection */
 
 s16b command_cmd;        /* Current "Angband Command" */
 
@@ -131,6 +132,7 @@ s32b dungeon_turn_limit;    /* Limit of game turn in dungeon */
 s32b old_turn;            /* Turn when level began */
 s32b old_battle;
 s32b player_turn;
+s32b image_turn;
 
 bool use_sound;            /* The "sound" mode is enabled */
 bool use_graphics;        /* The "graphics" mode is enabled */
@@ -169,7 +171,12 @@ char summon_kin_type;   /* Hack, by Julian Lighton: summon 'relatives' */
 s16b warning_hack_hp = 0;
 s16b shuffling_hack_hp = 0;
 byte poison_warning_hack = 0;
+byte energy_need_hack = 40;
+s16b energy_cost_hack = 0;
+bool show_energy_cost;
 bool spawn_hack = FALSE;
+bool atlantis_hack = FALSE;
+bool mystery_cave_ready = FALSE;
 
 int total_friends = 0;
 s32b friend_align = 0;
@@ -187,12 +194,17 @@ bool allow_special3_hack = FALSE;
 bool temporary_name_hack = FALSE;
 bool online_macro_hack = FALSE;
 bool recall_stairs_hack = FALSE;
+bool silent_drop_hack = FALSE;
+bool check_useless_pickup_hack = FALSE;
+bool drop_near_stack_hack = FALSE;
+bool advance_time_hack = FALSE;
 byte attack_spell_hack = ASH_USELESS_ATTACK;
 byte troika_spell_hack = 0;
 s16b vampirism_hack = 1000;
 byte spell_problem = 0;
 s16b run_count = 0;
 byte autopick_inkey_hack = 0;
+bool overworld_visit = FALSE;
 
 int current_flow_depth = 0;
 
@@ -200,7 +212,7 @@ int current_flow_depth = 0;
  * Software options (set via the '=' command). See "tables.c"
  */
 
-/*** Input Options ***/
+ /*** Input Options ***/
 
 bool rogue_like_commands;    /* Rogue-like commands */
 bool always_pickup;    /* Pick things up by default */
@@ -228,6 +240,7 @@ bool auto_get_objects;
 bool auto_detect_traps;
 bool auto_map_area;
 
+bool limit_shop_prompts;
 bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 bool use_pack_slots;
 bool unified_use;	/* Use the 'a' Activate command for all items */
@@ -254,19 +267,22 @@ bool square_delays;   /* Use delay factors based on squares */
 /*** Text Display Options ***/
 
 bool plain_descriptions;    /* Plain object descriptions */
-bool always_show_list;    /* Always show list when choosing items */
+
 bool depth_in_feet;    /* Show dungeon level in feet */
 bool effective_speed;  /* Use Ighalli's speed display */
 bool describe_slots;    /* Show equipment slot descriptions */
 bool show_weights;    /* Show weights in object listings */
 bool show_discounts;
 bool show_item_graph;    /* Show items graphics */
+bool shops_mark_unseen;    /* Indicate unseen flavors in shop inventories */
 bool equippy_chars;    /* Display 'equippy' chars */
+bool display_food_bar;
 bool display_hp_bar;
 bool display_sp_bar;
 bool compress_savefile;    /* Compress messages in savefiles */
 bool abbrev_extra;    /* Describe obj's extra resistances by abbreviation */
 bool abbrev_all;    /* Describe obj's all resistances by abbreviation */
+bool mark_dragon; /* Extend '?' to random dragon resistances */
 bool exp_need;    /* Show the experience needed for next level */
 bool ignore_unview;    /* Ignore whenever any monster does */
 bool display_distance;
@@ -282,23 +298,32 @@ bool show_future_spells; /* Include future spells in lists */
 bool display_skill_num; /* Give skills numerically in char sheet */
 bool reforge_details; /* Show statistics before proceeding with reforge */
 bool auto_sticky_labels; /* Automatically make power labels sticky */
-bool show_damage; /* Show the exact damage dealt and taken */
+
 bool show_power; /* Display device powers in inventory */
 bool show_rogue_keys; /* Display roguelike keys if possible */
+bool percentage_life; /* Show life rating as a percentage */
+bool obj_list_width;
+byte object_list_width = 50;
+bool mon_list_width;
+byte monster_list_width = 50;
 
 /*** Game-Play Options ***/
 
 bool stack_force_notes;    /* Merge inscriptions when stacking */
 bool stack_force_costs;    /* Merge discounts when stacking */
 bool expand_list;    /* Expand the power of the list commands */
-bool empty_levels;    /* Allow empty 'arena' levels */
+
 bool bound_walls_perm;    /* Boundary walls become 'permanent wall' */
 bool delay_autopick;  /* Always use delayed autopick */
 bool last_words;    /* Leave last words when your character dies */
+bool unified_use;   /* Use the 'a' command to use any item */
 
 #ifdef WORLD_SCORE
 bool send_score;    /* Send score dump to the world score server */
 #endif
+
+bool allow_debug_opts;    /* Allow use of debug/cheat options */
+
 
 /*** Disturbance Options ***/
 
@@ -337,12 +362,16 @@ bool no_wilderness;
 bool ironman_shops;    /* Stores are permanently closed (*) */
 bool ironman_downward;    /* Disable recall and use of up stairs (*) */
 bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) */
+byte generate_empty = EMPTY_SOMETIMES;
 bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
 bool quest_unique; /* Random quests for unique monsters only */
 bool random_artifacts;
 byte random_artifact_pct = 100;
 bool single_pantheon; /* Only use one pantheon */
+bool guaranteed_pantheon;
 byte game_pantheon = 0;
+byte active_pantheon = 0;
+byte pantheon_count = 2;
 bool no_artifacts;
 bool no_egos;
 bool no_selling;
@@ -371,7 +400,7 @@ bool destroy_debug;
 bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 bool destroy_identify;    /* Apply auto-destroy as identify an item */
 bool leave_worth;    /* Auto-destroyer leaves known worthy items */
-bool leave_equip;    /* Auto-destroyer leaves weapons and armor */
+bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
 bool leave_chest;    /* Auto-destroyer leaves closed chests */
 bool leave_wanted;    /* Auto-destroyer leaves wanted corpses */
 bool leave_corpse;    /* Auto-destroyer leaves corpses and skeletons */
@@ -379,6 +408,7 @@ bool leave_junk;    /* Auto-destroyer leaves junk */
 bool leave_special;    /* Auto-destroyer leaves items your race/class needs */
 bool leave_mogaminator; /* Mogaminator reads "destroy" as "leave" */
 bool no_mogaminator;   /* Deactivate the Mogaminator */
+bool check_full_pack; /* Check for full pack before manual pickup */
 
 
 /* Cheating options */
@@ -592,7 +622,23 @@ byte angband_color_table[256][4] =
     {0x00, 0xFF, 0x00, 0x00},    /* TERM_L_RED */
     {0x00, 0x00, 0xFF, 0x00},    /* TERM_L_GREEN */
     {0x00, 0x00, 0xFF, 0xFF},    /* TERM_L_BLUE */
-    {0x00, 0xC0, 0x80, 0x40}    /* TERM_L_UMBER */
+    {0x00, 0xC0, 0x80, 0x40},    /* TERM_L_UMBER */
+    {0x00, 0x40, 0xC0, 0x00},    /* TERM_I_GREEN */
+    {0x00, 0xFF, 0x80, 0xC0},    /* TERM_PINK */
+    {0x00, 0x00, 0x80, 0xFF},    /* TERM_I_BLUE */
+    {0x00, 0xC0, 0x00, 0xC0},    /* TERM_PURPLE */
+    {0x00, 0x00, 0xC0, 0x80},    /* TERM_TEAL */
+    {0x00, 0x40, 0xC0, 0xFF},    /* TERM_SKY_BLUE */
+    {0x00, 0x80, 0x80, 0x00},    /* TERM_MUD */
+    {0x00, 0xC0, 0xC0, 0x00},    /* TERM_D_YELLOW */
+    {0x00, 0x00, 0xFF, 0xC0},    /* TERM_TURQUOISE */
+    {0x00, 0xFF, 0xC0, 0x00},    /* TERM_L_ORANGE */
+    {0x00, 0xFF, 0xC0, 0xFF},    /* TERM_LILAC */
+    {0x00, 0x80, 0x00, 0x80},    /* TERM_D_PURPLE */
+    {0x00, 0x40, 0x80, 0xC0},    /* TERM_SKY_DARK */
+    {0x00, 0xC0, 0xC0, 0xFF},    /* TERM_PALE_BLUE */
+    {0x00, 0xC0, 0x40, 0x80},    /* TERM_D_PINK */
+    {0x00, 0xC0, 0x80, 0x80},    /* TERM_CHESTNUT */
 };
 
 
@@ -971,8 +1017,8 @@ bool (*get_obj_num_hook)(int k_idx);
 int obj_drop_theme;
 
 
-/* Hack, monk armor */
-bool monk_armor_aux;
+/* Hack, monk armour */
+bool monk_armour_aux;
 bool monk_notify_aux;
 
 #ifdef ALLOW_EASY_OPEN /* TNB */
@@ -1079,6 +1125,7 @@ int mutant_regenerate_mod = 100;
 bool can_save = FALSE;        /* Game can be saved */
 
 s16b world_monster;
+s16b no_air_monster;
 bool world_player;
 
 int cap_mon;
@@ -1145,6 +1192,9 @@ s16b feat_entrance;
 s16b feat_trap_open;
 s16b feat_trap_armageddon;
 s16b feat_trap_piranha;
+s16b feat_trap_bear;
+s16b feat_trap_icicle;
+s16b feat_trap_banana;
 
 /* Rubble */
 s16b feat_rubble;
@@ -1184,6 +1234,8 @@ s16b feat_deep_water;
 s16b feat_shallow_water;
 s16b feat_deep_lava;
 s16b feat_shallow_lava;
+s16b feat_deep_waste;
+s16b feat_shallow_waste;
 s16b feat_dirt;
 s16b feat_grass;
 s16b feat_flower;
@@ -1193,7 +1245,12 @@ s16b feat_mountain;
 s16b feat_swamp;
 s16b feat_dark_pit;
 s16b feat_web;
-s16b feat_table;
+s16b feat_snow_tree;
+s16b feat_snow_floor;
+s16b feat_ice_floor;
+s16b feat_glacier;
+s16b feat_glacier_steep;
+s16b feat_crevasse;
 
 /* Unknown grid (not detected) */
 s16b feat_undetected;
@@ -1227,8 +1284,8 @@ pantheon_type pant_list[PANTHEON_MAX] =
     { 0, 0, 0, "BUGGY", "Bug", "Software Bugs"},
     { PANTHEON_OLYMPIAN, RF3_OLYMPIAN, RF3_OLYMPIAN2, "Olympian", "Oly", "Olympians"},
     { PANTHEON_EGYPTIAN, RF3_EGYPTIAN, RF3_EGYPTIAN2, "Egyptian", "Egy", "Egyptian gods"},
+    { PANTHEON_NORSE, RF3_NORSE, RF3_NORSE2, "Norse", "Nor", "Aesir"},
+    { PANTHEON_HINDU, RF3_HINDU, RF3_HINDU2, "Hindu", "Ind", "Hindu deities"},
 };
 
 byte summon_pantheon_hack = 0;
-
-bool double_revenge = FALSE;

@@ -26,7 +26,6 @@ bool personality_includes_(int idx)
     return (p_ptr->personality == idx);
 }
 
-
 /****************************************************************
  * Combat
  ****************************************************************/
@@ -439,7 +438,7 @@ static void _munchkin_calc_bonuses(void)
     res_add(RES_CONF);
     p_ptr->hold_life = TRUE;
     p_ptr->munchkin_pseudo_id = TRUE;
-    if (!player_is_ninja)
+    if ((!player_is_ninja) && (!prace_is_(RACE_MON_MUMMY)) && (!prace_is_(RACE_MON_VAMPIRE)) && (!prace_is_(RACE_VAMPIRE)))
         p_ptr->lite = TRUE;
 
     p_ptr->pspeed += p_ptr->lev/10 + 5;
@@ -449,7 +448,7 @@ static void _munchkin_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_BLIND);
     add_flag(flgs, OF_RES_CONF);
     add_flag(flgs, OF_HOLD_LIFE);
-    if (!player_is_ninja)
+    if ((!player_is_ninja) && (!prace_is_(RACE_MON_MUMMY)))
         add_flag(flgs, OF_LITE);
     add_flag(flgs, OF_SPEED);
 }
@@ -651,7 +650,11 @@ static personality_ptr _get_ordinary_personality(void)
  ****************************************************************/
 static void _patient_calc_bonuses(void)
 {
-    p_ptr->to_m_chance += 1;
+    p_ptr->pspeed -= 2;
+}
+static void _patient_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    add_flag(flgs, OF_DEC_SPEED);  
 }
 static personality_ptr _get_patient_personality(void)
 {
@@ -662,29 +665,31 @@ static personality_ptr _get_patient_personality(void)
     {
         me.name = "Patient";
         me.desc = "A Patient adventurer does everything with great care, but not always "
-                    "with great expertise. Patient characters have high constitution and "
-                    "resilience but fairly mediocre skills, and get a slight penalty to spell fail rates.";
+                    "with great speed or confident hands. Patient characters are highly "
+                    "resilient, and their slow but measured movements make them relatively "
+                    "stealthy.";
 
-        me.stats[A_STR] = -1;
-        me.stats[A_INT] = -1;
-        me.stats[A_WIS] =  1;
+        me.stats[A_STR] =  0;
+        me.stats[A_INT] =  0;
+        me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  2;
         me.stats[A_CHR] =  0;
 
-        me.skills.dis = -5;
-        me.skills.dev = -2;
-        me.skills.sav =  3;
+        me.skills.dis = -1;
+        me.skills.dev = -1;
+        me.skills.sav =  4;
         me.skills.stl =  1;
         me.skills.srh =  0;
-        me.skills.fos = -3;
-        me.skills.thn = -6;
-        me.skills.thb = -3;
+        me.skills.fos =  0;
+        me.skills.thn = -3;
+        me.skills.thb =  0;
 
         me.life = 102;
         me.exp = 100;
 
         me.calc_bonuses = _patient_calc_bonuses;
+        me.get_flags = _patient_get_flags;
 
         init = TRUE;
     }
@@ -710,7 +715,7 @@ static personality_ptr _get_pious_personality(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  0;
 
         me.skills.dis = -5;
         me.skills.dev =  1;
@@ -743,9 +748,7 @@ static void _sexy_birth(void)
         if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
             rune_add(&forge, RUNE_ABSORPTION, FALSE);
         py_birth_obj(&forge);
-        p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-        if (p_ptr->proficiency_cap[PROF_BLUNT] < WEAPON_EXP_EXPERT)
-            p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
+        skills_weapon_init(TV_HAFTED, SV_WHIP, WEAPON_EXP_BEGINNER);
     }
 }
 static void _sexy_calc_bonuses(void)
@@ -772,7 +775,7 @@ static personality_ptr _get_sexy_personality(void)
         me.stats[A_WIS] = 1;
         me.stats[A_DEX] = 1;
         me.stats[A_CON] = 1;
-        me.stats[A_CHR] = 3;
+        me.stats[A_CHR] = 1;
 
         me.skills.dis = 10;
         me.skills.dev =  5;
@@ -871,7 +874,7 @@ static personality_ptr _get_sneaky_personality(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis =  5;
         me.skills.dev =  0;
@@ -914,7 +917,7 @@ void split_copy_status(byte status[MAX_PERSONALITIES], bool uusi)
     }    
 }
 
-void split_shuffle(bool birth)
+void split_shuffle(byte birth)
 {
      byte _new_status[MAX_PERSONALITIES] = {0}, laskuri = 0, i;
      int prob;
@@ -987,7 +990,7 @@ void split_shuffle(bool birth)
          if (_split_status[i] != _new_status[i]) muutos |= 0x01;
          _split_status[i] = _new_status[i];
      }  
-     if ((birth) || (!muutos)) return;
+     if ((birth == 1) || (!muutos)) return;
      _split_recalc_bonuses = TRUE;
      p_ptr->update |= (PU_BONUS | PU_HP);
      if (muutos & 0x01)
@@ -1004,7 +1007,7 @@ static void _split_birth(void)
 {
     int i; 
     _split_dominant = 0;
-    split_shuffle(TRUE);
+    split_shuffle(1);
     _split_recalc_bonuses = TRUE;
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {

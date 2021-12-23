@@ -111,7 +111,7 @@ bool object_is_favorite(object_type *o_ptr)
         obj_flags_known(o_ptr, flgs);
 
         if (!have_flag(flgs, OF_BLESSED) && 
-            !(o_ptr->tval == TV_HAFTED) && !(o_ptr->tval == TV_STAVES))
+            !(o_ptr->tval == TV_HAFTED))
             return FALSE;
         break;
     }
@@ -174,12 +174,8 @@ bool object_is_rare(object_type *o_ptr)
         break;
 
     case TV_HAFTED:
-        if (o_ptr->sval == SV_MACE_OF_DISRUPTION)
-            return TRUE;
-        break;
-
-    case TV_STAVES:
-        if (o_ptr->sval == SV_WIZSTAFF) return TRUE;
+        if (o_ptr->sval == SV_MACE_OF_DISRUPTION ||
+            o_ptr->sval == SV_WIZSTAFF) return TRUE;
         break;
 
     case TV_POLEARM:
@@ -189,13 +185,10 @@ bool object_is_rare(object_type *o_ptr)
 
     case TV_SWORD:
         if (o_ptr->sval == SV_BLADE_OF_CHAOS ||
-            o_ptr->sval == SV_DIAMOND_EDGE) return TRUE;
-        break;
-
-    case TV_DAGGER:
-        if (o_ptr->sval == SV_POISON_NEEDLE ||
+            o_ptr->sval == SV_DIAMOND_EDGE ||
+            o_ptr->sval == SV_DOKUBARI ||
             o_ptr->sval == SV_DRAGON_FANG ||
-            o_ptr->sval == SV_FALCON_SWORD) return TRUE;
+            o_ptr->sval == SV_HAYABUSA) return TRUE;
         break;
 
     case TV_SHIELD:
@@ -223,8 +216,8 @@ bool object_is_rare(object_type *o_ptr)
         break;
 
     case TV_SOFT_ARMOR:
-        if (o_ptr->sval == SV_BLACK_CLOTHES ||
-            o_ptr->sval == SV_SWIMSUIT) return TRUE;
+        if (o_ptr->sval == SV_KUROSHOUZOKU ||
+            o_ptr->sval == SV_ABUNAI_MIZUGI) return TRUE;
         break;
 
     case TV_DRAG_ARMOR:
@@ -336,9 +329,9 @@ bool object_is_ammo(object_type *o_ptr)
 
 
 /*
- * Check if an object is armor
+ * Check if an object is armour
  */
-bool object_is_armor(object_type *o_ptr)
+bool object_is_armour(object_type *o_ptr)
 {
     if (TV_ARMOR_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_ARMOR_END) return TRUE;
 
@@ -351,7 +344,7 @@ bool object_is_shield(object_type *o_ptr)
     return FALSE;
 }
 
-bool object_is_body_armor(object_type *o_ptr)
+bool object_is_body_armour(object_type *o_ptr)
 {
     switch (o_ptr->tval)
     {
@@ -366,14 +359,14 @@ bool object_is_body_armor(object_type *o_ptr)
 
 
 /*
- * Check if an object is weapon, armor or ammo
+ * Check if an object is weapon, armour or ammo
  */
 bool enchantment_hack = FALSE;
-bool object_is_weapon_armor_ammo(object_type *o_ptr)
+bool object_is_weapon_armour_ammo(object_type *o_ptr)
 {
     if (enchantment_hack && o_ptr->name1 == ART_HEPHAESTUS) return FALSE;
 
-    if (object_is_weapon_ammo(o_ptr) || object_is_armor(o_ptr)) return TRUE;
+    if (object_is_weapon_ammo(o_ptr) || object_is_armour(o_ptr)) return TRUE;
 
     return FALSE;
 }
@@ -384,7 +377,7 @@ bool object_is_weapon_armor_ammo(object_type *o_ptr)
  */
 bool object_is_melee_weapon(object_type *o_ptr)
 {
-    if (TV_DIGGING <= o_ptr->tval && o_ptr->tval <= TV_DAGGER) return TRUE;
+    if (TV_DIGGING <= o_ptr->tval && o_ptr->tval <= TV_SWORD) return TRUE;
 
     return FALSE;
 }
@@ -402,7 +395,7 @@ bool object_is_jewelry(object_type *o_ptr)
 }
 
 /*
- * Wearable including all weapon, all armor, bow, light source, amulet, and ring
+ * Wearable including all weapon, all armour, bow, light source, amulet, and ring
  */
 bool object_is_wearable(object_type *o_ptr)
 {
@@ -427,7 +420,7 @@ bool object_is_unenchantable(object_type *o_ptr)
 {
     u32b flgs[OF_ARRAY_SIZE];
     if (o_ptr->name2 == EGO_ROBE_TWILIGHT) return TRUE;
-    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE) return TRUE;
+    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_DOKUBARI) return TRUE;
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD) return TRUE;
 
     obj_flags(o_ptr, flgs);
@@ -461,9 +454,9 @@ bool object_allow_enchant_melee_weapon(object_type *o_ptr)
 /*
  * Check if an object is melee weapon and allows enchantment
  */
-bool object_allow_enchant_armor(object_type *o_ptr)
+bool object_allow_enchant_armour(object_type *o_ptr)
 {
-    if (object_is_armor(o_ptr) && !object_is_unenchantable(o_ptr)) return TRUE;
+    if (object_is_armour(o_ptr) && !object_is_unenchantable(o_ptr)) return TRUE;
 
     return FALSE;
 }
@@ -474,7 +467,7 @@ bool object_allow_enchant_armor(object_type *o_ptr)
  */
 bool object_is_smith(object_type *o_ptr)
 {
-    if (object_is_weapon_armor_ammo(o_ptr) && o_ptr->xtra3) return TRUE;
+    if (object_is_weapon_armour_ammo(o_ptr) && o_ptr->xtra3) return TRUE;
 
     return FALSE;
 }
@@ -524,15 +517,57 @@ bool object_is_nameless(object_type *o_ptr)
     return FALSE;
 }
 
+/*
+ * Check if an object is either an artifact or an ego
+ */
+bool object_is_art_or_ego(object_type *o_ptr)
+{
+    if (!o_ptr) return FALSE;
+    if (object_is_artifact(o_ptr) || object_is_ego(o_ptr)) return TRUE;
+    return FALSE;
+}
+
 
 /*
  * Check if an object is melee weapon and allows wielding with two-hands
  */
 bool object_allow_two_hands_wielding(object_type *o_ptr)
 {
-    if (object_is_melee_weapon(o_ptr) && ((o_ptr->weight > 99) || (o_ptr->tval == TV_POLEARM))) return TRUE;
+    if (object_is_melee_weapon(o_ptr) && (o_ptr->name1 != ART_MJOLLNIR) && 
+        ((o_ptr->weight > 99) || (o_ptr->tval == TV_POLEARM) || 
+        ((o_ptr->tval == TV_HAFTED) && (o_ptr->sval == SV_BASEBALL_BAT)))) return TRUE;
 
     /* Hack: Shield Mastery technique */
     if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH && object_is_shield(o_ptr)) return TRUE;
     return FALSE;
 }
+
+/*
+ * Check if an object is suitable ammo
+ */
+bool object_is_suitable_ammo(object_type *o_ptr)
+{
+    if (o_ptr->tval == p_ptr->shooter_info.tval_ammo) return TRUE;
+    if (p_ptr->shooter_info.tval_ammo == TV_ANY_AMMO) return (object_is_ammo(o_ptr));
+    return FALSE;
+}
+
+/*
+ * Check if item kind is a lamp that needs fuel
+ */
+bool object_needs_fuel(object_type *o_ptr)
+{
+    if (o_ptr->tval != TV_LITE) return FALSE;
+    if ((o_ptr->sval == SV_LITE_TORCH) || (o_ptr->sval == SV_LITE_LANTERN)) return TRUE;
+    return FALSE;
+}
+
+/*
+ * Check if item identifies fully based on average feeling
+ */
+bool object_known_on_average(object_type *o_ptr)
+{
+    if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET || o_ptr->tval == TV_QUIVER || object_is_(o_ptr, TV_LITE, SV_LITE_FEANOR)) return TRUE;
+    return FALSE;
+}
+

@@ -1,7 +1,9 @@
 
-?:[AND [EQU $TOWN 1] [EQU $WILDERNESS NONE] ]
+?:[AND [EQU $TOWN 1] [EQU $SPEED 2] ]
+%:t_ulite.txt
+?:[AND [EQU $TOWN 1] [EQU $WILDERNESS NONE] [LEQ $SPEED 1] ]
 %:t_lite.txt
-?:[AND [EQU $TOWN 1] [EQU $WILDERNESS NORMAL] ]
+?:[AND [EQU $TOWN 1] [EQU $WILDERNESS NORMAL] [LEQ $SPEED 1] ]
 %:t_rampart.txt
 ?:1
 
@@ -9,7 +11,7 @@
 %:t_telmo.txt
 
 ?:[EQU $TOWN 3]
-%:t_morivant.txt
+%:t_mori.txt
 
 ?:[EQU $TOWN 4]
 %:t_angwil.txt

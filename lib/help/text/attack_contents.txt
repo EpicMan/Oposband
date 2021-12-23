@@ -8,15 +8,18 @@ Please choose one of the following help sections:
     [d] Ranged Weapons
     [e] Ego Weapons and Artifacts
     [f] Slays and Brands
-    [g] Choosing the Right Weapon
-    [h] Attacking Monsters in Walls
-    [i] Attacking Pets or Friendly Monsters
-    [j] Martial Arts
-    [k] Two-Handed Wielding
-    [l] Dual-Wielding
-    [m] Magical Aids to Physical Combat
-    [n] Improving Your Odds
-    [o] Basic Tactics
+    [g] Critical Hits
+    [h] Choosing the Right Weapon
+    [i] Attacking Monsters in Walls
+    [j] Attacking Pets or Friendly Monsters
+    [k] Martial Arts
+    [l] Two-Handed Wielding
+    [m] Dual-Wielding
+    [n] Magical Aids to Physical Combat
+    [o] Improving Your Odds
+    [p] Attacking with Magical Devices
+    [q] Attacking with Spells  
+    [r] Basic Tactics
 
     (?) Help System Commands
 

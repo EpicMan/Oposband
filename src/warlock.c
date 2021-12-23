@@ -653,15 +653,15 @@ static void _dragon_eye_spell(int cmd, variant *res)
     }
 }
 
-static void _draconic_protection_spell(int cmd, variant *res)
+static void _understanding_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Draconic Protection");
+        var_set_string(res, "Understanding");
         break;
     default:
-        resist_heat_cold_spell(cmd, res);
+        probing_spell(cmd, res);
         break;
     }
 }
@@ -674,7 +674,7 @@ static void _word_of_command_spell(int cmd, variant *res)
         var_set_string(res, "Word of Command");
         break;
     case SPELL_DESC:
-        var_set_string(res, "By uttering a word of obediance, the true dragon rider can bend the will of all but the mightiest serpents.");
+        var_set_string(res, "By uttering a word of obedience, the true dragon rider can bend the will of all but the mightiest serpents.");
         break;
     case SPELL_CAST:                        /*v-- This is meaningless, but set high enough so that the project code actually works */
         project_hack(GF_CONTROL_PACT_MONSTER, 100);
@@ -731,11 +731,7 @@ static void _dragon_upkeep_song(void)
         if (_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEALING)
         {
             hp_player(p_ptr->lev);
-            if (mount->hp < mount->maxhp)
-            {
-                int heal = MIN(p_ptr->lev*3, mount->maxhp - mount->hp);
-                mount->hp += heal;
-            }
+            if (mount->hp < mount->maxhp) (void)hp_mon(mount, p_ptr->lev*3, FALSE);
         }
         else if (_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE)
         {
@@ -753,7 +749,7 @@ static void _dragon_upkeep_song(void)
             }
             if (MON_MONFEAR(mount))
             {
-                msg_format("%^s is not longer afraid.", m_name);
+                msg_format("%^s is no longer afraid.", m_name);
                 set_monster_monfear(p_ptr->riding, 0);
             }
         }
@@ -963,7 +959,7 @@ static void _mount_attack_spell(int cmd, variant *res)
         if (m_idx)
         {
             mon_attack_mon(p_ptr->riding, m_idx);
-            mount->energy_need += ENERGY_NEED();
+            mount->energy_need += PY_ENERGY_NEED();
             var_set_bool(res, TRUE);
         }
         break;
@@ -1040,7 +1036,7 @@ static void _mount_breathe_spell(int cmd, variant *res)
         if (!get_fire_dir(&_hack_dir)) return;
 
         if (mon_spell_cast_mon(mount, _dragonrider_ai))
-            mount->energy_need += ENERGY_NEED();
+            mount->energy_need += PY_ENERGY_NEED();
 
         var_set_bool(res, TRUE);
         break;
@@ -1086,7 +1082,7 @@ static void _pets_breathe_spell(int cmd, variant *res)
 
         if (mon_spell_cast_mon(mount, _dragonrider_ai))
         {
-            mount->energy_need += ENERGY_NEED();
+            mount->energy_need += PY_ENERGY_NEED();
             msg_boundary();
         }
 
@@ -1104,7 +1100,7 @@ static void _pets_breathe_spell(int cmd, variant *res)
 
             if (mon_spell_cast_mon(m_ptr, _dragonrider_ai))
             {
-                m_ptr->energy_need += ENERGY_NEED();
+                m_ptr->energy_need += energy_need_clipper_aux(SPEED_TO_ENERGY(m_ptr->mspeed));
                 if (one_in_(2))
                 {
                     if (mon_show_msg(m_ptr))
@@ -1157,7 +1153,7 @@ static _pact_t _dragons_pact = {
     { 20,  40, 70, summon_dragon_spell},
     { 23,  10, 50, _mount_attack_spell},
     { 25,   0,  0, _bless_song},
-    { 27,  15, 60, _draconic_protection_spell},
+    { 27,  15, 60, _understanding_spell},
     { 29,   0, 60, _mount_jump_spell},
     { 30,   0,  0, _canter_song},
     { 32,  20, 50, _dragon_eye_spell},
@@ -1236,11 +1232,11 @@ static void _dispelling_blast(int cmd, variant *res)
 }
 
 static _pact_t _angels_pact = {
-  "Archons",
-  "Archons are astral beings who use a variety of techniques to smite those they view as evil. "
-    "Warlocks who make pacts with Archons will also find their saving throws significantly improved, "
-    "and (eventually) their body almost immune to bolt-like effects. Since Archons are strongly aligned "
-    "with the forces of good, making a pact with Archons will reduce damage done to all good monsters "
+  "Angels",
+  "Angels are heavenly beings who use a variety of techniques to smite those they view as evil. "
+    "Warlocks who make pacts with Angels will also find their saving throws significantly improved, "
+    "and (eventually) their body almost immune to bolt-like effects. Since Angels are strongly aligned "
+    "with the forces of good, making a pact with Angels will reduce damage done to all good monsters "
     "by a substantial amount.",
   "A", /* + RF3_GOOD ... They are even allied with Fallen Angels! */
   _angel_calc_bonuses,
@@ -1966,12 +1962,13 @@ static spell_info _powers[MAX_WARLOCK_BLASTS] =
     { 42,  0,  75, _empowered_blast},
 };
 
-static int _get_powers(spell_info* spells, int max)
+static power_info *_get_powers(void)
 {
     int       i;
     int       ct = 0;
-    int       stat_idx = p_ptr->stat_ind[A_CHR];
     _pact_ptr pact = _get_pact(p_ptr->psubclass);
+    static power_info spells[MAX_SPELLS];
+    int       max = MAX_SPELLS;
 
     assert(pact);
 
@@ -1988,25 +1985,28 @@ static int _get_powers(spell_info* spells, int max)
         if (ct >= max) break;
         if ((base->level <= p_ptr->lev) || (show_future_powers))
         {
-            spell_info* current = &spells[ct];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);
-            if (current->fn == NULL)
-                current->fn = pact->special_blast;
+            power_info* current = &spells[ct];
+            current->spell.fn = base->fn;
+            current->spell.level = base->level;
+            current->spell.cost = base->cost;
+            current->spell.fail = base->fail;
+            current->stat = A_CHR;
+            if (current->spell.fn == NULL)
+                current->spell.fn = pact->special_blast;
 
             ct++;
         }
     }
-    return ct;
+    spells[ct].spell.fn = NULL;
+    return spells;
 }
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
     int       i;
     int       ct = 0;
-    int       stat_idx = p_ptr->stat_ind[A_CHR];
+    int       max = MAX_SPELLS;
     _pact_ptr pact = _get_pact(p_ptr->psubclass);
+    static spell_info spells[MAX_SPELLS];
 
     assert(pact);
 
@@ -2021,19 +2021,13 @@ static int _get_spells(spell_info* spells, int max)
             current->fn = base->fn;
             current->level = base->level;
             current->cost = base->cost;
-            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);
+            current->fail = base->fail;
         }
     }
 
-    return ct;
-}
+    spells[ct].fn = NULL;
 
-static void _character_dump(doc_ptr doc)
-{
-    spell_info spells[MAX_SPELLS];
-    int        ct = _get_spells(spells, MAX_SPELLS);
-
-    py_display_spells(doc, spells, ct);
+    return spells;
 }
 
 static caster_info * _caster_info(void)
@@ -2059,45 +2053,14 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
-
     if (p_ptr->psubclass == WARLOCK_GIANTS)
     {
-        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-        py_birth_obj_aux(TV_SWORD, SV_TWO_HANDED_SWORD, 1);
-
-        p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
-        p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-        p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
-
-        p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-        p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    }
-    else if (p_ptr->psubclass == WARLOCK_DRAGONS)
-    {
-        py_birth_obj_aux(TV_POLEARM, SV_SPEAR, 1);
-        p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-        p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+        skills_weapon_init(TV_SWORD, SV_CLAYMORE, WEAPON_EXP_BEGINNER);
+        py_birth_obj_aux(TV_SWORD, SV_CLAYMORE, 1);
     }
     else
-    {
         py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-        p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    }
-        
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }
 
@@ -2174,9 +2137,9 @@ class_t *warlock_get_class(int psubclass)
 
         me.birth = _birth;
         me.caster_info = _caster_info;
-        me.get_spells = _get_spells;
-        me.get_powers = _get_powers;
-        me.character_dump = _character_dump;
+        me.get_spells_fn = _get_spells;
+        me.get_powers_fn = _get_powers;
+        me.character_dump = py_dump_spells;
         me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_WEAK |
                    CLASS_SENSE2_MED | CLASS_SENSE2_STRONG;
 

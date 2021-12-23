@@ -477,11 +477,7 @@ static void _ultimate_resistance_spell(int cmd, variant *res)
         {
             int v = randint1(25) + 25;
             set_fast(v, FALSE);
-            set_oppose_acid(v, FALSE);
-            set_oppose_elec(v, FALSE);
-            set_oppose_fire(v, FALSE);
-            set_oppose_cold(v, FALSE);
-            set_oppose_pois(v, FALSE);
+            set_oppose_base(v, FALSE);
             set_ultimate_res(v, FALSE);
             var_set_bool(res, TRUE);
             break;
@@ -738,7 +734,7 @@ static void _essence_of_life_mut(int cmd, variant *res)
             object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_LIFE));
             object_origins(&forge, ORIGIN_PATRON);
             forge.number = 3;
-            obj_identify_fully(&forge);
+            obj_identify(&forge);
             pack_carry(&forge);
             break;
         }
@@ -765,7 +761,7 @@ static void _notes_of_death_mut(int cmd, variant *res)
             object_prep(&forge, lookup_kind(TV_SCROLL, SV_SCROLL_MASS_GENOCIDE));
             object_origins(&forge, ORIGIN_PATRON);
             forge.number = 5;
-            obj_identify_fully(&forge);
+            obj_identify(&forge);
             pack_carry(&forge);
             break;
         }
@@ -835,7 +831,7 @@ static void _power_sorcery_mut(int cmd, variant *res)
         msg_print("You pour your soul into your magic!");
         break;
     case SPELL_HELP_DESC:
-        var_set_string(res, "Increases your spellpower by +15%, but decreases your life rating by 3 points.");
+        var_set_string(res, "Increases your spellpower by +15%, but decreases your life multiplier by 3 points.");
         break;
     case SPELL_CALC_BONUS:
         p_ptr->spell_power += 2;
@@ -1066,7 +1062,7 @@ static void _wheel_mut(int cmd, variant *res)
             object_prep(&forge, lookup_kind(TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT));
             object_origins(&forge, ORIGIN_PATRON);
             forge.number = 3;
-            obj_identify_fully(&forge);
+            obj_identify(&forge);
             pack_carry(&forge);
             break;
         }
@@ -1158,9 +1154,10 @@ static int _my_calculate_fail_rate(int level, int base_fail, int stat_idx)
     return MAX(0, fail - (4 * _talent_count(_YQ_EASY)));
 }
 
-static int _yeqrezh_get_spells_learned(spell_info* spells, int max)
+static spell_info *_yeqrezh_get_spells_learned(void)
 {
     int ct = 0, i;
+    static spell_info spells[MAX_SPELLS];
     for (i = 0; i < (p_ptr->max_plv / 2); i++)
     {
         spell_info *src, *dest;
@@ -1190,15 +1187,17 @@ static int _yeqrezh_get_spells_learned(spell_info* spells, int max)
         dest->fail = _my_calculate_fail_rate(dest->level, src->fail, p_ptr->stat_ind[A_INT]);
         dest->fn = src->fn;
     }
-    return ct;
+    spells[ct].fn = NULL;
+    return spells;
 }
 
-static int _yeqrezh_get_spells_unlearned(spell_info* spells, bool check_lv)
+static int _yeqrezh_get_spells_unlearned(power_info* spells, bool check_lv)
 {
     int ct = 0, i, j;
     for (i = 0;; i++)
     {
-        spell_info *src, *dest;
+        spell_info *src;
+        power_info *dest;
         bool opittu = FALSE;
 
         src = &_yeqrezh_spells[i];
@@ -1217,17 +1216,18 @@ static int _yeqrezh_get_spells_unlearned(spell_info* spells, bool check_lv)
         if (opittu) continue;
 
         dest = &spells[ct++];
-        dest->level = src->level;
-        dest->cost = src->cost;
-        dest->fail = calculate_fail_rate(src->level, src->fail, p_ptr->stat_ind[A_INT]);
-        dest->fn = src->fn;
+        dest->spell.level = src->level;
+        dest->spell.cost = src->cost;
+        dest->spell.fail = _my_calculate_fail_rate((check_lv ? p_ptr->max_plv : src->level), src->fail, p_ptr->stat_ind[A_INT]);
+        dest->spell.fn = src->fn;
+        dest->stat = A_NONE;
     }
     return ct;
 }
 
 static bool _yeqrezh_gain_spell(int slot)
 {
-    spell_info spells[MAX_SPELLS];
+    power_info spells[MAX_SPELLS];
     bool valitse = ((slot % 8) == 7) ? TRUE : FALSE;
     int i, ct, uusi = _INVALID_SPELL, tosipaikka = _INVALID_SPELL;
     int taso = (slot + 1) * 2;
@@ -1248,7 +1248,7 @@ static bool _yeqrezh_gain_spell(int slot)
             int koitto = 0;
             for (i = 0; i < ct; i++)
             {
-                spell_info *spell = &spells[i];
+                spell_info *spell = &spells[i].spell;
                 int mahis = 1;
                 if ((!spell) || (!spell->level) || (spell->level < 0))
                 {
@@ -1280,7 +1280,7 @@ static bool _yeqrezh_gain_spell(int slot)
 
     for (i = 0; _yeqrezh_spells[i].level > 0; i++)
     {
-        if (spells[uusi].fn == _yeqrezh_spells[i].fn)
+        if (spells[uusi].spell.fn == _yeqrezh_spells[i].fn)
         {
             tosipaikka = i;
             break;
@@ -1453,7 +1453,7 @@ static void _yeqrezh_gain_item(int new_level)
      { 39, TV_STAFF, EFFECT_TELEPATHY},
      { 39, TV_POTION, SV_POTION_POLYMORPH},
      { 41, TV_STAFF, EFFECT_CONFUSING_LITE},
-     { 43, TV_POTION, SV_POTION_STAR_HEALING},
+     { 43, TV_STAFF, EFFECT_IDENTIFY_FULL},
      { 43, TV_SCROLL, SV_SCROLL_CRAFTING},
      { 45, TV_STAFF, EFFECT_STARBURST},
      { 45, TV_STAFF, EFFECT_BANISH_ALL},
@@ -1519,7 +1519,7 @@ static void _yeqrezh_gain_item(int new_level)
                 obj_make_pile(q_ptr);
         }
         object_origins(q_ptr, ORIGIN_PATRON);
-        obj_identify_fully(q_ptr);
+        obj_identify(q_ptr);
         (void)drop_near(q_ptr, -1, py, px);
     }
 }
@@ -1638,7 +1638,7 @@ static void _birth(void)
 {
     disciple_birth();
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_STUDDED_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_HARD_STUDDED_LEATHER, 1);
     _yeqrezh_ini_picks();
 }
 
@@ -1662,10 +1662,8 @@ static void _yeqrezh_save(savefile_ptr file)
 
 static void _yeqrezh_character_dump(doc_ptr doc)
 {
-    spell_info spells[MAX_SPELLS];
-    int        i, loydetty = 0, ct = _yeqrezh_get_spells_learned(spells, MAX_SPELLS);
-
-    py_display_spells(doc, spells, ct);
+    int        i, loydetty = 0;
+    py_dump_spells(doc);
 
     for (i = 0; i < p_ptr->max_plv / 10; i++)
     {
@@ -1728,7 +1726,7 @@ class_t *yeqrezh_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
-        me.get_spells = _yeqrezh_get_spells_learned;
+        me.get_spells_fn = _yeqrezh_get_spells_learned;
         me.gain_level = _gain_level;
         me.load_player = _yeqrezh_load;
         me.save_player = _yeqrezh_save;

@@ -1,4 +1,5 @@
 #include "angband.h"
+#include "chaos_patron.h"
 
 typedef struct
 {
@@ -25,41 +26,41 @@ static byte _slay_timeouts[MAX_TK_TIMEOUT];
 static char *_troika_names[3] = {"Guntujant", "Uxip", "Sohoglyth"};
 static byte _sohoglyth_reward_level = 0;
 
-#define REW_WRATH       1
-#define REW_TY_CURSE    2
-#define REW_HURT_LOT    3
-#define REW_PISS_OFF    4
-#define REW_CURSE_WP    5
-#define REW_CURSE_AR    6
-#define REW_LOSE_ABL    7
-#define REW_RUIN_ABL    8
-#define REW_LOSE_EXP    9
-#define REW_SUMMON_M    10
-#define REW_H_SUMMON    11
-#define REW_AFC_WP      12
-#define REW_STICKY      13
-#define REW_BY_CURSE    14
-#define REW_CURSE_EQ    15
+#define TROIKA_REW_WRATH       1
+#define TROIKA_REW_TY_CURSE    2
+#define TROIKA_REW_HURT_LOT    3
+#define TROIKA_REW_PISS_OFF    4
+#define TROIKA_REW_CURSE_WP    5
+#define TROIKA_REW_CURSE_AR    6
+#define TROIKA_REW_LOSE_ABL    7
+#define TROIKA_REW_RUIN_ABL    8
+#define TROIKA_REW_LOSE_EXP    9
+#define TROIKA_REW_SUMMON_M    10
+#define TROIKA_REW_H_SUMMON    11
+#define TROIKA_REW_AFC_WP      12
+#define TROIKA_REW_STICKY      13
+#define TROIKA_REW_BY_CURSE    14
+#define TROIKA_REW_CURSE_EQ    15
 
-#define REW_TROIKA_W    16
-#define REW_HEAL_FUL    17
-#define REW_DISPEL_C    18
-#define REW_POLY_SLF    19
-#define REW_GAIN_EXP    20
-#define REW_POLY_WND    21
-#define REW_DO_HAVOC    22
-#define REW_DESTRUCT    23
-#define REW_GENOCIDE    24
-#define REW_MASS_GEN    25
-#define REW_NO_BUFFS    26
+#define TROIKA_REW_TROIKA_W    16
+#define TROIKA_REW_HEAL_FUL    17
+#define TROIKA_REW_DISPEL_C    18
+#define TROIKA_REW_POLY_SLF    19
+#define TROIKA_REW_GAIN_EXP    20
+#define TROIKA_REW_POLY_WND    21
+#define TROIKA_REW_DO_HAVOC    22
+#define TROIKA_REW_DESTRUCT    23
+#define TROIKA_REW_GENOCIDE    24
+#define TROIKA_REW_MASS_GEN    25
+#define TROIKA_REW_NO_BUFFS    26
 
-#define REW_AUGM_ABL    27
-#define REW_GOOD_OBJ    28
-#define REW_SHARP_WP    29
-#define REW_GREA_OBJ    30
-#define REW_GOOD_OBS    31
-#define REW_GREA_OBS    32
-#define REW_GAIN_ABL    33
+#define TROIKA_REW_AUGM_ABL    27
+#define TROIKA_REW_GOOD_OBJ    28
+#define TROIKA_REW_SHARP_WP    29
+#define TROIKA_REW_GREA_OBJ    30
+#define TROIKA_REW_GOOD_OBS    31
+#define TROIKA_REW_GREA_OBS    32
+#define TROIKA_REW_GAIN_ABL    33
 
 #define _MAX_PUN 22
 #define _MAX_RND 17
@@ -67,24 +68,24 @@ static byte _sohoglyth_reward_level = 0;
 
 int _troika_punishments[_MAX_PUN] =
 {
-    REW_WRATH, REW_WRATH, REW_TY_CURSE, REW_HURT_LOT, REW_PISS_OFF,
-    REW_CURSE_AR, REW_CURSE_WP, REW_CURSE_AR, REW_CURSE_WP, REW_CURSE_AR,
-    REW_CURSE_WP, REW_CURSE_WP, REW_CURSE_AR, REW_RUIN_ABL, REW_LOSE_ABL,
-    REW_LOSE_EXP, REW_H_SUMMON, REW_SUMMON_M, REW_AFC_WP, REW_CURSE_EQ,
-    REW_BY_CURSE, REW_STICKY
+    TROIKA_REW_WRATH, TROIKA_REW_WRATH, TROIKA_REW_TY_CURSE, TROIKA_REW_HURT_LOT, TROIKA_REW_PISS_OFF,
+    TROIKA_REW_CURSE_AR, TROIKA_REW_CURSE_WP, TROIKA_REW_CURSE_AR, TROIKA_REW_CURSE_WP, TROIKA_REW_CURSE_AR,
+    TROIKA_REW_CURSE_WP, TROIKA_REW_CURSE_WP, TROIKA_REW_CURSE_AR, TROIKA_REW_RUIN_ABL, TROIKA_REW_LOSE_ABL,
+    TROIKA_REW_LOSE_EXP, TROIKA_REW_H_SUMMON, TROIKA_REW_SUMMON_M, TROIKA_REW_AFC_WP, TROIKA_REW_CURSE_EQ,
+    TROIKA_REW_BY_CURSE, TROIKA_REW_STICKY
 };
 int _troika_random[_MAX_RND] =
 {
-    REW_SUMMON_M, REW_TROIKA_W, REW_POLY_WND, REW_POLY_WND, REW_NO_BUFFS,
-    REW_POLY_SLF, REW_HEAL_FUL, REW_HEAL_FUL, REW_GAIN_ABL,
-    REW_GAIN_EXP, REW_LOSE_EXP, REW_GOOD_OBJ, REW_DESTRUCT,
-    REW_GENOCIDE, REW_MASS_GEN, REW_MASS_GEN, REW_DISPEL_C
+    TROIKA_REW_SUMMON_M, TROIKA_REW_TROIKA_W, TROIKA_REW_POLY_WND, TROIKA_REW_POLY_WND, TROIKA_REW_NO_BUFFS,
+    TROIKA_REW_POLY_SLF, TROIKA_REW_HEAL_FUL, TROIKA_REW_HEAL_FUL, TROIKA_REW_GAIN_ABL,
+    TROIKA_REW_GAIN_EXP, TROIKA_REW_LOSE_EXP, TROIKA_REW_GOOD_OBJ, TROIKA_REW_DESTRUCT,
+    TROIKA_REW_GENOCIDE, TROIKA_REW_MASS_GEN, TROIKA_REW_MASS_GEN, TROIKA_REW_DISPEL_C
 };
 int _troika_rewards[_MAX_REW] =
 {
-    REW_GOOD_OBJ, REW_GOOD_OBS, REW_TROIKA_W, REW_GREA_OBJ, REW_AUGM_ABL,
-    REW_GREA_OBS, REW_GAIN_ABL, REW_GOOD_OBJ, REW_GOOD_OBS, REW_TROIKA_W,
-    REW_GREA_OBJ, REW_AUGM_ABL, REW_GREA_OBS, REW_GAIN_ABL, REW_SHARP_WP
+    TROIKA_REW_GOOD_OBJ, TROIKA_REW_GOOD_OBS, TROIKA_REW_TROIKA_W, TROIKA_REW_GREA_OBJ, TROIKA_REW_AUGM_ABL,
+    TROIKA_REW_GREA_OBS, TROIKA_REW_GAIN_ABL, TROIKA_REW_GOOD_OBJ, TROIKA_REW_GOOD_OBS, TROIKA_REW_TROIKA_W,
+    TROIKA_REW_GREA_OBJ, TROIKA_REW_AUGM_ABL, TROIKA_REW_GREA_OBS, TROIKA_REW_GAIN_ABL, TROIKA_REW_SHARP_WP
 };
 
 static int _slay_flags[MAX_TK_TIMEOUT] =
@@ -231,14 +232,12 @@ void troika_wipe_timeouts(void)
 static void _birth(void)
 {
     disciple_birth(); 
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CONFUSION, 2);
     _troika_ini_quests();
     _troika_ini_spells();
     troika_wipe_timeouts();
-	p_ptr->proficiency[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-	p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
 }
 
 static void _make_troika_weapon(int sval)
@@ -262,14 +261,14 @@ static void _troika_event(int effect)
 
     switch (effect)
     {
-        case REW_POLY_SLF:
+        case TROIKA_REW_POLY_SLF:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou needst a new form, mortal!'");
 
             do_poly_self();
             break;
-        case REW_GAIN_EXP:
+        case TROIKA_REW_GAIN_EXP:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Well done, mortal! Lead on!'");
@@ -283,7 +282,7 @@ static void _troika_event(int effect)
                 gain_exp(ee);
             }
             break;
-        case REW_LOSE_EXP:
+        case TROIKA_REW_LOSE_EXP:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou didst not deserve that, slave.'");
@@ -297,18 +296,18 @@ static void _troika_event(int effect)
                 lose_exp(p_ptr->exp / 6);
             }
             break;
-        case REW_GOOD_OBJ:
+        case TROIKA_REW_GOOD_OBJ:
             msg_format("The voice of %s whispers:",_troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Use my gift wisely.'");
             acquirement(py, px, 1, FALSE, FALSE, ORIGIN_PATRON);
             break;
-        case REW_GREA_OBJ:
+        case TROIKA_REW_GREA_OBJ:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Use my gift wisely.'");
 
             acquirement(py, px, 1, TRUE, FALSE, ORIGIN_PATRON);
             break;
-        case REW_TROIKA_W:
+        case TROIKA_REW_TROIKA_W:
         {
             int dummy2;
             msg_format("The voice of %s booms out:", _troika_names[0]);
@@ -319,39 +318,46 @@ static void _troika_event(int effect)
                     dummy2 = SV_DAGGER;
                     break;
                 case 2: case 3:
-                    dummy2 = SV_DIRK;
+                    dummy2 = SV_MAIN_GAUCHE;
                     break;
                 case 4:
-                    dummy2 = SV_CAT_CLAW;
+                    dummy2 = SV_TANTO;
                     break;
                 case 5: case 6:
-                    dummy2 = SV_THRUSTING_SWORD;
+                    dummy2 = SV_RAPIER;
                     break;
                 case 7: case 8:
-                    dummy2 = SV_SHORT_SWORD;
+                    dummy2 = SV_SMALL_SWORD;
                     break;
                 case 9: case 10:
-                    dummy2 = SV_CAT_CLAW;
+                    dummy2 = SV_BASILLARD;
                     break;
                 case 11: case 12: case 13:
                     dummy2 = SV_SHORT_SWORD;
                     break;
                 case 14: case 15:
-                    dummy2 = SV_CRYSKNIFE;
+                    dummy2 = SV_SABRE;
                     break;
                 case 16: case 17:
-                    dummy2 = SV_MEDIUM_SWORD;
+                    dummy2 = SV_CUTLASS;
                     break;
                 case 18:
                     dummy2 = SV_WAKIZASHI;
                     break;
                 case 19:
-                case 20:
-                    dummy2 = SV_CURVED_SWORD;
+                    dummy2 = SV_KHOPESH;
                     break;
-                case 21: case 22: case 23:
-				case 24: case 25:
-					dummy2 = SV_LONG_SWORD;
+                case 20:
+                    dummy2 = SV_TULWAR;
+                    break;
+                case 21:
+                    dummy2 = SV_BROAD_SWORD;
+                    break;
+                case 22: case 23:
+                    dummy2 = SV_LONG_SWORD;
+                    break;
+                case 24: case 25:
+                    dummy2 = SV_SCIMITAR;
                     break;
                 case 26:
                     dummy2 = SV_NINJATO;
@@ -360,25 +366,34 @@ static void _troika_event(int effect)
                     dummy2 = SV_KATANA;
                     break;
                 case 28: case 29:
-                    dummy2 = SV_BROAD_SWORD;
+                    dummy2 = SV_BASTARD_SWORD;
                     break;
                 case 30:
-                    dummy2 = SV_EXECUTIONERS_SWORD;
+                    dummy2 = SV_GREAT_SCIMITAR;
                     break;
-				case 31: case 32: case 33:
+                case 31:
+                    dummy2 = SV_CLAYMORE;
+                    break;
+                case 32:
+                    dummy2 = SV_ESPADON;
+                    break;
+                case 33:
                     dummy2 = SV_TWO_HANDED_SWORD;
                     break;
-                case 34: case 35:
-                    dummy2 = SV_GREATSWORD;
+                case 34:
+                    dummy2 = SV_FLAMBERGE;
+                    break;
+                case 35:
+                    dummy2 = SV_NO_DACHI;
                     break;
                 case 36:
                     dummy2 = SV_EXECUTIONERS_SWORD;
                     break;
                 case 37:
-                    dummy2 = SV_BUSTER_SWORD;
+                    dummy2 = SV_ZWEIHANDER;
                     break;
                 case 38:
-                    dummy2 = SV_FALCON_SWORD;
+                    dummy2 = SV_HAYABUSA;
                     break;
                 case 39:
                     dummy2 = SV_BLADE_OF_CHAOS;
@@ -390,19 +405,19 @@ static void _troika_event(int effect)
             _make_troika_weapon(dummy2);
             break;
         }
-        case REW_GOOD_OBS:
+        case TROIKA_REW_GOOD_OBS:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thy deed hath earned thee a worthy reward.'");
 
             acquirement(py, px, randint1(2) + 1, FALSE, FALSE, ORIGIN_PATRON);
             break;
-        case REW_GREA_OBS:
+        case TROIKA_REW_GREA_OBS:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Behold, mortal, how generously I reward thy loyalty.'");
 
             acquirement(py, px, randint1(2) + 1, TRUE, FALSE, ORIGIN_PATRON);
             break;
-        case REW_TY_CURSE:
+        case TROIKA_REW_TY_CURSE:
             msg_format("The voice of %s thunders:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou art growing arrogant, mortal.'");
@@ -410,45 +425,45 @@ static void _troika_event(int effect)
             if (p_ptr->lev < 30) nonlethal_ty_substitute(TRUE);
             else activate_ty_curse(FALSE, &count);
             break;
-        case REW_BY_CURSE:
+        case TROIKA_REW_BY_CURSE:
             msg_format("The voice of %s thunders:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou art growing arrogant, mortal.'");
 
             nonlethal_ty_substitute(TRUE);
             break;
-        case REW_SUMMON_M:
+        case TROIKA_REW_SUMMON_M:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'My pets, destroy the arrogant mortal!'");
             for (dummy = 0; dummy < randint1(5) + 1; dummy++)
                 summon_specific(0, py, px, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
             break;
-        case REW_H_SUMMON:
+        case TROIKA_REW_H_SUMMON:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou needst worthier opponents!'");
             activate_hi_summon(py, px, FALSE);
             break;
-        case REW_DO_HAVOC:
+        case TROIKA_REW_DO_HAVOC:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Death and destruction! This pleaseth me!'");
             call_chaos(100);
             break;
-        case REW_GAIN_ABL:
+        case TROIKA_REW_GAIN_ABL:
             msg_format("The voice of %s rings out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Stay, mortal, and let me mold thee.'");
                 do_inc_stat(randint0(6));
             break;
-        case REW_LOSE_ABL:
+        case TROIKA_REW_LOSE_ABL:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'I grow tired of thee, mortal.'");
                 do_dec_stat(randint0(6));
             break;
-        case REW_RUIN_ABL:
+        case TROIKA_REW_RUIN_ABL:
             msg_format("The voice of %s thunders:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Thou needst a lesson in humility, mortal!'");
@@ -457,25 +472,25 @@ static void _troika_event(int effect)
             for (dummy = 0; dummy < 6; dummy++)
                 dec_stat(dummy, 10 + randint1(15), TRUE);
             break;
-        case REW_POLY_WND:
+        case TROIKA_REW_POLY_WND:
             msg_format("You feel the power of %s touch you.", _troika_names[0]);
             do_poly_wounds();
             break;
-        case REW_AUGM_ABL:
+        case TROIKA_REW_AUGM_ABL:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Receive this modest gift from me!'");
             for (dummy = 0; dummy < 6; dummy++)
                 do_inc_stat(dummy);
             break;
-        case REW_HURT_LOT:
+        case TROIKA_REW_HURT_LOT:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Suffer, pathetic fool!'");
             fire_ball(GF_DISINTEGRATE, 0, MIN(p_ptr->lev * 4, p_ptr->mhp * 2 / 5), 4);
             take_hit(DAMAGE_NOESCAPE, MIN(p_ptr->lev * 4, p_ptr->mhp * 2 / 5), wrath_reason);
             break;
-       case REW_HEAL_FUL:
+       case TROIKA_REW_HEAL_FUL:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Rise, my servant!'");
@@ -490,7 +505,7 @@ static void _troika_event(int effect)
             for (dummy = 0; dummy < 6; dummy++)
                 do_res_stat(dummy);
             break;
-        case REW_CURSE_WP:
+        case TROIKA_REW_CURSE_WP:
         {
             int slot = equip_random_slot(object_is_melee_weapon);
             if (slot)
@@ -503,7 +518,7 @@ static void _troika_event(int effect)
             else nonlethal_ty_substitute(TRUE);
             break;
         }
-        case REW_SHARP_WP:
+        case TROIKA_REW_SHARP_WP:
         {
             int slot = equip_random_slot(object_is_melee_weapon);
             if (slot)
@@ -533,7 +548,7 @@ static void _troika_event(int effect)
             }
             break;
         }
-        case REW_AFC_WP:
+        case TROIKA_REW_AFC_WP:
         {
             int slot = equip_random_slot(object_is_melee_weapon);
             if (slot)
@@ -555,7 +570,7 @@ static void _troika_event(int effect)
             }
             break;
         }
-        case REW_STICKY:
+        case TROIKA_REW_STICKY:
         {
             int slot = equip_random_slot(obj_exists);
             if (slot)
@@ -581,9 +596,9 @@ static void _troika_event(int effect)
             }
             break;
         }
-        case REW_CURSE_AR:
+        case TROIKA_REW_CURSE_AR:
         {
-            int slot = equip_random_slot(object_is_armor);
+            int slot = equip_random_slot(object_is_armour);
             if (slot)
             {
                 msg_format("The voice of %s booms out:",
@@ -594,12 +609,12 @@ static void _troika_event(int effect)
             else nonlethal_ty_substitute(TRUE);
             break;
         }
-        case REW_CURSE_EQ:
+        case TROIKA_REW_CURSE_EQ:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'A curse be upon thine equipment!'");
             curse_equipment(100, 50);
             break;
-        case REW_PISS_OFF:
+        case TROIKA_REW_PISS_OFF:
             msg_format("The voice of %s whispers:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Now thou shalt pay for annoying me.'");
             switch (randint1(4))
@@ -622,7 +637,7 @@ static void _troika_event(int effect)
                     }
                     else
                     {
-                        int slot = equip_random_slot(object_is_armor);
+                        int slot = equip_random_slot(object_is_armour);
                         if (slot)
                             curse_armor(slot);
                         else
@@ -635,7 +650,7 @@ static void _troika_event(int effect)
                     break;
             }
             break;
-        case REW_WRATH:
+        case TROIKA_REW_WRATH:
             msg_format("The voice of %s thunders:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Die, mortal!'");
 
@@ -654,37 +669,37 @@ static void _troika_event(int effect)
             }
             if (one_in_(2))
             {
-                int slot = equip_random_slot(object_is_armor);
+                int slot = equip_random_slot(object_is_armour);
                 if (slot)
                     curse_armor(slot);
             }
             break;
-        case REW_NO_BUFFS:
+        case TROIKA_REW_NO_BUFFS:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Normality! This pleaseth me!'");
             reset_tim_flags();
             break;
-        case REW_DESTRUCT:
+        case TROIKA_REW_DESTRUCT:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Death and destruction! This pleaseth me!'");
             destroy_area(py, px, 25, 3 * p_ptr->lev);
             break;
-        case REW_GENOCIDE:
+        case TROIKA_REW_GENOCIDE:
             msg_format("The voice of %s booms out:",
                 _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Let me relieve thee of thine oppressors!'");
             symbol_genocide(0, FALSE);
             break;
-        case REW_MASS_GEN:
+        case TROIKA_REW_MASS_GEN:
             msg_format("The voice of %s booms out:", _troika_names[0]);
             cmsg_print(TERM_VIOLET, "'Let me relieve thee of thine oppressors!'");
             mass_genocide(0, FALSE);
             break;
-        case REW_DISPEL_C:
+        case TROIKA_REW_DISPEL_C:
             msg_format("You feel the power of %s assault your enemies!", _troika_names[0]);
             dispel_monsters(p_ptr->lev * 4);
             break;
-/*        case REW_IGNORE:
+/*        case TROIKA_REW_IGNORE:
             msg_format("%s ignores you.", _troika_names[0]);
             break;*/
         default:
@@ -897,14 +912,14 @@ void troika_punish_quest_fail(void)
     {
         case 0:
         case 1:
-            _troika_event(REW_CURSE_WP);
+            _troika_event(TROIKA_REW_CURSE_WP);
             break;
         case 2:
         case 3:
-            _troika_event(REW_CURSE_AR);
+            _troika_event(TROIKA_REW_CURSE_AR);
             break;
         default:
-            _troika_event(REW_STICKY);
+            _troika_event(TROIKA_REW_STICKY);
             break;
     }
 }
@@ -2065,7 +2080,7 @@ static int _troika_get_spells_learned(spell_info* spells, int alku, int kumpi)
             dest = &spells[alku + (ct++)];
             dest->level = _my_spell_taso[kumpi][i];
             dest->cost = src->cost;
-            dest->fail = calculate_fail_rate(dest->level, src->fail, p_ptr->stat_ind[A_STR]);
+            dest->fail = src->fail;
             dest->fn = src->fn;
         }
     }
@@ -2223,23 +2238,20 @@ static void _troika_save(savefile_ptr file)
     }
 }
 
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
+    static spell_info spells[MAX_SPELLS];
     int laskuri = _troika_get_spells_learned(spells, 0, 0);
     troika_spell_hack = laskuri;
     laskuri += _troika_get_spells_learned(spells, laskuri, 1);
-    return laskuri;
+    spells[laskuri].fn = NULL;
+    return spells;
 }
 
 static void _troika_dump(doc_ptr doc)
 {
     _dump_quests(doc);
-    {
-        spell_info spells[MAX_SPELLS];
-        int        ct = _get_spells(spells, MAX_SPELLS);
-
-        py_display_spells(doc, spells, ct);
-    }
+    py_dump_spells(doc);
 }
 
 bool troika_dispel_timeouts(void)
@@ -2399,7 +2411,7 @@ class_t *troika_get_class(void)
         me.caster_info = _caster_info;
         me.gain_level = _gain_level;
         me.character_dump = _troika_dump;
-        me.get_spells = _get_spells;
+        me.get_spells_fn = _get_spells;
         me.load_player = _troika_load;
         me.save_player = _troika_save;
         init = TRUE;

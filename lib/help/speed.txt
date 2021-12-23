@@ -1,12 +1,12 @@
 <style:title>Game Speed Modes</style>
 
-FrogComposband offers several different game-speed modes, depending on how long and complex you wish the game to be. <color:keyword>Normal mode</color> is the full FrogComposband experience; it gives access to a vast wilderness, and many towns, dungeons and side-quests not available in other modes. But if you want to play a shorter game, or are just getting started and don't want too many complications, there are two accelerated game modes available: the very fast <color:keyword>coffee-break mode</color>, and the ultra-fast <color:keyword>instant-coffee mode</color>.
+Oposband offers several different game-speed modes, depending on how long and complex you wish the game to be. <color:keyword>Normal mode</color> is the full Oposband experience; it gives access to a vast wilderness, and many towns, dungeons and side-quests not available in other modes. But if you want to play a shorter game, or are just getting started and don't want too many complications, there are two accelerated game modes available: the very fast <color:keyword>coffee-break mode</color>, and the ultra-fast <color:keyword>instant-coffee mode</color>.
 
 Your ultimate goals remain the same regardless of mode: kill the <color:keyword>Serpent of Chaos</color>, and before that, kill <color:keyword>Oberon</color> to gain access to the Serpent's lair. But what else you can expect to do, and how quickly you will reach the endgame, depends greatly on the game speed selected.
 
 <topic:Normal><style:heading>Normal (full game)</style>
 
-This is the traditional game speed, and the one that offers the most complete game. In a full game of FrogComposband, you will fight thousands of monsters, complete dozens of quests, explore more than 30 dungeons and eagerly inspect thousands of (potentially) magical objects. It is possible to play in Normal Mode with the special coffee-break town and no wilderness, but this is strongly not recommended.
+This is the traditional game speed, and the one that offers the most complete game. In a full game of Oposband, you will fight thousands of monsters, complete dozens of quests, explore more than 30 dungeons and eagerly inspect thousands of (potentially) magical objects. It is possible to play in Normal Mode with the special coffee-break town and no wilderness, but this is strongly not recommended.
 
 A complete game in normal-speed mode typically lasts between 15 and 150 hours. The speedrun record for a full-game win is 4 hours and 6 minutes.
 
@@ -33,5 +33,5 @@ Instant-coffee mode discourages grindy play; the more monsters you kill on a giv
 Instant-coffee mode drops you in the thick of the action extremely quickly. It is therefore not recommended for new players - unless you wish to be overwhelmed! A complete game in instant-coffee mode typically lasts between 2 and 15 hours.
 
 <color:D>
-Original   : FrogComposband 7.1.liquorice
+Original   : Oposband 7.1.liquorice
 </color>

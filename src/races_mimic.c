@@ -15,9 +15,9 @@ static void _clay_golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_FREE_ACT);
     add_flag(flgs, OF_HOLD_LIFE);
 }
-race_t *clay_golem_get_race(void)
+race_t* clay_golem_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -25,13 +25,13 @@ race_t *clay_golem_get_race(void)
         me.name = "Clay-Golem";
         me.desc = "";
 
-        me.stats[A_STR] =  2;
-        me.stats[A_INT] =  0;
-        me.stats[A_WIS] =  0;
-        me.stats[A_DEX] =  0;
-        me.stats[A_CON] =  2;
+        me.stats[A_STR] = 2;
+        me.stats[A_INT] = 0;
+        me.stats[A_WIS] = 0;
+        me.stats[A_DEX] = 0;
+        me.stats[A_CON] = 2;
         me.stats[A_CHR] = -2;
-        
+
         me.skills.dis = -5;
         me.skills.dev = -5;
         me.skills.sav = 8;
@@ -46,7 +46,7 @@ race_t *clay_golem_get_race(void)
         me.exp = 200;
         me.infra = 2;
 
-        me.flags = RACE_IS_NONLIVING;
+        me.flags = RACE_IS_NONLIVING | RACE_EATS_DEVICES;
 
         me.calc_bonuses = _clay_golem_calc_bonuses;
         me.get_flags = _clay_golem_get_flags;
@@ -85,9 +85,9 @@ static void _colossus_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_SOUND);
     add_flag(flgs, OF_RES_DISEN);
 }
-race_t *colossus_get_race(void)
+race_t* colossus_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -95,15 +95,15 @@ race_t *colossus_get_race(void)
         me.name = "Colossus";
         me.desc = "";
 
-        me.stats[A_STR] =  7;
-        me.stats[A_INT] =  2;
-        me.stats[A_WIS] =  2;
+        me.stats[A_STR] = 7;
+        me.stats[A_INT] = 2;
+        me.stats[A_WIS] = 2;
         me.stats[A_DEX] = -4;
-        me.stats[A_CON] =  7;
-        me.stats[A_CHR] =  4;
-        
-        me.skills.dis =  0;
-        me.skills.dev =  0;
+        me.stats[A_CON] = 7;
+        me.stats[A_CHR] = 4;
+
+        me.skills.dis = 0;
+        me.skills.dev = 0;
         me.skills.sav = 35;
         me.skills.stl = -4;
         me.skills.srh = -2;
@@ -115,7 +115,7 @@ race_t *colossus_get_race(void)
         me.base_hp = 30;
         me.exp = 1000;
         me.infra = 5;
-        me.flags = RACE_IS_NONLIVING;
+        me.flags = RACE_IS_NONLIVING | RACE_EATS_DEVICES;
 
         me.calc_bonuses = _colossus_calc_bonuses;
         me.get_flags = _colossus_get_flags;
@@ -128,15 +128,11 @@ race_t *colossus_get_race(void)
 /****************************************************************
  * Demon (cf Polymorph Demon)
  ****************************************************************/
-static power_info _demon_powers[] =
+static power_info _demon_get_powers[] =
 {
     { A_CON, {15, 10, 70, demon_breath_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
-static int _demon_get_powers(spell_info* spells, int max)
-{
-    return get_powers_aux(spells, max, _demon_powers);
-}
 static void _demon_calc_bonuses(void)
 {
     p_ptr->hold_life++;
@@ -160,9 +156,9 @@ static void _demon_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SEE_INVIS);
     add_flag(flgs, OF_SPEED);
 }
-race_t *demon_get_race(void)
+race_t* demon_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -170,18 +166,18 @@ race_t *demon_get_race(void)
         me.name = "Demon";
         me.desc = "";
 
-        me.stats[A_STR] =  5;
-        me.stats[A_INT] =  3;
-        me.stats[A_WIS] =  2;
-        me.stats[A_DEX] =  3;
-        me.stats[A_CON] =  4;
-        me.stats[A_CHR] =  0;
-        
+        me.stats[A_STR] = 5;
+        me.stats[A_INT] = 3;
+        me.stats[A_WIS] = 2;
+        me.stats[A_DEX] = 3;
+        me.stats[A_CON] = 4;
+        me.stats[A_CHR] = 3;
+
         me.skills.dis = -5;
         me.skills.dev = 18;
         me.skills.sav = 20;
         me.skills.stl = -2;
-        me.skills.srh =  3;
+        me.skills.srh = 3;
         me.skills.fos = 10;
         me.skills.thn = 40;
         me.skills.thb = 10;
@@ -204,15 +200,11 @@ race_t *demon_get_race(void)
 /****************************************************************
  * Demon-Lord (cf Polymorph Demon-Lord)
  ****************************************************************/
-static power_info _demon_lord_powers[] =
+static power_info _demon_lord_get_powers[] =
 {
     { A_CON, {15, 10, 70, demon_breath_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
-static int _demon_lord_get_powers(spell_info* spells, int max)
-{
-    return get_powers_aux(spells, max, _demon_lord_powers);
-}
 static void _demon_lord_calc_bonuses(void)
 {
     p_ptr->hold_life++;
@@ -260,9 +252,9 @@ static void _demon_lord_get_flags(u32b flgs[OF_ARRAY_SIZE])
 
     add_flag(flgs, OF_IM_FIRE);
 }
-race_t *demon_lord_get_race(void)
+race_t* demon_lord_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -275,13 +267,13 @@ race_t *demon_lord_get_race(void)
         me.stats[A_WIS] = 10;
         me.stats[A_DEX] = 10;
         me.stats[A_CON] = 10;
-        me.stats[A_CHR] =  5;
-        
+        me.stats[A_CHR] = 10;
+
         me.skills.dis = 20;
         me.skills.dev = 20;
         me.skills.sav = 25;
         me.skills.stl = -2;
-        me.skills.srh =  3;
+        me.skills.srh = 3;
         me.skills.fos = 10;
         me.skills.thn = 70;
         me.skills.thb = 15;
@@ -322,9 +314,9 @@ static void _iron_golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_POIS);
     add_flag(flgs, OF_DEC_SPEED);
 }
-race_t *iron_golem_get_race(void)
+race_t* iron_golem_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -332,13 +324,13 @@ race_t *iron_golem_get_race(void)
         me.name = "Iron-Golem";
         me.desc = "";
 
-        me.stats[A_STR] =  3;
-        me.stats[A_INT] =  0;
-        me.stats[A_WIS] =  0;
+        me.stats[A_STR] = 3;
+        me.stats[A_INT] = 0;
+        me.stats[A_WIS] = 0;
         me.stats[A_DEX] = -1;
-        me.stats[A_CON] =  3;
+        me.stats[A_CON] = 3;
         me.stats[A_CHR] = -2;
-        
+
         me.skills.dis = -5;
         me.skills.dev = -5;
         me.skills.sav = 15;
@@ -352,7 +344,7 @@ race_t *iron_golem_get_race(void)
         me.base_hp = 24;
         me.exp = 250;
         me.infra = 3;
-        me.flags = RACE_IS_NONLIVING;
+        me.flags = RACE_IS_NONLIVING | RACE_EATS_DEVICES;
 
         me.calc_bonuses = _iron_golem_calc_bonuses;
         me.get_flags = _iron_golem_get_flags;
@@ -365,25 +357,25 @@ race_t *iron_golem_get_race(void)
 /****************************************************************
  * Mangy Leper
  ****************************************************************/
-race_t *mangy_leper_get_race(void)
+race_t* mangy_leper_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
     {
         me.name = "Mangy Leper";
         me.desc = "Mangy Lepers are humans who have contracted a horrible wasting disease. "
-                    "You cannot help but feel disgusted as your body rots before your very "
-                    "eyes.";
-        
+            "You cannot help but feel disgusted as your body rots before your very "
+            "eyes.";
+
         me.stats[A_STR] = -1;
-        me.stats[A_INT] =  0;
-        me.stats[A_WIS] =  0;
+        me.stats[A_INT] = 0;
+        me.stats[A_WIS] = 0;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] = -3;
-        me.stats[A_CHR] = -5;
-        
+        me.stats[A_CHR] = -3;
+
         me.skills.dis = 0;
         me.skills.dev = 0;
         me.skills.sav = 0;
@@ -429,9 +421,9 @@ static void _mithril_golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_SHARDS);
     add_flag(flgs, OF_REFLECT);
 }
-race_t *mithril_golem_get_race(void)
+race_t* mithril_golem_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -439,15 +431,15 @@ race_t *mithril_golem_get_race(void)
         me.name = "Mithril-Golem";
         me.desc = "";
 
-        me.stats[A_STR] =  5;
-        me.stats[A_INT] =  1;
-        me.stats[A_WIS] =  1;
+        me.stats[A_STR] = 5;
+        me.stats[A_INT] = 1;
+        me.stats[A_WIS] = 1;
         me.stats[A_DEX] = -3;
-        me.stats[A_CON] =  5;
-        me.stats[A_CHR] =  1;
-        
-        me.skills.dis =  0;
-        me.skills.dev =  0;
+        me.stats[A_CON] = 5;
+        me.stats[A_CHR] = 2;
+
+        me.skills.dis = 0;
+        me.skills.dev = 0;
         me.skills.sav = 25;
         me.skills.stl = -3;
         me.skills.srh = -2;
@@ -459,7 +451,7 @@ race_t *mithril_golem_get_race(void)
         me.base_hp = 27;
         me.exp = 500;
         me.infra = 4;
-        me.flags = RACE_IS_NONLIVING;
+        me.flags = RACE_IS_NONLIVING | RACE_EATS_DEVICES;
 
         me.calc_bonuses = _mithril_golem_calc_bonuses;
         me.get_flags = _mithril_golem_get_flags;
@@ -480,32 +472,32 @@ static void _small_kobold_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     add_flag(flgs, OF_RES_POIS);
 }
-race_t *small_kobold_get_race(void)
+race_t* small_kobold_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
     {
         me.name = "Small Kobold";
         me.desc = "Small Kobolds are a the runts of the kobold race, often relegated to the "
-                    "performance of menial tasks deemed unworthy of their larger, more "
-                    "respectable brethren.";
+            "performance of menial tasks deemed unworthy of their larger, more "
+            "respectable brethren.";
 
-        me.stats[A_STR] =  0;
+        me.stats[A_STR] = 0;
         me.stats[A_INT] = -2;
         me.stats[A_WIS] = -1;
-        me.stats[A_DEX] =  0;
+        me.stats[A_DEX] = 0;
         me.stats[A_CON] = -1;
         me.stats[A_CHR] = -3;
-        
+
         me.skills.dis = -5;
         me.skills.dev = -8;
         me.skills.sav = -3;
         me.skills.stl = -1;
-        me.skills.srh =  1;
-        me.skills.fos =  8;
-        me.skills.thn =  5;
+        me.skills.srh = 1;
+        me.skills.fos = 8;
+        me.skills.thn = 5;
         me.skills.thb = -8;
 
         me.life = 91;
@@ -524,15 +516,11 @@ race_t *small_kobold_get_race(void)
 /****************************************************************
  * Vampire-Lord (cf Polymorph Vampire)
  ****************************************************************/
-static power_info _vampire_lord_powers[] =
+static power_info _vampire_lord_get_powers[] =
 {
     { A_CON, {2, 1, 60, vampirism_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
-static int _vampire_lord_get_powers(spell_info* spells, int max)
-{
-    return get_powers_aux(spells, max, _vampire_lord_powers);
-}
 static void _vampire_lord_calc_bonuses(void)
 {
     res_add(RES_DARK);
@@ -563,9 +551,9 @@ static void _vampire_lord_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SEE_INVIS);
     add_flag(flgs, OF_SPEED);
 }
-race_t *vampire_lord_get_race(void)
+race_t* vampire_lord_get_race(void)
 {
-    static race_t me = {0};
+    static race_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
@@ -573,13 +561,13 @@ race_t *vampire_lord_get_race(void)
         me.name = "Vampire";
         me.desc = "";
 
-        me.stats[A_STR] =  4;
-        me.stats[A_INT] =  4;
-        me.stats[A_WIS] =  1;
-        me.stats[A_DEX] =  1;
-        me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
-        
+        me.stats[A_STR] = 4;
+        me.stats[A_INT] = 4;
+        me.stats[A_WIS] = 1;
+        me.stats[A_DEX] = 1;
+        me.stats[A_CON] = 2;
+        me.stats[A_CHR] = 3;
+
         me.skills.dis = 6;
         me.skills.dev = 12;
         me.skills.sav = 8;

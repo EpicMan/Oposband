@@ -439,7 +439,7 @@ struct GfxInfo
 
 static SDL_Surface *GfxSurface = NULL;    /* A surface for the graphics */
 
-#define GfxModes 4
+#define GfxModes 3
 static GfxInfo GfxDesc[GfxModes] =
 {
     /* No gfx (GRAPHICS_NONE) */
@@ -449,7 +449,7 @@ static GfxInfo GfxDesc[GfxModes] =
     /* 16x16 tiles (GRAPHICS_ADAM_BOLT) */
     {"16x16", "16x16.png", 16, 16, "new", 0, 65, TRUE},
     /* XXX (GRAPHICS_DAVID_GERVAIS) */
-    {"32x32", "32x32.png", 32, 32, "david", 0, 0, TRUE},
+//    {"32x32", "32x32.png", 32, 32, "david", 0, 0, TRUE},
 
     /* XXX (GRAPHICS_PSEUDO ???) */
     /*{NULL, NULL, NULL, -1, -1},    */
@@ -3159,13 +3159,14 @@ static errr Term_xtra_sdl(int n, int v)
         {
             return (Term_xtra_sdl_clear());
         }
+#ifdef SOUND_SDL
         /* Make a special sound */
         case TERM_XTRA_SOUND:
         {
             play_sound(v);
         return (0);
         }
-
+#endif
         /* Show or hide the cursor */
         case TERM_XTRA_SHAPE:
         {

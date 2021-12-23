@@ -38,6 +38,34 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
     obj_load(o_ptr, file);
 }
 
+void handle_tmp_indices(bool save_data, bool do_redraw)
+{
+    static int tmp_ix[5] = {0};
+    if (save_data)
+    {
+        tmp_ix[0] = p_ptr->duelist_target_idx;
+        tmp_ix[1] = p_ptr->health_who;
+        tmp_ix[2] = target_who;
+        tmp_ix[3] = pet_t_m_idx;
+        tmp_ix[4] = riding_t_m_idx;
+/*        note(format("Saving temporary indices %d/%d/%d/%d/%d", tmp_ix[0], tmp_ix[1], tmp_ix[2], tmp_ix[3], tmp_ix[4])); */
+    }
+    else
+    {
+        p_ptr->duelist_target_idx = tmp_ix[0];
+        p_ptr->health_who = tmp_ix[1];
+        target_who = tmp_ix[2];
+        pet_t_m_idx = tmp_ix[3];
+        riding_t_m_idx = tmp_ix[4];
+        if (do_redraw)
+        {
+            if (tmp_ix[0]) p_ptr->redraw |= PR_STATUS;
+            if (tmp_ix[1] || tmp_ix[2] || tmp_ix[3] || tmp_ix[4]) p_ptr->redraw |= PR_HEALTH_BARS;
+        }
+/*        note(format("Loading temporary indices %d/%d/%d/%d/%d", tmp_ix[0], tmp_ix[1], tmp_ix[2], tmp_ix[3], tmp_ix[4])); */
+    }
+}
+
 
 static void rd_monster(savefile_ptr file, monster_type *m_ptr)
 {
@@ -46,6 +74,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
 
     assert(m_ptr->id);
     m_ptr->mpower = 1000;
+    m_ptr->parent_r_idx = 0;
     m_ptr->r_idx = savefile_read_s16b(file);
     m_ptr->ap_r_idx = m_ptr->r_idx;
     m_ptr->fy = savefile_read_byte(file);
@@ -55,6 +84,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
     m_ptr->max_maxhp = savefile_read_s16b(file);
     m_ptr->mspeed = savefile_read_byte(file);
     m_ptr->energy_need = savefile_read_s16b(file);
+    m_ptr->ml = savefile_read_byte(file);
 
     for (;;)
     {
@@ -98,6 +128,9 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
             break;
         case SAVE_MON_PARENT:
             m_ptr->parent_m_idx = savefile_read_s16b(file);
+            break;
+        case SAVE_MON_PARENT_RACE:
+            m_ptr->parent_r_idx = savefile_read_s16b(file);
             break;
         case SAVE_MON_PACK_IDX:
             m_ptr->pack_idx = savefile_read_s16b(file);
@@ -143,6 +176,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
             TODO: Report an error back to the load routine!!*/
         }
     }
+    m_ptr->invis_turn = -1;
 }
 
 static void rd_lore_aux(savefile_ptr file, mon_race_ptr race)
@@ -237,6 +271,9 @@ static void rd_options(savefile_ptr file)
     mana_warn = savefile_read_byte(file);
     random_artifact_pct = savefile_read_byte(file);
     reduce_uniques_pct = savefile_read_byte(file);
+    object_list_width = savefile_read_byte(file);
+    monster_list_width = savefile_read_byte(file);
+    generate_empty = savefile_read_byte(file);
     small_level_type = savefile_read_byte(file);
 
     /*** Cheating options ***/
@@ -317,16 +354,35 @@ static void rd_quick_start(savefile_ptr file)
     previous_char.realm2 = savefile_read_byte(file);
     previous_char.dragon_realm = savefile_read_byte(file);
     previous_char.au = savefile_read_s32b(file);
-    previous_char.chaos_patron = savefile_read_s16b(file);
 
     for (i = 0; i < 6; i++)
         previous_char.stat_max[i] = savefile_read_s16b(file);
     previous_char.quick_ok = savefile_read_byte(file);
 }
 
+static void load_mystery(savefile_ptr file)
+{
+    byte tmp8u = savefile_read_byte(file);
+    dungeon_info_type *d_ptr = &d_info[DUNGEON_MYSTERY];
+    if (tmp8u != 0xFF)
+    {
+        return;
+    }
+    d_ptr->dy = savefile_read_byte(file);
+    d_ptr->dx = savefile_read_byte(file);
+    d_ptr->mindepth = savefile_read_s16b(file);
+    d_ptr->maxdepth = savefile_read_s16b(file);
+    d_ptr->final_guardian = (int)savefile_read_s16b(file);
+    d_ptr->initial_guardian = (int)savefile_read_s16b(file);
+    d_ptr->wild_type = savefile_read_byte(file);
+    d_ptr->min_plev = savefile_read_byte(file);
+    get_mystery_flags();
+    mystery_cave_ready = TRUE;
+}
+
 static void rd_extra(savefile_ptr file)
 {
-    int i;
+    int i,j;
     char buf[1024];
 
     p_ptr->id = savefile_read_s32b(file);
@@ -340,7 +396,9 @@ static void rd_extra(savefile_ptr file)
 
     game_mode = savefile_read_s32b(file);
     coffee_break = savefile_read_byte(file);
+    pantheon_count = savefile_read_byte(file);
     game_pantheon = savefile_read_byte(file);
+    active_pantheon = savefile_read_byte(file);
 
     p_ptr->prace = savefile_read_byte(file);
     p_ptr->pclass = savefile_read_byte(file);
@@ -367,8 +425,9 @@ static void rd_extra(savefile_ptr file)
     p_ptr->lev = savefile_read_s16b(file);
     p_ptr->quest_seed = savefile_read_u32b(file);
 
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency[i] = savefile_read_s16b(file);
-    for (i = PROF_DIGGER; i < MAX_PROFICIENCIES; i++) p_ptr->proficiency_cap[i] = savefile_read_s16b(file);
+    for (i = 0; i < 64; i++) p_ptr->spell_exp[i] = savefile_read_s16b(file);
+    for (i = 0; i < 5; i++) for (j = 0; j < 64; j++) p_ptr->weapon_exp[i][j] = savefile_read_s16b(file);
+    for (i = 0; i < 10; i++) p_ptr->skill_exp[i] = savefile_read_s16b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num1[i] = savefile_read_s32b(file);
     for (i = 0; i < MAX_MAGIC_NUM; i++) p_ptr->magic_num2[i] = savefile_read_byte(file);
     if (music_singing_any()) p_ptr->action = ACTION_SING;
@@ -426,8 +485,18 @@ static void rd_extra(savefile_ptr file)
             if (max_dlv[i] > d_info[i].maxdepth) max_dlv[i] = d_info[i].maxdepth;
         }
 
+        if (max < (byte)max_d_idx)
+        {
+            for (i = max; i < (byte)max_d_idx; i++)
+            {
+                max_dlv[i] = 0;
+            }
+        }
+
         for (i = 0; i < max; i++)
             dungeon_flags[i] = savefile_read_u32b(file);
+
+        load_mystery(file);
     }
 
     if (p_ptr->max_plv < p_ptr->lev) p_ptr->max_plv = p_ptr->lev;
@@ -436,6 +505,7 @@ static void rd_extra(savefile_ptr file)
     p_ptr->blind = savefile_read_s16b(file);
     p_ptr->paralyzed = savefile_read_s16b(file);
     p_ptr->confused = savefile_read_s16b(file);
+    p_ptr->food = savefile_read_s16b(file);
     p_ptr->energy_need = savefile_read_s16b(file);
     p_ptr->fast = savefile_read_s16b(file);
     p_ptr->slow = savefile_read_s16b(file);
@@ -461,6 +531,8 @@ static void rd_extra(savefile_ptr file)
     p_ptr->alter_reality = savefile_read_s16b(file);
     p_ptr->see_infra = savefile_read_s16b(file);
     p_ptr->tim_infra = savefile_read_s16b(file);
+    p_ptr->tim_poet = savefile_read_s16b(file);
+    p_ptr->tim_understanding = savefile_read_s16b(file);
     p_ptr->oppose_fire = savefile_read_s16b(file);
     p_ptr->oppose_cold = savefile_read_s16b(file);
     p_ptr->oppose_acid = savefile_read_s16b(file);
@@ -556,6 +628,11 @@ static void rd_extra(savefile_ptr file)
     p_ptr->entrench_ct = savefile_read_s16b(file);
     p_ptr->sense_artifact = savefile_read_byte(file);
     p_ptr->duelist_target_idx = savefile_read_s16b(file);
+    p_ptr->health_who = savefile_read_s16b(file);
+    target_who = savefile_read_s16b(file);
+    pet_t_m_idx = savefile_read_s16b(file);
+    riding_t_m_idx = savefile_read_s16b(file);
+
     p_ptr->tim_reflect = savefile_read_s16b(file);
     p_ptr->multishadow = savefile_read_s16b(file);
     p_ptr->dustrobe = savefile_read_s16b(file);
@@ -612,6 +689,11 @@ static void rd_extra(savefile_ptr file)
 
     seed_flavor = savefile_read_u32b(file);
     seed_town = savefile_read_u32b(file);
+    seed_dungeon = savefile_read_u32b(file);
+    world_monster = savefile_read_byte(file);
+    p_ptr->no_air = savefile_read_s16b(file);
+    no_air_monster = (p_ptr->no_air == 0) ? 0 : savefile_read_byte(file);
+
     if (p_ptr->personality == PERS_SPLIT) split_load(file);
     p_ptr->panic_save = savefile_read_u16b(file);
     p_ptr->total_winner = savefile_read_u16b(file);
@@ -619,18 +701,13 @@ static void rd_extra(savefile_ptr file)
     p_ptr->is_dead = savefile_read_byte(file) ? TRUE : FALSE;
     p_ptr->feeling = savefile_read_byte(file);
 
-    switch (p_ptr->start_race)
+    if (get_race_aux(p_ptr->start_race, 0)->flags & RACE_NIGHT_START)
     {
-    case RACE_VAMPIRE:
-    case RACE_MON_VAMPIRE:
-    case RACE_SKELETON:
-    case RACE_ZOMBIE:
-    case RACE_SPECTRE:
         game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * MAX_DAYS + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
-        break;
-    default:
+    }
+    else
+    {
         game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
-        break;
     }
     dungeon_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
 
@@ -640,11 +717,13 @@ static void rd_extra(savefile_ptr file)
     player_turn = savefile_read_s32b(file);
 
     dungeon_turn = savefile_read_s32b(file);
+    image_turn = savefile_read_s32b(file);
     old_battle = savefile_read_s32b(file);
     today_mon = savefile_read_s16b(file);
     p_ptr->today_mon = savefile_read_s16b(file);
     p_ptr->riding = savefile_read_s16b(file);
     p_ptr->floor_id = savefile_read_s16b(file);
+    overworld_visit = savefile_read_byte(file);
 
     playtime = savefile_read_u32b(file);
     p_ptr->count = savefile_read_u32b(file);
@@ -927,7 +1006,7 @@ static errr rd_dungeon(savefile_ptr file)
     /*** Meta info ***/
 
     max_floor_id = savefile_read_s16b(file);
-    dungeon_type = savefile_read_byte(file);
+    set_dungeon_type(savefile_read_byte(file));
 
     num = savefile_read_byte(file);
 
@@ -1039,7 +1118,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     /* Mention the savefile version */
     note(format(
-             "Loading a %d.%d.%d savefile...",
+             "Loading a %d.%d.%s savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
     /* Savefiles break iff VER_MAJOR bumps */
@@ -1078,6 +1157,9 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         else if (r_ptr->flags7 & RF7_NAZGUL) r_ptr->max_num = MAX_NAZGUL_NUM;
         else if (i == MON_CAMELOT_KNIGHT)
             r_ptr->max_num = MAX_CAMELOT_KNIGHT_NUM;
+
+        /* Hack -- allow massive bushfires */
+        else if (i == MON_BUSH) r_ptr->max_num = 250;
     }
 
     /* Monster Memory */
@@ -1230,8 +1312,15 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     if (arg_fiddle) note("Loaded extra information");
 
-    /* Player life rating */
-	p_ptr->life_rating = savefile_read_s16b(file);
+    /* Read the player_hp array */
+    tmp16u = savefile_read_u16b(file);
+    if (tmp16u > PY_MAX_LEVEL)
+    {
+        note(format("Too many (%u) hitpoint entries!", tmp16u));
+        return (25);
+    }
+    for (i = 0; i < tmp16u; i++)
+        p_ptr->player_hp[i] = savefile_read_s16b(file);
 
     /* Important -- Initialize stuff */
     mp_ptr = &m_info[p_ptr->pclass];
@@ -1246,6 +1335,12 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     }
 
     /* Read spell info */
+    p_ptr->spell_learned1 = savefile_read_u32b(file);
+    p_ptr->spell_learned2 = savefile_read_u32b(file);
+    p_ptr->spell_worked1 = savefile_read_u32b(file);
+    p_ptr->spell_worked2 = savefile_read_u32b(file);
+    p_ptr->spell_forgotten1 = savefile_read_u32b(file);
+    p_ptr->spell_forgotten2 = savefile_read_u32b(file);
     p_ptr->learned_spells = savefile_read_s16b(file);
     p_ptr->add_spells = savefile_read_s16b(file);
     if (p_ptr->pclass == CLASS_MINDCRAFTER) p_ptr->add_spells = 0;
@@ -1279,19 +1374,20 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     }
 
     spell_stats_on_load(file);
+    skills_on_load(file);
     stats_on_load(file);
 
     /* I'm not dead yet... */
     if (!p_ptr->is_dead)
     {
-        int tmp_ix = p_ptr->duelist_target_idx;
+        handle_tmp_indices(TRUE, FALSE);
         note("Restoring Dungeon...");
         if (rd_dungeon(file))
         {
             note("Error reading dungeon data");
             return (34);
         }
-        p_ptr->duelist_target_idx = tmp_ix;
+        handle_tmp_indices(FALSE, FALSE);
     }
 
 #ifdef VERIFY_CHECKSUMS

@@ -333,8 +333,12 @@ says, 'Christmas is so stressful!'
 says, 'What is with that chimney thing, anyway? Some people believe the strangest things.'
 says, 'I'm sick of this notion that developing superintelligent robots is risky because they might take over. I mean, what's the worst that could happen? They wipe us out. Dumb species replaced with a smart one. I don't see any scenario where the results are actually bad - as long as we ensure the robots are completely out of our control.'
 
+N:743:The Phoenix
+emits loud eeping sounds.
+flaps its wings in a failing attempt at a chicken-dance.
+tweets, 'Birds of a feather stick together! #EEP'
+
 #N:738:Khamul the Easterling
-#N:743:The Phoenix
 #N:753:Nidhogg the Hel-Drake
 #N:754:The Lernean Hydra
 #N:755:Thuringwethil
@@ -550,7 +554,7 @@ yells 'The World!' Time has stopped!
 casts Anti-Magic. You feel your spells are blocked!
 throws a large rock.
 invokes a stasis field.
-casts Polymorph Other ... You turn into a giant toad!
+casts Polymorph Other... You turn into a giant toad!
 says, 'I'm BABY SATAN!'
 
 N:1063:lousy, the King of louses
@@ -660,7 +664,7 @@ says, 'Never trust rumors, mate, they're full of alternative facts.'
 tells you to be careful around great wyrms.
 says, 'Watch out for great unclean ones, toxic waste has some real nasty side-effects.'
 warns you about the man called Sjijn.
-says, 'You're a dirty lootin' punk, I'm a dirty lootin' punk... this is the good life, innit?'
+says, 'You're a dirty lootin' bastard, I'm a dirty lootin' bastard... this is the good life, innit?'
 says, 'You know what's even more fun than an octopus alien? An octopus alien on a Potion of Speed!'
 says, 'Never trust the Goddess, she's no lady.'
 says, 'I've always had a great appreciation for the arts, you know.'

@@ -11,6 +11,7 @@
 /* Purpose: Angband game engine */
 
 #include "angband.h"
+#include "chaos_patron.h"
 #include <assert.h>
 
 #define TY_CURSE_CHANCE 200
@@ -29,7 +30,7 @@ static int wild_regen = 20;
  * average -> good -> excellent -> special
  *         -> bad  -> awful     -> terrible
  */
-byte value_check_aux1(object_type *o_ptr)
+byte value_check_aux1(object_type *o_ptr, bool remote)
 {
     if (object_is_artifact(o_ptr))
     {
@@ -45,13 +46,22 @@ byte value_check_aux1(object_type *o_ptr)
 
     if (object_is_cursed(o_ptr)) return FEEL_BAD;
     if (object_is_broken(o_ptr)) return FEEL_BROKEN;
-    if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) return FEEL_AVERAGE;
-	
-	if (simple_item_check(o_ptr)) return FEEL_NONE;
+    if (object_known_on_average(o_ptr))
+    {
+        obj_identify(o_ptr);
+        return (remote ? FEEL_NONE : FEEL_AVERAGE);
+    }
 
     if (o_ptr->to_a > 0) return FEEL_GOOD;
     if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
-    if (o_ptr->to_h > 0) return FEEL_GOOD;
+    if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_GOOD;
+
+    /* Average weapons, armor, ammo and lites can all be IDed since the player will
+     * (after playing a few games) know all their properties just by knowing the object
+     * is average
+     */
+    if (object_is_weapon_armour_ammo(o_ptr) || object_is_lite(o_ptr))
+        obj_identify(o_ptr);
 
     return FEEL_AVERAGE;
 }
@@ -79,9 +89,6 @@ static byte value_check_aux2(object_type *o_ptr)
     /* Ego-Items -- except cursed/broken ones */
     if (object_is_ego(o_ptr)) return FEEL_ENCHANTED;
 
-	/*ID and go home*/
-	if (simple_item_check(o_ptr)) return FEEL_NONE;
-
     /* Good armor bonus */
     if (o_ptr->to_a > 0) return FEEL_ENCHANTED;
 
@@ -89,7 +96,19 @@ static byte value_check_aux2(object_type *o_ptr)
     if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
 
     /* Good weapon bonuses */
-    if (o_ptr->to_h) return FEEL_ENCHANTED;
+    if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_ENCHANTED;
+
+    if (object_known_on_average(o_ptr))
+    {
+        obj_identify(o_ptr);
+    }
+
+    /* Average weapons, armor, ammo and lites can all be IDed since the player will
+     * (after playing a few games) know all their properties just by knowing the object
+     * is average
+     */
+    if (object_is_weapon_armour_ammo(o_ptr) || object_is_lite(o_ptr))
+        obj_identify(o_ptr);
 
     return FEEL_AVERAGE;
 }
@@ -108,7 +127,7 @@ static void _sense_obj(obj_ptr obj)
 
     if (!strong && p_ptr->good_luck && !randint0(13))
         strong = TRUE;
-    feel = strong ? value_check_aux1(obj) : value_check_aux2(obj);
+    feel = strong ? value_check_aux1(obj, FALSE) : value_check_aux2(obj);
     if (!feel) return;
 
     /*if (disturb_minor) disturb(0, 0);*/
@@ -131,8 +150,11 @@ static void _sense_obj(obj_ptr obj)
                    game_inscriptions[feel]);
     }
 
-    obj->ident |= IDENT_SENSE;
-    obj->feeling = feel;
+    if (!(obj->ident & IDENT_KNOWN))
+    {
+        obj->ident |= IDENT_SENSE;
+        obj->feeling = feel;
+    }
 
     autopick_alter_obj(obj, destroy_feeling && obj->loc.where != INV_EQUIP);
     obj_release(obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
@@ -176,33 +198,28 @@ static void sense_inventory1(void)
 
     if (p_ptr->confused) return;
 
-    if (no_id)
+    int flags = _get_pseudo_id_flags();
+    if (flags & CLASS_SENSE1_STRONG)
+        strong = TRUE;
+    else if (!(flags & CLASS_SENSE1_WEAK))
         return;
-	else
+    if (flags & CLASS_SENSE1_FAST)
     {
-		int flags = _get_pseudo_id_flags();
-		if (flags & CLASS_SENSE1_STRONG)
-			strong = TRUE;
-		else if (!(flags & CLASS_SENSE1_WEAK))
+        if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
             return;
-		if (flags & CLASS_SENSE1_FAST)
-			{
-			if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE1_MED)
-			{
-			if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE1_SLOW)
-			{
-			if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
-				return;
-			}
-		if (virtue_current(VIRTUE_KNOWLEDGE) >= 100)
-			strong = TRUE;
     }
+    else if (flags & CLASS_SENSE1_MED)
+    {
+        if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
+            return;
+    }
+    else if (flags & CLASS_SENSE1_SLOW)
+    {
+        if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
+            return;
+    }
+    if (virtue_current(VIRTUE_KNOWLEDGE) >= 100)
+        strong = TRUE;
 
     /*** Sense everything ***/
     _sense_strong = strong;
@@ -219,37 +236,31 @@ static void sense_inventory2(void)
 //    int  flags = _get_pseudo_id_flags();
 
     if (p_ptr->confused) return;
-	if (no_id)
-	{
+	
+    int flags = _get_pseudo_id_flags();
+    if (flags & CLASS_SENSE2_STRONG)
+        strong = TRUE;
+    else if (!(flags & CLASS_SENSE2_WEAK))
         return;
-    }
-    else
+    if (flags & CLASS_SENSE2_FAST)
     {
-		int flags = _get_pseudo_id_flags();
-		if (flags & CLASS_SENSE2_STRONG)
-			strong = TRUE;
-		else if (!(flags & CLASS_SENSE2_WEAK))
-        return;
-		if (flags & CLASS_SENSE2_FAST)
-			{
-			if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE2_MED)
-			{
-			if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE2_SLOW)
-			{
-			if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
-				return;
-			}
-		else /* Super duper slow */
-			{
-			if (0 != randint0(_adj_pseudo_id(240000) / (plev + 5)))
-				return;
-			}
+        if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
+            return;
+    }
+    else if (flags & CLASS_SENSE2_MED)
+    {
+        if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
+            return;
+    }
+    else if (flags & CLASS_SENSE2_SLOW)
+    {
+        if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
+            return;
+    }
+    else /* Super duper slow */
+    {
+        if (0 != randint0(_adj_pseudo_id(240000) / (plev + 5)))
+            return;
     }
 
     /*** Sense everything ***/
@@ -258,11 +269,34 @@ static void sense_inventory2(void)
     equip_for_each_that(_sense_obj, obj_can_sense2);
 }
 
+/* Smoothed-out triple-move preventer */
+static byte energy_clipper_table[50] =
+{ 67, 67, 67, 68, 68, 68, 68, 68, 68, 69,
+  70, 70, 70, 71, 71, 71, 72, 72, 72, 73,
+  73, 74, 74, 74, 74, 75, 75, 75, 75, 75,
+  76, 76, 76, 76, 76, 76, 77, 77, 78, 78,
+  80, 80, 80, 80, 80, 80, 80, 80, 80, 80};
+
 /* Random energy */
-s16b energy_need_clipper(void)
+s16b energy_need_clipper_aux(int speed)
 {
     s16b tulos = randnor(100, 18);
-    return MIN(133, MAX(67, tulos));
+    int mini = energy_clipper_table[speed];
+    return MIN(200 - mini, MAX(mini, tulos));
+}
+
+s16b energy_need_clipper(void)
+{
+    return energy_need_clipper_aux(energy_need_hack);
+}
+
+/*
+ * Track dungeon type
+ */
+void set_dungeon_type(byte which)
+{
+    dungeon_type = which;
+    atlantis_hack = (dungeon_type == DUNGEON_ATLANTIS);
 }
 
 /*
@@ -283,7 +317,7 @@ static void pattern_teleport(void)
         char    tmp_val[160];
 
         /* Only downward in ironman mode */
-        if (ironman_downward)
+        if (only_downward())
             min_level = dun_level;
 
         /* Maximum level */
@@ -459,23 +493,87 @@ static bool pattern_effect(void)
     return TRUE;
 }
 
-static void _suppress_extra_pantheons(void)
+static void _suppress_extra_dungeons(void)
 {
-    u32b pantheon_flag_mask = 0;
     int i;
-
-    if ((!game_pantheon) || (!single_pantheon)) return; /* paranoia */
-
-    /* Initialize pantheon flag mask (with flags of all pantheons) */
-    for (i = 0; i < PANTHEON_MAX; i++)
+    for (i = 1; i < max_d_idx; i++)  /* make sure all substitutions are two-way */
     {
-        pantheon_flag_mask |= pant_list[i].flag;
+        if ((d_info[i].alt > 0) && (d_info[i].alt < max_d_idx)) d_info[d_info[i].alt].alt = i;
     }
-
-    /* Pick a random pantheon if one hasn't been selected yet */
-    if (game_pantheon >= PANTHEON_MAX)
+    for (i = 1; i < max_d_idx; i++)
     {
-        if (prace_is_(RACE_DEMIGOD))
+        int eka, toka, modu;
+        bool vaihda = FALSE;
+        if (i > d_info[i].alt) continue; /* either no alt or already processed */
+        eka = i;
+        toka = d_info[i].alt;
+        modu = (eka * 48) + toka;
+        if ((seed_dungeon % (modu * 2)) >= (u32b)modu) /* always returns FALSE with a seed of 0, so old savefiles retain the original dungeons */
+        {
+            vaihda = TRUE;
+        }
+        if (toka == DUNGEON_NO_MELEE) /* Hack */
+        {
+            if (!seed_dungeon)
+            {
+                toka = DUNGEON_MYSTERY;
+            }
+            else if (no_melee_challenge) vaihda = TRUE;
+            else if (melee_challenge) vaihda = FALSE;
+        }
+        if ((vaihda) && (toka == DUNGEON_MAN_CAVE) && (seed_dungeon % 32)) /* 1 in 64 chance of man cave */
+        {
+            vaihda = FALSE;
+        }
+        if ((max_dlv[eka] > 0) && (max_dlv[toka] == 0)) /* Crude attempt not to switch dungeons mid-game */
+        {
+            vaihda = FALSE;
+        }
+        if (vaihda)
+        {
+            eka = toka;
+            toka = i;
+        }
+        d_info[toka].flags1 |= DF1_SUPPRESSED;
+//        msg_format("Suppressing dungeon %d", toka);
+        if ((d_info[toka].final_guardian) && (d_info[toka].final_guardian != d_info[eka].final_guardian))
+        {
+            r_info[d_info[toka].final_guardian].flags7 &= ~(RF7_GUARDIAN);
+        }
+        if ((d_info[toka].dy != d_info[eka].dy) || (d_info[toka].dx != d_info[eka].dx))
+        {
+            wilderness[d_info[toka].dy][d_info[toka].dx].entrance = 0;
+        }
+        else if (!wilderness[d_info[toka].dy][d_info[toka].dx].town)
+        {
+            wilderness[d_info[toka].dy][d_info[toka].dx].level = d_info[eka].mindepth;
+        }
+    }
+}
+
+bool is_active_pantheon(int i)
+{
+    if ((i < 1) || (i >= PANTHEON_MAX)) return FALSE;
+    if (pantheon_count == (PANTHEON_MAX - 1)) return TRUE; /* Hack - helps with pantheon testing in wizard mode */
+    return (active_pantheon & (1 << i)) ? TRUE : FALSE;
+}
+
+static void _suppress_extra_pantheons(bool new_game)
+{
+    u32b flag_mask_keep = 0, flag_mask_rm = 0;
+    int i;
+    int keep_pantheon = (1 << game_pantheon);
+
+    if (new_game)
+    {
+        race_t *race_ptr = get_true_race();
+        active_pantheon = 0;
+        for (i = 1; i < PANTHEON_MAX; i++)
+        {
+            active_pantheon |= (1 << i);
+        }
+        /* Guarantee Olympian pantheon for Greek demigods */
+        if ((prace_is_(RACE_DEMIGOD)) && (pantheon_count < PANTHEON_MAX - 1))
         {
             switch (p_ptr->psubrace)
             {
@@ -491,42 +589,81 @@ static void _suppress_extra_pantheons(void)
                 case DEMIGOD_HERMES:
                 case DEMIGOD_POSEIDON:
                 case DEMIGOD_ZEUS:
-                    game_pantheon = PANTHEON_OLYMPIAN;
+                    if ((pantheon_count == 1) && (game_pantheon) && (game_pantheon < PANTHEON_MAX) && (game_pantheon != PANTHEON_OLYMPIAN)) pantheon_count = 2;
+                    keep_pantheon |= (1 << PANTHEON_OLYMPIAN);
                     break;
                 default:
-                    game_pantheon = randint1(PANTHEON_MAX - 1);
                     break;
-            }            
+            }
         }
-        else
-            game_pantheon = randint1(PANTHEON_MAX - 1);
+        else if ((race_ptr->boss_r_idx) && (race_ptr->boss_r_idx > 0) && (race_ptr->boss_r_idx < max_r_idx) &&
+                 (monster_pantheon(&r_info[race_ptr->boss_r_idx])) &&
+                 (pantheon_count < PANTHEON_MAX - 1))
+        {
+            int force_pant = monster_pantheon(&r_info[race_ptr->boss_r_idx]);
+            if ((pantheon_count == 1) && (game_pantheon) && (game_pantheon < PANTHEON_MAX) && (game_pantheon != force_pant)) pantheon_count = 2;
+            keep_pantheon |= (1 << force_pant);
+        }
+        if (pantheon_count < (PANTHEON_MAX - 1))
+        {
+            int poista = (PANTHEON_MAX - 1) - pantheon_count;
+            int yrk = 10000; /* paranoia */
+            while ((poista > 0) && (yrk > 0))
+            {
+                i = randint1(PANTHEON_MAX - 1);
+                if (keep_pantheon & (1 << i)) continue;
+                if (is_active_pantheon(i))
+                {
+                    active_pantheon &= ~(1 << i);
+                    poista--;
+                }
+                yrk--;
+            }
+        }
     }
 
-    /* Wipe dungeons associated with other pantheons */
-    for (i = 1; i < max_d_idx; i++)
+    /* Initialize pantheon flag mask (with flags of all pantheons) */
+    for (i = 1; i < PANTHEON_MAX; i++)
     {
-        dungeon_info_type *d_ptr = &d_info[i];
-        if ((d_ptr->pantheon) && (d_ptr->pantheon != game_pantheon))
-        { /* Wipe the dungeon */
-            WIPE(&d_info[i], dungeon_info_type);
+        if (is_active_pantheon(i)) flag_mask_keep |= pant_list[i].flag;
+        else flag_mask_rm |= pant_list[i].flag;
+    }
+
+    if (pantheon_count < PANTHEON_MAX - 1)
+    {
+        /* Wipe dungeons associated with suppressed pantheons */
+        for (i = 1; i < max_d_idx; i++)
+        {
+            dungeon_info_type *d_ptr = &d_info[i];
+            if ((d_ptr->pantheon) && (!is_active_pantheon(d_ptr->pantheon)))
+            { /* Wipe the dungeon */
+    //            WIPE(&d_info[i], dungeon_info_type);
+                d_info[i].flags1 |= DF1_SUPPRESSED;
+                d_info[i].dy = 0;
+                d_info[i].dx = 0;
+                if (d_info[i].final_guardian)
+                    r_info[d_info[i].final_guardian].flags7 &= ~(RF7_GUARDIAN);
+                d_info[i].final_guardian = 0;
+            }
         }
     }
 
-    /* Suppress monsters who belong to other pantheons, and unsuppress the active pantheon */
+    /* Suppress monsters who belong to other pantheons, and unsuppress the active pantheons */
     for (i = 1; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
-        u32b race_flag_match;
+        u32b keep_flag_match, rm_flag_match;
 
         if ((!r_ptr) || (!r_ptr->name)) continue;
-        race_flag_match = (r_ptr->flags3 & pantheon_flag_mask);
-        if ((race_flag_match > 0) && (!(r_ptr->flags3 & pant_list[game_pantheon].flag)))
-        { /* Suppress member of rival pantheon */
-            r_ptr->flagsx |= RFX_SUPPRESS;
-        }
-        else if (race_flag_match) /* Unsuppress */
+        keep_flag_match = (r_ptr->flags3 & flag_mask_keep);
+        rm_flag_match = (r_ptr->flags3 & flag_mask_rm);
+        if ((keep_flag_match > 0) && (coffee_break != SPEED_INSTA_COFFEE)) /* Unsuppress */
         {
             r_ptr->flagsx &= ~RFX_SUPPRESS;
+        }
+        else if ((rm_flag_match > 0) || ((r_ptr->dungeon > 0) && (r_ptr->dungeon < max_r_idx) && (d_info[r_ptr->dungeon].pantheon) && (!is_active_pantheon(d_info[r_ptr->dungeon].pantheon)))) /* Suppress member of rival pantheon */
+        {
+            r_ptr->flagsx |= RFX_SUPPRESS;
         }
     }
 }
@@ -720,6 +857,8 @@ static void regen_monsters(void)
         /* Skip dead monsters */
         if (!m_ptr->r_idx) continue;
 
+        if ((p_ptr->no_air) && (monster_living(r_ptr))) continue;
+
         /* Allow regeneration (if needed) */
         if (m_ptr->hp < m_ptr->maxhp)
         {
@@ -736,14 +875,37 @@ static void regen_monsters(void)
             if (frac >= 400) frac = 400;
 
             /* Regenerate */
-            m_ptr->hp += frac;
-
-            /* Do not over-regenerate */
-            if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
-
-            /* Redraw (later) if needed */
-            check_mon_health_redraw(i);
+            (void)hp_mon(m_ptr, frac, FALSE);
         }
+    }
+}
+
+/* Unregenerate monsters */
+static void unregen_monsters(void)
+{
+    int i, dmg;
+    bool fear;
+
+    /* Unregenerate everyone */
+    for (i = 1; i < m_max; i++)
+    {
+        /* Check the i'th monster */
+        monster_type *m_ptr = &m_list[i];
+        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+
+        /* Skip dead monsters */
+        if (!m_ptr->r_idx) continue;
+
+        /* Skip not-living monsters */
+        if (!monster_living(r_ptr)) continue;
+        if (i == no_air_monster) continue;
+
+        dmg = (NO_AIR_MAX - p_ptr->no_air) / 2;
+
+        check_mon_health_redraw(i);
+
+        if (no_air_monster) mon_take_hit_mon(i, dmg, &fear, extract_note_dies(real_r_ptr(m_ptr)), no_air_monster);
+        else mon_take_hit(i, dmg, DAM_TYPE_AURA, &fear, extract_note_dies(real_r_ptr(m_ptr)));
     }
 }
 
@@ -876,7 +1038,7 @@ byte coffeebreak_recall_level(bool laskuri)
      * and taso == max_dlv, we are revisiting the depth */
     if ((laskuri) && (taso == (byte)max_dlv[DUNGEON_ANGBAND]) && (p_ptr->coffee_lv_revisits < 251) && (taso < 101))
     {
-        if (p_ptr->coffee_lv_revisits == 2) /* warn the player about J's increasing mpower */
+        if (p_ptr->coffee_lv_revisits == ((coffee_break == SPEED_INSTA_COFFEE) ? 1 : 2)) /* warn the player about J's increasing mpower */
         {
             msg_print("You have a brief vision of a red-faced, overweight humanoid with an unkempt beard, yelling <color:R>'Get to it already! The longer you bum around, the stronger the Serpent grows!'</color> You aren't sure who this strange apparition is, but given how tense and irritable he appears, you hope he's not the ultimate supreme deity.");
         }
@@ -924,7 +1086,7 @@ bool psychometry(void)
     }
 
     /* Check for a feeling */
-    feel = value_check_aux1(prompt.obj);
+    feel = value_check_aux1(prompt.obj, FALSE);
 
     /* Get an object description */
     object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
@@ -942,11 +1104,14 @@ bool psychometry(void)
                game_inscriptions[feel]);
 
 
-    /* We have "felt" it */
-    prompt.obj->ident |= (IDENT_SENSE);
-
-    /* "Inscribe" it */
-    prompt.obj->feeling = feel;
+    if (prompt.obj->ident & (IDENT_KNOWN)) feel = FEEL_NONE;
+    else
+    {
+        /* We have "felt" it */
+        prompt.obj->ident |= (IDENT_SENSE);
+        /* "Inscribe" it */
+        prompt.obj->feeling = feel;
+    }
 
     /* Player touches it */
     prompt.obj->marked |= OM_TOUCHED;
@@ -960,11 +1125,8 @@ bool psychometry(void)
     case TV_BOW:
     case TV_DIGGING:
     case TV_HAFTED:
-    case TV_STAVES:
     case TV_POLEARM:
-    case TV_AXE:
     case TV_SWORD:
-    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -1060,7 +1222,7 @@ void do_alter_reality(void)
 
 
     /* Determine the level */
-    if ((ironman_downward) || ((!dungeon_type) && (quests_get_current())))
+    if ((only_downward()) || (p_ptr->inside_arena) || ((!dungeon_type) && (quests_get_current())))
     {
         msg_print("The world seems to change for a moment!");
         p_ptr->alter_reality = 0;
@@ -1087,28 +1249,49 @@ void do_alter_reality(void)
         /* Leaving */
         p_ptr->leaving = TRUE;
         if (quests_get_current()) quests_on_leave();
+
+        if (p_ptr->no_air) set_no_air(0, TRUE);
     }
 
     /* Sound */
     sound(SOUND_TPLEVEL);
 }
 
-static bool _fast_mana_regen(void)
+bool mon_fast_mana_regen(void)
 {
-    switch (get_class_idx())
+    if (p_ptr->pclass != CLASS_MONSTER) return FALSE;
+    else if (!p_ptr->msp) return FALSE;
+    else
     {
-    case CLASS_MAGE:
-    case CLASS_BLOOD_MAGE:
-    case CLASS_NECROMANCER:
-    case CLASS_HIGH_MAGE:
-    case CLASS_SORCERER:
-    case CLASS_YELLOW_MAGE:
-    case CLASS_GRAY_MAGE:
-        return TRUE;
+        static byte _onko[MAX_CLASS] = {0};
+        int kuka = get_class_idx();
+        if (_onko[kuka] == 2) return TRUE;
+        if (_onko[kuka] == 1) return FALSE;
+        _onko[kuka] = (get_class_aux(kuka, 0)->flags & CLASS_REGEN_MANA) ? 2 : 1;
+        return (_onko[kuka] == 2);
     }
-    return FALSE;
 }
 
+int py_food_regen(void)
+{
+    if (p_ptr->food >= PY_FOOD_WEAK) return PY_REGEN_NORMAL;
+    else
+    {
+        /* Lower regeneration */
+        if (p_ptr->food < PY_FOOD_STARVE)
+        {
+            return 0;
+        }
+        else if (p_ptr->food < PY_FOOD_FAINT)
+        {
+            return PY_REGEN_FAINT;
+        }
+        else
+        {
+            return PY_REGEN_WEAK;
+        }
+    }
+}
 /*
  * Handle timed damage and regeneration every 10 game turns
  */
@@ -1125,7 +1308,7 @@ static void process_world_aux_hp_and_sp(void)
 
     /*** Damage over Time ***/
 
-    /* Take damage from cuts */
+    /* Take damage from cuts - NOTE: Wild mode only */
     if (p_ptr->cut && !IS_INVULN() && p_ptr->wild_mode)
     {
         cut_info_t cut = cut_info(p_ptr->cut);
@@ -1135,9 +1318,9 @@ static void process_world_aux_hp_and_sp(void)
             take_hit(DAMAGE_NOESCAPE, cut.dam, "a fatal wound");
         }
     }
-
+    
     /* (Vampires) Take damage from sunlight. Note, Vampires are vulnerable
-       to light so start with -50% resistance. Rather than res_save(RES_LIGHT)
+       to light so start with -30% resistance. Rather than res_save(RES_LIGHT)
        we will simply take damage so long as there is light vulnerability. */
     if (prace_is_(RACE_VAMPIRE) || prace_is_(RACE_MON_VAMPIRE) || p_ptr->mimic_form == MIMIC_VAMPIRE)
     {
@@ -1275,6 +1458,15 @@ static void process_world_aux_hp_and_sp(void)
         }
     }
 
+    if (((have_flag(f_ptr->flags, FF_SNOW)) || (have_flag(f_ptr->flags, FF_SLIPPERY))) &&
+        (p_ptr->resist[RES_COLD] <= 0))
+    {
+        msg_print("You are freezing!");
+        if (one_in_(10)) take_hit(DAMAGE_NOESCAPE, 1, "freezing");
+        if (one_in_(50)) set_unwell(75 + randint1(25), TRUE);
+        cave_no_regen = TRUE;
+    }
+
     if (p_ptr->riding)
     {
         if (r_info[m_list[p_ptr->riding].r_idx].flags2 & RF2_AURA_FIRE)
@@ -1323,7 +1515,7 @@ static void process_world_aux_hp_and_sp(void)
         if (!IS_INVULN() && !IS_WRAITH())
         {
             int dam;
-            cptr dam_desc = NULL;
+            cptr dam_desc = "";
 
             dam = 1 + p_ptr->lev/5;
             /* Passwall now takes more energy ...
@@ -1356,6 +1548,12 @@ static void process_world_aux_hp_and_sp(void)
 
 
     /*** handle regeneration ***/
+
+    /* Getting Weak */
+    if (p_ptr->food < PY_FOOD_WEAK)
+    {
+        regen_amount = py_food_regen();
+    }
 
     /* Are we walking the pattern? */
     if (pattern_effect())
@@ -1393,7 +1591,7 @@ static void process_world_aux_hp_and_sp(void)
      * and regen-worsening things make it better */
     upkeep_regen = (100 - upkeep_factor) * ((upkeep_factor > 100) ? PY_REGEN_NORMAL : regen_amount);
 
-    if ((_fast_mana_regen()) && (upkeep_regen > 0))
+    if ((p_ptr->mana_regen) && (upkeep_regen > 0))
         upkeep_regen = upkeep_regen * 2;
 
     if (!p_ptr->nice) regenmana(upkeep_regen);
@@ -1435,6 +1633,7 @@ static void process_world_aux_hp_and_sp(void)
     /* Poisoned or cut yields no healing */
     if (p_ptr->poisoned) regen_amount = 0;
     if (p_ptr->cut && p_ptr->pclass != CLASS_BLOOD_KNIGHT) regen_amount = 0;
+    if ((p_ptr->no_air) && (!(get_race()->flags & RACE_IS_NONLIVING)) && (!equip_find_art(ART_VAYU))) regen_amount = 0;
 
     /* Special floor -- Pattern, in a wall -- yields no healing */
     if (cave_no_regen) regen_amount = 0;
@@ -1521,6 +1720,18 @@ static void process_world_aux_timeout(void)
         (void)set_tim_infra(p_ptr->tim_infra - 1, TRUE);
     }
 
+    /* Timed poetry */
+    if (p_ptr->tim_poet)
+    {
+        (void)set_tim_poet(p_ptr->tim_poet - 1, TRUE);
+    }
+
+    /* Timed poetry */
+    if (p_ptr->tim_understanding)
+    {
+        (void)set_tim_understanding(p_ptr->tim_understanding - 1, TRUE);
+    }
+
     /* Timed stealth */
     if (p_ptr->tim_stealth)
     {
@@ -1581,6 +1792,12 @@ static void process_world_aux_timeout(void)
         (void)set_tim_regen(p_ptr->tim_regen - 1, TRUE);
     }
 
+    /* Timed no-air */
+    if (p_ptr->no_air)
+    {
+        (void)set_no_air(p_ptr->no_air - 1, TRUE);
+    }
+
     /* Timed resist nether */
     if (p_ptr->tim_res_nether)
     {
@@ -1636,8 +1853,9 @@ static void process_world_aux_timeout(void)
      * much slower than recovery from paralysis (2L vs L/2) */
     if (p_ptr->slow)
     {
-        do { set_slow(p_ptr->slow - 1, TRUE); }
-            while (p_ptr->slow && free_act_save_p(dun_level*2));
+        int vah = 0;
+        do { set_slow(p_ptr->slow - 1, TRUE); vah++; }
+            while (p_ptr->slow && free_act_save_p(dun_level*2) && vah < 5);
     }
 
     /* Unwellness recovery */
@@ -1647,9 +1865,9 @@ static void process_world_aux_timeout(void)
     }
 
     /* Mini-slow recovery - regen helps */
-    if (p_ptr->minislow)
+    if ((p_ptr->minislow) && ((!p_ptr->no_air) || (get_race()->flags & RACE_IS_NONLIVING) || (equip_find_art(ART_VAYU))))
     {
-        int myregen = MAX(0, p_ptr->regen / 100);        
+        int myregen = MAX(0, p_ptr->regen / 100);
         if ((!myregen) && (one_in_(3))) myregen++;
         p_ptr->mini_energy += myregen * ((p_ptr->minislow * 2) + 2) / 3;
         if (p_ptr->mini_energy >= 100)
@@ -1903,21 +2121,19 @@ static void process_world_aux_timeout(void)
 
     if (p_ptr->fasting && one_in_(7))
     {
-        switch (randint1(8))
+        if (randint1(PY_FOOD_ALERT) > p_ptr->food)
         {
-        case 1: do_res_stat(A_STR); break;
-        case 2: do_res_stat(A_INT); break;
-        case 3: do_res_stat(A_WIS); break;
-        case 4: do_res_stat(A_DEX); break;
-        case 5: do_res_stat(A_CON); break;
-        case 6: do_res_stat(A_CHR); break;
-        case 7: restore_level(); break;
-        case 8: lp_player(150); break;
-        }
-
-        if (one_in_(15))
-        {
-            p_ptr->fasting = 0;
+            switch (randint1(8))
+            {
+            case 1: do_res_stat(A_STR); break;
+            case 2: do_res_stat(A_INT); break;
+            case 3: do_res_stat(A_WIS); break;
+            case 4: do_res_stat(A_DEX); break;
+            case 5: do_res_stat(A_CON); break;
+            case 6: do_res_stat(A_CHR); break;
+            case 7: restore_level(); break;
+            case 8: lp_player(150); break;
+            }
         }
     }
 
@@ -1948,6 +2164,12 @@ static void process_world_aux_timeout(void)
             if (adjust < 1) adjust = 1;
         }
 
+        if (p_ptr->cursed & OFC_OPEN_WOUNDS) /* Slow wound recovery */
+        {
+            adjust += (game_turn % 3);
+            adjust /= 3;
+        }
+
         /* Apply some healing */
         (void)set_cut(p_ptr->cut - adjust, TRUE);
     }
@@ -1963,7 +2185,7 @@ static void process_world_aux_light(void)
     if (slot)
     {
         object_type *lite = equip_obj(slot);
-        if ( !(lite->name1 || lite->name3 || lite->art_name || lite->sval == SV_LITE_FEANOR)
+        if ( !(lite->name1 || lite->name3 || lite->art_name || !object_needs_fuel(lite))
           && lite->xtra4 > 0 )
         {
             if (lite->name2 == EGO_LITE_DURATION)
@@ -2018,7 +2240,7 @@ static void process_world_aux_curse(void)
             {
                 o_ptr = equip_obj(i_keep);
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-                msg_format("Your %s is activating teleportation.", o_name);
+                msg_format("Your %s %s activating teleportation.", o_name, object_plural(o_ptr) ? "are" : "is");
                 if (get_check_strict("Teleport? ", CHECK_OKAY_CANCEL))
                 {
                     disturb(0, 0);
@@ -2044,9 +2266,51 @@ static void process_world_aux_curse(void)
         if ((p_ptr->cursed & OFC_TY_CURSE) && one_in_(TY_CURSE_CHANCE))
         {
             int count = 0;
-            (void)activate_ty_curse(FALSE, &count);
+            if ((prace_is_(RACE_MON_MUMMY)) && (mummy_ty_protection()))
+                msg_print("You suppress the foul curse lashing at you!");
+            else
+                (void)activate_ty_curse(FALSE, &count);
             equip_learn_curse(OFC_TY_CURSE);
         }
+        /* Baby Curse */
+        if ((p_ptr->cursed & OFC_BY_CURSE) && (one_in_(TY_CURSE_CHANCE)))
+        {
+            nonlethal_ty_substitute(TRUE);
+            equip_learn_curse(OFC_BY_CURSE);
+        }
+        /* Normality */
+        if ((p_ptr->cursed & OFC_NORMALITY) && (one_in_(128)))
+        {
+            int ii, yrkat = randint1(20);
+            bool osui = FALSE;
+            for (ii = 0; ii < yrkat; ii++)
+            {
+                if (disenchant_player()) osui = TRUE;
+            }
+            if (osui)
+            {
+                msg_print("You feel awfully normal...");
+                equip_learn_curse(OFC_NORMALITY);
+            }
+        }
+
+        /* Allergy */
+        if ((p_ptr->cursed & OFC_ALLERGY) && (!p_ptr->unwell) && (one_in_(888)) && (!(get_race()->flags & RACE_IS_NONLIVING)))
+        {
+            msg_print("Your eyes suddenly feel very itchy...");
+            disturb(0,0);
+            set_unwell(70, TRUE);
+            equip_learn_curse(OFC_ALLERGY);
+        }
+
+        if ((p_ptr->cursed & OFC_CRAPPY_MUT) && (one_in_(1500)))
+        {
+            msg_print("You mutate!");
+            mut_gain_random(mut_bad_pred);
+            disturb(0,0);
+            equip_learn_curse(OFC_CRAPPY_MUT);
+        }
+
         /* Handle experience draining */
         if (p_ptr->prace != RACE_ANDROID &&
             ((p_ptr->cursed & OFC_DRAIN_EXP) && one_in_(4)))
@@ -2182,8 +2446,8 @@ static void process_world_aux_curse(void)
             object_type *o_ptr = choose_cursed_obj_name(OFC_DRAIN_HP);
 
             object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-            msg_format("Your %s drains HP from you!", o_name);
-            take_hit(DAMAGE_LOSELIFE, MIN(p_ptr->lev*2, 100), o_name);
+            msg_format("Your %s %s HP from you!", o_name, object_plural(o_ptr) ? "drain" : "drains");
+            take_hit(DAMAGE_LOSELIFE, MIN(p_ptr->lev*2, 100), "an equipment curse");
             obj_learn_curse(o_ptr, OFC_DRAIN_HP);
         }
         /* Handle mana draining */
@@ -2193,7 +2457,7 @@ static void process_world_aux_curse(void)
             object_type *o_ptr = choose_cursed_obj_name(OFC_DRAIN_MANA);
 
             object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-            msg_format("Your %s drains mana from you!", o_name);
+            msg_format("Your %s %s mana from you!", o_name, object_plural(o_ptr) ? "drain" : "drains");
             p_ptr->csp -= MIN(p_ptr->lev, 50);
             if (p_ptr->csp < 0)
             {
@@ -2202,6 +2466,21 @@ static void process_world_aux_curse(void)
             }
             p_ptr->redraw |= PR_MANA;
             obj_learn_curse(o_ptr, OFC_DRAIN_MANA);
+        }
+
+        /* Handle charge draining */
+        if ((p_ptr->cursed & OFC_DRAIN_PACK) && one_in_(333))
+        {
+            bool drained = FALSE;
+            if (drain_random_object(0, 100, &drained))
+            {
+                char o_name[MAX_NLEN];
+                object_type *o_ptr = choose_cursed_obj_name(OFC_DRAIN_PACK);
+
+                object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+                msg_format("Your %s %s a strange sizzling sound...", o_name, object_plural(o_ptr) ? "make" : "makes");
+                obj_learn_curse(o_ptr, OFC_DRAIN_PACK);
+            }
         }
     }
 
@@ -2289,22 +2568,6 @@ static void process_world_aux_curse(void)
             p_ptr->redraw |= PR_MANA;
         }
     }
-
-    if (!p_ptr->wild_mode && one_in_(66))
-    {
-        int slot = equip_find_art(ART_BLOODRIP);
-        if (slot)
-        {
-            object_type *o_ptr = equip_obj(slot);
-            if (set_cut(p_ptr->cut + 66, FALSE))
-            {
-                if (object_is_known(o_ptr))
-                    msg_print("Bloodrip feeds on you!");
-                else
-                    msg_print("Something feeds on you!");
-            }
-        }
-    }
 }
 
 
@@ -2382,8 +2645,6 @@ static void process_world_aux_recharge(void)
  */
 void process_world_aux_movement(void)
 {
-    recall_stairs_hack = FALSE;
-
     /* Delayed Word-of-Recall */
     if (p_ptr->word_recall)
     {
@@ -2412,7 +2673,7 @@ void process_world_aux_movement(void)
             if (py_on_surface())
             {
                 cmsg_print(TERM_YELLOW, "You feel yourself yanked downwards!");
-                dungeon_type = p_ptr->recall_dungeon;
+                set_dungeon_type(p_ptr->recall_dungeon);
                 dun_level = max_dlv[dungeon_type];
                 if (dun_level < 1) dun_level = 1;
 
@@ -2468,7 +2729,7 @@ void process_world_aux_movement(void)
                 if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
 
                 dun_level = 0;
-                dungeon_type = 0;
+                set_dungeon_type(0);
                 quests_on_leave();
                 p_ptr->leaving = TRUE;
 
@@ -2730,6 +2991,7 @@ static void process_world(void)
 
     const s32b A_DAY = TURNS_PER_TICK * TOWN_DAWN;
     s32b prev_turn_in_today = ((game_turn - TURNS_PER_TICK) % A_DAY + A_DAY / 4) % A_DAY;
+    static s32b world_proc_hack_turn = 0;
     int prev_min = (1440 * prev_turn_in_today / A_DAY) % 60;
 
     extract_day_hour_min(&day, &hour, &min);
@@ -2805,6 +3067,14 @@ static void process_world(void)
 
     /* Every 10 game turns */
     if (game_turn % TURNS_PER_TICK) return;
+
+    /* Needs to be processed every 10 turns */
+    recall_stairs_hack = FALSE;
+
+    /* Paranoia - only once per turn */
+    if (game_turn == world_proc_hack_turn) return;
+    if ((game_turn == old_turn) && (cave_have_flag_bold(py, px, FF_STAIRS))) return;
+    world_proc_hack_turn = game_turn;
 
     /*** Check the Time and Load ***/
 
@@ -2991,6 +3261,7 @@ static void process_world(void)
     /* Hack -- Check for creature regeneration */
     if (!(game_turn % (TURNS_PER_TICK*10)) && !p_ptr->inside_battle) regen_monsters();
     if (!(game_turn % (TURNS_PER_TICK*3))) regen_captured_monsters();
+    if ((p_ptr->no_air) && (p_ptr->no_air < NO_AIR_MAX - 2)) unregen_monsters();
 
     /* Date changes */
     if (!hour && !min)
@@ -3048,6 +3319,77 @@ static void process_world(void)
     }
 
 
+    /*** Check the Food, and Regenerate ***/
+
+    if (!p_ptr->inside_battle)
+    {
+        /* Digest quickly when gorged */
+        if (p_ptr->food >= PY_FOOD_MAX)
+        {
+            /* Digest a lot of food */
+            (void)set_food(p_ptr->food - 100);
+        }
+
+        /* Digest normally -- Every 50 game turns */
+        else if (!(game_turn % (TURNS_PER_TICK*5)))
+        {
+            /* Basic digestion rate based on speed */
+            int digestion = SPEED_TO_ENERGY(p_ptr->pspeed);
+
+            /* Regeneration takes more food */
+            if (p_ptr->regen > 100)
+                digestion += 10*(p_ptr->regen-100)/100;
+            if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
+                digestion += 20;
+            if (p_ptr->cursed & OFC_FAST_DIGEST)
+                digestion += 30;
+
+            /* Slow digestion takes less food */
+            if (p_ptr->slow_digest)
+                digestion /= 2;
+
+            /* Temperance slows digestion */
+            digestion = digestion * (375 - virtue_current(VIRTUE_TEMPERANCE)) / 375;
+
+            /* Minimal digestion */
+            if (digestion < 1) digestion = 1;
+            /* Maximal digestion */
+            if (digestion > 100) digestion = 100;
+
+            /* Digest some food */
+            (void)set_food(p_ptr->food - digestion);
+        }
+
+
+        /* Getting Faint */
+        if ((p_ptr->food < PY_FOOD_FAINT))
+        {
+            /* Faint occasionally */
+            if (!p_ptr->paralyzed && (randint0(100) < 10))
+            {
+                /* Message */
+                msg_print("You faint from the lack of food.");
+
+                disturb(1, 0);
+
+                /* Hack -- faint (bypass free action) */
+                (void)set_paralyzed(randint1(4), FALSE);
+            }
+
+            /* Starve to death (slowly) */
+            if (p_ptr->food < PY_FOOD_STARVE)
+            {
+                /* Calculate damage */
+                int dam = (PY_FOOD_STARVE - p_ptr->food) / 10;
+
+                /* Take damage */
+                if (!IS_INVULN()) take_hit(DAMAGE_LOSELIFE, dam, "starvation");
+            }
+        }
+    }
+
+
+
     /* Process timed damage and regeneration */
     process_world_aux_hp_and_sp();
 
@@ -3091,7 +3433,7 @@ static bool enter_wizard_mode(void)
     if (!p_ptr->noscore)
     {
         /* Wizard mode is not permitted */
-        if (arg_wizard)
+        if (!allow_debug_opts || arg_wizard)
         {
             msg_print("Wizard mode is not permitted.");
             return FALSE;
@@ -3131,6 +3473,13 @@ static bool enter_debug_mode(void)
     /* Ask first time */
     if (!p_ptr->noscore)
     {
+        /* Debug mode is not permitted */
+        if (!allow_debug_opts)
+        {
+            msg_print("Use of debug command is not permitted.");
+            return FALSE;
+        }
+
         /* Mention effects */
         msg_print("The debug commands are for debugging and experimenting.");
         msg_print("The game will not be scored if you use debug commands.");
@@ -3409,40 +3758,33 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Go up or down a staircase */
-        case '>':
+        /* Go up staircase */
         case '<':
+        {
+            if (py_on_surface())
+            {
+                if (no_wilderness) break;
+
+                if (p_ptr->food < PY_FOOD_WEAK)
+                {
+                    msg_print("You must eat something here.");
+                    break;
+                }
+
+                change_wild_mode();
+            }
+            else
+                do_cmd_go_up();
+            break;
+        }
+
+        /* Go down staircase */
+        case '>':
         {
             if (p_ptr->wild_mode)
                 change_wild_mode();
             else
-            {
-                /* Player grid */
-                cave_type* c_ptr = &cave[py][px];
-                feature_type* f_ptr = &f_info[c_ptr->feat];
-
-                /* Verify stairs */
-                if (have_flag(f_ptr->flags, FF_LESS))
-                {
-                    do_cmd_go_up();
-                }
-                else if (have_flag(f_ptr->flags, FF_MORE))
-                {
-                    do_cmd_go_down();
-                }
-                else if (py_on_surface())
-                {
-                    if (no_wilderness) break;
-
-                    change_wild_mode();
-                }
-                else /* no stair / map change is possible */
-                {
-                    msg_print("I see no staircase here.");
-
-                    return;
-                }
-            }
+                do_cmd_go_down();
 
             break;
         }
@@ -3488,8 +3830,12 @@ static void _dispatch_command(int old_now_turn)
         /* Gain new spells/prayers */
         case 'G':
         {
-            if (p_ptr->pclass == CLASS_SKILLMASTER)
+            if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
+                msg_print("You don't have to learn spells!");
+            else if (p_ptr->pclass == CLASS_SKILLMASTER)
                 skillmaster_gain_skill();
+            else if (p_ptr->pclass == CLASS_SAMURAI)
+                do_cmd_gain_hissatsu();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)
                 rage_mage_gain_spell();
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
@@ -3501,7 +3847,7 @@ static void _dispatch_command(int old_now_turn)
                 msg_print("You can only gain spells at certain levels.");
             }
             else
-				msg_print("You don't have to learn spells!");
+                do_cmd_study();
             break;
         }
 
@@ -3596,8 +3942,6 @@ static void _dispatch_command(int old_now_turn)
                     which_power = "psionic powers";
                 else if (p_ptr->pclass == CLASS_SAMURAI)
                     which_power = "hissatsu";
-				else if (p_ptr->pclass == CLASS_IMITATOR)
-					which_power = "imitation";
                 else if (p_ptr->pclass == CLASS_LAWYER || p_ptr->pclass == CLASS_NINJA_LAWYER)
                     which_power = "legal trickery";
                 else if (p_ptr->pclass == CLASS_MIRROR_MASTER)
@@ -3624,13 +3968,14 @@ static void _dispatch_command(int old_now_turn)
                 spell_problem = 0;
                 if (p_ptr->prace == RACE_MON_RING)
                     ring_cast();
-                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || 
-                        p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR)
+                else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC || p_ptr->pclass == CLASS_BLUE_MAGE)
                     possessor_cast();
                 else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                     magic_eater_cast(0);
                 else if (p_ptr->pclass == CLASS_SKILLMASTER)
                     skillmaster_cast();
+                else if (p_ptr->pclass == CLASS_SAMURAI)
+                    do_cmd_hissatsu();
                 else if (p_ptr->pclass == CLASS_GRAY_MAGE)
                     gray_mage_cast_spell();
                 else if (p_ptr->pclass == CLASS_ALCHEMIST)
@@ -3707,7 +4052,7 @@ static void _dispatch_command(int old_now_turn)
                     do_cmd_activate();
                 else
                 {
-                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print("The arena absorbs the attempted activation!");
                     msg_print(NULL);
                 }
             }
@@ -3747,37 +4092,19 @@ static void _dispatch_command(int old_now_turn)
         }
 
         /* Aim a wand */
-		/* ...or unified use command. Device command in both keysets */
         case 'a':
         {
             if (!p_ptr->wild_mode)
             {
-				if (unified_use)
-				{
-					/* Slightly different order here, as the item chosen to use may or may not work 
-					*  depending on the devicemaster speciality. But if not a devicemaster, it certainly won't work */
-					if (p_ptr->inside_arena && p_ptr->pclass != CLASS_DEVICEMASTER)
-					{
-						msg_print("The arena absorbs all attempted magic!");
-						msg_print(NULL);
-					}
-					else
-					{
-						do_cmd_unified_use();
-					}
-				}
-				else
-				{
-					if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_WANDS))
-					{
-						msg_print("The arena absorbs all attempted magic!");
-						msg_print(NULL);
-					}
-					else
-					{
-						do_cmd_aim_wand();
-					}
-				}
+                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_WANDS))
+                {
+                    msg_print("The arena absorbs the energy of magical devices!");
+                    msg_print(NULL);
+                }
+                else
+                {
+                    do_cmd_aim_wand();
+                }
             }
             break;
         }
@@ -3789,7 +4116,7 @@ static void _dispatch_command(int old_now_turn)
             {
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_RODS))
                 {
-                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print("The arena absorbs the energy of magical devices!");
                     msg_print(NULL);
                 }
                 else
@@ -3807,7 +4134,7 @@ static void _dispatch_command(int old_now_turn)
             {
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_POTIONS) && p_ptr->pclass != CLASS_ALCHEMIST)
                 {
-                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print("The arena absorbs the energy of magical potions!");
                     msg_print(NULL);
                 }
                 else
@@ -3825,7 +4152,7 @@ static void _dispatch_command(int old_now_turn)
             {
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_SCROLLS))
                 {
-                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print("The arena absorbs the energy of magical scrolls!");
                     msg_print(NULL);
                 }
                 else
@@ -3843,7 +4170,7 @@ static void _dispatch_command(int old_now_turn)
             {
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_STAVES))
                 {
-                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print("The arena absorbs the energy of magical devices!");
                     msg_print(NULL);
                 }
                 else
@@ -4024,15 +4351,15 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Show previous messages - used to be Ctrl+P */
-        case 'P':
+        /* Show previous messages */
+        case KTRL('P'):
         {
             do_cmd_messages(old_now_turn);
             break;
         }
 
-        /* Show quest status -used to be Ctrl+Q */
-        case 'Q':
+        /* Show quest status -KMW- */
+        case KTRL('Q'):
         {
             quests_display();
             break;
@@ -4071,8 +4398,8 @@ static void _dispatch_command(int old_now_turn)
             break;
         }
 
-        /* Quit (commit suicide) -used to be 'Q' */
-		case KTRL('Q'):
+        /* Quit (commit suicide) */
+        case 'Q':
         {
             do_cmd_suicide();
             break;
@@ -4236,6 +4563,7 @@ static void process_player(void)
 
     /* No turn yet */
     if (p_ptr->energy_need > 0) return;
+    energy_need_hack = SPEED_TO_ENERGY(p_ptr->pspeed);
     if (!command_rep) prt_time();
 
     /*** Check for interupts ***/
@@ -4534,6 +4862,7 @@ static void process_player(void)
     /* Repeat until out of energy */
     while (p_ptr->energy_need <= 0)
     {
+        int _start_energy = p_ptr->energy_need;
         p_ptr->sutemi = FALSE;
         p_ptr->counter = FALSE;
         monsters_damaged_hack = FALSE;
@@ -4587,7 +4916,7 @@ static void process_player(void)
         else if (p_ptr->stun >= STUN_KNOCKED_OUT)
         {
             energy_use = 100;
-            set_stun(p_ptr->stun - 25, TRUE);
+            set_stun(p_ptr->stun - 20, TRUE);
         }
 
         /* Resting */
@@ -4674,7 +5003,7 @@ static void process_player(void)
              * won't be completely broken by any minor tweaks in the future */
             if ((alert_poison) && (p_ptr->poisoned > pienempi(p_ptr->mhp * 4 / 5, MIN(499, p_ptr->chp))))
             {
-                if ((!poison_warning_hack) || ((int)poison_warning_hack < (p_ptr->poisoned + 9) / 10) || (p_ptr->poisoned / 4 > p_ptr->chp))
+                if ((!poison_warning_hack) || ((int)poison_warning_hack < (MIN(255, (p_ptr->poisoned + 9) / 10))) || (p_ptr->poisoned / 4 > p_ptr->chp))
                 {
                     msg_boundary();
                     msg_format("<color:G>*** POISON WARNING! ***</color>");
@@ -4749,6 +5078,19 @@ static void process_player(void)
                 }
             }
 
+            /* Take damage from airlessness */
+            if ((p_ptr->no_air) && (!p_ptr->leaving) && (!(get_race()->flags & RACE_IS_NONLIVING)) && (!equip_find_art(ART_VAYU)))
+            {
+                int divisor = 10 * SPEED_TO_ENERGY(p_ptr->pspeed);
+                int dmg = ((NO_AIR_MAX - p_ptr->no_air) * energy_use + (divisor * 2 - 1)) / divisor;
+                if (dmg < 10)
+                {
+                    msg_print("You cannot breathe!");
+                }
+                else msg_print("You feel weak from the lack of oxygen...");
+                take_hit(DAMAGE_NOESCAPE, dmg, "oxygen deprivation");
+            }
+
             if (p_ptr->free_turns)
             {
                 p_ptr->redraw |= PR_STATUS;
@@ -4761,6 +5103,11 @@ static void process_player(void)
             {
                 /* The Randomness is irrelevant */
                 p_ptr->energy_need += energy_use * TURNS_PER_TICK / 10;
+                if (show_energy_cost)
+                {
+                    energy_cost_hack = p_ptr->energy_need - _start_energy;
+                    p_ptr->redraw |= PR_EFFECTS;
+                }
             }
             else
             {
@@ -4769,6 +5116,16 @@ static void process_player(void)
                 {
                     rect_t r = ui_char_info_rect();
                     c_put_str(TERM_WHITE, format("E:%3d/%3d", amt, energy_use), r.y + r.cy - 2, r.x);
+//                    c_put_str(TERM_WHITE, format("E:%3d/%3d", amt, p_ptr->energy_need + amt), r.y + r.cy - 2, r.x);
+                }
+                else if (show_energy_cost)
+                {
+                    int _cost = energy_use + p_ptr->energy_need - _start_energy;
+                    if (_cost != energy_cost_hack)
+                    {
+                        energy_cost_hack = _cost;
+                        p_ptr->redraw |= PR_EFFECTS;
+                    }
                 }
                 p_ptr->energy_need += amt;
             }
@@ -4842,21 +5199,6 @@ static void process_player(void)
                     }
                 }
             }
-			if (p_ptr->pclass == CLASS_IMITATOR)
-			{
-				/* TODO: Fix this - roll off older spells as newer ones are learned */
-				/*if (p_ptr->mane_num > (p_ptr->lev > 44 ? 3 : p_ptr->lev > 29 ? 2 : 1))
-				{
-					p_ptr->mane_num--;
-					for (i = 0; i < p_ptr->mane_num; i++)
-					{
-						p_ptr->mane_spell[i] = p_ptr->mane_spell[i + 1];
-						p_ptr->mane_dam[i] = p_ptr->mane_dam[i + 1];
-					}
-				}
-				new_mane = FALSE;
-				p_ptr->redraw |= PR_EFFECTS;*/
-			}
             if (p_ptr->action == ACTION_LEARN)
             {
                 new_mane = FALSE;
@@ -4877,7 +5219,14 @@ static void process_player(void)
             predictable_energy_hack = FALSE;
         }
         else
+        {
             player_turn--;
+            if ((show_energy_cost) && (p_ptr->playing))
+            {
+                energy_cost_hack = 0;
+                p_ptr->redraw |= PR_EFFECTS;
+            }
+        }
 
         if (!p_ptr->playing || p_ptr->is_dead)
         {
@@ -4925,14 +5274,16 @@ static void dungeon(bool load_game)
     command_arg = 0;
     command_dir = 0;
 
+    if (!load_game)
+    {
+        /* Cancel the target */
+        target_who = 0;
+        pet_t_m_idx = 0;
+        riding_t_m_idx = 0;
 
-    /* Cancel the target */
-    target_who = 0;
-    pet_t_m_idx = 0;
-    riding_t_m_idx = 0;
-
-    /* Cancel the health bar */
-    health_track(0);
+        /* Cancel the health bar */
+        health_track(0);
+    }
 
     /* Check visual effects */
     shimmer_monsters = TRUE;
@@ -4963,8 +5314,12 @@ static void dungeon(bool load_game)
 
     (void)calculate_upkeep();
 
+    redraw_hack = load_game;
+
     /* Verify the panel */
     viewport_verify();
+
+    redraw_hack = load_game;
 
     /* Flush messages
     msg_print(NULL);*/
@@ -5055,6 +5410,7 @@ static void dungeon(bool load_game)
     object_level = base_level;
 
     hack_mind = TRUE;
+    redraw_hack = FALSE;
 
     if (p_ptr->energy_need > 0 && !p_ptr->inside_battle &&
         (dun_level || p_ptr->leaving_dungeon || p_ptr->inside_arena))
@@ -5148,10 +5504,30 @@ static void dungeon(bool load_game)
         if (!p_ptr->playing || p_ptr->is_dead) break;
 
         /* Handle "leaving" */
-        if (p_ptr->leaving) break;
+        if ((p_ptr->leaving) && (!advance_time_hack)) break;
 
         /* Count game turns */
         game_turn++;
+
+        /* Hack - time does not advance normally on taking stairs.
+         * Manually advance it by equivalent of consuming 200 energy
+         * upon taking upstairs, to compensate for taking downstairs
+         * consuming zero turns */
+        if (advance_time_hack)
+        {
+            int nopeus = SPEED_TO_ENERGY(p_ptr->pspeed);
+            int kaytto = MIN(25, (200 + randint0(nopeus)) / nopeus);
+            int new_day, prev_day, prev_hour, prev_min;
+            extract_day_hour_min(&prev_day, &prev_hour, &prev_min);
+            advance_time_hack = FALSE;
+            game_turn += kaytto;
+            extract_day_hour_min(&new_day, &prev_hour, &prev_min);
+            if (new_day != prev_day) /* Check midnight */
+            {
+                 determine_today_mon(FALSE);
+                 if (p_ptr->prace == RACE_WEREWOLF) werewolf_check_midnight();
+            }
+        }
 
         if (dungeon_turn < dungeon_turn_limit)
         {
@@ -5160,6 +5536,8 @@ static void dungeon(bool load_game)
         }
 
         prevent_turn_overflow();
+
+        if (p_ptr->leaving) break;
 
         if (wild_regen) wild_regen--;
     }
@@ -5313,6 +5691,309 @@ void extract_option_vars(void)
 }
 
 /*
+ * Design the highly random Mystery Cave
+ */
+typedef struct
+{
+    int terrain;
+    int min_bl;
+    int max_bl;
+    int model;
+} mystery_cave_type;
+
+static mystery_cave_type mystery_models[] =
+{
+    { TERRAIN_GRASS, 8, 30, DUNGEON_HIDEOUT },
+    { TERRAIN_SWAMP, 15, 45, DUNGEON_TIDAL_CAVE },
+    { TERRAIN_SNOW, 25, 45, DUNGEON_SNOW },
+    { TERRAIN_DEEP_WATER, 60, 90, DUNGEON_CTH },
+    { TERRAIN_TREES, 20, 50, DUNGEON_WOOD },
+    { TERRAIN_MOUNTAIN, 40, 80, DUNGEON_MOUNTAIN },
+    { TERRAIN_DIRT, 20, 70, DUNGEON_CASTLE },
+    { TERRAIN_GRASS, 10, 90, DUNGEON_ANGBAND },
+    { TERRAIN_DIRT, 25, 40, DUNGEON_ORC },
+    { TERRAIN_GLACIER, 40, 75, DUNGEON_SNOW },
+    { 0, 0, 0, 0 },
+};
+
+/*** Get flags and dungeon styling (imitate model) ***/
+void get_mystery_flags(void)
+{
+    int i;
+    dungeon_info_type *d_ptr = &d_info[DUNGEON_MYSTERY], *d2_ptr;
+
+    if (d_ptr->min_plev >= max_d_idx) d_ptr->min_plev = 0; /* paranoia */
+
+    d2_ptr = &d_info[d_ptr->min_plev];
+    
+    for (i = 0; i < DUNGEON_FEAT_PROB_NUM; i++)
+    {
+        d_ptr->floor[i] = d2_ptr->floor[i];
+        d_ptr->fill[i] = d2_ptr->fill[i];
+    }
+    for (i = 0; i < MAX_R_CHAR; i++)
+    {
+        d_ptr->r_char[i] = d2_ptr->r_char[i];
+    }
+    d_ptr->flags1 = d2_ptr->flags1;
+    d_ptr->mflags1 = d2_ptr->mflags1;
+    d_ptr->mflags2 = d2_ptr->mflags2;
+    d_ptr->mflags3 = d2_ptr->mflags3;
+    d_ptr->mflags4 = d2_ptr->mflags4;
+    d_ptr->mflags5 = d2_ptr->mflags5;
+    d_ptr->mflags6 = d2_ptr->mflags6;
+    d_ptr->mflags7 = d2_ptr->mflags7;
+    d_ptr->mflags8 = d2_ptr->mflags8;
+    d_ptr->mflags9 = d2_ptr->mflags9;
+    d_ptr->mflagsr = d2_ptr->mflagsr;
+    d_ptr->min_m_alloc_level = d2_ptr->min_m_alloc_level;
+    d_ptr->max_m_alloc_chance = d2_ptr->max_m_alloc_chance;
+    d_ptr->pit = d2_ptr->pit;
+    d_ptr->nest = d2_ptr->nest;
+    d_ptr->mode = d2_ptr->mode;
+    d_ptr->outer_wall = d2_ptr->outer_wall;
+    d_ptr->inner_wall = d2_ptr->inner_wall;
+    d_ptr->stream1 = d2_ptr->stream1;
+    d_ptr->stream2 = d2_ptr->stream2;
+    d_ptr->special_div = d2_ptr->special_div;
+    d_ptr->tunnel_percent = d2_ptr->tunnel_percent;
+    d_ptr->obj_great = d2_ptr->obj_great;
+    d_ptr->obj_good = d2_ptr->obj_good;
+
+    /* The model dungeon might be suppressed... */
+    d_ptr->flags1 &= ~DF1_SUPPRESSED;
+
+    if ((d_ptr->maxdepth - d_ptr->mindepth >= 10) && ((seed_dungeon % (d_ptr->maxdepth - d_ptr->mindepth)) > 5))
+    {
+        d_ptr->flags1 |= DF1_ALL_SHAFTS;
+    }
+}
+
+void design_mystery_cave(void)
+{
+    dungeon_info_type *d_ptr = &d_info[DUNGEON_MYSTERY];
+    int i = 0, tyyppi = 0, syvyys = 0, pohja = 0, osumat = 0, limiitti = 19, etaisyys = 5;
+    bool near_town = FALSE;
+
+    /* Make sure we're zeroed out */
+    d_ptr->dy = 0;
+    d_ptr->dx = 0;
+    d_ptr->mindepth = 0;
+    d_ptr->maxdepth = 0;
+    d_ptr->final_guardian = 0;
+    d_ptr->initial_guardian = 0;
+    d_ptr->wild_type = 0;
+    d_ptr->min_plev = 0;
+
+    if (!seed_dungeon) /* paranoia */
+    {
+        d_ptr->flags1 |= DF1_SUPPRESSED;
+        return;
+    }
+
+    /* Make sure wilderness is initialized */
+    process_dungeon_file("w_info.txt", 0);
+
+    /* Select model for mystery cave */
+    for (i = 1;; i++)
+    {
+        if (!mystery_models[i].terrain) break;
+        if (one_in_(i + 1)) tyyppi = i;
+    }
+
+    /* Min and max depth */
+    syvyys = mystery_models[tyyppi].max_bl - mystery_models[tyyppi].min_bl + 1;
+    d_ptr->maxdepth = mystery_models[tyyppi].min_bl + randint0(syvyys);
+    pohja = MAX(1, mystery_models[tyyppi].min_bl - 10);
+    syvyys = d_ptr->maxdepth - pohja;
+    d_ptr->mindepth = pohja + randint0(syvyys);
+    syvyys = d_ptr->maxdepth - d_ptr->mindepth + 1;
+    if ((syvyys > 8) && (d_ptr->mindepth % 5))
+    {
+        d_ptr->mindepth += (5 - (d_ptr->mindepth % 5));
+    }
+    else if ((d_ptr->mindepth > 5) && (d_ptr->mindepth % 5))
+    {
+        d_ptr->mindepth -= (d_ptr->mindepth % 5);
+    }
+
+    d_ptr->wild_type = mystery_models[tyyppi].terrain;
+
+    syvyys = (d_ptr->maxdepth - d_ptr->mindepth);
+    if ((syvyys > 10) && (syvyys % 2))
+    {
+        if (seed_dungeon % 2) d_ptr->maxdepth++;
+        else d_ptr->maxdepth--;
+    }
+
+    /* Pick a boss */
+    for (i = 1; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        if (!r_ptr->name) continue;
+        if (!(r_ptr->flags1 & RF1_UNIQUE)) continue;
+        if (r_ptr->flagsx & RFX_QUESTOR) continue;
+        if (r_ptr->flags1 & RF1_NO_QUEST) continue;
+        if (r_ptr->flags7 & RF7_GUARDIAN) continue;
+        if (r_ptr->rarity > 100) continue;
+        if (r_ptr->flags7 & RF7_FRIENDLY) continue;
+        if ((r_ptr->flags7 & RF7_AQUATIC) && (mystery_models[tyyppi].terrain != TERRAIN_DEEP_WATER)) continue;
+        if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
+        if (r_ptr->flagsx & RFX_SUPPRESS) continue; /* paranoia */
+        if (r_ptr->dungeon) continue;
+        if (r_ptr->level <= d_ptr->maxdepth) continue;
+        if (r_ptr->level > d_ptr->maxdepth + 8) continue;
+        if (monster_pantheon(r_ptr)) continue;
+        if (i == MON_ERIC) continue;
+        if (d_info[mystery_models[tyyppi].model].special_div == 0)
+        {
+            if (!restrict_monster_to_dungeon(i, mystery_models[tyyppi].model))
+                continue;
+        }
+        osumat++;
+//        msg_format("Considering monster: %s", r_name + r_ptr->name);
+        if (one_in_(osumat))
+        {
+            d_ptr->final_guardian = i;
+//            msg_format("New mystery boss: %s", r_name + r_ptr->name);
+        }
+    }
+    if (!d_ptr->final_guardian) /* Desperation move - let's hope this never happens... */
+    {
+        d_ptr->final_guardian = MON_TALOS; /* !! */
+        if (r_info[MON_TALOS].flagsx & RFX_SUPPRESS) r_info[MON_TALOS].flagsx &= ~RFX_SUPPRESS;
+    }
+    r_info[d_ptr->final_guardian].flags7 |= RF7_GUARDIAN;
+
+    /* Pick initial guardian - stupid but keeps people on their toes */
+    if (d_ptr->mindepth >= 40)
+    {
+        d_ptr->initial_guardian = (d_ptr->wild_type == TERRAIN_DEEP_WATER) ? MON_SEA_GIANT : MON_ICE_GIANT;
+        if ((d_ptr->mindepth >= 55) && (d_ptr->wild_type != TERRAIN_SNOW))
+            d_ptr->initial_guardian = (d_ptr->wild_type == TERRAIN_DEEP_WATER) ? MON_LESSER_KRAKEN : MON_ELDER_FIRE_GIANT;
+    }
+
+    /* Pick location */
+    near_town = (d_ptr->mindepth <= 12);
+
+    d_ptr->dy = 0;
+    d_ptr->dx = 0;
+
+    if (near_town)
+    {
+        int x, y, dx, dy, tx, ty, best = 1000;
+
+        /* Pick location near town */
+        osumat = 0;
+
+        for (y = 0; y < max_wild_y; y++)
+        {
+            for (x = 0; x < max_wild_x; x++)
+            {
+                if ((wilderness[y][x].town) && (wilderness[y][x].town <= TOWN_THALOS))
+                {
+                    for (dy = -2; dy <= 2; dy++)
+                    {
+                        for (dx = -2; dx <= 2; dx++)
+                        {
+                            if ((ABS(dy) != 2) && (ABS(dx) != 2)) continue;
+                            ty = y + dy;
+                            tx = x + dx;
+                            if ((ty < 2) || (ty > max_wild_y - 2) || (tx < 2) || (tx > max_wild_x - 2)) continue;
+                            if (wilderness[ty][tx].road) continue;
+                            if ((!osumat) && (wilderness[ty][tx].terrain != d_ptr->wild_type) && (ABS(wilderness[ty][tx].level - d_ptr->mindepth) < best))
+                            {
+                                best = ABS(wilderness[ty][tx].level - d_ptr->mindepth);
+                                d_ptr->dy = ty;
+                                d_ptr->dx = tx;
+                            }
+                            if (wilderness[ty][tx].terrain == d_ptr->wild_type)
+                            {
+                                osumat++;
+                                if (one_in_(osumat))
+                                {
+                                    d_ptr->dy = ty;
+                                    d_ptr->dx = tx;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    msg_format("Wild type: %d", d_ptr->wild_type);
+
+    if (d_ptr->mindepth < 25) limiitti = 14;
+
+    /* Pick location away from towns and dungeons */
+    while (!d_ptr->dy)
+    {
+        int x, y, dx, dy, tx, ty;
+        if (limiitti < 55) limiitti++;
+        else if (etaisyys > 2) etaisyys--;
+        else /* Desperation move */
+        {
+            if (d_ptr->wild_type == TERRAIN_DEEP_WATER)
+            {
+                d_ptr->dy = 14;
+                d_ptr->dx = 18;
+            }
+            else
+            {
+                d_ptr->dy = 57;
+                d_ptr->dx = 57;
+            }
+            break;
+        }
+        osumat = 0;
+        for (y = 2; y < max_wild_y - 2; y++)
+        {
+            for (x = 2; x < max_wild_x - 2; x++)
+            {
+                bool lopeta = FALSE;
+                if (wilderness[y][x].terrain != d_ptr->wild_type) continue;
+                if (wilderness[y][x].entrance) continue;
+                if (wilderness[y][x].road) continue;
+                if (wilderness[y][x].town) continue;
+                if (ABS(wilderness_level(x,y) - d_ptr->mindepth) > limiitti) continue;
+                for (dy = 0 - etaisyys; ((dy <= etaisyys) && (!lopeta)); dy++)
+                {
+                    for (dx = 0 - etaisyys; ((dx <= etaisyys) && (!lopeta)); dx++)
+                    {
+                        ty = y + dy;
+                        tx = x + dx;
+                        if ((ty < 1) || (ty > max_wild_y - 1) || (tx < 1) || (tx > max_wild_x - 1)) continue;
+                        if ((wilderness[ty][tx].entrance) || (wilderness[ty][tx].town))
+                        {
+                            lopeta = TRUE;
+                            break;
+                        }
+                        if ((dy != etaisyys) || (dx != etaisyys)) continue;
+                        osumat++;
+                        if (one_in_(osumat))
+                        {
+                            d_ptr->dy = y;
+                            d_ptr->dx = x;
+                            lopeta = TRUE;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    wilderness[d_ptr->dy][d_ptr->dx].entrance = DUNGEON_MYSTERY;
+
+    /* Mega-hack - store model here */
+    d_ptr->min_plev = mystery_models[tyyppi].model;
+
+    get_mystery_flags();
+
+    mystery_cave_ready = TRUE;
+}
+
+/*
  * Determine today's bounty monster
  * Note: conv_old is used if loaded 0.0.3 or older save file
  */
@@ -5373,6 +6054,9 @@ void play_game(bool new_game)
 
     /* Hack -- Character is "icky" */
     character_icky = TRUE;
+
+    /* Hack -- Mystery cave is not ready */
+    mystery_cave_ready = FALSE;
 
     /* Make sure main term is active */
     Term_activate(angband_term[0]);
@@ -5491,6 +6175,9 @@ void play_game(bool new_game)
         /* Roll up a new character */
         player_birth();
 
+        /* Hack -- seed for dungeons */
+        seed_dungeon = (no_wilderness) ? 0 : randint0(0x10000000);
+
         counts_write(2,0);
         p_ptr->count = 0;
 
@@ -5521,8 +6208,34 @@ void play_game(bool new_game)
         }
     }
 
+    /* Suppress extra dungeons */
+    _suppress_extra_dungeons();
+
     /* Suppress extra pantheons */
-    if (single_pantheon) _suppress_extra_pantheons();
+    _suppress_extra_pantheons(new_game);
+
+    /* Mystery cave */
+    if ((!no_wilderness) && ((new_game) || (!mystery_cave_ready)) &&
+        (!(d_info[DUNGEON_MYSTERY].flags1 & DF1_SUPPRESSED)))
+    {
+//        msg_format("Redesigning mystery cave - new_game %s, cave ready %s", new_game ? "Yes" : "No", mystery_cave_ready ? "Yes" : "No");
+        design_mystery_cave();
+    }
+    else if ((no_wilderness) || (d_info[DUNGEON_MYSTERY].flags1 & DF1_SUPPRESSED))
+    { /* paranoia */
+        d_info[DUNGEON_MYSTERY].dy = 0;
+        d_info[DUNGEON_MYSTERY].dx = 0;
+        d_info[DUNGEON_MYSTERY].flags1 |= DF1_SUPPRESSED;
+        if (d_info[DUNGEON_MYSTERY].final_guardian)
+        {
+            if ((d_info[DUNGEON_MYSTERY].final_guardian > 0) && (d_info[DUNGEON_MYSTERY].final_guardian < max_r_idx)) r_info[d_info[DUNGEON_MYSTERY].final_guardian].flags7 &= ~RF7_GUARDIAN;
+            d_info[DUNGEON_MYSTERY].final_guardian = 0;
+        }
+    }
+    else if (d_info[DUNGEON_MYSTERY].final_guardian)
+    {
+        r_info[d_info[DUNGEON_MYSTERY].final_guardian].flags7 |= RF7_GUARDIAN;
+    }
 
     creating_savefile = FALSE;
 
@@ -5531,6 +6244,11 @@ void play_game(bool new_game)
     world_monster = FALSE;
     now_turn = game_turn;
     start_time = time(NULL);
+
+    /* TODO: py_skills_init() or some such ... w_max needs to be reset each time you play, 
+     * not just on player birth */
+    if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
+        weaponmaster_adjust_skills();
 
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
@@ -5591,7 +6309,7 @@ void play_game(bool new_game)
                 enter_quest = FALSE;
                 if (qp) /* Broken quest - force exit */
                 {
-                   dungeon_type = 0;
+                   set_dungeon_type(0);
                    dun_level = 0;
                    quests_on_leave();
                 }
@@ -5679,12 +6397,10 @@ void play_game(bool new_game)
         {
             /* most races won't need a special birth function, so
              * give standard food and light by default */
-            py_birth_scrolls();
+            py_birth_food();
             py_birth_light();
         }
-        if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) 
-            py_birth_obj_aux(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL, 1);
-
+        if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) py_birth_obj_aux(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL, (game_mode == GAME_MODE_BEGINNER) ? 10 : 1);
         if (thrall_mode)
         {
             if (p_ptr->pclass == CLASS_BERSERKER)
@@ -5712,8 +6428,11 @@ void play_game(bool new_game)
 
         stats_on_gold_find(p_ptr->au); /* Found? Inherited? What's the difference? */
 
-        if (class_ptr->gain_level) /* Gain CL1 (e.g. Chaos Warriors) */
-            (class_ptr->gain_level)(p_ptr->lev);
+        /* Chaos warriors and logrus masters get a patron effect at lvl 1 */
+        if (worships_chaos())
+        {
+            chaos_choose_effect(PATRON_LEVEL_UP);
+        }
     }
 
 
@@ -5767,6 +6486,7 @@ void play_game(bool new_game)
         m_ptr->maxhp = r_ptr->hdice*(r_ptr->hside+1)/2;
         m_ptr->max_maxhp = m_ptr->maxhp;
         m_ptr->hp = r_ptr->hdice*(r_ptr->hside+1)/2;
+        energy_need_hack = SPEED_TO_ENERGY(m_ptr->mspeed);
         m_ptr->energy_need = ENERGY_NEED() + ENERGY_NEED();
     }
 
@@ -5787,12 +6507,12 @@ void play_game(bool new_game)
 
         character_xtra = FALSE;
 
-        /* Cancel the target */
-        target_who = 0;
-
-        /* Cancel the health bar */
-        health_track(0);
-
+        /* Cancel the target and health bar */
+        if (p_ptr->playing)
+        {
+            target_who = 0;
+            health_track(0);
+        }
 
         /* Forget the lite */
         forget_lite();
@@ -5826,6 +6546,8 @@ void play_game(bool new_game)
                 p_ptr->chp = 0;
                 p_ptr->chp_frac = 0;
                 p_ptr->exit_bldg = TRUE;
+                energy_use = 0;
+                p_ptr->energy_need = 0;
                 reset_tim_flags();
 
                 fame_on_failure();
@@ -5889,7 +6611,7 @@ void play_game(bool new_game)
                     enter_quest = FALSE;
                     if (qp) /* Exit the quest */
                     {
-                        dungeon_type = 0;
+                        set_dungeon_type(0);
                         dun_level = 0;
                         quests_on_leave();
                     }
@@ -5910,11 +6632,14 @@ void play_game(bool new_game)
                     (void)set_stun(0, TRUE);
                     (void)set_cut(0, TRUE);
 
+                    /* Hack -- Prevent starvation */
+                    (void)set_food(PY_FOOD_MAX - 1);
+
                     dun_level = 0;
                     p_ptr->inside_arena = FALSE;
                     p_ptr->inside_battle = FALSE;
                     if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
-                    dungeon_type = 0;
+                    set_dungeon_type(0);
                     if (was_in_dung)
                     {
                         if (no_wilderness)
@@ -5944,7 +6669,7 @@ void play_game(bool new_game)
                     if (no_cheat)
                     {
                         msg_print("You are resurrected!");
-                        dungeon_type = DUNGEON_HEAVEN;
+                        set_dungeon_type(DUNGEON_HEAVEN);
                         dun_level = d_info[dungeon_type].maxdepth;
                     }
 
@@ -5971,17 +6696,9 @@ void play_game(bool new_game)
 
 s32b turn_real(s32b hoge)
 {
-    switch (p_ptr->start_race)
-    {
-    case RACE_VAMPIRE:
-    case RACE_MON_VAMPIRE:
-    case RACE_SKELETON:
-    case RACE_ZOMBIE:
-    case RACE_SPECTRE:
-        return hoge - (TURNS_PER_TICK * TOWN_DAWN * 3 / 4);
-    default:
-        return hoge;
-    }
+    race_t *race_ptr = get_race_aux(p_ptr->start_race, 0);
+    if (race_ptr->flags & RACE_NIGHT_START) return hoge - (TURNS_PER_TICK * TOWN_DAWN * 3 / 4);
+    else return hoge;
 }
 
 void prevent_turn_overflow(void)

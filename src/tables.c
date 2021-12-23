@@ -84,8 +84,12 @@ char listsym[] =
 /*
  * Encode the screen colors
  */
-cptr color_char = "dwsorgbuDWvyRGBU";
+char color_char[] = "dwsorgbuDWvyRGBULPICtSmMTOVcnKpi";
 
+/*
+ * Global mixed-case alphanumeric array
+ */
+char multicase[84] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&'()*+,-./:;<=>{|}";
 
 /*
  * Stat Table (INT/WIS) -- Number of half-spells per level
@@ -129,7 +133,7 @@ byte adj_mag_study[] =
     5    /* 37 */,
     5    /* 38 */,
     6    /* 39 */,
-    6    /* 40+ */
+    6    /* 40 */
 };
 
 
@@ -175,7 +179,7 @@ byte adj_mag_mana[] =
     27      /* 37 */,
     28      /* 38 */,
     29      /* 39 */,
-    30      /* 40+ */
+    30      /* 40 */
 };
 
 /* Pseudo-id is currently 1 in (N/f(L)) where f(L) might be L*L+50 or L+5, etc, (class dependent)
@@ -223,7 +227,7 @@ byte adj_pseudo_id[] =
      72      /* 37 */,
      70      /* 38 */,
      68      /* 39 */,
-     65      /* 40+ */
+     65      /* 40 */
 };
 
 /* XP = XP * adj / 100;
@@ -267,7 +271,7 @@ byte adj_exp_gain[] =
     127     /* 37 */,
     128     /* 38 */,
     130     /* 39 */,
-    135     /* 40+ */
+    135     /* 40 */
 };
 
 s16b adj_fear_m[] =
@@ -309,7 +313,7 @@ s16b adj_fear_m[] =
     220      /* 37 */,
     230      /* 38 */,
     240      /* 39 */,
-    250      /* 40+ */
+    250      /* 40 */
 };
 
 s16b adj_stat_save_fear[] =
@@ -351,7 +355,7 @@ s16b adj_stat_save_fear[] =
     44     /* 37 */,
     47     /* 38 */,
     50     /* 39 */,
-    55     /* 40+ */
+    55     /* 40 */
 };
 
 s16b adj_stat_save[] =
@@ -393,7 +397,7 @@ s16b adj_stat_save[] =
     33     /* 37 */,
     37     /* 38 */,
     42     /* 39 */,
-    50     /* 40+ */
+    50     /* 40 */
 };
 
 /*
@@ -438,7 +442,7 @@ byte adj_mag_fail[] =
     1       /* 37 */,
     0       /* 38 */,
     0       /* 39 */,
-    0       /* 40+ */
+    0       /* 40 */
 };
 
 
@@ -484,7 +488,7 @@ byte adj_mag_stat[] =
     17      /* 37 */,
     18      /* 38 */,
     19      /* 39 */,
-    20      /* 40+ */
+    20      /* 40 */
 };
 
 
@@ -530,7 +534,7 @@ byte adj_gold[] =
     81      /* 37 */,
     80      /* 38 */,
     79      /* 39 */,
-    78      /* 40+ */
+    78      /* 40 */
 };
 
 /*
@@ -575,7 +579,7 @@ s16b adj_int_dev[] =
     17      /* 37 */,
     18      /* 38 */,
     20      /* 39 */,
-    23      /* 40+ */
+    23      /* 40 */
 };
 
 
@@ -621,7 +625,7 @@ byte adj_wis_sav[] =
     17      /* 37 */,
     19      /* 38 */,
     21      /* 39 */,
-    25      /* 40+ */
+    25      /* 40 */
 };
 
 
@@ -667,7 +671,7 @@ byte adj_dex_dis[] =
     9       /* 37 */,
     10      /* 38 */,
     10      /* 39 */,
-    10      /* 40+ */
+    10      /* 40 */
 };
 
 
@@ -713,7 +717,7 @@ byte adj_int_dis[] =
     18      /* 37 */,
     19      /* 38 */,
     19      /* 39 */,
-    20      /* 40+ */
+    20      /* 40 */
 };
 
 
@@ -759,7 +763,7 @@ byte adj_dex_ta[] =
     128 + 14    /* 37 */,
     128 + 16    /* 38 */,
     128 + 18    /* 39 */,
-    128 + 20    /* 40+ */
+    128 + 20    /* 40 */
 };
 
 /*
@@ -804,7 +808,7 @@ byte adj_str_td[] =
     128 + 15    /* 37 */,
     128 + 16    /* 38 */,
     128 + 18    /* 39 */,
-    128 + 20    /* 40+ */
+    128 + 20    /* 40 */
 };
 
 
@@ -850,7 +854,7 @@ byte adj_dex_th[] =
     128 + 14        /* 37 */,
     128 + 15        /* 38 */,
     128 + 15        /* 39 */,
-    128 + 16        /* 40+ */
+    128 + 16        /* 40 */
 };
 
 
@@ -896,7 +900,7 @@ byte adj_str_th[] =
     128 + 14        /* 37 */,
     128 + 15        /* 38 */,
     128 + 15        /* 39 */,
-    128 + 16        /* 40+ */
+    128 + 16        /* 40 */
 };
 
 
@@ -942,7 +946,7 @@ byte adj_str_wgt[] =
     37      /* 37 */,
     38      /* 38 */,
     38      /* 39 */,
-    39      /* 40+ */
+    39      /* 40 */
 };
 
 
@@ -988,7 +992,7 @@ byte adj_str_hold[] =
     48      /* 37 */,
     50     /* 38 */,
     50     /* 39 */,
-    50     /* 40+ */
+    50     /* 40 */
 };
 
 
@@ -1034,7 +1038,7 @@ byte adj_str_dig[] =
     95      /* 37 */,
     100     /* 38 */,
     100     /* 39 */,
-    100     /* 40+ */
+    100     /* 40 */
 };
 
 
@@ -1080,7 +1084,7 @@ byte adj_str_blow[] =
     210 /* 37 */,
     220 /* 38 */,
     230 /* 39 */,
-    240 /* 40+ */
+    240 /* 40 */
 };
 
 
@@ -1126,7 +1130,7 @@ byte adj_dex_blow[] =
     11      /* 37 */,
     12      /* 38 */,
     12      /* 39 */,
-    13      /* 40+ */
+    13      /* 40 */
 };
 
 
@@ -1172,7 +1176,7 @@ byte adj_dex_safe[] =
     100     /* 37 */,
     100     /* 38 */,
     100     /* 39 */,
-    100     /* 40+ */
+    100     /* 40 */
 };
 
 
@@ -1218,7 +1222,7 @@ byte adj_con_fix[] =
     8       /* 37 */,
     9       /* 38 */,
     9       /* 39 */,
-    9       /* 40+ */
+    9       /* 40 */
 };
 
 
@@ -1264,7 +1268,7 @@ byte adj_con_mhp[] =
     151 /* 37 */,
     154 /* 38 */,
     157 /* 39 */,
-    160 /* 40+ */
+    160 /* 40 */
 };
 
 
@@ -1310,7 +1314,7 @@ byte adj_chr_chm[] =
     73      /* 37 */,
     77      /* 38 */,
     81      /* 39 */,
-    85      /* 40+ */
+    85      /* 40 */
 };
 
 /* For devices, the sval is actually the effect you want, and it needs
@@ -1322,7 +1326,7 @@ arena_type arena_info[MAX_ARENA_MONS + 2] =
     { MON_TIGER,         0,         0                             },
     { MON_DRUID,         0,         0                             },
     { MON_HILL_GIANT,    TV_POTION, SV_POTION_SPEED               },
-    { MON_WERERAT2,      0,         0                             },
+    { MON_WERERAT,       0,         0                             },
     { MON_ORC_CAPTAIN,   0,         0                             },
     { MON_BERSERKER,     TV_ROD,    EFFECT_DETECT_TRAPS           },
     { MON_STONE_GIANT,   0,         0                             },
@@ -1442,7 +1446,7 @@ player_pact pact_info[WARLOCK_MAX] =
         "Dd"
     },
     {
-        "Archon",
+        "Angel",
         "A"
     },
     {
@@ -1484,7 +1488,7 @@ magic_type technic_info[NUM_TECHNIC][32] =
         { REALM_LAW, 20, 32, 20,  50,   45}, /* Probe */
         { REALM_LAW, 21, 35, 25,  50,   60}, /* Spin */
         { REALM_LAW, 22, 40, 40,  60,   70}, /* Advanced Bloodsucking */
-        { REALM_LAW, 23, 50, 150, 75,  200}, /* Alter Reality */
+        { REALM_LAW, 23, 50, 125, 65,  200}, /* Alter Reality */
 
         { REALM_LAW, 24, 10,  10,  25,   15}, /* Blink */
         { REALM_LAW, 25, 15,  12,  30,   25}, /* Tread Softly */
@@ -1778,8 +1782,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
-	CH_HEX,                 /* Hexblade */
-	(CH_CHAOS | CH_DAEMON), /* Chaos-Mage*/
+    (CH_CHAOS | CH_DAEMON), /* Logrus-Master*/
 };
 
 
@@ -1854,11 +1857,10 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
-	CH_NONE,                 /* Hexblade */
-	(CH_SORCERY | CH_NATURE |
-	 CH_CHAOS | CH_DEATH | CH_TRUMP |
-	 CH_ARCANE | CH_ENCHANT | CH_DAEMON |
-	 CH_ARMAGEDDON),		/* Chaos-Mage*/
+    (CH_SORCERY | CH_NATURE |
+     CH_CHAOS | CH_DEATH | CH_TRUMP |
+     CH_ARCANE | CH_ENCHANT | CH_DAEMON |
+     CH_ARMAGEDDON),		/* Logrus Master */
 };
 
 
@@ -1969,7 +1971,7 @@ int chest_traps[64] =
 /*
  * Hack -- the "basic" color names (see "TERM_xxx")
  */
-cptr color_names[16] =
+cptr color_names[32] =
 {
     "Dark",
     "White",
@@ -1987,7 +1989,22 @@ cptr color_names[16] =
     "Light Green",
     "Light Blue",
     "Light Umber",
-
+    "Int. Green",
+    "Pink",
+    "Int. Blue",
+    "Purple",
+    "Teal",
+    "Sky-Blue",
+    "Mud",
+    "Dark Yellow",
+    "Turquoise",
+    "Light Orange",
+    "Lilac",
+    "Dark Purple",
+    "Dark Sky-Blue",
+    "Pale Blue",
+    "Dark Pink",
+    "Chestnut"
 };
 
 
@@ -2021,6 +2038,10 @@ cptr stat_names_reduced[6] =
 
 };
 
+cptr empty_lv_description[EMPTY_MAX] =
+{
+    "Sometimes", "Never", "Always"
+};
 
 /*
  * Certain "screens" always use the main screen, including News, Birth,
@@ -2150,6 +2171,9 @@ option_type option_info[] =
     { &auto_get_objects,            FALSE, OPT_PAGE_INPUT, 6, 7,
     "auto_get_objects",             "Ctrl-G automatically gets nearby wanted objects" },
 
+    { &limit_shop_prompts,          TRUE, OPT_PAGE_INPUT, 6, 0,
+    "limit_shop_prompts",           "Limit shop quantity prompts by money available" },
+
     { &numpad_as_cursorkey,         TRUE, OPT_PAGE_INPUT, 2, 31,
     "numpad_as_cursorkey",          "Use numpad keys as cursor keys in editor mode" },
 
@@ -2207,29 +2231,11 @@ option_type option_info[] =
     { &plain_descriptions,          TRUE,  OPT_PAGE_TEXT, 5, 1,
     "plain_descriptions",           "Plain object descriptions" },
 
-    { &always_show_list,            TRUE,  OPT_PAGE_TEXT, 4, 0,
-    "always_show_list",             "Always show list when choosing spells" },
-
     { &depth_in_feet,               FALSE, OPT_PAGE_TEXT, 0, 7,
     "depth_in_feet",                "Show dungeon level in feet" },
 
     { &effective_speed,             FALSE, OPT_PAGE_TEXT, 0, 29,
     "effective_speed",              "Show speeds as energy multipliers" },
-
-    { &describe_slots,              TRUE,  OPT_PAGE_TEXT, 0, 10,
-    "describe_slots",               "Show equipment slot descriptions" },
-
-    { &show_weights,                TRUE,  OPT_PAGE_TEXT, 0, 11,
-    "show_weights",                 "Show weights in object listings" },
-
-    { &show_discounts,              TRUE,  OPT_PAGE_TEXT, 0, 12,
-    "show_discounts",               "Show discounts in object listings" },
-
-    { &show_power,                  FALSE, OPT_PAGE_TEXT, 2, 14,
-    "show_power",                   "Show device power in object listings (if known)" },
-
-    { &show_item_graph,             TRUE,  OPT_PAGE_TEXT, 2, 0,
-    "show_item_graph",              "Show item graphics in object listings" },
 
     { &equippy_chars,               TRUE,  OPT_PAGE_TEXT, 1, 12,
     "equippy_chars",                "Display 'equippy' chars" },
@@ -2240,310 +2246,353 @@ option_type option_info[] =
     { &display_sp_bar,              FALSE,  OPT_PAGE_TEXT, 1, 2,
     "display_sp_bar",               "Display player sp bar" },
 
+    { &display_food_bar,            FALSE,  OPT_PAGE_TEXT, 1, 13,
+    "display_food_bar",             "Display detailed food status" },
+
+    { &percentage_life,             FALSE,  OPT_PAGE_TEXT, 4, 2,
+    "percentage_life",              "Display life rating on a scale of 87% to 117%" },
+
     { &show_rogue_keys,		    FALSE, OPT_PAGE_TEXT, 6, 3,
     "show_rogue_keys",		    "Display roguelike movement keys as reminder" },
 
-//    { &display_percentages,         FALSE,  OPT_PAGE_TEXT, 1, 10,
-//    "display_percentages",          "Display percentages rather than status bars" },
+    { &show_energy_cost,            FALSE, OPT_PAGE_TEXT, 2, 9,
+    "show_energy_cost",             "Display energy cost of most recent action" },
 
-    { &compress_savefile,           FALSE, OPT_PAGE_TEXT, 1, 26,
-    "compress_savefile",            "Compress messages in savefiles" },
+    //    { &display_percentages,         FALSE,  OPT_PAGE_TEXT, 1, 10,
+    //    "display_percentages",          "Display percentages rather than status bars" },
 
-    { &abbrev_extra,                FALSE, OPT_PAGE_TEXT, 2, 10,
-    "abbrev_extra",                 "Describe extra object attributes by abbreviation" },
+        { &compress_savefile,           FALSE, OPT_PAGE_TEXT, 1, 26,
+        "compress_savefile",            "Compress messages in savefiles" },
 
-    { &abbrev_all,                  FALSE, OPT_PAGE_TEXT, 2, 11,
-    "abbrev_all",                   "Describe all object attributes by abbreviation" },
+        { &abbrev_extra,                FALSE, OPT_PAGE_TEXT, 2, 10,
+        "abbrev_extra",                 "Describe extra object attributes by abbreviation" },
 
-    { &exp_need,                    FALSE, OPT_PAGE_TEXT, 2, 12,
-    "exp_need",                     "Show the experience needed for next level" },
+        { &abbrev_all,                  FALSE, OPT_PAGE_TEXT, 2, 11,
+        "abbrev_all",                   "Describe all object attributes by abbreviation" },
 
-    { &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
-    "ignore_unview",                "Ignore actions of out of sight monsters" },
+        { &mark_dragon,                 TRUE, OPT_PAGE_TEXT, 2, 4,
+        "mark_dragon",                  "Extend use of '?' to random dragon resistances" },
 
-    { &display_distance,            FALSE,  OPT_PAGE_TEXT, 1, 4,
-    "display_distance",             "Display distance in monster list" },
+        { &exp_need,                    FALSE, OPT_PAGE_TEXT, 2, 12,
+        "exp_need",                     "Show the experience needed for next level" },
 
-    { &display_race,		        TRUE, OPT_PAGE_TEXT, 2, 29,
-    "display_race",                 "Player character depends on race" },
+        { &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
+        "ignore_unview",                "Ignore actions of out of sight monsters" },
 
-    { &show_origins,		        TRUE, OPT_PAGE_TEXT, 2, 28,
-    "show_origins",                 "Show object origins on examination" },
+        { &display_race,		        TRUE, OPT_PAGE_TEXT, 2, 29,
+        "display_race",                 "Player character depends on race" },
 
-    { &show_discovery,		        FALSE, OPT_PAGE_TEXT, 2, 26,
-    "show_discovery",                 "Show time of discovery on examination" },
+        { &show_origins,		        TRUE, OPT_PAGE_TEXT, 2, 28,
+        "show_origins",                 "Show object origins on examination" },
 
-    { &final_dump_origins,		TRUE, OPT_PAGE_TEXT, 2, 18,
-    "final_dump_origins",             "Show origins in final character dumps" },
+        { &show_discovery,		        FALSE, OPT_PAGE_TEXT, 2, 26,
+        "show_discovery",                 "Show time of discovery on examination" },
 
-    { &always_dump_origins,		FALSE, OPT_PAGE_TEXT, 2, 19,
-    "always_dump_origins",             "Show origins in all character dumps" },
+        { &final_dump_origins,		TRUE, OPT_PAGE_TEXT, 2, 18,
+        "final_dump_origins",             "Show origins in final character dumps" },
 
-    { &easy_mimics,		        FALSE, OPT_PAGE_TEXT, 2, 27,
-    "easy_mimics",                  "Use 'x' for monsters that look like things" },
+        { &always_dump_origins,		FALSE, OPT_PAGE_TEXT, 2, 19,
+        "always_dump_origins",             "Show origins in all character dumps" },
 
-    { &list_stairs,                  FALSE,  OPT_PAGE_TEXT, 1, 10,
-    "list_stairs",                  "Display stairs in the object list" },
+        { &easy_mimics,		        FALSE, OPT_PAGE_TEXT, 2, 27,
+        "easy_mimics",                  "Use 'x' for monsters that look like things" },
 
-    { &show_future_powers,           TRUE,  OPT_PAGE_TEXT, 1, 0,
-    "show_future_powers",           "Include known future race/class powers in lists" },
+        { &display_skill_num,            FALSE,  OPT_PAGE_TEXT, 2, 22,
+        "display_skill_num",            "Display skills as numbers on character sheet" },
 
-    { &show_future_spells,           TRUE,  OPT_PAGE_TEXT, 2, 20,
-    "show_future_spells",           "Include known future class spells in lists" },
+        { &reforge_details,              TRUE,  OPT_PAGE_TEXT, 2, 16,
+        "reforge_details",              "Show statistics before proceeding with a reforge" },
 
-    { &show_damage,                  TRUE, OPT_PAGE_TEXT, 2, 12,
-	"show_damage",					"Show damage amounts in messages" },
 
-    { &display_skill_num,            FALSE,  OPT_PAGE_TEXT, 2, 22,
-    "display_skill_num",            "Display skills as numbers in character sheet" },
+        /*** Game-Play ***/
 
-    { &reforge_details,              TRUE,  OPT_PAGE_TEXT, 2, 16,
-    "reforge_details",              "Show statistics before proceeding with a reforge" },
+        { &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
+        "stack_force_notes",            "Merge inscriptions when stacking" },
 
-    { &auto_sticky_labels,           TRUE,  OPT_PAGE_TEXT, 2, 17,
-    "auto_sticky_labels",           "Automatically make all power labels sticky" },
+        { &stack_force_costs,           TRUE, OPT_PAGE_GAMEPLAY, 0, 9,
+        "stack_force_costs",            "Merge discounts when stacking" },
 
+        { &expand_list,                 TRUE,  OPT_PAGE_GAMEPLAY, 1, 5,
+        "expand_list",                  "Allow query option lists to loop to beginning" },
 
-    /*** Game-Play ***/
+        { &bound_walls_perm,            FALSE, OPT_PAGE_GAMEPLAY, 2, 1,
+        "bound_walls_perm",             "Display dungeon boundaries as permanent walls" },
 
-    { &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
-    "stack_force_notes",            "Merge inscriptions when stacking" },
+        { &last_words,                  TRUE,  OPT_PAGE_GAMEPLAY, 0, 28,
+        "last_words",                   "Leave last words when your character dies" },
 
-    { &stack_force_costs,           TRUE, OPT_PAGE_GAMEPLAY, 0, 9,
-    "stack_force_costs",            "Merge discounts when stacking" },
+        { &unified_use,					FALSE, OPT_PAGE_GAMEPLAY, 0, 19,
+        "unified_use_command",			"Use 'a' for using any item type" },
 
-    { &expand_list,                 TRUE,  OPT_PAGE_GAMEPLAY, 1, 5,
-    "expand_list",                  "Allow query option lists to loop to beginning" },
 
-    { &empty_levels,                TRUE,  OPT_PAGE_GAMEPLAY, 0, 31,
-    "empty_levels",                 "Allow empty 'arena' levels" },
+    #ifdef ALLOW_WIZARD
+        { &allow_debug_opts,            FALSE, OPT_PAGE_GAMEPLAY, 6, 11,
+        "allow_debug_opts",             "Allow use of debug/cheat options" },
+    #endif
 
-    { &bound_walls_perm,            FALSE, OPT_PAGE_GAMEPLAY, 2, 1,
-    "bound_walls_perm",             "Display dungeon boundaries as permanent walls" },
+        /*** Disturbance ***/
 
-    { &last_words,                  TRUE,  OPT_PAGE_GAMEPLAY, 0, 28,
-    "last_words",                   "Leave last words when your character dies" },
+        { &find_ignore_stairs,          FALSE, OPT_PAGE_DISTURBANCE, 0, 16,
+        "find_ignore_stairs",           "Run past stairs" },
 
-	{ &unified_use,					FALSE, OPT_PAGE_GAMEPLAY, 0, 19,
-	"unified_use_command",			"Use 'a' for using any item type" },
+        { &find_ignore_doors,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 17,
+        "find_ignore_doors",            "Run through open doors" },
 
-    /*** Disturbance ***/
+        { &find_ignore_veins,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 19,
+        "find_ignore_veins",            "Run past buried treasure" },
 
-    { &find_ignore_stairs,          FALSE, OPT_PAGE_DISTURBANCE, 0, 16,
-    "find_ignore_stairs",           "Run past stairs" },
+        { &find_cut,                    FALSE, OPT_PAGE_DISTURBANCE, 0, 18,
+        "find_cut",                     "Run past known corners" },
 
-    { &find_ignore_doors,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 17,
-    "find_ignore_doors",            "Run through open doors" },
+        { &travel_ignore_items,         TRUE, OPT_PAGE_DISTURBANCE, 2, 30,
+        "travel_ignore_items",          "Ignore identified items while travelling" },
 
-    { &find_ignore_veins,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 19,
-    "find_ignore_veins",            "Run past buried treasure" },
+        { &check_abort,                 TRUE,  OPT_PAGE_DISTURBANCE, 1, 18,
+        "check_abort",                  "Check for user abort of automated input" },
 
-    { &find_cut,                    FALSE, OPT_PAGE_DISTURBANCE, 0, 18,
-    "find_cut",                     "Run past known corners" },
+        { &flush_failure,               TRUE,  OPT_PAGE_DISTURBANCE, 1, 20,
+        "flush_failure",                "Flush input on various failures" },
 
-    { &travel_ignore_items,         TRUE, OPT_PAGE_DISTURBANCE, 2, 30,
-    "travel_ignore_items",          "Ignore identified items while travelling" },
+        { &prompt_on_failure,           FALSE, OPT_PAGE_DISTURBANCE, 0, 26,
+        "prompt_on_failure",            "Give -more- prompts on device/spell failures" },
 
-    { &check_abort,                 TRUE,  OPT_PAGE_DISTURBANCE, 1, 18,
-    "check_abort",                  "Check for user abort of automated input" },
+        { &flush_disturb,               FALSE, OPT_PAGE_DISTURBANCE, 1, 21,
+        "flush_disturb",                "Flush input whenever disturbed" },
 
-    { &flush_failure,               TRUE,  OPT_PAGE_DISTURBANCE, 1, 20,
-    "flush_failure",                "Flush input on various failures" },
+        { &disturb_move,                FALSE, OPT_PAGE_DISTURBANCE, 0, 20,
+        "disturb_move",                 "Disturb whenever any monster moves" },
 
-    { &prompt_on_failure,           FALSE, OPT_PAGE_DISTURBANCE, 0, 26,
-    "prompt_on_failure",            "Give -more- prompts on device/spell failures" },
+        { &disturb_high,                FALSE, OPT_PAGE_DISTURBANCE, 1, 3,
+        "disturb_high",                 "Disturb whenever high-level monster moves" },
 
-    { &flush_disturb,               FALSE, OPT_PAGE_DISTURBANCE, 1, 21,
-    "flush_disturb",                "Flush input whenever disturbed" },
+        { &disturb_near,                TRUE,  OPT_PAGE_DISTURBANCE, 0, 21,
+        "disturb_near",                 "Disturb whenever viewable monster moves" },
 
-    { &disturb_move,                FALSE, OPT_PAGE_DISTURBANCE, 0, 20,
-    "disturb_move",                 "Disturb whenever any monster moves" },
+        { &disturb_pets,                FALSE, OPT_PAGE_DISTURBANCE, 5, 6,
+        "disturb_pets",                 "Disturb when visible pets move" },
 
-    { &disturb_high,                FALSE, OPT_PAGE_DISTURBANCE, 1, 3,
-    "disturb_high",                 "Disturb whenever high-level monster moves" },
+        { &disturb_panel,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 22,
+        "disturb_panel",                "Disturb whenever map panel changes" },
 
-    { &disturb_near,                TRUE,  OPT_PAGE_DISTURBANCE, 0, 21,
-    "disturb_near",                 "Disturb whenever viewable monster moves" },
+        { &disturb_state,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 23,
+        "disturb_state",                "Disturb whenever player state changes" },
 
-    { &disturb_pets,                FALSE, OPT_PAGE_DISTURBANCE, 5, 6,
-    "disturb_pets",                 "Disturb when visible pets move" },
+        { &disturb_minor,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 24,
+        "disturb_minor",                "Disturb whenever boring things happen" },
 
-    { &disturb_panel,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 22,
-    "disturb_panel",                "Disturb whenever map panel changes" },
+        { &town_no_disturb,             FALSE, OPT_PAGE_DISTURBANCE, 1, 17,
+        "town_no_disturb",              "Never disturb when a town monster moves" },
 
-    { &disturb_state,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 23,
-    "disturb_state",                "Disturb whenever player state changes" },
+        { &ring_bell,                   FALSE, OPT_PAGE_DISTURBANCE, 0, 14,
+        "ring_bell",                    "Audible bell (on errors, etc.)" },
 
-    { &disturb_minor,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 24,
-    "disturb_minor",                "Disturb whenever boring things happen" },
+        { &disturb_trap_detect,         TRUE,  OPT_PAGE_DISTURBANCE, 0, 27,
+        "disturb_trap_detect",          "Disturb when leaving trap-detected area" },
 
-    { &town_no_disturb,             FALSE, OPT_PAGE_DISTURBANCE, 1, 17,
-    "town_no_disturb",              "Never disturb when a town monster moves" },
+        { &alert_trap_detect,           FALSE, OPT_PAGE_DISTURBANCE, 0, 25,
+        "alert_trap_detect",            "Alert when leaving trap-detected area" },
 
-    { &ring_bell,                   FALSE, OPT_PAGE_DISTURBANCE, 0, 14,
-    "ring_bell",                    "Audible bell (on errors, etc.)" },
+        { &alert_device_gone,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 13,
+        "alert_device_gone",            "Alert when carried device is destroyed or stolen" },
 
-    { &disturb_trap_detect,         TRUE,  OPT_PAGE_DISTURBANCE, 0, 27,
-    "disturb_trap_detect",          "Disturb when leaving trap-detected area" },
+        { &alert_insc_gone,             TRUE,  OPT_PAGE_DISTURBANCE, 0, 2,
+        "alert_insc_gone",              "Alert when inscribed item is destroyed or stolen" },
 
-    { &alert_trap_detect,           FALSE, OPT_PAGE_DISTURBANCE, 0, 25,
-    "alert_trap_detect",            "Alert when leaving trap-detected area" },
+        { &alert_wanted_kill,           FALSE,  OPT_PAGE_DISTURBANCE, 0, 30,
+        "alert_wanted_kill",            "Alert on killing wanted uniques" },
 
-    { &alert_device_gone,           TRUE,  OPT_PAGE_DISTURBANCE, 0, 13,
-    "alert_device_gone",            "Alert when carried device is destroyed or stolen" },
+        { &alert_poison,                TRUE,  OPT_PAGE_DISTURBANCE, 2, 2,
+        "alert_poison",                 "Alert on dangerously high poison counter" },
 
-    { &alert_insc_gone,             TRUE,  OPT_PAGE_DISTURBANCE, 0, 2,
-    "alert_insc_gone",              "Alert when inscribed item is destroyed or stolen" },
+        /*** Birth Options ***/
 
-    { &alert_wanted_kill,           FALSE,  OPT_PAGE_DISTURBANCE, 0, 30,
-    "alert_wanted_kill",            "Alert on killing wanted uniques" },
+    //	{ &coffee_break,		FALSE, OPT_PAGE_BIRTH, 6, 3,
+    //	"coffee_break",			"Coffee-break mode (accelerated game) (*)" },
 
-    { &alert_poison,                TRUE,  OPT_PAGE_DISTURBANCE, 2, 2,
-    "alert_poison",                 "Alert on dangerously high poison counter" },
+        { &no_id,			FALSE, OPT_PAGE_BIRTH, 6, 31,
+        "no_id",			"Objects created IDed (*)" },
 
-    /*** Birth Options ***/
+        { &power_tele,			FALSE, OPT_PAGE_BIRTH, 6, 6,
+        "power_tele",			"Use enhanced telepathy (*)" },
 
-//	{ &coffee_break,		FALSE, OPT_PAGE_BIRTH, 6, 3,
-//	"coffee_break",			"Coffee-break mode (accelerated game) (*)" },
+        { &never_forget,		FALSE, OPT_PAGE_BIRTH, 6, 27,
+        "never_forget",			"Easy Labyrinth and no amnesia" },
 
-	{ &no_id,			FALSE, OPT_PAGE_BIRTH, 6, 31,
-	"no_id",			"Objects created IDed (*)" },
-	
-	{ &power_tele,			FALSE, OPT_PAGE_BIRTH, 6, 6,
-	"power_tele",			"Use enhanced telepathy" },
+        { &xp_penalty_to_score,			FALSE, OPT_PAGE_BIRTH, 1, 14,
+        "xp_penalty_to_score",			"Exp multiplier affect score instead (*)" },
 
-	{ &never_forget,		FALSE, OPT_PAGE_BIRTH, 6, 27,
-	"never_forget",			"Easy Labyrinth and no amnesia" },
+        { &smart_cheat,                 FALSE, OPT_PAGE_BIRTH, 1, 15,
+        "smart_cheat",                  "Monsters exploit player's weaknesses (*)" },
 
-	{ &xp_penalty_to_score,			FALSE, OPT_PAGE_BIRTH, 1, 14,
-	"xp_penalty_to_score",			"Exp multiplier affect score instead (*)" },
+        { &no_wilderness,               FALSE, OPT_PAGE_BIRTH, 6, 1,
+        "no_wilderness",                "Play without a wilderness" },
 
-    { &smart_cheat,                 FALSE, OPT_PAGE_BIRTH, 1, 15,
-    "smart_cheat",                  "Monsters exploit player's weaknesses (*)" },
+        { &ironman_shops,               FALSE, OPT_PAGE_BIRTH, 6, 2,
+        "ironman_shops",                "Stores are permanently closed (*)" },
 
-    { &no_wilderness,               FALSE, OPT_PAGE_BIRTH, 6, 1,
-    "no_wilderness",                "Play without a wilderness" },
+        { &ironman_downward,            FALSE, OPT_PAGE_BIRTH, 6, 4,
+        "ironman_downward",             "Disable recall and use of up stairs (*)" },
 
-    { &ironman_shops,               FALSE, OPT_PAGE_BIRTH, 6, 2,
-    "ironman_shops",                "Stores are permanently closed (*)" },
+        { &ironman_empty_levels,        FALSE, OPT_PAGE_BIRTH, 6, 8,
+        "ironman_empty_levels",         "Generate empty 'arena' levels (*)" },
 
-    { &ironman_downward,            FALSE, OPT_PAGE_BIRTH, 6, 4,
-    "ironman_downward",             "Disable recall and use of up stairs (*)" },
+        { &ironman_nightmare,           FALSE, OPT_PAGE_BIRTH, 6, 18,
+        "ironman_nightmare",            "Nightmare mode(it isn't even remotely fair!)(*)" },
 
-    { &ironman_empty_levels,        FALSE, OPT_PAGE_BIRTH, 6, 8,
-    "ironman_empty_levels",         "Always create empty 'arena' levels (*)" },
+        { &thrall_mode,                 FALSE, OPT_PAGE_BIRTH, 1, 19,
+        "thrall_mode",                  "Thrall mode (start in extreme danger) (*)" },
 
-    { &ironman_nightmare,           FALSE, OPT_PAGE_BIRTH, 6, 18,
-    "ironman_nightmare",            "Nightmare mode(it isn't even remotely fair!)(*)" },
+        { &wacky_rooms,                 FALSE, OPT_PAGE_BIRTH, 1, 22,
+        "wacky_rooms",                  "Always generate very unusual rooms" },
 
-    { &thrall_mode,                 FALSE, OPT_PAGE_BIRTH, 1, 19,
-    "thrall_mode",                  "Thrall mode (start in extreme danger) (*)" },
+        { &melee_challenge,             FALSE, OPT_PAGE_BIRTH, 2, 21,
+        "melee_challenge",              "Monsters can only be damaged in melee (*)" },
 
-    { &wacky_rooms,                 FALSE, OPT_PAGE_BIRTH, 1, 22,
-    "wacky_rooms",                  "Always generate very unusual rooms (*)" },
+        { &no_melee_challenge,          FALSE, OPT_PAGE_BIRTH, 2, 23,
+        "no_melee_challenge",           "Monsters cannot be damaged in melee (*)" },
 
-    { &melee_challenge,             FALSE, OPT_PAGE_BIRTH, 2, 21,
-    "melee_challenge",              "Monsters can only be damaged in melee (*)" },
+        { &enable_virtues,              FALSE, OPT_PAGE_BIRTH, 6, 13,
+        "enable_virtues",               "Enable the virtue system" },
 
-    { &no_melee_challenge,          FALSE, OPT_PAGE_BIRTH, 2, 23,
-    "no_melee_challenge",           "Monsters cannot be damaged in melee (*)" },
+        { &no_wanted_points,            TRUE, OPT_PAGE_BIRTH, 2, 24,
+        "no_wanted_points",             "Deeper wanted uniques give better rewards" },
 
-    { &enable_virtues,              FALSE, OPT_PAGE_BIRTH, 6, 13,
-    "enable_virtues",               "Enable the virtue system" },
+        { &quest_unique,                TRUE, OPT_PAGE_BIRTH, 6, 21,
+        "quest_unique",                 "Random quests for unique monsters only" },
 
-    { &no_wanted_points,            TRUE, OPT_PAGE_BIRTH, 2, 24,
-    "no_wanted_points",             "Deeper wanted uniques give better rewards" },
+        { &random_artifacts,            FALSE, OPT_PAGE_BIRTH, 6, 23,
+        "random_artifacts",             "Randomize standard artifacts" },
 
-    { &quest_unique,                TRUE, OPT_PAGE_BIRTH, 6, 21,
-    "quest_unique",                 "Random quests for unique monsters only" },
+        { &no_artifacts,                FALSE, OPT_PAGE_BIRTH, 6, 24,
+        "no_artifacts",                 "Never create artifacts (*)" },
 
-    { &random_artifacts,            FALSE, OPT_PAGE_BIRTH, 6, 23,
-    "random_artifacts",             "Randomize standard artifacts" },
+        { &no_egos,                     FALSE, OPT_PAGE_BIRTH, 6, 25,
+        "no_egos",                      "Never create non-jewelry ego items (*)" },
 
-    { &no_artifacts,                FALSE, OPT_PAGE_BIRTH, 6, 24,
-    "no_artifacts",                 "Never create artifacts" },
+        { &no_selling,                  FALSE, OPT_PAGE_BIRTH, 6, 22,
+        "no_selling",                   "Disable selling but increase gold drops" },
 
-    { &no_egos,                     FALSE, OPT_PAGE_BIRTH, 6, 25,
-    "no_egos",                      "Never create non-jewelry ego items" },
+        { &reduce_uniques,              FALSE, OPT_PAGE_BIRTH, 6, 26,
+        "reduce_uniques",               "Reduce the number of uniques (randomly)" },
 
-    { &no_selling,                  TRUE, OPT_PAGE_BIRTH, 6, 22,
-    "no_selling",                   "Disable selling but increase gold drops" },
+        { &single_pantheon,             FALSE, OPT_PAGE_BIRTH, 5, 9,
+        "single_pantheon",              "Active pantheons" },
 
-    { &reduce_uniques,              FALSE, OPT_PAGE_BIRTH, 6, 26,
-    "reduce_uniques",               "Reduce the number of uniques (randomly)" },
+        { &guaranteed_pantheon,         FALSE, OPT_PAGE_BIRTH, 2, 3,
+        "guaranteed_pantheon",          "Guaranteed pantheon" },
 
-    { &single_pantheon,             FALSE, OPT_PAGE_BIRTH, 5, 9,
-    "single_pantheon",              "Play with only one pantheon" },
+        { &always_small_levels,         FALSE, OPT_PAGE_BIRTH, 4, 14,
+        "always_small_levels",          "Level size" },
 
-    { &always_small_levels,         FALSE, OPT_PAGE_BIRTH, 4, 14,
-    "always_small_levels",          "Level size" },
+        { &increase_density,            FALSE, OPT_PAGE_BIRTH, 4, 15,
+        "increase_density",             "Increase monster density on small levels" },
+                              { &no_big_dungeons,             FALSE, OPT_PAGE_BIRTH, 4, 17,
+        "no_big_dungeons",              "Allow small levels in all dungeons except Arena" },
 
-    { &increase_density,            FALSE, OPT_PAGE_BIRTH, 4, 15,
-    "increase_density",             "Increase monster density on small levels" },
+        { &even_proportions,            FALSE, OPT_PAGE_BIRTH, 4, 16,
+        "even_proportions",             "Sometimes reshape very flat \"pipe\" levels" },
 
-    { &no_big_dungeons,             FALSE, OPT_PAGE_BIRTH, 4, 17,
-    "no_big_dungeons",              "Allow small levels in all dungeons except Arena" },
+        { &no_nexus_warp,			FALSE, OPT_PAGE_BIRTH, 6, 12,
+        "no_nexus_warp",				"Nexus attacks never teleport to another dungeon" },
 
-    { &even_proportions,            FALSE, OPT_PAGE_BIRTH, 4, 16,
-    "even_proportions",             "Sometimes reshape very flat \"pipe\" levels" },
+        { &no_scrambling,			FALSE, OPT_PAGE_BIRTH, 6, 15,
+        "no_scrambling",			"Disallow stat scrambling from monster attacks" },
 
-    { &no_nexus_warp,			FALSE, OPT_PAGE_BIRTH, 6, 12,
-    "no_nexus_warp",				"Nexus attacks never teleport to another dungeon" },
+        { &comp_mode,			FALSE, OPT_PAGE_BIRTH, 5, 18,
+        "comp_mode",			"Disallow permanent changes to player race" },
 
-    { &no_scrambling,			FALSE, OPT_PAGE_BIRTH, 6, 15,
-    "no_scrambling",			"Disallow stat scrambling from monster attacks" },
+        /*** Easy Object Auto-Destroyer ***/
 
-    { &comp_mode,			FALSE, OPT_PAGE_BIRTH, 5, 18,
-    "comp_mode",			"Disallow permanent changes to player race" },
+        { &destroy_items,               FALSE, OPT_PAGE_AUTODESTROY, 7, 0,
+        "destroy_items",                "Use easy auto-destroyer" },
 
-    /*** Easy Object Auto-Destroyer ***/
+        { &destroy_feeling,             FALSE, OPT_PAGE_AUTODESTROY, 7, 8,
+        "destroy_feeling",              "Apply auto-destroy on sensing an item" },
 
-    { &destroy_items,               FALSE, OPT_PAGE_AUTODESTROY, 7, 0,
-    "destroy_items",                "Use easy auto-destroyer" },
+        { &destroy_identify,            FALSE, OPT_PAGE_AUTODESTROY, 7, 9,
+        "destroy_identify",             "Apply auto-destroy on identifying an item" },
 
-    { &destroy_feeling,             FALSE, OPT_PAGE_AUTODESTROY, 7, 8,
-    "destroy_feeling",              "Apply auto-destroy on sensing an item" },
+        { &destroy_debug,               FALSE, OPT_PAGE_AUTODESTROY, 7, 10,
+        "destroy_debug",                "List the rule used when applying the Mogaminator" },
 
-    { &destroy_identify,            FALSE, OPT_PAGE_AUTODESTROY, 7, 9,
-    "destroy_identify",             "Apply auto-destroy on identifying an item" },
+        { &no_mogaminator,              FALSE, OPT_PAGE_AUTODESTROY, 7, 11,
+        "no_mogaminator",               "Never apply the Mogaminator" },
 
-    { &destroy_debug,               FALSE, OPT_PAGE_AUTODESTROY, 7, 10,
-    "destroy_debug",                "List the rule used when applying the Mogaminator" },
+        { &leave_mogaminator,           FALSE, OPT_PAGE_AUTODESTROY, 7, 12,
+        "leave_mogaminator",            "Leave items the Mogaminator wants to destroy" },
 
-    { &no_mogaminator,              FALSE, OPT_PAGE_AUTODESTROY, 7, 11,
-    "no_mogaminator",               "Never apply the Mogaminator" },
+        { &check_full_pack,             TRUE, OPT_PAGE_AUTODESTROY, 2, 15,
+        "check_full_pack",              "Limit pickup prompts if pack is already full" },
 
-    { &leave_mogaminator,           FALSE, OPT_PAGE_AUTODESTROY, 7, 12,
-    "leave_mogaminator",            "Leave items the Mogaminator wants to destroy" },
+        { &delay_autopick,              FALSE, OPT_PAGE_AUTODESTROY, 1, 9,
+        "delay_autopick",               "Allow manual pickup before applying auto-pickup" },
 
-    { &delay_autopick,              FALSE, OPT_PAGE_AUTODESTROY, 1, 9,
-    "delay_autopick",               "Allow manual pickup before applying auto-pickup" },
+        { &leave_worth,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 2,
+        "leave_worth",                  "Auto-destroyer leaves known worthy items" },
 
-    { &leave_worth,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 2,
-    "leave_worth",                  "Auto-destroyer leaves known worthy items" },
+        { &leave_equip,                 FALSE, OPT_PAGE_AUTODESTROY, 7, 3,
+        "leave_equip",                  "Auto-destroyer leaves weapons and armour" },
 
-    { &leave_equip,                 FALSE, OPT_PAGE_AUTODESTROY, 7, 3,
-    "leave_equip",                  "Auto-destroyer leaves weapons and armor" },
+        { &leave_chest,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 7,
+        "leave_chest",                  "Auto-destroyer leaves closed chests" },
 
-    { &leave_chest,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 7,
-    "leave_chest",                  "Auto-destroyer leaves closed chests" },
+        { &leave_wanted,                TRUE,  OPT_PAGE_AUTODESTROY, 7, 4,
+        "leave_wanted",                 "Auto-destroyer leaves wanted corpses" },
 
-    { &leave_wanted,                TRUE,  OPT_PAGE_AUTODESTROY, 7, 4,
-    "leave_wanted",                 "Auto-destroyer leaves wanted corpses" },
+        { &leave_corpse,                FALSE, OPT_PAGE_AUTODESTROY, 7, 5,
+        "leave_corpse",                 "Auto-destroyer leaves corpses and skeletons" },
 
-    { &leave_corpse,                FALSE, OPT_PAGE_AUTODESTROY, 7, 5,
-    "leave_corpse",                 "Auto-destroyer leaves corpses and skeletons" },
+        { &leave_junk,                  FALSE, OPT_PAGE_AUTODESTROY, 7, 6,
+        "leave_junk",                   "Auto-destroyer leaves junk" },
 
-    { &leave_junk,                  FALSE, OPT_PAGE_AUTODESTROY, 7, 6,
-    "leave_junk",                   "Auto-destroyer leaves junk" },
+        { &leave_special,               TRUE,  OPT_PAGE_AUTODESTROY, 7, 1,
+        "leave_special",                "Auto-destroyer leaves items your race/class needs" },
 
-    { &leave_special,               TRUE,  OPT_PAGE_AUTODESTROY, 7, 1,
-    "leave_special",                "Auto-destroyer leaves items your race/class needs" },
+        /* List Options */
 
-    /*** End of Table ***/
+        { &describe_slots,              TRUE,  OPT_PAGE_LIST, 0, 10,
+        "describe_slots",               "Show equipment slot descriptions" },
 
-    { NULL,                         0, 0, 0, 0,
-    NULL,                           NULL }
+        { &show_weights,                TRUE,  OPT_PAGE_LIST, 0, 11,
+        "show_weights",                 "Show weights in object listings" },
+
+        { &show_discounts,              TRUE,  OPT_PAGE_LIST, 0, 12,
+        "show_discounts",               "Show discounts in object listings" },
+
+        { &show_power,                  FALSE, OPT_PAGE_LIST, 2, 14,
+        "show_power",                   "Show device power in object listings (if known)" },
+
+        { &show_item_graph,             TRUE,  OPT_PAGE_LIST, 2, 0,
+        "show_item_graph",              "Show item graphics in object listings" },
+
+        { &shops_mark_unseen,           FALSE, OPT_PAGE_LIST, 0, 31,
+        "shops_mark_unseen",            "Indicate unknown flavors in shop inventories" },
+
+        { &display_distance,            FALSE,  OPT_PAGE_LIST, 1, 4,
+        "display_distance",             "Display distance in monster list" },
+
+        { &list_stairs,                 FALSE,  OPT_PAGE_LIST, 1, 10,
+        "list_stairs",                  "Display stairs in object list" },
+
+        { &show_future_powers,          TRUE,  OPT_PAGE_LIST, 1, 0,
+        "show_future_powers",           "Include known future race/class powers in lists" },
+
+        { &show_future_spells,          FALSE,  OPT_PAGE_LIST, 2, 20,
+        "show_future_spells",           "Include known future class spells in lists" },
+
+        { &auto_sticky_labels,          TRUE,  OPT_PAGE_LIST, 2, 17,
+        "auto_sticky_labels",           "Automatically make all power labels sticky" },
+
+        { &obj_list_width,              TRUE,  OPT_PAGE_LIST, 4, 0,
+        "object_list_width",            "Maximum width of the object list" },
+
+        { &mon_list_width,              TRUE,  OPT_PAGE_LIST, 4, 1,
+        "monster_list_width",           "Maximum width of the monster list" },
+
+        /*** End of Table ***/
+
+        { NULL,                         0, 0, 0, 0,
+        NULL,                           NULL }
 };
 
 
@@ -2594,23 +2643,23 @@ cptr lv_size_options[SMALL_LVL_MAX + 1] =
 
 martial_arts ma_blows[MAX_MA] =
 {
-    { "Punch",         "You punch",                                 1, 0, 1, 4, 0 },
-    { "Kick",          "You kick",                                  2, 0, 1, 6, 0 },
-    { "Strike",        "You strike",                                3, 0, 1, 7, 0 },
-    { "Knee",          "You knee",                                  5, 5, 2, 3, MA_KNEE },
-    { "Elbow",         "You elbow",                                 7, 5, 1, 8, 0 },
-    { "Butt",          "You <color:U>butt</color>",                 9, 10, 2, 5, 0 },
-    { "Kick",          "You <color:U>kick</color>",                 11, 10, 3, 4, MA_SLOW },
-    { "Uppercut",      "You <color:U>uppercut</color>",             13, 12, 4, 4, 6 },
-    { "Double Kick",   "You <color:y>double-kick</color>",          16, 15, 5, 4, 8 },
-    { "Cat's Claw",    "You land a <color:y>Cat's Claw</color>",     20, 20, 5, 5, 0 },
-    { "Jump Kick",     "You <color:y>jump kick</color>",            25, 25, 5, 6, 10 },
-    { "Eagle's Claw",  "You land an <color:o>Eagle's Claw</color>", 29, 25, 6, 6, 0 },
-    { "Circle Kick",   "You <color:o>circle kick</color>",          33, 30, 6, 8, 10 },
-    { "Iron Fist",     "You land an <color:R>Iron Fist</color>",    37, 35, 8, 8, 10 },
-    { "Flying Kick",   "You land a <color:R>flying kick</color>",   41, 35, 8, 10, 12 },
-    { "Dragon Fist",   "You land a <color:r>Dragon Fist</color>",   45, 35, 10, 10, 16 },
-    { "Crushing Blow", "You land a <color:v>Crushing Blow</color>", 48, 35, 10, 12, 18 },
+    { "Punch",         "You punch.",                                 1, 0, 1, 4, 0 },
+    { "Kick",          "You kick.",                                  2, 0, 1, 6, 0 },
+    { "Strike",        "You strike.",                                3, 0, 1, 7, 0 },
+    { "Knee",          "You knee.",                                  5, 5, 2, 3, MA_KNEE },
+    { "Elbow",         "You elbow.",                                 7, 5, 1, 8, 0 },
+    { "Butt",          "You <color:U>butt</color>.",                 9, 10, 2, 5, 0 },
+    { "Kick",          "You <color:U>kick</color>.",                 11, 10, 3, 4, MA_SLOW },
+    { "Uppercut",      "You <color:U>uppercut</color>.",             13, 12, 4, 4, 6 },
+    { "Double Kick",   "You <color:y>double-kick</color>.",          16, 15, 5, 4, 8 },
+    { "Cat's Claw",    "You land a <color:y>Cat's Claw</color>.",     20, 20, 5, 5, 0 },
+    { "Jump Kick",     "You <color:y>jump kick</color>.",            25, 25, 5, 6, 10 },
+    { "Eagle's Claw",  "You land an <color:o>Eagle's Claw</color>.", 29, 25, 6, 6, 0 },
+    { "Circle Kick",   "You <color:o>circle kick</color>.",          33, 30, 6, 8, 10 },
+    { "Iron Fist",     "You land an <color:R>Iron Fist</color>.",    37, 35, 8, 8, 10 },
+    { "Flying Kick",   "You land a <color:R>flying kick</color>.",   41, 35, 8, 10, 12 },
+    { "Dragon Fist",   "You land a <color:r>Dragon Fist</color>.",   45, 35, 10, 10, 16 },
+    { "Crushing Blow", "You land a <color:v>Crushing Blow</color>.", 48, 35, 10, 12, 18 },
 };
 
 /*
@@ -2688,6 +2737,49 @@ cptr silly_attacks[MAX_SILLY_ATTACK] =
     "disbelieves",
     "molests",
     "pusupusu",
+    "wipes",
+
+    "bowdlerizes",
+    "decomposes",
+    "eats",
+    "drinks",
+    "disrobes",
+
+    "minimizes",
+    "sits on",
+    "decompresses",
+    "pulverises",
+    "gropes",
+
+    "dismembers",
+    "sneezes at",
+    "flays",
+    "debones",
+    "sucker-punches",
+
+    "erases",
+    "paws",
+    "vomits on",
+    "disembowels",
+    "overwrites",
+
+    "initializes",
+    "headpats",
+    "smacks",
+    "bounces",
+    "nerfs",
+
+    "defenestrates",
+    "deletes",
+    "caresses",
+    "petrifies",
+    "nags at",
+
+    "discombobulates",
+    "violates",
+    "bores",
+    "sprays pink paint on",
+    "autocorrects",
 };
 
 
@@ -2709,7 +2801,7 @@ cptr ident_info[] =
     "):A shield",
     "*:A vein with treasure or a ball monster",
     "+:A closed door",
-    ",:Mushroom patch",
+    ",:Food (or mushroom patch)",
     "-:A wand (or rod)",
     ".:Floor",
     "/:A polearm (Axe/Pike/etc)",
@@ -2730,7 +2822,7 @@ cptr ident_info[] =
     ">:A down staircase",
     "?:A scroll",
     "@:You",
-    "A:Archon",
+    "A:Angel",
     "B:Bird",
     "C:Canine",
     "D:Ancient Dragon/Wyrm",
@@ -2921,22 +3013,5 @@ byte feature_action_flags[FF_FLAG_MAX] =
     0, /* ROGUE_TRAP_3 */
     0, /* WEB */
     0, /* SEMI_PUN */
-};
-
-cptr PROFICIENCIES[MAX_PROFICIENCIES] =
-{
-    "Digging Tools",
-    "Hafted Weapons",
-    "Polearms",
-    "Swords",
-    "Staves",
-    "Axes",
-    "Daggers",
-    "Bows",
-    "Crossbows",
-    "Slings",
-    "Martial Arts",
-    "Dual Wielding",
-    "Riding",
-    "Innate Attacks"
+    0, /* SHADOW_ZAP */
 };

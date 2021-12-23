@@ -216,18 +216,6 @@ static bool _inscribe_pack_hack = FALSE;
 #define ADD_FLG_NOUN(FLG) (ADD_FLG(FLG), prev_flg = FLG)
 #define IS_FLG(FLG) (entry->flag[FLG / 32] & (1L << (FLG % 32)))
 
-/* Always fully know basic items */
-bool_hack simple_item_check(object_type *o_ptr)
-{
-	/* Only for weapons, armor, lites and ammo */
-	if (o_ptr->tval >= TV_SHOT && o_ptr->tval <= TV_LITE)
-	{
-		identify_item(o_ptr);
-		return TRUE;
-	}
-
-	return FALSE;
-}
 
 /*
  * A function to create new entry
@@ -587,7 +575,8 @@ bool object_is_icky(object_type *o_ptr, bool assume_id)
         class_t *class_ptr = get_class();
         if ((o_ptr->tval == TV_GLOVES) && (class_ptr->caster_info) && ((assume_id) || (obj_is_identified(o_ptr)) || (o_ptr->feeling == FEEL_AVERAGE) || (o_ptr->feeling == FEEL_GOOD)))
         {
-            if (get_caster_info()->options & CASTER_GLOVE_ENCUMBRANCE)
+            caster_info *caster_ptr = get_caster_info();
+            if ((caster_ptr) && (caster_ptr->options & CASTER_GLOVE_ENCUMBRANCE))
             {
                 u32b flgs[OF_ARRAY_SIZE];
                 obj_flags(o_ptr, flgs);
@@ -693,7 +682,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         /* Ego objects */
         if (object_is_ego(o_ptr))
         {
-            if (object_is_weapon_armor_ammo(o_ptr))
+            if (object_is_weapon_armour_ammo(o_ptr))
             {
                 /*
                  * Base name of ego weapons and armors
@@ -725,7 +714,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
             /* Wearable nameless object */
             if (object_is_ammo(o_ptr))
             {
-                if (o_ptr->to_h)
+                if (o_ptr->to_h || o_ptr->to_d)
                     ADD_FLG(FLG_GOOD);
                 else
                     ADD_FLG(FLG_AVERAGE);
@@ -1481,6 +1470,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (!object_is_known(o_ptr)) return FALSE;
 
         if (o_ptr->to_h <= entry->bonus &&
+            o_ptr->to_d <= entry->bonus &&
             o_ptr->to_a <= entry->bonus &&
             o_ptr->pval <= entry->bonus)
         {
@@ -1692,7 +1682,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
                 return FALSE;
 
             /* Average are not okay */
-            if (o_ptr->to_a <= 0 && (o_ptr->to_h) <= 0)
+            if (o_ptr->to_a <= 0 && (o_ptr->to_h + o_ptr->to_d) <= 0)
                 return FALSE;
         }
 
@@ -1775,7 +1765,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
                 return FALSE;
 
             /* Good are not okay */
-            if (o_ptr->to_a > 0 || (o_ptr->to_h) > 0)
+            if (o_ptr->to_a > 0 || (o_ptr->to_h + o_ptr->to_d) > 0)
                 return FALSE;
         }
 
@@ -1898,7 +1888,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     }
     else if (IS_FLG(FLG_ARMORS))
     {
-        if (!object_is_armor(o_ptr))
+        if (!object_is_armour(o_ptr))
             return FALSE;
     }
     else if (IS_FLG(FLG_SHIELDS))
@@ -2144,7 +2134,7 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
     }
 
     if (leave_equip)
-        if (object_is_weapon_armor_ammo(o_ptr)) return FALSE;
+        if (object_is_weapon_armour_ammo(o_ptr)) return FALSE;
 
     if (leave_chest)
         if ((o_ptr->tval == TV_CHEST) && o_ptr->pval) return FALSE;
@@ -2343,8 +2333,8 @@ static void _sense_object_floor(object_type *o_ptr)
     if (object_is_known(o_ptr)) return;
     if ((!obj_can_sense1(o_ptr)) && (!obj_can_sense2(o_ptr))) return;
 
-    o_ptr->ident |= IDENT_SENSE;
-    o_ptr->feeling = value_check_aux1(o_ptr);
+    o_ptr->feeling = value_check_aux1(o_ptr, TRUE);
+    if (!(o_ptr->ident & IDENT_KNOWN)) o_ptr->ident |= IDENT_SENSE;
 }
 
 /* Automatically identify objects, consuming requisite resources.
@@ -2432,7 +2422,6 @@ static void _get_obj(obj_ptr obj)
     else if ((p_ptr->auto_pseudo_id) || (p_ptr->munchkin_pseudo_id))
     {
         _sense_object_floor(obj);
-        equip_learn_flag(OF_LORE1);
     }
 
     if ((!obj) || (!obj->k_idx)) return;

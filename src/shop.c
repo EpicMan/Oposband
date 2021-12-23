@@ -484,6 +484,7 @@ static bool _create(obj_ptr obj, int k_idx, int lvl, u32b mode)
     if (mode & AM_SHUFFLING) /* Prevent shuffling for a [Sm amulet */
     {
         if ((k_info[k_idx].tval == TV_AMULET) && (have_flag(obj->flags, OF_NO_SUMMON))) return FALSE;
+        if (have_flag(obj->flags, OF_REGEN_MANA)) return FALSE;
         if ((object_is_mushroom(obj)) && ((prace_is_(RACE_SNOTLING)) || (p_ptr->prace == RACE_SNOTLING) || (p_ptr->prace == RACE_DOPPELGANGER))) return FALSE;
     }
 
@@ -568,6 +569,8 @@ static bool _general_create(obj_ptr obj, u32b mode)
     if (one_in_(50))
         k_idx = lookup_kind(TV_CAPTURE, 0);
     else if (one_in_(3))
+        k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
+    else if (one_in_(3))
         k_idx = lookup_kind(TV_POTION, SV_POTION_WATER);
     else if (one_in_(3))
         k_idx = lookup_kind(TV_FLASK, SV_FLASK_OIL);
@@ -634,13 +637,10 @@ static bool _weapon_will_buy(obj_ptr obj)
     case TV_DIGGING:
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_DAGGER:
-    case TV_HAFTED:
-    case TV_AXE:
     case TV_HISSATSU_BOOK:
     case TV_RAGE_BOOK:
         break;
-    case TV_STAVES:
+    case TV_HAFTED:
         if(obj->sval == SV_WIZSTAFF) return FALSE;
         break;
     default:
@@ -658,8 +658,6 @@ static bool _weapon_stock_p(int k_idx)
     {
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_DAGGER:
-    case TV_AXE:
         return TRUE;
     }
     return FALSE;
@@ -718,9 +716,10 @@ static bool _weapon_create(obj_ptr obj, u32b mode)
     if (!_create(obj, k_idx, l2, mode)) return FALSE;
     if ((object_is_ammo(obj)) && (p_ptr->lev < 12))
     {
-        if ((obj->to_h > 1) && (!obj->name2) && (!one_in_(3)))
+        if ((obj->to_d > 0) && (!obj->name2) && (!one_in_(3)))
         {
-            obj->to_h = 1;
+            obj->to_h = 0;
+            obj->to_d = 0;
         }
         obj->number -= (obj->number / 3);
     }
@@ -729,6 +728,7 @@ static bool _weapon_create(obj_ptr obj, u32b mode)
 		if (object_is_ammo(obj) && (!obj->name2))
 		{
 			obj->to_h = 0;
+			obj->to_d = 0;
 			obj->curse_flags = 0;
 			obj->known_curse_flags = 0;
 			return TRUE;
@@ -750,7 +750,6 @@ static bool _temple_will_buy(obj_ptr obj)
     case TV_SCROLL:
     case TV_POTION:
     case TV_HAFTED:
-    case TV_STAVES:
         break;
     case TV_FIGURINE:
     case TV_STATUE: {
@@ -765,8 +764,6 @@ static bool _temple_will_buy(obj_ptr obj)
         return FALSE; }
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_AXE:
-    case TV_DAGGER:
         if (obj_is_blessed(obj)) break;
         return FALSE;
     default:
@@ -787,7 +784,6 @@ static bool _temple_stock_p(int k_idx)
         return TRUE;
 
     case TV_HAFTED:
-    case TV_STAVES:
         return TRUE;
 
     /* Scrolls and Potions are also stocked by the Alchemist */
@@ -922,7 +918,7 @@ static bool _magic_will_buy(obj_ptr obj)
     case TV_POTION:
     case TV_FIGURINE:
         break;
-    case TV_STAVES:
+    case TV_HAFTED:
         if(obj->sval == SV_WIZSTAFF) break;
         else return FALSE;
     case TV_LITE:
@@ -1041,7 +1037,7 @@ static bool _black_market_create(obj_ptr obj, u32b mode)
     if (obj_value(obj) < 10) return FALSE;
     if (object_is_nameless(obj) && !object_is_rare(obj) && object_is_wearable(obj))
     {
-        if (obj->to_a <= 0 && obj->to_h <= 0)
+        if (obj->to_a <= 0 && obj->to_h <= 0 && obj->to_d <= 0)
             return FALSE;
     }
     return TRUE;
@@ -1528,6 +1524,15 @@ static void _loop(_ui_context_ptr context)
                 if (context->top > context->page_size)
                     context->top -= context->page_size;
                 break;
+            case SKEY_BOTTOM: case '1':
+                 while (context->top + context->page_size - 1 < max)
+                 {
+                    context->top += context->page_size;
+                 }
+                 break;
+            case SKEY_TOP: case '7':
+                 context->top = 1;
+                 break;
             default:
                 if (cmd < 256 && isprint(cmd))
                 {
@@ -1681,7 +1686,7 @@ static bool _buy_aux(shop_ptr shop, obj_ptr obj)
     obj->marked &= ~OM_WORN;
     obj->timeout = 0;
 
-    obj_identify_fully(obj);
+    obj_identify(obj);
     stats_on_purchase(obj);
 
     /* This message may seem like spam, but it is not. Selling an
@@ -1750,6 +1755,7 @@ static void _buy(_ui_context_ptr context)
     {
         obj_t copy = *prompt.obj;
         int vakuutettu = 0;
+        bool tunnettu = object_is_known(prompt.obj);
         if (prompt.obj->insured)
         {
             vakuutettu = MAX(0, (prompt.obj->insured % 100) - prompt.obj->number + amt);
@@ -1759,7 +1765,7 @@ static void _buy(_ui_context_ptr context)
         copy.number = amt;
         if (_buy_aux(context->shop, &copy))
         {
-            obj_identify_fully(prompt.obj);
+            obj_identify(prompt.obj);
             prompt.obj->number -= amt;
             if (vakuutettu) obj_dec_insured(prompt.obj, vakuutettu);
             prompt.obj->marked |= OM_DELAYED_MSG;
@@ -1768,6 +1774,7 @@ static void _buy(_ui_context_ptr context)
                 p_ptr->notice |= PN_OPTIMIZE_QUIVER;
             else if (prompt.obj->loc.where == INV_PACK)
                 p_ptr->notice |= PN_OPTIMIZE_PACK;
+            if (!tunnettu) autopick_alter_obj(prompt.obj, ((destroy_identify) && (obj_value(prompt.obj) < 1)));
         }
     }
     else
@@ -1802,9 +1809,37 @@ static void _reserve_aux(shop_ptr shop, obj_ptr obj)
     string_ptr s;
     char       c;
     char       name[MAX_NLEN];
+    int        amt = 1, maks = -1;
 
-    object_desc(name, obj, OD_COLOR_CODED);
-    s = string_alloc_format("Reserve %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, cost);
+    if (obj->number > 1)
+    {
+        maks = obj->number;
+        if ((limit_shop_prompts) && ((cost * maks) > p_ptr->au)) maks = p_ptr->au / cost;
+        if (maks > 1)
+        {
+            amt = maks;
+            if (!msg_input_num("Quantity", &amt, 1, maks)) return;
+        }
+    }
+
+    if (maks > 0)
+    {
+        int mode = (OD_OMIT_PREFIX | OD_COLOR_CODED);
+        if (amt == 1) mode |= OD_SINGULAR;
+        object_desc(name, obj, mode);
+        cost *= amt;
+        s = string_alloc_format("Reserve <color:%c>%d</color> %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", tval_to_attr_char(obj->tval), amt, name, cost);
+    }
+    else if (maks < 0)
+    {
+        object_desc(name, obj, OD_COLOR_CODED);
+        s = string_alloc_format("Reserve %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, cost);
+    }
+    else
+    {
+        msg_print("You don't have enough gold.");
+        return;
+    }
     c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
     string_free(s);
     if (c == 'n') return;
@@ -1820,7 +1855,10 @@ static void _reserve_aux(shop_ptr shop, obj_ptr obj)
     if (prace_is_(RACE_MON_LEPRECHAUN))
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
+    obj->number = amt;
+    object_desc(name, obj, OD_COLOR_CODED);
     obj->marked |= OM_RESERVED;
+
     msg_format("Done! I'll hold on to %s for you. You may come back at any time to purchase it.", name);
 }
 
@@ -1889,7 +1927,7 @@ static bool _sell_aux(shop_ptr shop, obj_ptr obj)
      * we need to avoid overwriting such items' original origins */
     if ((!obj->origin_type) || (obj->origin_type == ORIGIN_MIXED)) object_origins(obj, ORIGIN_STORE);
 
-    obj_identify_fully(obj);
+    obj_identify(obj);
     stats_on_purchase(obj);
 
     if (shop->type->id == SHOP_BLACK_MARKET)
@@ -1933,9 +1971,21 @@ static void _sell(_ui_context_ptr context)
         obj = inv_obj(context->shop->inv, slot);
         if (!obj) continue;
 
-        if (obj->number > 1)
+//        if (obj->number > 1)
         {
-            if (!msg_input_num("Quantity", &amt, 1, obj->number)) continue;
+            int maks = obj->number;
+            if (limit_shop_prompts)
+            {
+                int price = obj_value(obj);
+                price = _sell_price(context->shop, price);
+                if ((price * maks) > p_ptr->au) maks = p_ptr->au / price;
+            }
+            if ((maks > 1) && (!msg_input_num("Quantity", &amt, 1, maks))) continue;
+            else if (maks < 1)
+            {
+                msg_print("You do not have enough gold.");
+                return;
+            }
         }
 
         if (amt < obj->number)
@@ -2008,7 +2058,7 @@ static void _sellout(shop_ptr shop)
             obj->feeling = FEEL_NONE;
             obj->marked &= ~OM_RESERVED;
 
-            obj_identify_fully(obj);
+            obj_identify(obj);
 
             if (!destroy)
             {
@@ -2207,6 +2257,9 @@ static int _restock(shop_ptr shop, int target, bool is_shuffle)
         mode |= AM_STOCK_BM;
 
     if (is_shuffle) mode |= AM_SHUFFLING;
+
+    if (target > _STOCK_HI) target = _STOCK_HI; /* paranoia */
+    if (ct > target) return ct; /* Too many reserved items... */
 
     assert(ct <= target);
     for (attempt = 1; ct < target && attempt < 100; attempt++)
@@ -2625,6 +2678,65 @@ void birth_shop_items(void)
     _town_add_shop_item(town, SHOP_ALCHEMIST, lookup_kind(TV_SCROLL, SV_SCROLL_PHASE_DOOR), 1);
     _town_add_shop_item(town, SHOP_ALCHEMIST, lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT), 1);
     _town_add_shop_item(town, SHOP_WEAPON, lookup_kind(TV_QUIVER, 0), 1);
+    if ((p_ptr->pclass == CLASS_SKILLMASTER) || /* (p_ptr->pclass == CLASS_SORCERER) || */
+        (p_ptr->pclass == CLASS_GRAY_MAGE) || (p_ptr->pclass == CLASS_RED_MAGE))
+    {
+        _town_add_shop_item(town, SHOP_WEAPON, lookup_kind(TV_HISSATSU_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_TEMPLE, lookup_kind(TV_LIFE_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_TEMPLE, lookup_kind(TV_CRUSADE_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_ARCANE_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_SORCERY_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_NATURE_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_CHAOS_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_DEATH_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_TRUMP_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_CRAFT_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_DAEMON_BOOK, 0), 1);
+        _town_add_shop_item(town, SHOP_BOOK, lookup_kind(TV_ARMAGEDDON_BOOK, 0), 1);
+    }
+    else
+    {
+        if (p_ptr->realm1)
+        {
+            int _shop = SHOP_BOOK, _book = realm2tval(p_ptr->realm1);
+            switch (_book)
+            {
+                 case TV_LIFE_BOOK:
+                 case TV_CRUSADE_BOOK:
+                     _shop = SHOP_TEMPLE;
+                     break;
+                 case TV_RAGE_BOOK:
+                 case TV_HISSATSU_BOOK:
+                     _shop = SHOP_WEAPON;
+                     break;
+                 case TV_BURGLARY_BOOK:
+                     _shop = SHOP_BLACK_MARKET;
+                     break;
+                 default: break;
+            }
+            _town_add_shop_item(town, _shop, lookup_kind(_book, 1), 1);
+        }
+        if (p_ptr->realm2)
+        {
+            int _shop = SHOP_BOOK, _book = realm2tval(p_ptr->realm2);
+            switch (_book)
+            {
+                 case TV_LIFE_BOOK:
+                 case TV_CRUSADE_BOOK:
+                     _shop = SHOP_TEMPLE;
+                     break;
+                 case TV_RAGE_BOOK:
+                 case TV_HISSATSU_BOOK:
+                     _shop = SHOP_WEAPON;
+                     break;
+                 case TV_BURGLARY_BOOK:
+                     _shop = SHOP_BLACK_MARKET;
+                     break;
+                 default: break;
+            }
+            _town_add_shop_item(town, _shop, lookup_kind(_book, 1), 1);
+        }
+    }
 }
 
 /************************************************************************

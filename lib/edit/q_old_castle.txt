@@ -26,7 +26,7 @@ T:QUEST:NORMAL
 ###################################
 # The Monsters
 L:a:MON(anti-paladin)
-L:A:MON(darkened archon)
+L:A:MON(fallen angel)
 L:C:MON(crypt thing)
 L:d:MON(time bomb)
 L:E:MON(enchantress)
@@ -141,6 +141,12 @@ R:ART(stone of war)
 R:ART(jack of shadows)
 ?:[AND [EQU $RACE Hound] [GEQ [MOD $RANDOM27 5] 1] ]
 R:ART(harness of the hell)
+##########################################################################
+# Mummy
+?:[AND [EQU $RACE Mummy] [EQU [MOD $RANDOM27 5] 0] ]
+R:ART(thingol)
+?:[AND [EQU $RACE Mummy] [GEQ [MOD $RANDOM27 5] 1] ]
+R:ART(ingwe)
 ##########################################################################
 # Hydra
 ?:[AND [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [EQU [MOD $RANDOM27 5] 0] ]

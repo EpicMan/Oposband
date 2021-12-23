@@ -22,9 +22,10 @@ Welcome to the Online Help System
     Advanced Topics:
     [p] Options
     [q] User Preference Files
-    [r] The Proficiency System
-    [s] The Mogaminator
-    [t] Subwindows
+    [r] The Speed System
+    [s] The Proficiency System
+    [t] The Mogaminator
+    [u] Subwindows
 
     (?) Help System Commands
 

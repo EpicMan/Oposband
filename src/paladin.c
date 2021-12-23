@@ -12,27 +12,27 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
         add_flag(flgs, OF_RES_FEAR);
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_good_powers[] =
 {
-    int ct = 0;
-    spell_info* spell = &spells[ct++];
+    { A_WIS, { 30, 30, 70, holy_lance_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
+static power_info _get_evil_powers[] =
+{
+    { A_WIS, { 30, 30, 70, hell_lance_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
+static power_info *_get_powers(void)
+{
     if (is_good_realm(p_ptr->realm1))
     {
-        spell->level = 30;
-        spell->cost = 30;
-        spell->fail = calculate_fail_rate(spell->level, 70, p_ptr->stat_ind[A_WIS]);
-        spell->fn = holy_lance_spell;
+        return _get_good_powers;
     }
     else
     {
-        spell->level = 30;
-        spell->cost = 30;
-        spell->fail = calculate_fail_rate(spell->level, 70, p_ptr->stat_ind[A_WIS]);
-        spell->fn = hell_lance_spell;
+        return _get_evil_powers;
     }
-
-    return ct;
 }
 
 static caster_info * _caster_info(void)
@@ -54,26 +54,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
-    py_birth_obj_aux(TV_HARD_ARMOR, SV_BREASTPLATE, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_HARD_ARMOR, SV_RING_MAIL, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *paladin_get_class(void)
@@ -102,7 +85,7 @@ class_t *paladin_get_class(void)
                     "Life/Crusade Paladin. Paladins receive one class power, 'Holy Lance' "
                     "or 'Hell Lance', depending on the alignment of their realm.";
 
-        me.stats[A_STR] =  3;
+        me.stats[A_STR] =  2;
         me.stats[A_INT] = -3;
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  0;
@@ -110,7 +93,7 @@ class_t *paladin_get_class(void)
         me.stats[A_CHR] =  2;
         me.base_skills = bs;
         me.extra_skills = xs;
-        me.life = 111;
+        me.life = 110;
         me.base_hp = 12;
         me.exp = 135;
         me.pets = 40;
@@ -122,7 +105,7 @@ class_t *paladin_get_class(void)
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/
-        me.get_powers = _get_powers;
+        me.get_powers_fn = _get_powers;
         me.character_dump = spellbook_character_dump;
         me.get_flags = _get_flags;
         init = TRUE;

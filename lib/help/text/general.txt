@@ -1,7 +1,7 @@
 General Information
 
-This document gives a brief introduction to the game. FrogComposband is 
-a single-player dungeon simulation; you play a character whose ultimate 
+This document gives a brief introduction to the game. Oposband is a 
+single-player dungeon simulation; you play a character whose ultimate 
 aim is to slay the dreaded Serpent of Chaos, who lurks somewhere in the 
 dark depths of the dungeon. Along the way, you will complete many side 
 missions, learn mighty magical spells, defeat or befriend fantastic 
@@ -13,8 +13,8 @@ wrong, and hopefully end up enjoying yourself a lot.
 About the Help Files
 
 You have probably seen many games that come with a 300-page manual the 
-authors expect you to read before you start to play. FrogComposband is 
-like that, except its manual is not as pocket-sized.
+authors expect you to read before you start to play. Oposband is like 
+that, except its manual is not as pocket-sized.
 
 Of course you do not really have to read the whole thing before you 
 play; you can just jump in, figure things out through play, and look up 
@@ -299,13 +299,7 @@ try along the way. Good luck, and enjoy!
 
 
 --
-Original   : (??)
-Updated    : (??)
-Updated    : Zangband DevTeam
-Updated    : Hengband 1.5.4
-Updated    : PosChengband 4.0.0
-Updated    : FrogComposband 7.0.nougat
-Updated    : FrogComposband 7.1.liquorice
+Last Updated: Oposband 0.4.0
 
   
 

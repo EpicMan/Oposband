@@ -147,6 +147,16 @@ cptr info_power(int power)
     return format("power %d", power);
 }
 
+/*
+ * Generate level info string such as "lvl 50" or "lvl 50+1d50"
+ */
+cptr info_level(int base, int sides)
+{
+    if (!sides) return format("lvl %d", base);
+    else if (!base) return format("lvl 1d%d", sides);
+    else return format("lvl %d+1d%d", base, sides);
+}
+
 
 /*
  * Generate power info string such as "power 1d100"
@@ -493,6 +503,9 @@ void do_sneeze(void)
         project(0, 0, y, x, p_ptr->lev / 2, GF_COLD,
             PROJECT_BEAM | PROJECT_THRU | PROJECT_GRID | PROJECT_KILL);
     }
+
+    /* Loud sneezing alerts monsters */
+    aggravate_monsters(0);
 }
 
 static void wild_magic(int spell)
@@ -1095,7 +1108,7 @@ static cptr do_life_spell(int spell, int mode)
         if (name) return "Satisfy Hunger";
         if (desc) return "Satisfies hunger.";
         if (cast)
-            return "You feel full!";
+            set_food(PY_FOOD_MAX - 1);
         break;
     case 8:
         if (name) return "Remove Curse";
@@ -1125,6 +1138,7 @@ static cptr do_life_spell(int spell, int mode)
                 return NULL;
             }
             msg_print("You begin to fast.");
+            set_food(p_ptr->food/2);
             p_ptr->redraw |= PR_STATUS;
             p_ptr->fasting = TRUE;
         }
@@ -1151,7 +1165,7 @@ static cptr do_life_spell(int spell, int mode)
 
     case 11:
         if (name) return "Resist Heat and Cold";
-        if (desc) return "Gives resistance to fire and cold.";
+        if (desc) return "Gives temporary resistance to fire and cold.";
 
         {
             int base = spell_power(20);
@@ -1160,8 +1174,9 @@ static cptr do_life_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_fire(randint1(base) + base, FALSE);
+                int dur = randint1(base) + base;
+                set_oppose_cold(dur, FALSE);
+                set_oppose_fire(dur, FALSE);
             }
         }
         break;
@@ -1477,16 +1492,13 @@ static cptr do_life_spell(int spell, int mode)
         break;
 
     case 30:
-        if (name) return "Day of the Dove";
-        if (desc) return "Attempts to charm all monsters in sight.";
+        if (name) return "Holy Vision";
+        if (desc) return "Fully identifies an item.";
+
         {
-			int power = spell_power(p_ptr->lev * 2);
-
-			if (info) return info_power(power);
-
             if (cast)
             {
-				charm_monsters(power);
+                if (!identify_fully(NULL)) return NULL;
             }
         }
         break;
@@ -1505,11 +1517,7 @@ static cptr do_life_spell(int spell, int mode)
             {
                 int v = randint1(base) + base;
                 set_fast(v, FALSE);
-                set_oppose_acid(v, FALSE);
-                set_oppose_elec(v, FALSE);
-                set_oppose_fire(v, FALSE);
-                set_oppose_cold(v, FALSE);
-                set_oppose_pois(v, FALSE);
+                set_oppose_base(v, FALSE);
                 set_ultimate_res(v, FALSE);
             }
         }
@@ -1725,7 +1733,7 @@ static cptr do_sorcery_spell(int spell, int mode)
             {
                 if (!get_fire_dir(&dir)) return NULL;
 
-                slow_monster(dir);
+                slow_monster(dir, power);
             }
         }
         break;
@@ -1809,15 +1817,13 @@ static cptr do_sorcery_spell(int spell, int mode)
         break;
 
     case 15:
-		if (name) return "Conjure Elemental";
-        if (desc) return "Summons an elemental";
+        if (name) return "Identify True";
+        if (desc) return "*Identifies* an item.";
+
         {
             if (cast)
             {
-				if (!summon_specific(-1, py, px, plev, SUMMON_ELEMENTAL, (PM_ALLOW_GROUP | PM_FORCE_PET)))
-				{
-					msg_print("No Elementals arrive.");
-				}
+                if (!identify_fully(NULL)) return NULL;
             }
         }
         break;
@@ -1933,21 +1939,13 @@ static cptr do_sorcery_spell(int spell, int mode)
         break;
 
     case 24:
-        if (name) return "Word of Power";
-        if (desc) return "Attempts to stun and slow a monster";
+        if (name) return "Probing";
+        if (desc) return "Proves all monsters' alignment, HP, speed and their true character.";
 
         {
             if (cast)
             {
-				int dir;
-				int power = spell_power(p_ptr->lev * 2);
-				if (!get_fire_dir(&dir)) return NULL;
-
-				/* Slow monsters powerfully */
-				int flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
-				project_hook(GF_OLD_SLOW, dir, power, flg);
-
-				stun_monster(dir, 5 + p_ptr->lev / 5);
+                probing();
             }
         }
         break;
@@ -2139,19 +2137,18 @@ static cptr do_nature_spell(int spell, int mode)
         break;
 
     case 3:
-        if (name) return "Grow Mushrooms";
-        if (desc) return "Produces a mushroom.";
+        if (name) return "Produce Food";
+        if (desc) return "Produces a Ration of Food.";
 
         {
             if (cast)
             {
                 object_type forge, *q_ptr = &forge;
 
-                msg_print("A mushroom suddenly sprouts from the ground.");
+                msg_print("A food ration is produced.");
 
                 /* Create the food ration */
-                int which_one = randint0(1 + SV_FOOD_MAX_MUSHROOM);
-                object_prep(q_ptr, lookup_kind(TV_FOOD, which_one));
+                object_prep(q_ptr, lookup_kind(TV_FOOD, SV_FOOD_RATION));
                 object_origins(q_ptr, ORIGIN_ACQUIRE);
 
                 /* Drop the object from heaven */
@@ -2210,9 +2207,10 @@ static cptr do_nature_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_fire(randint1(base) + base, FALSE);
-                set_oppose_elec(randint1(base) + base, FALSE);
+                int dur = randint1(base) + base;
+                set_oppose_cold(dur, FALSE);
+                set_oppose_fire(dur, FALSE);
+                set_oppose_elec(dur, FALSE);
             }
         }
         break;
@@ -2458,11 +2456,7 @@ static cptr do_nature_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_acid(randint1(base) + base, FALSE);
-                set_oppose_elec(randint1(base) + base, FALSE);
-                set_oppose_fire(randint1(base) + base, FALSE);
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_pois(randint1(base) + base, FALSE);
+                set_oppose_base(randint1(base) + base, FALSE);
             }
         }
         break;
@@ -2481,12 +2475,12 @@ static cptr do_nature_spell(int spell, int mode)
 
     case 20:
         if (name) return "Stone Tell";
-        if (desc) return "Identifies an item.";
+        if (desc) return "*Identifies* an item.";
 
         {
             if (cast)
             {
-                if (!ident_spell(NULL)) return NULL;
+                if (!identify_fully(NULL)) return NULL;
             }
         }
         break;
@@ -3561,8 +3555,9 @@ static cptr do_death_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_pois(randint1(base) + base, FALSE);
+                int dur = randint1(base) + base;
+                set_oppose_cold(dur, FALSE);
+                set_oppose_pois(dur, FALSE);
             }
         }
         break;
@@ -3741,6 +3736,23 @@ static cptr do_death_spell(int spell, int mode)
                     virtue_add(VIRTUE_VITALITY, -1);
 
                     hp_player(dam);
+
+                    /*
+                     * Gain nutritional sustenance:
+                     * 150/hp drained
+                     *
+                     * A Food ration gives 5000
+                     * food points (by contrast)
+                     * Don't ever get more than
+                     * "Full" this way But if we
+                     * ARE Gorged, it won't cure
+                     * us
+                     */
+                    dam = p_ptr->food + MIN(5000, 100 * dam);
+
+                    /* Not gorged already */
+                    if (p_ptr->food < PY_FOOD_MAX)
+                        set_food(dam >= PY_FOOD_MAX ? PY_FOOD_MAX - 1 : dam);
                 }
             }
         }
@@ -3982,12 +3994,19 @@ static cptr do_death_spell(int spell, int mode)
 
     case 26:
         if (name) return "Esoteria";
-        if (desc) return "Identifies an item.";
+        if (desc) return "Identifies an item. Or *identifies* an item at higher level.";
 
         {
             if (cast)
             {
-                if (!ident_spell(NULL)) return NULL;
+                if (randint1(50) > spell_power(plev))
+                {
+                    if (!ident_spell(NULL)) return NULL;
+                }
+                else
+                {
+                    if (!identify_fully(NULL)) return NULL;
+                }
             }
         }
         break;
@@ -4147,6 +4166,7 @@ static cptr do_trump_spell(int spell, int mode)
 
             if (cast)
             {
+                /*if (TRUE || get_check("Are you sure you wish to shuffle?"))*/
                 cast_shuffle();
             }
         }
@@ -4591,12 +4611,12 @@ static cptr do_trump_spell(int spell, int mode)
 
     case 25:
         if (name) return "Trump Lore";
-        if (desc) return "Identifies an item.";
+        if (desc) return "*Identifies* an item.";
 
         {
             if (cast)
             {
-                if (!ident_spell(NULL)) return NULL;
+                if (!identify_fully(NULL)) return NULL;
             }
         }
         break;
@@ -5141,7 +5161,7 @@ static cptr do_arcane_spell(int spell, int mode)
         {
             if (cast)
             {
-                return "You feel full!";
+                set_food(PY_FOOD_MAX - 1);
             }
         }
         break;
@@ -5293,8 +5313,8 @@ static cptr do_arcane_spell(int spell, int mode)
 }
 
 static bool _can_enchant(obj_ptr obj) {
-    if (object_is_(obj, TV_DAGGER, SV_POISON_NEEDLE)) return FALSE;
-    return object_is_weapon_armor_ammo(obj);
+    if (object_is_(obj, TV_SWORD, SV_POISON_NEEDLE)) return FALSE;
+    return object_is_weapon_armour_ammo(obj);
 }
 bool craft_enchant(int max, int inc)
 {
@@ -5330,6 +5350,13 @@ bool craft_enchant(int max, int inc)
         {
             prompt.obj->to_h = MIN(max, prompt.obj->to_h + inc);
             if (prompt.obj->to_h >= 0)
+                break_curse(prompt.obj);
+            improved = TRUE;
+        }
+        if (prompt.obj->to_d < max)
+        {
+            prompt.obj->to_d = MIN(max, prompt.obj->to_d + inc);
+            if (prompt.obj->to_d >= 0)
                 break_curse(prompt.obj);
             improved = TRUE;
         }
@@ -5412,7 +5439,7 @@ static cptr do_craft_spell(int spell, int mode)
         {
             if (cast)
             {
-                return "You feel full!";
+                set_food(PY_FOOD_MAX - 1);
             }
         }
         break;
@@ -5657,11 +5684,7 @@ static cptr do_craft_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_acid(randint1(base) + base, FALSE);
-                set_oppose_elec(randint1(base) + base, FALSE);
-                set_oppose_fire(randint1(base) + base, FALSE);
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_pois(randint1(base) + base, FALSE);
+                set_oppose_base(randint1(base) + base, FALSE);
             }
         }
         break;
@@ -5774,19 +5797,13 @@ static cptr do_craft_spell(int spell, int mode)
         break;
 
     case 26:
-        if (name) return "Create Golem";
-        if (desc) return "Creates a golem.";
+        if (name) return "Knowledge True";
+        if (desc) return "*Identifies* an item.";
+
         {
             if (cast)
             {
-				if (summon_specific(-1, py, px, plev, SUMMON_GOLEM, PM_FORCE_PET))
-				{
-					msg_print("You make a golem.");
-				}
-				else
-				{
-					msg_print("You fail to enchant the rubble.");
-				}
+                if (!identify_fully(NULL)) return NULL;
             }
         }
         break;
@@ -6649,7 +6666,7 @@ static cptr do_crusade_spell(int spell, int mode)
 
     case 9:
         if (name) return "Holy Orb";
-        if (desc) return "Fires a ball with holy power. Hurts evil monsters greatly, but don't effect good monsters.";
+        if (desc) return "Fires a ball of holy power. Hurts evil monsters greatly, but doesn't affect good monsters.";
 
         {
             int dice = 3;
@@ -6817,7 +6834,7 @@ static cptr do_crusade_spell(int spell, int mode)
         break;
 
     case 18:
-        if (name) return "Astral Cloak";
+        if (name) return "Angelic Cloak";
         if (desc) return "Gives resistance to acid, cold and lightning. Gives aura of holy power which injures evil monsters which attacked you for a while.";
 
         {
@@ -6827,10 +6844,11 @@ static cptr do_crusade_spell(int spell, int mode)
 
             if (cast)
             {
-                set_oppose_acid(randint1(base) + base, FALSE);
-                set_oppose_cold(randint1(base) + base, FALSE);
-                set_oppose_elec(randint1(base) + base, FALSE);
-                set_tim_sh_holy(randint1(base) + base, FALSE);
+                int dur = randint1(base) + base;
+                set_oppose_acid(dur, FALSE);
+                set_oppose_cold(dur, FALSE);
+                set_oppose_elec(dur, FALSE);
+                set_tim_sh_holy(dur, FALSE);
             }
         }
         break;
@@ -6902,8 +6920,8 @@ static cptr do_crusade_spell(int spell, int mode)
         break;
 
     case 23:
-        if (name) return "Summon Archon";
-        if (desc) return "Summons an archon.";
+        if (name) return "Summon Angel";
+        if (desc) return "Summons an angel.";
 
         {
             if (cast)
@@ -7577,7 +7595,7 @@ static cptr do_music_spell(int spell, int mode)
 
             if (!p_ptr->oppose_elec)
             {
-                msg_print("You feel less resistant to elec.");
+                msg_print("You feel less resistant to electricity.");
             }
 
             if (!p_ptr->oppose_fire)
@@ -7979,7 +7997,7 @@ static cptr do_music_spell(int spell, int mode)
                 p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
 
                 /* Take an extra turn */
-                p_ptr->energy_need += ENERGY_NEED();
+                p_ptr->energy_need += PY_ENERGY_NEED();
             }
         }
 
@@ -7999,9 +8017,6 @@ static bool item_tester_hook_weapon_except_bow(object_type *o_ptr)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
-        case TV_DAGGER:
-        case TV_AXE:
-        case TV_STAVES:
         case TV_DIGGING:
         {
             return (TRUE);
@@ -8123,6 +8138,11 @@ static cptr do_hex_spell(int spell, int mode)
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
                 {
+                    if (prompt.obj->to_d > 0)
+                    {
+                        prompt.obj->to_d -= randint1(3) % 2;
+                        if (prompt.obj->to_d < 0) prompt.obj->to_d = 0;
+                    }
                     if (prompt.obj->to_h > 0)
                     {
                         prompt.obj->to_h -= randint1(3) % 2;
@@ -8159,7 +8179,10 @@ static cptr do_hex_spell(int spell, int mode)
                     }
                 }
 
-                prompt.obj->curse_flags |= get_curse(power, prompt.obj);
+                /* Clouded says getting actual bad curses on Hex objects is annoying,
+                 * so we only rarely do it */
+                if ((power > 0) || (one_in_(26))) prompt.obj->curse_flags |= get_curse(power, prompt.obj);
+                else if (one_in_(2)) prompt.obj->curse_flags |= (OFC_ALLERGY);
             }
 
             p_ptr->update |= (PU_BONUS);
@@ -8213,7 +8236,10 @@ static cptr do_hex_spell(int spell, int mode)
                     project(0, rad, py, px, power, GF_HELL_FIRE,
                         (PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL));
                 }
-                msg_format("You return %d damage.", power);
+                if (p_ptr->wizard || TRUE)
+                {
+                    msg_format("You return %d damages.", power);
+                }
 
                 /* Reset */
                 p_ptr->magic_num2[1] = 0;
@@ -8386,16 +8412,16 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 20:
         if (name) return "Curse armor";
-        if (desc) return "Curse a piece of armor that you wielding.";
+        if (desc) return "Curse a piece of armour that you wielding.";
         if (cast)
         {
             obj_prompt_t prompt = {0};
             char o_name[MAX_NLEN];
             u32b f[OF_ARRAY_SIZE];
 
-            prompt.prompt = "Which piece of armor do you curse?";
-            prompt.error = "You are not wearing any armor pieces.";
-            prompt.filter = object_is_armor;
+            prompt.prompt = "Which piece of armour do you curse?";
+            prompt.error = "You wield no piece of armours.";
+            prompt.filter = object_is_armour;
             prompt.where[0] = INV_EQUIP;
 
             obj_prompt(&prompt);
@@ -8412,6 +8438,11 @@ static cptr do_hex_spell(int spell, int mode)
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
                 {
+                    if (prompt.obj->to_d > 0)
+                    {
+                        prompt.obj->to_d -= randint1(3) % 2;
+                        if (prompt.obj->to_d < 0) prompt.obj->to_d = 0;
+                    }
                     if (prompt.obj->to_h > 0)
                     {
                         prompt.obj->to_h -= randint1(3) % 2;
@@ -8564,8 +8595,11 @@ static cptr do_hex_spell(int spell, int mode)
             {
                 if (p_ptr->stat_cur[i] < p_ptr->stat_max[i])
                 {
-                    p_ptr->stat_cur[i]++;
-					
+                    if (p_ptr->stat_cur[i] < 18)
+                        p_ptr->stat_cur[i]++;
+                    else
+                        p_ptr->stat_cur[i] += 10;
+
                     if (p_ptr->stat_cur[i] > p_ptr->stat_max[i])
                         p_ptr->stat_cur[i] = p_ptr->stat_max[i];
 
@@ -8755,13 +8789,16 @@ static cptr do_hex_spell(int spell, int mode)
 
                     do
                     {
-                        msg_print("Time for revenge!");
+                        msg_print("Time to revenge!");
                     }
                     while (!get_fire_dir(&dir));
 
                     fire_ball(GF_HELL_FIRE, dir, power, 1);
 
-                    msg_format("You return %d damage.", power);
+                    if (p_ptr->wizard || TRUE)
+                    {
+                        msg_format("You return %d damages.", power);
+                    }
                 }
                 else
                 {

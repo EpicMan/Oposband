@@ -163,16 +163,34 @@ void quest_complete(quest_ptr q, point_t p)
     {
         int x = p.x;
         int y = p.y;
-        int nx,ny;
+        int dist = 1;
+        int yrk = 50, maxyrk = 50;
+        int nx = x, ny = y;
 
-        while (cave_perma_bold(y, x) || cave[y][x].o_idx || (cave[y][x].info & CAVE_OBJECT) )
+        while (cave_perma_bold(y, x) || cave[ny][nx].o_idx || (cave[ny][nx].info & CAVE_OBJECT) )
         {
-            scatter(&ny, &nx, y, x, 1, 0);
-            y = ny; x = nx;
+            scatter(&ny, &nx, y, x, dist, 0);
+            yrk--;
+            if ((yrk > (maxyrk / 2)) && (!projectable(py, px, ny, nx))) continue;
+            if (!yrk)
+            {
+                dist++;
+                maxyrk = MIN(120, 50 + (20 * dist));
+                yrk = maxyrk;
+                if (dist > 10) /* Screw this */
+                {
+                    ny = y;
+                    nx = x;
+                    break;
+                }
+            }
         }
+        y = ny; x = nx;
 
         cmsg_print(TERM_L_BLUE, "A magical staircase appears...");
-        if ((!coffee_break) || (dun_level == 99))
+        /* The following check must use dungeon_type since it may not match
+         * q->dungeon */
+        if (((!coffee_break) && (!(d_info[dungeon_type].flags1 & DF1_ALL_SHAFTS))) || (dun_level == 99))
         {
             cave_set_feat(y, x, feat_down_stair);
         }
@@ -247,14 +265,13 @@ void quest_complete(quest_ptr q, point_t p)
         if (!p_ptr->noscore) p_ptr->total_winner = TRUE;
 
         /* Redraw the "title" */
-        if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->pclass == CLASS_CHAOS_MAGE) || mut_present(MUT_CHAOS_GIFT))
+        if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || mut_present(MUT_CHAOS_GIFT))
         {
             msg_format("The voice of %s booms out:", chaos_patrons[p_ptr->chaos_patron]);
             msg_print("'Thou art donst well, mortal!'");
         }
 
         /* Congratulations */
-		/* TODO: Maybe change verbiage so suicide isn't the end? */
         msg_print("*** CONGRATULATIONS ***");
         msg_print("You have won the game!");
         msg_print("You may retire (commit suicide) when you are ready.");
@@ -279,7 +296,7 @@ void quest_reward(quest_ptr q)
     if (reward)
     {
         /*char name[MAX_NLEN];*/
-        obj_identify_fully(reward);
+        obj_identify(reward);
         /*object_desc(name, reward, OD_COLOR_CODED);
         msg_format("You receive %s as a reward.", name);*/
         pack_carry(reward);
@@ -1046,6 +1063,7 @@ void get_purple_questor(quest_ptr q)
         if (r_ptr->rarity > 100) continue;
         if (r_ptr->flags7 & RF7_FRIENDLY) continue;
         if (r_ptr->flags7 & RF7_AQUATIC) continue;
+        if (r_ptr->flags3 & RF3_COMPOST) continue;
         if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
         if (r_ptr->flags7 & (RF7_UNIQUE2 | RF7_NAZGUL)) continue;
         if (r_ptr->flagsx & RFX_SUPPRESS) continue; /* paranoia */
@@ -1144,6 +1162,8 @@ static int _quest_dungeon(quest_ptr q)
     /* move wargs quest from 'Warrens' to 'Angband' */
     if (d && no_wilderness)
         d = DUNGEON_ANGBAND;
+    /* handle suppressed dungeons, make big honking assumption */
+    if ((d) && (d_info[d].flags1 & DF1_SUPPRESSED)) d = d_info[d].alt;
     return d;
 }
 
@@ -1169,7 +1189,7 @@ static quest_ptr _find_quest(int dungeon, int level)
 
     /* Prevent quests from becoming uncompletable in forced-descent mode
      * should the player request them too late (adapted from Pos-R) */
-    if ((!result) && (ironman_downward) && (dungeon == DUNGEON_ANGBAND) &&
+    if ((!result) && (only_downward()) && (dungeon == DUNGEON_ANGBAND) &&
         (level < 99))
     {
         for (i = 0; i < vec_length(v); i++)
@@ -1307,6 +1327,12 @@ void _dungeon_boss_death(mon_ptr mon)
         {
             int tval = realm2tval(p_ptr->realm1);
             k_idx = lookup_kind(tval, 3);
+        }
+
+        if (dungeon_type == DUNGEON_MYSTERY)
+        {
+            acquirement(py, px, 1 + (dun_level / 30), TRUE, FALSE, ORIGIN_MYSTERY);
+            k_idx = 0;
         }
 
         if (k_idx)
@@ -2299,7 +2325,7 @@ static void _reward_cmd(_ui_context_ptr context)
                     if (make_object(&forge, AM_GOOD | AM_GREAT | AM_TAILORED | AM_QUEST, ORIGIN_ANGBAND_REWARD))
                     {
                         char name[MAX_NLEN];
-                        obj_identify_fully(&forge);
+                        obj_identify(&forge);
                         object_desc(name, &forge, OD_COLOR_CODED);
                         msg_boundary();
                         msg_format("%s", name);
@@ -2319,7 +2345,7 @@ static void _reward_cmd(_ui_context_ptr context)
                 else
                 {
                     char name[MAX_NLEN];
-                    obj_identify_fully(reward);
+                    obj_identify(reward);
                     object_desc(name, reward, OD_COLOR_CODED);
                     msg_format("<color:R>%s</color> gives %s.", quest->name, name);
                     if (reward->name1)

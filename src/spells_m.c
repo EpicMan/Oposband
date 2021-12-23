@@ -575,7 +575,7 @@ void phase_door_spell(int cmd, variant *res)
         {
             var_set_int(res, 30);
             break;
-        }
+        } /* Fall through */
     default:
         default_spell(cmd, res);
         break;
@@ -871,6 +871,7 @@ void power_throw_spell(int cmd, variant *res)
         }
         p_ptr->mighty_throw = old_mt;
         var_set_bool(res, TRUE);
+        break;
     }
     case SPELL_CALC_BONUS:
         p_ptr->mighty_throw = TRUE;
@@ -882,33 +883,26 @@ void power_throw_spell(int cmd, variant *res)
 }
 bool cast_power_throw(void) { return cast_spell(power_throw_spell); }
 
-void word_of_power_spell(int cmd, variant *res)
+void probing_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Word of Power");
+        var_set_string(res, "Probe Monster");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attempts to stun and slow a monster (power level = 2x Player level.");
+        var_set_string(res, "Determines the abilities, strengths and weaknesses of nearby monsters.");
         break;
     case SPELL_CAST:
-	{
-		int dir;
-		int power = spell_power(p_ptr->lev * 2);
-		if (get_fire_dir(&dir))
-		{
-			slow_monster(dir);
-			stun_monster(dir, 5 + p_ptr->lev / 5);
-		}
-	}
+        probing();
+        var_set_bool(res, TRUE);
         break;
     default:
         default_spell(cmd, res);
         break;
     }
 }
-bool cast_probing(void) { return cast_spell(word_of_power_spell); }
+bool cast_probing(void) { return cast_spell(probing_spell); }
 
 void protection_from_evil_spell(int cmd, variant *res)
 {
@@ -1199,11 +1193,7 @@ void resistance_spell(int cmd, variant *res)
     {
         int base = spell_power(20);
 
-        set_oppose_acid(randint1(base) + base, FALSE);
-        set_oppose_elec(randint1(base) + base, FALSE);
-        set_oppose_fire(randint1(base) + base, FALSE);
-        set_oppose_cold(randint1(base) + base, FALSE);
-        set_oppose_pois(randint1(base) + base, FALSE);
+        set_oppose_base(randint1(base) + base, FALSE);
 
         var_set_bool(res, TRUE);
         break;

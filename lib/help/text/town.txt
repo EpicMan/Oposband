@@ -22,7 +22,7 @@ are likely to see often in the town and the wilderness:
   ----------------------        -------------------------------
   #   Tree/wooded area          #   Building wall
   .   Patch of grass            1   Entrance to General Store
-  :   Flower                       Entrance to Armoury
+  :   Flower                    2   Entrance to Armoury
   :   Brake                     3   Entrance to Weapon Shop
   .   Swamp                     4   Entrance to Temple Shop
   ~   Shallow water             5   Entrance to Alchemy Shop
@@ -212,7 +212,7 @@ List of Shops
   items and some others can be sold back to the General store for 
   money.
 
-  The Armory ()
+  The Armory (2)
   The Armory is where the town's armor is fashioned. All sorts of 
   protective gear may be bought and sold here.
 
@@ -614,8 +614,8 @@ The No Wilderness Option
 
 Diverse dungeons are fun, multiple towns are fun, and the wilderness is 
 fun; but sometimes you might want to just forget about them all and 
-select the No Wilderness option. Maybe you are new to FrogComposband, 
-and want to learn the basics in a simplified version of the game before 
+select the No Wilderness option. Maybe you are new to Oposband, and 
+want to learn the basics in a simplified version of the game before 
 moving on to the full version. (Beginner Mode automatically turns on 
 coffee-break mode, which turns off the wilderness - though sometimes, 
 enthusiastic new players jump straight to the Normal Mode!) Or maybe 

@@ -1,4 +1,5 @@
 #include "angband.h"
+#include "chaos_patron.h"
 
 typedef struct
 {
@@ -420,7 +421,7 @@ static void _thundershadow_spell(int cmd, variant *res)
     }
 }
 
-static spell_info _karrot_spells[] =
+static spell_info _karrot_get_spells[] =
 {
     /* lvl cst fail spell */
     {  1,  1, 22, detect_monsters_spell},
@@ -442,11 +443,6 @@ static spell_info _karrot_spells[] =
     { 49, 100, 72, _polymorph_dragon_spell},
     { -1, -1, -1, NULL},
 };
-
-static int _karrot_get_spells(spell_info* spells, int max)
-{
-    return get_spells_aux(spells, max, _karrot_spells);
-}
 
 static void _calc_bonuses(void)
 {
@@ -507,7 +503,7 @@ static void _give_reward(int monesko)
      { 9, TV_SCROLL, SV_SCROLL_ACQUIREMENT},
      { 10, TV_WAND, EFFECT_BALL_NEXUS},
      { 11, TV_SCROLL, SV_SCROLL_ICE},
-     { 12, TV_SCROLL, SV_SCROLL_CHAOS},
+     { 12, TV_SCROLL, SV_SCROLL_MANA},
      { 13, TV_POTION, SV_POTION_NEW_LIFE},
      { 14, TV_POTION, SV_POTION_RESTORE_MANA},
      { 15, TV_ROD, EFFECT_BALL_NETHER},
@@ -556,7 +552,7 @@ static void _give_reward(int monesko)
                 obj_make_pile(q_ptr);
         }
         object_origins(q_ptr, ORIGIN_PATRON);
-        obj_identify_fully(q_ptr);
+        obj_identify(q_ptr);
         msg_format("The voice of Karrot echoes through the dungeon: <color:v>Behold, my %s, how generously I reward thee!</color>", p_ptr->psex == SEX_FEMALE ? "daughter" : "son");
         (void)drop_near(q_ptr, -1, py, px);
     }    
@@ -693,7 +689,7 @@ void karrot_quest_finished(quest_ptr q, bool success)
                 }
                 if (one_in_(3))
                 {
-                    int slot = equip_random_slot(object_is_armor);
+                    int slot = equip_random_slot(object_is_armour);
                     if (slot) curse_armor(slot);
                     else
                     {
@@ -940,7 +936,7 @@ bool karrot_replace_art(object_type *o_ptr)
             }
             msg_format("The voice of Karrot booms out: <color:v>I am pleased with thee, my %s; thou hast done well to recover my %s %s!</color>", p_ptr->psex == SEX_FEMALE ? "daughter" : "son", kuvaus, o_name);
             no_karrot_hack = TRUE;
-            obj_identify_fully(o_ptr);
+            obj_identify(o_ptr);
             object_desc(o_name, o_ptr, OD_COLOR_CODED);
             if (forge.name1 == ART_UROG)
             {
@@ -949,7 +945,7 @@ bool karrot_replace_art(object_type *o_ptr)
             msg_format("Karrot claims %s, and gives you a reward for your good work.", o_name);
             forge.level = o_ptr->level;
             object_origins(&forge, ORIGIN_PATRON);
-            obj_identify_fully(&forge);
+            obj_identify(&forge);
             obj_zero(o_ptr);
             obj_release(o_ptr, OBJ_RELEASE_QUIET);
             pack_carry(&forge);
@@ -963,7 +959,7 @@ bool karrot_replace_art(object_type *o_ptr)
 static void _birth(void)
 {
     disciple_birth();
-    py_birth_obj_aux(TV_SWORD, SV_MEDIUM_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_CUTLASS, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     _karrot_ini_quests();
 }
@@ -1115,12 +1111,7 @@ static void _karrot_dump(doc_ptr doc)
 {
     if (_pack_initialized) _dump_satchel(doc);
     if (_q_idx) _dump_quests(doc);
-    {
-        spell_info spells[MAX_SPELLS];
-        int        ct = _karrot_get_spells(spells, MAX_SPELLS);
-
-        py_display_spells(doc, spells, ct);
-    }
+    py_dump_spells(doc);
 }
 
 static void _dragon_breathe_spell(int cmd, variant *res)
@@ -1159,16 +1150,13 @@ static void _dragon_breathe_spell(int cmd, variant *res)
     }
 }
 
-static power_info _dragon_powers[] = {
+static power_info _dragon_get_powers[] = {
     { A_CON, {  1,  0, 30, _dragon_breathe_spell}},
     { A_DEX, { 20,  7,  0, dragon_reach_spell}},
     { A_DEX, { 25, 15,  0, dragon_tail_sweep_spell}},
     { A_DEX, { 30, 30,  0, dragon_wing_storm_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-static int _dragon_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _dragon_powers);
-}
 
 static void _dragon_calc_innate_attacks(void)
 {
@@ -1187,7 +1175,7 @@ static void _dragon_calc_innate_attacks(void)
 
         a.weight = 100 + l;
         calc_innate_blows(&a, 400);
-        a.msg = "You claw";
+        a.msg = "You claw.";
         a.name = "Claw";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -1209,7 +1197,7 @@ static void _dragon_calc_innate_attacks(void)
             calc_innate_blows(&a, 150);
         else
             a.blows = 100;
-        a.msg = "You bite";
+        a.msg = "You bite.";
         a.name = "Bite";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

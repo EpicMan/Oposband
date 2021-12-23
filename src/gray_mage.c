@@ -30,18 +30,18 @@ static int _browse_choice = _INVALID_SLOT;
 typedef struct {
     int realm;
     int spell;
-} _slot_info_t, *_slot_info_ptr;
+} _slot_info_t, * _slot_info_ptr;
 
 static _slot_info_t _spells[_MAX_SLOTS];
 
-static magic_type *_get_spell_info(int realm, int spell)
+static magic_type* _get_spell_info(int realm, int spell)
 {
     return &mp_ptr->info[realm - 1][spell];
 }
 
 static void _list_spell(doc_ptr doc, int realm, int spell, int choice, int options)
 {
-    magic_type *spell_ptr = _get_spell_info(realm, spell);
+    magic_type* spell_ptr = _get_spell_info(realm, spell);
     int         sp_level = lawyer_hack(spell_ptr, LAWYER_HACK_LEVEL);
     int         cost = calculate_cost(lawyer_hack(spell_ptr, LAWYER_HACK_MANA));
     int         fail = calculate_fail_rate(sp_level, lawyer_hack(spell_ptr, LAWYER_HACK_FAILRATE), p_ptr->stat_ind[A_INT]);
@@ -246,7 +246,7 @@ static void _birth(void)
     object_type forge;
     int i;
 
-    object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
+    object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
     py_birth_obj(&forge);
 
     if (p_ptr->psubclass == GRAY_MAGE_GOOD)
@@ -326,22 +326,15 @@ static void _save_player(savefile_ptr file)
     savefile_write_u16b(file, 0xFFFF); /* sentinel */
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_powers[] =
 {
-    int ct = 0;
+    { A_INT, { 25, 1, 90, eat_magic_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
-    spell_info* spell = &spells[ct++];
-    spell->level = 25;
-    spell->cost = 1;
-    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_INT]);
-    spell->fn = eat_magic_spell;
-
-    return ct;
-}
-
-static caster_info * _caster_info(void)
+static caster_info* _caster_info(void)
 {
-    static caster_info me = {0};
+    static caster_info me = { 0 };
     static bool init = FALSE;
     if (!init)
     {
@@ -394,7 +387,7 @@ bool gray_mage_is_allowed_book(int tval, int sval) /* For autopick.c */
     return _is_allowed_realm(tval2realm(tval));
 }
 
-static bool _spell_book_p(object_type *o_ptr)
+static bool _spell_book_p(object_type* o_ptr)
 {
     if (!_is_spellbook(o_ptr->tval)) return FALSE;
     return gray_mage_is_allowed_book(o_ptr->tval, o_ptr->sval);
@@ -403,7 +396,7 @@ static bool _spell_book_p(object_type *o_ptr)
 /* cmd5.c get_spell() was blowing up when I attempted code reuse ...
    so roll our own (much simpler) version */
 #define _SPELLS_PER_BOOK 8
-static void _display_spells_to_gain(object_type *o_ptr, rect_t r, int tutki)
+static void _display_spells_to_gain(object_type* o_ptr, rect_t r, int tutki)
 {
     doc_ptr doc = doc_alloc(r.cx);
     int     i;
@@ -430,7 +423,7 @@ static void _display_spells_to_gain(object_type *o_ptr, rect_t r, int tutki)
     doc_free(doc);
 }
 
-static int _choose_spell_to_gain(object_type *o_ptr)
+static int _choose_spell_to_gain(object_type* o_ptr)
 {
     rect_t r = _menu_rect();
     int    result = -1;
@@ -453,15 +446,15 @@ static int _choose_spell_to_gain(object_type *o_ptr)
         if ('a' <= cmd && cmd < 'a' + _SPELLS_PER_BOOK)
         {
             int         spell_idx = o_ptr->sval * _SPELLS_PER_BOOK + A2I(cmd);
-            magic_type *spell_ptr = _get_spell_info(tval2realm(o_ptr->tval), spell_idx);
+            magic_type* spell_ptr = _get_spell_info(tval2realm(o_ptr->tval), spell_idx);
 
             if (lawyer_hack(spell_ptr, LAWYER_HACK_LEVEL) <= p_ptr->lev) /* Note: Illegible spells have slevel == 99 in m_info.txt */
             {
                 done = TRUE;
                 result = spell_idx;
             }
-        }        
-        else 
+        }
+        else
         {
             screen_load();
             screen_save();
@@ -517,7 +510,7 @@ void gray_mage_cast_spell(void)
     slot_ptr = _choose("Cast", _ALLOW_EXCHANGE | _SHOW_INFO);
     if (slot_ptr)
     {
-        magic_type *spell_ptr = _get_spell_info(slot_ptr->realm, slot_ptr->spell);
+        magic_type* spell_ptr = _get_spell_info(slot_ptr->realm, slot_ptr->spell);
         int         sp_level = lawyer_hack(spell_ptr, LAWYER_HACK_LEVEL);
         int         cost = calculate_cost(lawyer_hack(spell_ptr, LAWYER_HACK_MANA));
         int         fail = calculate_fail_rate(sp_level, lawyer_hack(spell_ptr, LAWYER_HACK_FAILRATE), p_ptr->stat_ind[A_INT]);
@@ -544,7 +537,7 @@ void gray_mage_cast_spell(void)
             cmsg_format(TERM_VIOLET, "You failed to cast %s!", do_spell(slot_ptr->realm, slot_ptr->spell, SPELL_NAME));
             if (prompt_on_failure) msg_print(NULL);
             if (demigod_is_(DEMIGOD_ATHENA))
-                p_ptr->csp += cost/2;
+                p_ptr->csp += cost / 2;
             spell_stats_on_fail_old(slot_ptr->realm, slot_ptr->spell);
             sound(SOUND_FAIL);
             do_spell(slot_ptr->realm, slot_ptr->spell, SPELL_FAIL);
@@ -568,7 +561,7 @@ void gray_mage_cast_spell(void)
 
 void gray_mage_gain_spell(void)
 {
-    obj_prompt_t    prompt = {0};
+    obj_prompt_t    prompt = { 0 };
     int             spell_idx;
     _slot_info_ptr  slot_ptr;
 
@@ -652,36 +645,36 @@ extern cptr gray_mage_speciality_desc(int psubclass)
     return "";
 }
 
-class_t *gray_mage_get_class(int psubclass)
+class_t* gray_mage_get_class(int psubclass)
 {
-    static class_t me = {0};
+    static class_t me = { 0 };
     static bool init = FALSE;
 
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 30,  40,  38,   3,  16,  20,  34,  20};
-    skills_t xs = {  7,  15,  11,   0,   0,   0,   6,   7};
+        skills_t bs = { 30,  40,  38,   3,  16,  20,  34,  20 };
+        skills_t xs = { 7,  15,  11,   0,   0,   0,   6,   7 };
 
         me.name = "Gray-Mage";
         me.desc = "The Gray-Mage casts spells from memory rather than books; a "
-                    "spellbook is only required for the initial learning process. "
-                    "However, only ten spells may be memorized at any given time; and "
-                    "while a Gray-Mage may replace old spells with new ones, the total "
-                    "number of spells they can study is limited.\n\n"
-                    "Gray-Mages do not choose specific realms like book spellcasters; "
-                    "instead, they choose a general bias towards either Good, Neutral "
-                    "or Evil magic. So while all Gray-Mages may learn spells from the Arcane, "
-                    "Armageddon, Chaos, Craft, Sorcery and Trump realms, only a Good Bias allows "
-                    "access to Life and Crusade magic; only a Neutral Bias allows access to Nature "
-                    "magic; and only an Evil Bias allows access to Death and Daemon magic. At any one "
-                    "time, a Gray-Mage has relatively few spells directly at their disposal; but their ability "
-                    "to pick the best spells from an extremely large pool more than compensates for this. "
-                    "As with most mages, the key stat is Intelligence.";
+            "spellbook is only required for the initial learning process. "
+            "However, only ten spells may be memorized at any given time; and "
+            "while a Gray-Mage may replace old spells with new ones, the total "
+            "number of spells they can study is limited.\n\n"
+            "Gray-Mages do not choose specific realms like book spellcasters; "
+            "instead, they choose a general bias towards either Good, Neutral "
+            "or Evil magic. So while all Gray-Mages may learn spells from the Arcane, "
+            "Armageddon, Chaos, Craft, Sorcery and Trump realms, only a Good Bias allows "
+            "access to Life and Crusade magic; only a Neutral Bias allows access to Nature "
+            "magic; and only an Evil Bias allows access to Death and Daemon magic. At any one "
+            "time, a Gray-Mage has relatively few spells directly at their disposal; but their ability "
+            "to pick the best spells from an extremely large pool more than compensates for this. "
+            "As with most mages, the key stat is Intelligence.";
 
         me.stats[A_STR] = -4;
-        me.stats[A_INT] =  3;
-        me.stats[A_WIS] =  0;
-        me.stats[A_DEX] =  1;
+        me.stats[A_INT] = 3;
+        me.stats[A_WIS] = 0;
+        me.stats[A_DEX] = 1;
         me.stats[A_CON] = -2;
         me.stats[A_CHR] = -2;
         me.base_skills = bs;
@@ -691,7 +684,8 @@ class_t *gray_mage_get_class(int psubclass)
         me.exp = 130;
         me.pets = 30;
         me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
-                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
+            CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG |
+            CLASS_REGEN_MANA;
 
         me.caster_info = _caster_info;
         me.character_dump = _character_dump;

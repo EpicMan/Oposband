@@ -1,97 +1,9 @@
 #include "angband.h"
-
-
-#define REW_POLY_SLF    1
-#define REW_GAIN_EXP    2
-#define REW_LOSE_EXP    3
-#define REW_GOOD_OBJ    4
-#define REW_GREA_OBJ    5
-#define REW_CHAOS_WP    6
-#define REW_GOOD_OBS    7
-#define REW_GREA_OBS    8
-#define REW_TY_CURSE    9
-#define REW_SUMMON_M    10
-#define REW_H_SUMMON    11
-#define REW_DO_HAVOC    12
-#define REW_GAIN_ABL    13
-#define REW_LOSE_ABL    14
-#define REW_RUIN_ABL    15
-#define REW_AUGM_ABL    16
-#define REW_POLY_WND    17
-#define REW_HEAL_FUL    18
-#define REW_HURT_LOT    19
-#define REW_CURSE_WP    20
-#define REW_CURSE_AR    21
-#define REW_PISS_OFF    22
-#define REW_WRATH       23
-#define REW_DESTRUCT    24
-#define REW_GENOCIDE    25
-#define REW_MASS_GEN    26
-#define REW_DISPEL_C    27
-#define REW_DAMNATION   28 /* new chaos mage rewards */
-#define REW_DISORDER    29
-#define REW_EXULTATION  30
-#define REW_ENERGISE    31
-#define REW_DEVICE      32 /* fin */
-#define REW_IGNORE      33
-#define REW_SER_UNDE    34
-#define REW_SER_DEMO    35
-#define REW_SER_MONS    36  
-#define REW_MUTATE		37
-
-/* reward types */
-#define REW_TYPE_PUNISH  0
-#define REW_TYPE_ANNOY   1
-#define REW_TYPE_REWARD  2
-#define REW_TYPE_FAVOUR  3
-#define REW_CATEGORIES   4
-
-/* patron attitudes */
-#define AMBIVALENT 0
-#define SCORNFUL 1
-#define AMUSED 2
-#define INTERESTED 3
-#define APPROVING 4
-#define ATTITUDE_MAX 5
-
-
-/*todo: this*/
-struct chaos_patron
-{
-	int stat;
-	int rewards[REW_CATEGORIES][5];
-	cptr name;
-	cptr title;
-	int noticechance[PATRON_EFFECT_MAX];
-	int attitudes[PATRON_EFFECT_MAX];
-};
-
-int chaos_stats[MAX_PATRON] =
-{
-	A_CON,  /* Slortar */
-	A_CON,  /* Mabelode */
-	A_STR,  /* Chardros */
-	A_STR,  /* Hionhurn */
-	A_STR,  /* Xiombarg */
-
-	A_INT,  /* Pyaray */
-	A_STR,  /* Balaan */
-	A_INT,  /* Arioch */
-	A_CON,  /* Eequor */
-	A_CHR,  /* Narjhan */
-
-	-1,     /* Balo */
-	A_STR,  /* Khorne */
-	A_CHR,  /* Slaanesh */
-	A_CON,  /* Nurgle */
-	A_INT,  /* Tzeentch */
-
-	A_STR,  /* Khaine */
-};
+#include "chaos_patron.h"
 
 bool worships_chaos(void) 
 {	
-	return (p_ptr->pclass == CLASS_CHAOS_WARRIOR || p_ptr->pclass == CLASS_CHAOS_MAGE || mut_present(MUT_CHAOS_GIFT));
+	return (p_ptr->pclass == CLASS_CHAOS_WARRIOR || p_ptr->pclass == CLASS_LOGRUS_MASTER || mut_present(MUT_CHAOS_GIFT));
 }
 
 void chaos_forge_weapon() {
@@ -102,77 +14,85 @@ void chaos_forge_weapon() {
 	switch (randint1(p_ptr->lev))
 	{
 	case 0: case 1:
-		dummy = TV_DAGGER;
 		dummy2 = SV_DAGGER;
 		break;
 	case 2: case 3:
-		dummy = TV_DAGGER; 
-		dummy2 = SV_DIRK;
+		dummy2 = SV_MAIN_GAUCHE;
 		break;
 	case 4:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CAT_CLAW;
+		dummy2 = SV_TANTO;
 		break;
 	case 5: case 6:
-		dummy = TV_SWORD;
-		dummy2 = SV_THRUSTING_SWORD;
+		dummy2 = SV_RAPIER;
 		break;
 	case 7: case 8:
-		dummy2 = SV_SHORT_SWORD;
+		dummy2 = SV_SMALL_SWORD;
 		break;
 	case 9: case 10:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CAT_CLAW;
+		dummy2 = SV_BASILLARD;
 		break;
 	case 11: case 12: case 13:
 		dummy2 = SV_SHORT_SWORD;
 		break;
 	case 14: case 15:
-		dummy = TV_DAGGER;
-		dummy2 = SV_CRYSKNIFE;
+		dummy2 = SV_SABRE;
 		break;
 	case 16: case 17:
-		dummy2 = SV_MEDIUM_SWORD;
+		dummy2 = SV_CUTLASS;
 		break;
 	case 18:
 		dummy2 = SV_WAKIZASHI;
 		break;
 	case 19:
-	case 20:
-		dummy2 = SV_CURVED_SWORD;
+		dummy2 = SV_KHOPESH;
 		break;
-	case 21: case 22: case 23:
-	case 24: case 25:
+	case 20:
+		dummy2 = SV_TULWAR;
+		break;
+	case 21:
+		dummy2 = SV_BROAD_SWORD;
+		break;
+	case 22: case 23:
 		dummy2 = SV_LONG_SWORD;
 		break;
+	case 24: case 25:
+		dummy2 = SV_SCIMITAR;
+		break;
 	case 26:
-		dummy = TV_DAGGER;
 		dummy2 = SV_NINJATO;
 		break;
 	case 27:
 		dummy2 = SV_KATANA;
 		break;
 	case 28: case 29:
-		dummy2 = SV_BROAD_SWORD;
+		dummy2 = SV_BASTARD_SWORD;
 		break;
 	case 30:
-		dummy2 = SV_EXECUTIONERS_SWORD;
+		dummy2 = SV_GREAT_SCIMITAR;
 		break;
-	case 31: case 32: case 33:
+	case 31:
+		dummy2 = SV_CLAYMORE;
+		break;
+	case 32:
+		dummy2 = SV_ESPADON;
+		break;
+	case 33:
 		dummy2 = SV_TWO_HANDED_SWORD;
 		break;
-	case 34: case 35:
-		dummy2 = SV_GREATSWORD;
+	case 34:
+		dummy2 = SV_FLAMBERGE;
+		break;
+	case 35:
+		dummy2 = SV_NO_DACHI;
 		break;
 	case 36:
 		dummy2 = SV_EXECUTIONERS_SWORD;
 		break;
 	case 37:
-		dummy2 = SV_BUSTER_SWORD;
+		dummy2 = SV_ZWEIHANDER;
 		break;
 	case 38:
-		dummy = TV_DAGGER;
-		dummy2 = SV_FALCON_SWORD;
+		dummy2 = SV_HAYABUSA;
 		break;
 	default:
 		dummy2 = SV_BLADE_OF_CHAOS;
@@ -402,7 +322,7 @@ void chaos_patron_event(int effect)
 	}
 	case REW_CURSE_AR:
 	{
-		int slot = equip_random_slot(object_is_armor);
+		int slot = equip_random_slot(object_is_armour);
 		if (slot)
 		{
 			msg_format("The voice of %s booms out:",
@@ -433,7 +353,7 @@ void chaos_patron_event(int effect)
 			}
 			else
 			{
-				int slot = equip_random_slot(object_is_armor);
+				int slot = equip_random_slot(object_is_armour);
 				if (slot)
 					curse_armor(slot);
 			}
@@ -461,7 +381,7 @@ void chaos_patron_event(int effect)
 		}
 		if (one_in_(2))
 		{
-			int slot = equip_random_slot(object_is_armor);
+			int slot = equip_random_slot(object_is_armour);
 			if (slot)
 				curse_armor(slot);
 		}
@@ -916,5 +836,82 @@ void chaos_choose_effect(int reason)
 	}
 }
 
+/* Bad things, but not ty_curse bad (or at least not ty_curse insta-deadly) */
+void nonlethal_ty_substitute(bool do_dec)
+{
+	bool old_nos = no_scrambling;
+	no_scrambling = TRUE;
+	mutate_player();
+	no_scrambling = old_nos;
+	if (do_dec) dec_stat(randint0(MAX_STATS), 12 + randint1(6), TRUE);
+	if (!(p_ptr->cursed & OFC_BY_CURSE))
+	{
+		if (randint0(p_ptr->max_plv + 40) > 45)
+		{
+			if ((one_in_(3)) && (randint0(50) < p_ptr->max_plv))
+			{
+				curse_equipment(100, 25);
+			}
+			else if ((one_in_(2)) || (randint0(50) >= p_ptr->max_plv))
+			{
+				curse_equipment(50, 0);
+			}
+			else /* The BFC sometimes puts itself on equipment */
+			{
+				int slot = equip_random_slot(object_is_art_or_ego);
+				if (slot)
+				{
+					object_type* o_ptr = equip_obj(slot);
+					u32b oflgs[OF_ARRAY_SIZE];
+					char o_name[MAX_NLEN];
+					if ((!o_ptr) || (!o_ptr->k_idx)) return;
+					obj_flags(o_ptr, oflgs);
+					object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
+					if (have_flag(oflgs, OF_BLESSED))
+					{
+						msg_format("Your %s resists cursing!", o_name);
+						return;
+					}
+					o_ptr->curse_flags |= OFC_HEAVY_CURSE;
+					o_ptr->curse_flags |= OFC_CURSED;
+					o_ptr->curse_flags |= OFC_BY_CURSE;
+					msg_format("There is a malignant black aura surrounding %s...", o_name);
+					o_ptr->feeling = FEEL_NONE;
+					p_ptr->update |= PU_BONUS;
+					p_ptr->window |= (PW_EQUIP | PW_INVEN);
+					p_ptr->redraw |= PR_EFFECTS;
+				}
+			}
+		}
+	}
+}
 
+void do_energise(void)
+{
+	/* Dizzying rush of arcane power */
+	s16b sp_diff = (p_ptr->msp - p_ptr->csp);
+	s16b change = damroll(p_ptr->lev, 5);
+	bool Nasty_effect = one_in_(5);
+
+	if (!sp_diff) return;
+
+	msg_print("You feel a dizzying rush of power.");
+
+	sp_player(change);
+	if (Nasty_effect)
+	{
+		msg_print("You feel disoriented!");
+		switch (randint0(3)) {
+		case 0:
+			if (!res_save_default(RES_CONF))
+				set_confused(p_ptr->confused + randint0(3) + 3, FALSE);
+		case 1:
+			if (!res_save_default(RES_CHAOS))
+				set_image(p_ptr->image + randint0(8) + 8, FALSE);
+		case 2:
+			if (!res_save_default(RES_SOUND))
+				set_stun(p_ptr->stun + randint0(4) + 2, FALSE);
+		}
+	}
+}
