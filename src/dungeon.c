@@ -3414,7 +3414,7 @@ static void _dispatch_command(int old_now_turn)
         case '<':
         {
             if (p_ptr->wild_mode)
-                change_wild_mode();
+                change_wild_mode(FALSE);
             else
             {
                 /* Player grid */
@@ -3434,7 +3434,7 @@ static void _dispatch_command(int old_now_turn)
                 {
                     if (no_wilderness) break;
 
-                    change_wild_mode();
+                    change_wild_mode(FALSE);
                 }
                 else /* no stair / map change is possible */
                 {

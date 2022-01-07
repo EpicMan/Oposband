@@ -16,7 +16,7 @@
 #include <assert.h>
 
 /* hack as in leave_store in store.c */
-static bool leave_bldg = FALSE;
+bool leave_bldg = FALSE;
 static bool paivita = FALSE;
 static bool paivitys_no_inkey_hack = FALSE;
 
@@ -3867,6 +3867,7 @@ static void _sell_photo(void)
  */
 static void bldg_process_command(building_type *bldg, int i)
 {
+    leave_bldg = FALSE;
     int bact = bldg->actions[i];
     int bcost;
     bool paid = FALSE;

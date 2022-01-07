@@ -5488,7 +5488,6 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
 
             if (!dun_level && !p_ptr->wild_mode && !p_ptr->inside_arena && !p_ptr->inside_battle)
             {
-                wilderness_move_player(ox, oy);
                 c_ptr = &cave[py][px]; /* re-aquire in case of wilderness scroll */
             }
         }
@@ -6024,90 +6023,81 @@ void move_player(int dir, bool do_pickup, bool break_trap)
         /* Disturb the player */
         disturb(0, 0);
 
+        /* Leave this wilderness square */
+        /* Boundary floor mimic */
+        if (boundary_floor(c_ptr, f_ptr, mimic_f_ptr))
+        {
+            if (py_on_surface())
+            {
+                if (no_wilderness)
+                    msg_print("You cannot go any more.");
+                else
+                {
+                    change_wild_mode(TRUE);
+                    return;
+                }
+                    
+            }
+        }
+
         /* Notice things in the dark */
         if (!(c_ptr->info & CAVE_MARK) && !player_can_see_bold(y, x))
         {
-            /* Boundary floor mimic */
-            if (boundary_floor(c_ptr, f_ptr, mimic_f_ptr))
-            {
-                msg_print("You feel you cannot go any more.");
-            }
+            msg_format("You feel %s %s blocking your way.",
+                is_a_vowel(name[0]) ? "an" : "a", name);
 
-            /* Wall (or secret door) */
-            else
-            {
-                msg_format("You feel %s %s blocking your way.",
-                    is_a_vowel(name[0]) ? "an" : "a", name);
-
-                c_ptr->info |= (CAVE_MARK | CAVE_AWARE);
-                lite_spot(y, x);
-            }
+            c_ptr->info |= (CAVE_MARK | CAVE_AWARE);
+            lite_spot(y, x);
         }
 
         /* Notice things */
         else
         {
-            /* Boundary floor mimic */
-            if (boundary_floor(c_ptr, f_ptr, mimic_f_ptr))
-            {
-                msg_print("You cannot go any more.");
-
-                if (!(p_ptr->confused || p_ptr->image))
-                {
-                    if (!shadow_strike)
-                        energy_use = 0;
-                }
-            }
-
-            /* Wall (or secret door) */
-            else
-            {
 #ifdef ALLOW_EASY_OPEN
-                /* Closed doors */
-                if (easy_open && is_closed_door(feat) && easy_open_door(y, x, dir))
+            /* Closed doors */
+            if (easy_open && is_closed_door(feat) && easy_open_door(y, x, dir))
+            {
+                /* Hack. Try to deduce what happened since easy_open_door hides this.
+                    Try to repeat attempting to unlock the door, but do a quick check
+                    for jammed doors so we don't waste 99 turns. Also, only make
+                    99 attempts to pick the lock ... But using command_rep would be
+                    unwise since we will then run thru the door once we pick the lock! */
+                if (always_repeat)
                 {
-                    /* Hack. Try to deduce what happened since easy_open_door hides this.
-                       Try to repeat attempting to unlock the door, but do a quick check
-                       for jammed doors so we don't waste 99 turns. Also, only make
-                       99 attempts to pick the lock ... But using command_rep would be
-                       unwise since we will then run thru the door once we pick the lock! */
-                    if (always_repeat)
+                    static int _repeat_count = 0;
+
+                    cave_type *c_ptr = &cave[y][x];
+                    feature_type *f_ptr = &f_info[c_ptr->feat];
+
+                    if (is_closed_door(c_ptr->feat) && have_flag(f_ptr->flags, FF_OPEN))
                     {
-                        static int _repeat_count = 0;
-
-                        cave_type *c_ptr = &cave[y][x];
-                        feature_type *f_ptr = &f_info[c_ptr->feat];
-
-                        if (is_closed_door(c_ptr->feat) && have_flag(f_ptr->flags, FF_OPEN))
-                        {
-                            if (_repeat_count == 0)
-                                _repeat_count = 99;
-                            else
-                                --_repeat_count;
-
-                            if (_repeat_count)
-                                command_rep = 1;
-                        }
+                        if (_repeat_count == 0)
+                            _repeat_count = 99;
                         else
-                            _repeat_count = 0;
+                            --_repeat_count;
+
+                        if (_repeat_count)
+                            command_rep = 1;
                     }
-                    return;
+                    else
+                        _repeat_count = 0;
                 }
+                return;
+            }
 #endif /* ALLOW_EASY_OPEN */
 
-                msg_format("There is %s %s blocking your way.",
-                    is_a_vowel(name[0]) ? "an" : "a", name);
+            msg_format("There is %s %s blocking your way.",
+                is_a_vowel(name[0]) ? "an" : "a", name);
 
-                /*
-                 * Well, it makes sense that you lose time bumping into
-                 * a wall _if_ you are confused or blind; but
-                 * typing mistakes should not cost you a turn...
-                 */
-                if (!(p_ptr->confused || p_ptr->image))
-                {
-                    if (!shadow_strike)
-                        energy_use = 0;
-                }
+            /*
+                * Well, it makes sense that you lose time bumping into
+                * a wall _if_ you are confused or blind; but
+                * typing mistakes should not cost you a turn...
+                */
+            if (!(p_ptr->confused || p_ptr->image))
+            {
+                if (!shadow_strike)
+                    energy_use = 0;
             }
         }
 

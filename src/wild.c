@@ -383,6 +383,10 @@ void wilderness_move_player(int old_x, int old_y)
     rect_t  valid;
     bool    do_disturb = FALSE;
 
+    /* hack: try to put player in the middle */
+    old_qx = qx;
+    old_qy = qy;
+
     if (no_wilderness)
         return;
 
@@ -1503,8 +1507,8 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
 void wilderness_gen(void)
 {
     int           y, x;
-    cave_type    *c_ptr;
-    feature_type *f_ptr;
+    cave_type* c_ptr;
+    feature_type* f_ptr;
 
     /* Big town */
     cur_hgt = MAX_HGT;
@@ -1533,7 +1537,7 @@ void wilderness_gen(void)
                 if (have_flag(f_ptr->flags, FF_BLDG))
                 {
                     if ((f_ptr->subtype == 4) || ((p_ptr->town_num == TOWN_OUTPOST) && (f_ptr->subtype == 0))
-                    || ((p_ptr->town_num == TOWN_ZUL) && (f_ptr->subtype == 8)))
+                        || ((p_ptr->town_num == TOWN_ZUL) && (f_ptr->subtype == 8)))
                     {
                         if (c_ptr->m_idx) delete_monster_idx(c_ptr->m_idx);
                         p_ptr->oldpy = y;
@@ -1567,6 +1571,17 @@ void wilderness_gen(void)
             }
         }
         p_ptr->teleport_town = FALSE;
+    }
+    /* Return to previous position if leaving a building */
+    else if (leave_bldg)
+    {
+        leave_bldg = FALSE;
+    }
+    /* Otherwise, place player in the middle of the map */
+    else
+    {
+        p_ptr->oldpx = MAX_WID / 2;
+        p_ptr->oldpy = MAX_HGT / 2;
     }
 
     player_place(p_ptr->oldpy, p_ptr->oldpx);
@@ -2008,7 +2023,7 @@ void init_wilderness_terrains(void)
 }
 
 
-bool change_wild_mode(void)
+bool change_wild_mode(bool exit_by_map_edge)
 {
     int i;
     bool have_pet = FALSE;
@@ -2050,28 +2065,35 @@ bool change_wild_mode(void)
         return TRUE;
     }
 
-    for (i = 1; i < m_max; i++)
+    /* If exiting off the edge of a map, we allow leaving even with monsters
+     * nearby. 
+     * TODO: Should adjacent monsters prevent leaving?
+     */
+    if (!exit_by_map_edge)
     {
-        monster_type *m_ptr = &m_list[i];
-        monster_race *r_ptr;
-
-        if (!m_ptr->r_idx) continue;
-        r_ptr = &r_info[m_ptr->r_idx];
-        if (is_pet(m_ptr) && i != p_ptr->riding) have_pet = TRUE;
-        if (MON_CSLEEP(m_ptr)) continue;
-        if (m_ptr->cdis > MAX_SIGHT) continue;
-        if ( !los(py, px, m_ptr->fy, m_ptr->fx) /* XXX For Hugo ;) */
-          && m_ptr->cdis > MIN(MAX_SIGHT, r_ptr->aaf) )
+        for (i = 1; i < m_max; i++)
         {
-            continue;
+            monster_type* m_ptr = &m_list[i];
+            monster_race* r_ptr;
+
+            if (!m_ptr->r_idx) continue;
+            r_ptr = &r_info[m_ptr->r_idx];
+            if (is_pet(m_ptr) && i != p_ptr->riding) have_pet = TRUE;
+            if (MON_CSLEEP(m_ptr)) continue;
+            if (m_ptr->cdis > MAX_SIGHT) continue;
+            if (!los(py, px, m_ptr->fy, m_ptr->fx) /* XXX For Hugo ;) */
+                && m_ptr->cdis > MIN(MAX_SIGHT, r_ptr->aaf))
+            {
+                continue;
+            }
+            if (!is_hostile(m_ptr)) continue;
+            /* Monster Awareness of the player is a TODO concept, not yet correctly implemented.
+               At the moment, only the Ring player race uses this and there is a slight bug as well!
+            if (!is_aware(m_ptr)) continue;*/
+            msg_print("You cannot enter the global map since there are some monsters nearby!");
+            energy_use = 0;
+            return FALSE;
         }
-        if (!is_hostile(m_ptr)) continue;
-        /* Monster Awareness of the player is a TODO concept, not yet correctly implemented.
-           At the moment, only the Ring player race uses this and there is a slight bug as well!
-        if (!is_aware(m_ptr)) continue;*/
-        msg_print("You cannot enter the global map since there are some monsters nearby!");
-        energy_use = 0;
-        return FALSE;
     }
 
     if (have_pet)

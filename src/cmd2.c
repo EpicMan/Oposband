@@ -2344,12 +2344,12 @@ void do_cmd_walk(bool pickup)
              && (one_in_(MAX(3, p_ptr->pspeed - 110)))))
         {
             /* Inform the player of his horrible fate :=) */
-            msg_print("You are ambushed!");
+            msg_print("You are ambushed! Reach the edge of the map to escape!");
 
             /* Go into large wilderness view */
             p_ptr->oldpy = rand_range(15, MAX_HGT - 15);
             p_ptr->oldpx = rand_range(15, MAX_WID - 15);
-            change_wild_mode();
+            change_wild_mode(FALSE);
 
             /* Give first move to monsters */
             energy_use = 100;
