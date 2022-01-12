@@ -5198,7 +5198,7 @@ bool set_food(int v)
 
         if (p_ptr->wild_mode && (new_aux < 2))
         {
-            change_wild_mode();
+            change_wild_mode(FALSE);
         }
 
         /* Change */
