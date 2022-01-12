@@ -50,10 +50,10 @@ void do_cmd_go_up(void)
     quests_on_leave();
     if (dun_level)
     {
-        /* New depth */
+/*        /* New depth * /
         if (have_flag(f_ptr->flags, FF_SHAFT))
         {
-            /* Create a way back */
+            /* Create a way back * /
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_UP | CFM_SHAFT);
             up_num = 2;
         }
@@ -61,26 +61,26 @@ void do_cmd_go_up(void)
         {
             /* Create a way back */
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_UP);
-
+/*
             up_num = 1;
         }
 
-        /* Get out from current dungeon */
-        if (dun_level - up_num < d_info[dungeon_type].mindepth)
+        /* Get out from current dungeon * /
+        if (dun_level - up_num < d_info[dungeon_type].mindepth) */
             up_num = dun_level;
 
-        if (d_info[dungeon_type].flags1 & DF1_RANDOM)
+/*        if (d_info[dungeon_type].flags1 & DF1_RANDOM)
         {
             up_num = dun_level;
             prepare_change_floor_mode(CFM_NO_RETURN);
-        }
+        }*/
     }
 
     /* Success */
-    if (up_num == dun_level)
+/*    if (up_num == dun_level)*/
         msg_print("You go back to the surface.");
-    else
-        msg_print("You enter a maze of up staircases.");
+/*    else
+        msg_print("You enter a maze of up staircases.");*/
 
     /* Leaving */
     p_ptr->leaving = TRUE;
@@ -209,16 +209,10 @@ void do_cmd_go_down(void)
             }
             else
             {
-                /* Create a way back ... maybe */
-                if (p_ptr->enter_dungeon
-                    && down_num >= 20
-                    && !wacky_rooms
-                    && !(d_info[dungeon_type].flags1 & DF1_RANDOM)
-                    && !(d_info[dungeon_type].initial_guardian && !(dungeon_flags[dungeon_type] & DUNGEON_NO_GUARDIAN))
-                    && one_in_(14))
+                /* Create a way back (if you pass a Navigation check) */
+                if ( p_ptr->enter_dungeon && randint0(100) >= p_ptr->skills.fos)
                 {
                     /* Hack:  No stair scum */
-                    msg_print("The stairs collapse behind you! You are trapped!!");
                     dungeon_flags[target_dungeon] |= DUNGEON_NO_ENTRANCE;
                     prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_DOWN | CFM_RAND_PLACE);
                 }

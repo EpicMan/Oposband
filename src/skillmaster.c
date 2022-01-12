@@ -152,7 +152,7 @@ static _group_t _groups[] = {
          { 0 }}},
     { _TYPE_SKILLS, "Skills",
         "There are various <color:B>Skills</color> important for every player, including "
-        "stealth, perception, health and magic devices. While these skills may be influenced by "
+        "stealth, navigation, health and magic devices. While these skills may be influenced by "
         "talents in other groups (e.g. Magic increases your device skills), it is often "
         "desirable to directly increase these skills even more. In addition, you can directly "
         "improve your starting stats by investing in some of the skills in this group "

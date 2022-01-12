@@ -1718,7 +1718,7 @@ race_t *dwarf_get_race(void)
         me.desc = "Dwarves are the headstrong miners and fighters of legend. They tend to be strong and tough, "
                     "but lack agility. Because they are so headstrong and also somewhat wise, dwarves are "
                     "relatively resistant to evil curses cast on them. They are very good at fighting, searching "
-                    "and perception, and resist being blinded, but infamously have miserable stealth.";
+                    "and navigation, and resist being blinded, but infamously have miserable stealth.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] = -2;
@@ -2271,7 +2271,7 @@ race_t *half_orc_get_race(void)
 		me.name = "Half-Orc";
 		me.desc = "Half-orcs make excellent warriors, but are terrible at magic. "
 			"They are as bad as dwarves at stealth, and horrible at searching, "
-			"disarming, and perception. Being accustomed to living underground, "
+			"disarming, and navigation. Being accustomed to living underground, "
                         "half-orcs are resistant to darkness attacks. Half-orcs are quite ugly, "
                         "and so tend to pay more for goods in town. The human part of their "
 			"heritage allows them to select a talent at level 30.";
@@ -2405,7 +2405,7 @@ race_t *half_troll_get_race(void)
     {
         me.name = "Half-Troll";
         me.desc = "Half-trolls are incredibly strong, and have more hit points than most other races. "
-                    "They are very stupid, and bad at searching, disarming, perception, and stealth; "
+                    "They are very stupid, and bad at searching, disarming, navigation, and stealth; "
                     "but they make excellent fighters despite their poor agility. They are so ugly that a "
                     "half-orc grimaces in their presence. They also happen to be fun to run... "
                     "Half-trolls always have their strength sustained, and their regeneration is exceptionally fast.";

@@ -164,7 +164,7 @@ race_t *kutar_get_race(void)
         me.name = "Kutar";
         me.desc = "A Kutar is not a dog, cat or bear. Despite their characteristic "
                     "vacant expression, Kutars are beautiful and so have a high charisma. "
-                    "Their absent-mindedness hurts their searching and perception skills, "
+                    "Their absent-mindedness hurts their searching and navigation skills, "
                     "but renders them resistant to being confused. Due to their unearthly "
                     "calmness and serenity, Kutars are extremely stealthy. They learn the "
                     "special ability to expand their body horizontally; this increases "

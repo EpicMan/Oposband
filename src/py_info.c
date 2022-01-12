@@ -320,7 +320,7 @@ static void _build_general2(doc_ptr doc)
         _display_skill(doc, "Archery", skills.thb, 12);
         _display_skill(doc, "SavingThrow", skills.sav, 7);
         _display_skill(doc, "Stealth", skills.stl, 1);
-        _display_skill(doc, "Perception", skills.fos, 6);
+        _display_skill(doc, "Navigation", skills.fos, 6);
         _display_skill(doc, "Searching", skills.srh, 6);
         _display_skill(doc, "Disarming", skills.dis, 8);
         _display_skill(doc, "Device", skills.dev, 7);

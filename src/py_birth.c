@@ -3153,7 +3153,7 @@ static void _race_class_info(doc_ptr doc)
         else
         {
             doc_printf(doc, "<color:w>   %-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
-                "Searching", "Perception", "Melee", "Archery");
+                "Searching", "Navigation", "Melee", "Archery");
             doc_printf(doc, "   %s %s %s %s\n", p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
             doc_printf(doc, "   %s %s %s %s\n",
                 r_desc.srh, r_desc.fos, r_desc.thn, r_desc.thb);

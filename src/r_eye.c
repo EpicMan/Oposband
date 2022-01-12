@@ -380,7 +380,7 @@ race_t *mon_beholder_get_race(void)
                     "Beholders gain powers as they evolve, including some strong offensive spells; "
                     "but their primary offense will always be their powerful gaze. Intelligence is their "
                     "spell stat, and beholders are quite intelligent indeed. Their searching and "
-                    "perception are legendary, and they are quite capable with magical devices. "
+                    "navigation are legendary, and they are quite capable with magical devices. "
                     "However, they are not very strong and must be careful when surrounded by "
                     "foes.\n \n"
                     "The attack of the beholder is unique. Since their gaze is not a normal physical "
