@@ -2146,7 +2146,9 @@ static bool inn_comm(int cmd)
         case BACT_FOOD: /* Buy food & drink */
             if ((prace_is_(RACE_BALROG)) || (prace_is_(RACE_MON_DEMON)))
                 msg_print("The barkeep offers you some very fresh meat, which you gratefully wolf down.");
-            else msg_print("The barkeep gives you some gruel and a beer. Yum!");
+            else msg_print("The barkeep gives you some gruel and a beer.");
+
+            (void)set_food(PY_FOOD_MAX - 1);
             break;
 
         case BACT_REST: /* Rest for the night */

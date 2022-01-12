@@ -69,7 +69,7 @@ F:q_nature.txt
 
 N:14:5:Pest Control (Outpost)
 T:TOWN
-W:yeek cave
+W:warren
 G:KILL(^warg$, 8)
 F:q_wargs.txt
 

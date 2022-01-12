@@ -552,7 +552,7 @@ static void _beastman_get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _beastman_birth(void)
 {
     mut_gain_random(mut_good_pred);
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 race_t *beastman_get_race(void)
@@ -624,7 +624,12 @@ static void _boit_vomit_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         msg_print("You throw up!");
-        take_hit(DAMAGE_NOESCAPE, 2, "choking on their own vomit");
+        if (p_ptr->food < PY_FOOD_FAINT + 24)
+        {
+            take_hit(DAMAGE_NOESCAPE, 10, "vomiting on an empty stomach");
+            energy_use += 15;
+        }
+        set_food(MAX(1, MIN(p_ptr->food - 100, PY_FOOD_FAINT + 12)));
         fire_ball(GF_POIS, 0, p_ptr->poisoned * 2 / 7, 1);
         set_poisoned(0, TRUE);
         var_set_bool(res, TRUE);
@@ -704,7 +709,7 @@ static void _centaur_birth(void)
 {
     equip_on_change_race();
     skills_innate_init("Hooves", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 
@@ -1718,7 +1723,7 @@ race_t *dwarf_get_race(void)
         me.desc = "Dwarves are the headstrong miners and fighters of legend. They tend to be strong and tough, "
                     "but lack agility. Because they are so headstrong and also somewhat wise, dwarves are "
                     "relatively resistant to evil curses cast on them. They are very good at fighting, searching "
-                    "and navigation, and resist being blinded, but infamously have miserable stealth.";
+                    "and perception, and resist being blinded, but infamously have miserable stealth.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] = -2;
@@ -2271,7 +2276,7 @@ race_t *half_orc_get_race(void)
 		me.name = "Half-Orc";
 		me.desc = "Half-orcs make excellent warriors, but are terrible at magic. "
 			"They are as bad as dwarves at stealth, and horrible at searching, "
-			"disarming, and navigation. Being accustomed to living underground, "
+			"disarming, and perception. Being accustomed to living underground, "
                         "half-orcs are resistant to darkness attacks. Half-orcs are quite ugly, "
                         "and so tend to pay more for goods in town. The human part of their "
 			"heritage allows them to select a talent at level 30.";
@@ -2405,7 +2410,7 @@ race_t *half_troll_get_race(void)
     {
         me.name = "Half-Troll";
         me.desc = "Half-trolls are incredibly strong, and have more hit points than most other races. "
-                    "They are very stupid, and bad at searching, disarming, navigation, and stealth; "
+                    "They are very stupid, and bad at searching, disarming, perception, and stealth; "
                     "but they make excellent fighters despite their poor agility. They are so ugly that a "
                     "half-orc grimaces in their presence. They also happen to be fun to run... "
                     "Half-trolls always have their strength sustained, and their regeneration is exceptionally fast.";

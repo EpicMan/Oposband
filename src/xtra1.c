@@ -58,7 +58,7 @@
 
 #define ROW_HEALTH_BARS        (p_ptr->pclass == CLASS_POLITICIAN ? 15 : 14)
 #define COL_HEALTH_BARS         0
-#define COUNT_HEALTH_BARS       5 /* HP, SP, Riding, Monster Track, Target */
+#define COUNT_HEALTH_BARS       6 /* HP, SP, Food, Riding, Monster Track, Target */
 
 #define ROW_EFFECTS            (p_ptr->pclass == CLASS_POLITICIAN ? 21 : 20)
 #define COL_EFFECTS             0
@@ -1874,6 +1874,24 @@ static void prt_fear(int row, int col)
     }
 }
 
+static void prt_food(int row, int col)
+{
+    if (p_ptr->food < PY_FOOD_FAINT)
+        c_put_str(TERM_RED, "Faint", row, col);
+
+    else if (p_ptr->food < PY_FOOD_WEAK)
+        c_put_str(TERM_ORANGE, "Weak", row, col);
+
+    else if (p_ptr->food < PY_FOOD_ALERT)
+        c_put_str(TERM_YELLOW, "Hungry", row, col);
+
+    else if (p_ptr->food < PY_FOOD_MAX)
+        c_put_str(TERM_L_GREEN, "Full", row, col);
+
+    else
+        c_put_str(TERM_GREEN, "Gorged", row, col);
+}
+
 static void prt_effects(void)
 {
     int i, row, col;
@@ -1978,6 +1996,8 @@ static void prt_effects(void)
         c_put_str(color, tmp, row, col + 6);
         row++;
     }
+    if (p_ptr->food >= PY_FOOD_FULL || p_ptr->food < PY_FOOD_ALERT)
+        prt_food(row++, col);
     if (p_ptr->wizard)
         c_put_str(TERM_L_BLUE, "Wizard", row++, col);
     if (p_ptr->pclass == CLASS_SKILLMASTER)
@@ -2079,6 +2099,39 @@ static void prt_sp_bar(int row, int col)
     {
         Term_putstr(col + 1, row, 11, TERM_WHITE, "[---------]");
         Term_putstr(col + 2, row, len, a, "*********");
+    }
+}
+
+static void prt_food_bar(int row, int col)
+{
+    byte attr;
+    int  pct;
+    int  len;
+    int  k_idx;
+
+    k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
+    Term_queue_bigchar(col, row, k_info[k_idx].x_attr, k_info[k_idx].x_char, 0, 0);
+
+    pct = 100 * p_ptr->food / PY_FOOD_FULL;
+    len = MIN(9, 1 + p_ptr->food * 9 / PY_FOOD_FULL);
+
+    if (pct >= 100) attr = TERM_L_GREEN;
+    else if (pct >= 50) attr = TERM_WHITE;
+    else if (pct >= 30) attr = TERM_YELLOW;
+    else if (pct >= 20) attr = TERM_ORANGE;
+    else if (pct >= 10) attr = TERM_L_RED;
+    else attr = TERM_VIOLET;
+
+    if (p_ptr->wizard)
+    {
+        char buf[20];
+        sprintf(buf, "%3d%%", pct);
+        Term_putstr(col + 2, row, strlen(buf), attr, buf);
+    }
+    else
+    {
+        Term_putstr(col + 1, row, 11, TERM_WHITE, "[---------]");
+        Term_putstr(col + 2, row, len, attr, "*********");
     }
 }
 
@@ -2214,6 +2267,8 @@ static void prt_health_bars(void)
             prt_hp_bar(row++, col);
         if (display_sp_bar && p_ptr->msp)
             prt_sp_bar(row++, col);
+        if (display_food_bar)
+            prt_food_bar(row++, col);
         if (p_ptr->riding)
             prt_mon_health_bar(p_ptr->riding, row++, col);
         if (p_ptr->health_who && p_ptr->health_who != p_ptr->riding)
@@ -4124,6 +4179,9 @@ void calc_bonuses(void)
     p_ptr->life += adj_con_mhp[p_ptr->stat_ind[A_CON]];
     if (p_ptr->life != old_life)
         p_ptr->update |= PU_HP;
+
+    /* Bloating slows the player down (a little) */
+    if (p_ptr->food >= PY_FOOD_MAX) p_ptr->pspeed -= 10;
 
     /* Barehanded Combat */
     for (i = 0; i < MAX_HANDS; i++)

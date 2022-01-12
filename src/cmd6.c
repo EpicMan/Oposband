@@ -297,6 +297,7 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
                 if (mut_present(MUT_WAYBREAD_INTO))
                 {
                     msg_print("The waybread makes you vomit!");
+                    set_food(PY_FOOD_STARVE - 1);
                     set_paralyzed(randint1(4), FALSE);
                     set_poisoned(0, TRUE);
                     ident = TRUE;
@@ -349,6 +350,117 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
         stats_on_notice(obj, 1);
         gain_exp((lev + (p_ptr->lev >> 1)) / p_ptr->lev);
         p_ptr->notice |= PN_OPTIMIZE_PACK;
+    }
+
+    /* Food can feed the player */
+    if (no_food)
+    {
+    }
+    else if ( prace_is_(RACE_VAMPIRE)
+      || prace_is_(RACE_MON_VAMPIRE)
+      || p_ptr->mimic_form == MIMIC_VAMPIRE )
+    {
+        /* Reduced nutritional benefit */
+        set_food(p_ptr->food + obj->pval / 10);
+        msg_print("Mere victuals hold scant sustenance for a being such as yourself.");
+        if (p_ptr->food < PY_FOOD_ALERT)   /* Hungry */
+            msg_print("Your hunger can only be satisfied with fresh blood!");
+    }
+    else if (prace_is_(RACE_ANDROID))
+    {
+        if (obj->tval == TV_FLASK)
+        {
+            msg_print("You replenish yourself with the oil.");
+            set_food(p_ptr->food + 5000);
+        }
+    }
+    else if (prace_is_(RACE_MON_JELLY))
+    {
+        int luku = obj->number;
+        obj->number = 1;
+        jelly_eat_object(obj);
+        obj->number = luku;
+    }
+    else if ( ( prace_is_(RACE_SKELETON)
+             || prace_is_(RACE_GOLEM)
+             || prace_is_(RACE_MON_GOLEM)
+             || prace_is_(RACE_MON_SWORD)
+             || prace_is_(RACE_MON_ARMOR)
+             || prace_is_(RACE_MON_RING)
+             || p_ptr->mimic_form == MIMIC_CLAY_GOLEM
+             || p_ptr->mimic_form == MIMIC_IRON_GOLEM
+             || p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM
+             || p_ptr->mimic_form == MIMIC_COLOSSUS
+             || prace_is_(RACE_ZOMBIE)
+             || prace_is_(RACE_MON_LICH)
+             || prace_is_(RACE_SPECTRE)
+             || prace_is_(RACE_MON_VORTEX)
+             || elemental_is_(ELEMENTAL_AIR) )
+           && object_is_device(obj) )
+    {
+        int amt = obj->activation.cost;
+
+        if (amt > device_sp(obj))
+            amt = device_sp(obj);
+
+        if (!amt)
+        {
+            msg_print("The device has no energy left.");
+            return;
+        }
+
+        device_decrease_sp(obj, amt);
+        set_food(p_ptr->food + 5000);
+
+        obj_describe_charges(obj);
+        p_ptr->window |= PW_INVEN;
+
+        /* Don't consume the object */
+        return;
+    }
+    else if ( (get_race()->flags & RACE_IS_DEMON)
+           && obj->tval == TV_CORPSE
+           && obj->sval == SV_CORPSE
+           && my_strchr("pht", r_info[obj->pval].d_char) )
+    {
+        /* Drain vitality of humanoids */
+        char o_name[MAX_NLEN];
+
+        object_desc(o_name, obj, (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_SINGULAR));
+
+        msg_format("<color:%c>The %^s</color> is burnt to ashes. You absorb its vitality!", tval_to_attr_char(obj->tval), o_name);
+        set_food(PY_FOOD_MAX - 1);
+    }
+    else if (prace_is_(RACE_SKELETON))
+    {
+        if (!(obj->sval == SV_FOOD_WAYBREAD ||
+              obj->sval < SV_FOOD_BISCUIT))
+        {
+            int luku = obj->number;
+            msg_print("The food falls through your jaws!");
+            obj->number = 1;
+            drop_near(obj, -1, py, px);
+            obj->number = luku;
+        }
+        else
+        {
+            msg_print("The food falls through your jaws and vanishes!");
+        }
+    }
+    else if (((get_race()->flags & RACE_IS_NONLIVING) && (!prace_is_(RACE_MON_PUMPKIN)) && (!prace_is_(RACE_EINHERI))) || prace_is_(RACE_ENT) || prace_is_(RACE_MON_ARMOR))
+    {
+        msg_print("The food of mortals is poor sustenance for you.");
+        set_food(p_ptr->food + obj->pval / 20);
+    }
+    else if (obj->tval == TV_FOOD && (obj->sval == SV_FOOD_WAYBREAD || obj->sval == SV_FOOD_AMBROSIA))
+    {
+        /* Waybread is always fully satisfying. */
+        set_food(MAX(p_ptr->food, PY_FOOD_MAX - 1));
+    }
+    else
+    {
+        /* Food can feed the player */
+        set_food(p_ptr->food + obj->pval);
     }
 
     /* Consume the object */
@@ -506,6 +618,75 @@ static void do_cmd_quaff_potion_aux(obj_ptr obj)
     }
 
     water_mana_action(FALSE, (obj->sval == SV_POTION_WATER) ? 20 : 10);
+
+    /* Potions can feed the player */
+    switch (p_ptr->mimic_form)
+    {
+    case MIMIC_NONE:
+        switch (p_ptr->prace)
+        {
+            case RACE_VAMPIRE:
+            case RACE_MON_VAMPIRE:
+                set_food(p_ptr->food + obj->pval / 10);
+                break;
+            case RACE_SKELETON:
+            case RACE_MON_JELLY:
+                break;
+            case RACE_GOLEM:
+            case RACE_MON_GOLEM:
+            case RACE_MON_VORTEX:
+            case RACE_ZOMBIE:
+            case RACE_MON_LICH:
+            case RACE_BALROG:
+            case RACE_SPECTRE:
+            case RACE_MON_DEMON:
+            case RACE_MON_SWORD:
+            case RACE_MON_ARMOR:
+            case RACE_MON_RING:
+                set_food(p_ptr->food + obj->pval / 20);
+                break;
+            case RACE_ANDROID:
+                if (obj->tval == TV_FLASK)
+                {
+                    msg_print("You replenish yourself with the oil.");
+                    set_food(p_ptr->food + 5000);
+                }
+                else
+                {
+                    set_food(p_ptr->food + obj->pval / 20);
+                }
+                break;
+            case RACE_ENT:
+                msg_print("You are moistened.");
+                set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                break;
+            default:
+                if (elemental_is_(ELEMENTAL_WATER))
+                {
+                    msg_print("That tastes delicious.");
+                    set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                }
+                else if (elemental_is_(ELEMENTAL_FIRE) && obj->tval == TV_FLASK)
+                {
+                    msg_print("Your body flames up with renewed vigor.");
+                    set_food(p_ptr->food + 5000);
+                }
+                else
+                    set_food(p_ptr->food + obj->pval);
+                break;
+        }
+        break;
+    case MIMIC_DEMON:
+    case MIMIC_DEMON_LORD:
+        set_food(p_ptr->food + obj->pval / 20);
+        break;
+    case MIMIC_VAMPIRE:
+        set_food(p_ptr->food + obj->pval / 10);
+        break;
+    default:
+        set_food(p_ptr->food + obj->pval);
+        break;
+    }
 
     /* Consume Item */
     if (devicemaster_is_(DEVICEMASTER_POTIONS) && !devicemaster_desperation && randint1(3*p_ptr->lev/2) > MAX(10, lev))

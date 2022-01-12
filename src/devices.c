@@ -386,6 +386,7 @@ static cptr _do_potion(int sval, int mode)
               && !prace_is_(RACE_MON_JELLY) ) || prace_is_(RACE_EINHERI))
             {
                 msg_print("The potion makes you vomit!");
+                set_food(PY_FOOD_STARVE - 1);
                 set_paralyzed(randint1(4), FALSE);
                 set_poisoned(0, TRUE);
                 device_noticed = TRUE;
@@ -1449,8 +1450,7 @@ static cptr _do_scroll(int sval, int mode)
         if (desc) return "It satisfies hunger when you read it.";
         if (cast)
         {
-            device_noticed = TRUE;
-            return "You feel full!";
+            if (set_food(PY_FOOD_MAX - 1)) device_noticed = TRUE;
         }
         break;
     case SV_SCROLL_BLESSING:
@@ -3734,8 +3734,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_GREEN);
         if (cast)
         {
-            device_noticed = TRUE;
-            return "You feel full!";
+            if (set_food(PY_FOOD_MAX - 1)) device_noticed = TRUE;
         }
         break;
     case EFFECT_DESTROY_TRAP:
@@ -6951,13 +6950,13 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         break;
     case EFFECT_DEMETER:
         if (name) return "Flame of Demeter";
-        if (desc) return "It heals you greatly.";
+        if (desc) return "It heals you and satiates your hunger.";
         if (info) return info_heal(0, 0, _BOOST(500));
         if (value) return format("%d", 10000);
         if (cast)
         {
-            hp_player(_BOOST(500));
-            device_noticed = TRUE;
+            if (hp_player(_BOOST(500))) device_noticed = TRUE;
+            if (set_food(PY_FOOD_MAX - 1)) device_noticed = TRUE;
         }
         break;
     case EFFECT_EYE_VECNA:

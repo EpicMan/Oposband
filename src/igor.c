@@ -958,7 +958,7 @@ static void _birth(void)
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
     skills_innate_init("Claw", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
     _igor_birth_hack = TRUE;
     for (i = 0; i < _IB_MAX_ACTIVE; i++)

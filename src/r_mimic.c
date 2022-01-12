@@ -872,7 +872,7 @@ static void _birth(void)
     forge.to_h = 3;
     py_birth_obj(&forge);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 

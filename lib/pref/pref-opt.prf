@@ -54,6 +54,7 @@ Y:describe_slots
 Y:show_weights
 Y:show_item_graph
 Y:equippy_chars
+X:display_food_bar
 X:display_hp_bar
 X:display_sp_bar
 X:compress_savefile

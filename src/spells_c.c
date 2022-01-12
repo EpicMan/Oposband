@@ -439,16 +439,15 @@ void create_food_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         if (p_ptr->prace == RACE_HOBBIT)
-            var_set_string(res, "It's time for second breakfast! Forage for mushrooms.");
+            var_set_string(res, "It's time for second breakfast!  Cook up a tasty meal.");
         else
-            var_set_string(res, "Create a tasty mushroom.");
+            var_set_string(res, "Create a ration of tasty food.");
         break;
     case SPELL_CAST:
     {
         object_type forge;
-        int which_one = randint0(1 + SV_FOOD_MAX_MUSHROOM);
 
-        object_prep(&forge, lookup_kind(TV_FOOD, which_one));
+        object_prep(&forge, lookup_kind(TV_FOOD, SV_FOOD_RATION));
         drop_near(&forge, -1, py, px);
         object_origins(&forge, ORIGIN_ACQUIRE);
 
@@ -1513,8 +1512,32 @@ void eat_rock_spell(int cmd, variant *res)
             msg_print("You don't like the glassy taste!");
             break;
         }
-        else if(elemental_is_(ELEMENTAL_EARTH))
-			msg_format("This %s is very filling!", f_name + mimic_f_ptr->name);
+        else if (have_flag(f_ptr->flags, FF_DOOR) || have_flag(f_ptr->flags, FF_CAN_DIG))
+        {
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 500, PY_FOOD_MAX - 1));
+            else
+                set_food(p_ptr->food + 3000);
+        }
+        else if (have_flag(f_ptr->flags, FF_MAY_HAVE_GOLD) || have_flag(f_ptr->flags, FF_HAS_GOLD))
+        {
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 1000, PY_FOOD_MAX - 1));
+            else
+                set_food(p_ptr->food + 5000);
+        }
+        else
+        {
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 2000, PY_FOOD_MAX - 1));
+            else
+            {
+                msg_format("This %s is very filling!",
+                    f_name + mimic_f_ptr->name);
+
+                set_food(p_ptr->food + 10000);
+            }
+        }
 
         /* Destroy the wall */
         cave_alter_feat(y, x, FF_HURT_ROCK);

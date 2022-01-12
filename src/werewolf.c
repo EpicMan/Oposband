@@ -111,7 +111,7 @@ static void _birth(void)
     _werewolf_form = 0;
     skills_innate_init("Claw", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 
@@ -185,8 +185,8 @@ void werewolf_change_shape_spell(int cmd, variant *res)
         }
         _werewolf_form = 1 - _werewolf_form;
         _equip_on_change_form();
-        if (_werewolf_form == WEREWOLF_FORM_WOLF) msg_print("You turn into a wolf!");
-        else msg_print("You turn into a human!");
+        if (_werewolf_form == WEREWOLF_FORM_WOLF) msg_format("You turn into %s wolf!", ((one_in_(8)) && (p_ptr->food < PY_FOOD_ALERT)) ? "a ravenous" : "a");
+        else msg_format("You turn into %s human!", ((one_in_(8)) && (p_ptr->food < PY_FOOD_ALERT)) ? "a ravenous" : "a");
         if ((_werewolf_form == WEREWOLF_FORM_HUMAN) && (p_ptr->action == ACTION_STALK)) set_action(ACTION_NONE);
         var_set_bool(res, TRUE);
         handle_stuff();

@@ -136,7 +136,7 @@ cptr do_law_spell(int spell, int mode)
         if (name) return "Satisfy Hunger";
         if (desc) return "Satisfies hunger.";
         if (cast)
-            return "You feel full!";
+            set_food(PY_FOOD_MAX - 1);
         break;
 
     case 3:

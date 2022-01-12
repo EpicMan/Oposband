@@ -108,7 +108,7 @@ static void _birth(void)
 
     _beorning_form = 0;
     skills_innate_init("Claw", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 

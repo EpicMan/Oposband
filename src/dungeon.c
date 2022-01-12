@@ -1357,6 +1357,24 @@ static void process_world_aux_hp_and_sp(void)
 
     /*** handle regeneration ***/
 
+    /* Getting Weak */
+    if (p_ptr->food < PY_FOOD_WEAK)
+    {
+        /* Lower regeneration */
+        if (p_ptr->food < PY_FOOD_STARVE)
+        {
+            regen_amount = 0;
+        }
+        else if (p_ptr->food < PY_FOOD_FAINT)
+        {
+            regen_amount = PY_REGEN_FAINT;
+        }
+        else
+        {
+            regen_amount = PY_REGEN_WEAK;
+        }
+    }
+
     /* Are we walking the pattern? */
     if (pattern_effect())
     {
@@ -1903,21 +1921,19 @@ static void process_world_aux_timeout(void)
 
     if (p_ptr->fasting && one_in_(7))
     {
-        switch (randint1(8))
+        if (randint1(PY_FOOD_ALERT) > p_ptr->food)
         {
-        case 1: do_res_stat(A_STR); break;
-        case 2: do_res_stat(A_INT); break;
-        case 3: do_res_stat(A_WIS); break;
-        case 4: do_res_stat(A_DEX); break;
-        case 5: do_res_stat(A_CON); break;
-        case 6: do_res_stat(A_CHR); break;
-        case 7: restore_level(); break;
-        case 8: lp_player(150); break;
-        }
-
-        if (one_in_(15))
-        {
-            p_ptr->fasting = 0;
+            switch (randint1(8))
+            {
+            case 1: do_res_stat(A_STR); break;
+            case 2: do_res_stat(A_INT); break;
+            case 3: do_res_stat(A_WIS); break;
+            case 4: do_res_stat(A_DEX); break;
+            case 5: do_res_stat(A_CON); break;
+            case 6: do_res_stat(A_CHR); break;
+            case 7: restore_level(); break;
+            case 8: lp_player(150); break;
+            }
         }
     }
 
@@ -3048,6 +3064,77 @@ static void process_world(void)
     }
 
 
+    /*** Check the Food, and Regenerate ***/
+
+    if (!p_ptr->inside_battle)
+    {
+        /* Digest quickly when gorged */
+        if (p_ptr->food >= PY_FOOD_MAX)
+        {
+            /* Digest a lot of food */
+            (void)set_food(p_ptr->food - 100);
+        }
+
+        /* Digest normally -- Every 50 game turns */
+        else if (!(game_turn % (TURNS_PER_TICK*5)))
+        {
+            /* Basic digestion rate based on speed */
+            int digestion = SPEED_TO_ENERGY(p_ptr->pspeed);
+
+            /* Regeneration takes more food */
+            if (p_ptr->regen > 100)
+                digestion += 10*(p_ptr->regen-100)/100;
+            if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
+                digestion += 20;
+            if (p_ptr->cursed & OFC_FAST_DIGEST)
+                digestion += 30;
+
+            /* Slow digestion takes less food */
+            if (p_ptr->slow_digest)
+                digestion /= 2;
+
+            /* Temperance slows digestion */
+            digestion = digestion * (375 - virtue_current(VIRTUE_TEMPERANCE)) / 375;
+
+            /* Minimal digestion */
+            if (digestion < 1) digestion = 1;
+            /* Maximal digestion */
+            if (digestion > 100) digestion = 100;
+
+            /* Digest some food */
+            (void)set_food(p_ptr->food - digestion);
+        }
+
+
+        /* Getting Faint */
+        if ((p_ptr->food < PY_FOOD_FAINT))
+        {
+            /* Faint occasionally */
+            if (!p_ptr->paralyzed && (randint0(100) < 10))
+            {
+                /* Message */
+                msg_print("You faint from the lack of food.");
+
+                disturb(1, 0);
+
+                /* Hack -- faint (bypass free action) */
+                (void)set_paralyzed(randint1(4), FALSE);
+            }
+
+            /* Starve to death (slowly) */
+            if (p_ptr->food < PY_FOOD_STARVE)
+            {
+                /* Calculate damage */
+                int dam = (PY_FOOD_STARVE - p_ptr->food) / 10;
+
+                /* Take damage */
+                if (!IS_INVULN()) take_hit(DAMAGE_LOSELIFE, dam, "starvation");
+            }
+        }
+    }
+
+
+
     /* Process timed damage and regeneration */
     process_world_aux_hp_and_sp();
 
@@ -3433,6 +3520,12 @@ static void _dispatch_command(int old_now_turn)
                 else if (py_on_surface())
                 {
                     if (no_wilderness) break;
+
+                    if (p_ptr->food < PY_FOOD_WEAK)
+                    {
+                        msg_print("You must eat something here.");
+                        break;
+                    }
 
                     change_wild_mode();
                 }
@@ -5679,7 +5772,7 @@ void play_game(bool new_game)
         {
             /* most races won't need a special birth function, so
              * give standard food and light by default */
-            py_birth_scrolls();
+            py_birth_food();
             py_birth_light();
         }
         if ((coffee_break) && (!thrall_mode) && (p_ptr->pclass != CLASS_BERSERKER)) 
@@ -5909,6 +6002,9 @@ void play_game(bool new_game)
                     (void)set_image(0, TRUE);
                     (void)set_stun(0, TRUE);
                     (void)set_cut(0, TRUE);
+
+                    /* Hack -- Prevent starvation */
+                    (void)set_food(PY_FOOD_MAX - 1);
 
                     dun_level = 0;
                     p_ptr->inside_arena = FALSE;

@@ -43,7 +43,7 @@ static void _dragon_birth(void)
     add_flag(forge.flags, OF_DEX);
     py_birth_obj(&forge);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 

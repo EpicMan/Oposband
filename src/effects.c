@@ -4980,6 +4980,259 @@ bool set_cut(int v, bool do_dec)
 
 
 /*
+ * Set "p_ptr->food", notice observable changes
+ *
+ * The "p_ptr->food" variable can get as large as 20000, allowing the
+ * addition of the most "filling" item, Elvish Waybread, which adds
+ * 7500 food units, without overflowing the 32767 maximum limit.
+ *
+ * Perhaps we should disturb the player with various messages,
+ * especially messages about hunger status changes. XXX XXX XXX
+ *
+ * Digestion of food is handled in "dungeon.c", in which, normally,
+ * the player digests about 20 food units per 100 game turns, more
+ * when "fast", more when "regenerating", less with "slow digestion",
+ * but when the player is "gorged", he digests 100 food units per 10
+ * game turns, or a full 1000 food units per 100 game turns.
+ *
+ * Note that the player's speed is reduced by 10 units while gorged,
+ * so if the player eats a single food ration (5000 food units) when
+ * full (15000 food units), he will be gorged for (5000/100)*10 = 500
+ * game turns, or 500/(100/5) = 25 player turns (if nothing else is
+ * affecting the player speed).
+ */
+bool set_food(int v)
+{
+    int old_aux, new_aux;
+    int old_pct;
+    int new_pct;
+
+    bool notice = FALSE;
+
+    /* Hack -- Force good values */
+    v = (v > 20000) ? 20000 : (v < 0) ? 0 : v;
+
+    /* CTK: I added a "food bar" to track hunger ... */
+    if (p_ptr->wizard)
+    {
+        old_pct = p_ptr->food * 100 / PY_FOOD_FULL;
+        new_pct = v * 100 / PY_FOOD_FULL;
+    }
+    else
+    {
+        old_pct = MIN(10, p_ptr->food * 10 / PY_FOOD_FULL);
+        new_pct = MIN(10, v * 10 / PY_FOOD_FULL);
+    }
+
+    /* Fainting / Starving */
+    if (p_ptr->food < PY_FOOD_FAINT)
+    {
+        old_aux = 0;
+    }
+
+    /* Weak */
+    else if (p_ptr->food < PY_FOOD_WEAK)
+    {
+        old_aux = 1;
+    }
+
+    /* Hungry */
+    else if (p_ptr->food < PY_FOOD_ALERT)
+    {
+        old_aux = 2;
+    }
+
+    /* Normal */
+    else if (p_ptr->food < PY_FOOD_FULL)
+    {
+        old_aux = 3;
+    }
+
+    /* Full */
+    else if (p_ptr->food < PY_FOOD_MAX)
+    {
+        old_aux = 4;
+    }
+
+    /* Gorged */
+    else
+    {
+        old_aux = 5;
+    }
+
+    /* Fainting / Starving */
+    if (v < PY_FOOD_FAINT)
+    {
+        new_aux = 0;
+    }
+
+    /* Weak */
+    else if (v < PY_FOOD_WEAK)
+    {
+        new_aux = 1;
+    }
+
+    /* Hungry */
+    else if (v < PY_FOOD_ALERT)
+    {
+        new_aux = 2;
+    }
+
+    /* Normal */
+    else if (v < PY_FOOD_FULL)
+    {
+        new_aux = 3;
+    }
+
+    /* Full */
+    else if (v < PY_FOOD_MAX)
+    {
+        new_aux = 4;
+    }
+
+    /* Gorged */
+    else
+    {
+        new_aux = 5;
+    }
+
+    if (old_aux < 1 && new_aux > 0)
+        virtue_add(VIRTUE_PATIENCE, 2);
+    else if (old_aux < 3 && (old_aux != new_aux))
+        virtue_add(VIRTUE_PATIENCE, 1);
+    if (old_aux == 2)
+        virtue_add(VIRTUE_TEMPERANCE, 1);
+    if (old_aux == 0)
+        virtue_add(VIRTUE_TEMPERANCE, -1);
+
+    if (display_food_bar && new_pct != old_pct)
+        notice = TRUE;
+
+    /* Food increase */
+    if (new_aux > old_aux)
+    {
+        /* Describe the state */
+        switch (new_aux)
+        {
+            /* Weak */
+            case 1:
+            msg_print("You are still weak.");
+
+            break;
+
+            /* Hungry */
+            case 2:
+            msg_print("You are still hungry.");
+
+            break;
+
+            /* Normal */
+            case 3:
+            msg_print("You are no longer hungry.");
+
+            break;
+
+            /* Full */
+            case 4:
+            msg_print("You are full!");
+
+            break;
+
+            /* Bloated */
+            case 5:
+            msg_print("You have gorged yourself!");
+            virtue_add(VIRTUE_HARMONY, -1);
+            virtue_add(VIRTUE_PATIENCE, -1);
+            virtue_add(VIRTUE_TEMPERANCE, -2);
+
+            break;
+        }
+
+        /* Change */
+        notice = TRUE;
+    }
+
+    if ((v > p_ptr->food) && p_ptr->fasting)
+    {
+        msg_print("You break your fast.");
+        p_ptr->redraw |= PR_STATUS;
+        p_ptr->fasting = FALSE;
+    }
+
+    /* Food decrease */
+    else if (new_aux < old_aux)
+    {
+        /* Describe the state */
+        switch (new_aux)
+        {
+            /* Fainting / Starving */
+            case 0:
+            msg_print("You are getting faint from hunger!");
+
+            break;
+
+            /* Weak */
+            case 1:
+            msg_print("You are getting weak from hunger!");
+
+            break;
+
+            /* Hungry */
+            case 2:
+            msg_print("You are getting hungry.");
+
+            break;
+
+            /* Normal */
+            case 3:
+            msg_print("You are no longer full.");
+
+            break;
+
+            /* Full */
+            case 4:
+            msg_print("You are no longer gorged.");
+
+            break;
+        }
+
+        if (p_ptr->wild_mode && (new_aux < 2))
+        {
+            change_wild_mode();
+        }
+
+        /* Change */
+        notice = TRUE;
+    }
+
+    /* Use the value */
+    p_ptr->food = v;
+
+    /* Nothing to notice */
+    if (!notice) return (FALSE);
+
+    if (new_aux != old_aux)
+    {
+        /* Disturb */
+        if (disturb_state) disturb(0, 0);
+
+        /* Recalculate bonuses */
+        p_ptr->update |= (PU_BONUS);
+    }
+
+    /* Redraw hunger */
+    p_ptr->redraw |= PR_EFFECTS;
+    if (display_food_bar)
+        p_ptr->redraw |= PR_HEALTH_BARS;
+
+    /* Handle stuff */
+    handle_stuff();
+
+    /* Result */
+    return (TRUE);
+}
+
+/*
  * Increases a stat by one randomized level             -RAK-
  *
  * Note that this function (used by stat potions) now restores

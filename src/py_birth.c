@@ -54,7 +54,7 @@ extern int py_birth(void);
 
 extern void py_birth_obj(object_type *o_ptr);
 extern void py_birth_obj_aux(int tval, int sval, int qty);
-extern void py_birth_scrolls(void);
+extern void py_birth_food(void);
 extern void py_birth_light(void);
 extern void py_birth_spellbooks(void);
 
@@ -177,9 +177,9 @@ void py_birth_obj(object_type *o_ptr)
 }
 
 /* Standard Food and Light */
-void py_birth_scrolls(void)
+void py_birth_food(void)
 {
-    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_IDENTIFY, 2 + rand_range(2, 5));
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_RATION, 2 + rand_range(3, 7));
 }
 
 void py_birth_light(void)
@@ -3153,7 +3153,7 @@ static void _race_class_info(doc_ptr doc)
         else
         {
             doc_printf(doc, "<color:w>   %-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
-                "Searching", "Navigation", "Melee", "Archery");
+                "Searching", "Perception", "Melee", "Archery");
             doc_printf(doc, "   %s %s %s %s\n", p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
             doc_printf(doc, "   %s %s %s %s\n",
                 r_desc.srh, r_desc.fos, r_desc.thn, r_desc.thb);

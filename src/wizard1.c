@@ -86,6 +86,7 @@ static grouper group_item[] =
 
     { TV_SCROLL,        "Scrolls" },
     { TV_POTION,        "Potions" },
+    { TV_FOOD,          "Food" },
 
     { TV_LIFE_BOOK,     "Books (Life)" },
     { TV_SORCERY_BOOK,  "Books (Sorcery)" },

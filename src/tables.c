@@ -2240,6 +2240,9 @@ option_type option_info[] =
     { &display_sp_bar,              FALSE,  OPT_PAGE_TEXT, 1, 2,
     "display_sp_bar",               "Display player sp bar" },
 
+    { &display_food_bar,            FALSE,  OPT_PAGE_TEXT, 1, 13,
+    "display_food_bar",             "Display detailed food status" },
+
     { &show_rogue_keys,		    FALSE, OPT_PAGE_TEXT, 6, 3,
     "show_rogue_keys",		    "Display roguelike movement keys as reminder" },
 
@@ -2709,7 +2712,7 @@ cptr ident_info[] =
     "):A shield",
     "*:A vein with treasure or a ball monster",
     "+:A closed door",
-    ",:Mushroom patch",
+    ",:Food (or mushroom patch)",
     "-:A wand (or rod)",
     ".:Floor",
     "/:A polearm (Axe/Pike/etc)",

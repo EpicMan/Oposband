@@ -564,10 +564,24 @@ void vampire_feed(int amt)
     if (prace_is_(MIMIC_BAT))
         div = 16;
 
-    if (p_ptr->chp < p_ptr->mhp)
+    if (p_ptr->food < PY_FOOD_FULL)
         hp_player(amt);
     else
         msg_print("You were not hungry.");
+
+    /* Experimental: Scale the feeding asymptotically. Historically, vampiric feeding
+        was too slow in the early game (low damage) hence tedious. But by the end game,
+        a mere two bites would fill the vampire, rendering the talent rather useless. */
+    if (p_ptr->food < PY_FOOD_VAMP_MAX)
+        food = p_ptr->food + (PY_FOOD_VAMP_MAX - p_ptr->food) / div;
+    /* Exceeding PY_FOOD_VAMP_MAX is unlikely, but possible (eg. eating rations of food?!) */
+    else if (p_ptr->food < PY_FOOD_MAX)
+        food = p_ptr->food + (PY_FOOD_MAX - p_ptr->food) / div;
+    else
+        food = p_ptr->food + amt;
+
+    assert(food >= p_ptr->food);
+    set_food(food);
 }
 
 void vampire_check_light_status(void)

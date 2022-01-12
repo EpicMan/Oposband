@@ -605,6 +605,7 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->blind);
     savefile_write_s16b(file, p_ptr->paralyzed);
     savefile_write_s16b(file, p_ptr->confused);
+    savefile_write_s16b(file, p_ptr->food);
     savefile_write_s16b(file, p_ptr->energy_need);
     savefile_write_s16b(file, p_ptr->fast);
     savefile_write_s16b(file, p_ptr->slow);

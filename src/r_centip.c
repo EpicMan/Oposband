@@ -44,7 +44,7 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_BOOTS, SV_PAIR_OF_SOFT_LEATHER_BOOTS));
     py_birth_obj(&forge);
 
-    py_birth_scrolls();
+    py_birth_food();
     py_birth_light();
 }
 

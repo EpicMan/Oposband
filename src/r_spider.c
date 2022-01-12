@@ -600,7 +600,7 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 
-    py_birth_scrolls();
+    py_birth_food();
 }
 
 static name_desc_t _info[SPIDER_MAX] = {
