@@ -6365,7 +6365,7 @@ int take_hit(int damage_type, int damage, cptr hit_from)
     warning_hack_hp = 0;
     if (p_ptr->wild_mode && !p_ptr->leaving && (p_ptr->chp < MAX(warning, p_ptr->mhp/5)))
     {
-        change_wild_mode();
+        change_wild_mode(FALSE);
     }
     else if ((disciple_is_(DISCIPLE_TROIKA)) && (p_ptr->mhp / (MAX(1, old_chp - p_ptr->chp))) < 6) /* counterintuitively, the MAX(1,) is needed - the difference actually can be zero in some strange circumstances */
     {

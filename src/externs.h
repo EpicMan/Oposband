@@ -1656,6 +1656,7 @@ extern bool summon_kin_player(int level, int y, int x, u32b mode);
 
 
 /* bldg.c */
+extern bool leave_bldg;
 extern int get_bldg_member_code(cptr name);
 extern bool get_nightmare(int r_idx);
 extern void have_nightmare(int r_idx);
@@ -2234,7 +2235,7 @@ extern void init_wilderness_terrains(void);
 extern void seed_wilderness(void);
 extern void seed_wilderness_aux(void);
 extern errr parse_line_wilderness(char *buf, int options);
-extern bool change_wild_mode(void);
+extern bool change_wild_mode(bool exit_by_map_edge);
 
 /* wizard2.c */
 extern bool spoiler_hack;

@@ -1610,6 +1610,7 @@ void quests_on_leave(void)
         }
     }
     /* Hack: Return to surface */
+    leave_bldg = TRUE;
     if ((q->flags & QF_GENERATE) && !q->dungeon)
         dun_level = 0;
     _current = 0;

@@ -47,11 +47,14 @@ byte value_check_aux1(object_type *o_ptr)
     if (object_is_broken(o_ptr)) return FEEL_BROKEN;
     if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) return FEEL_AVERAGE;
 	
-	if (simple_item_check(o_ptr)) return FEEL_NONE;
-
     if (o_ptr->to_a > 0) return FEEL_GOOD;
-    if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
-    if (o_ptr->to_h > 0) return FEEL_GOOD;
+    
+    /* Don't be fooled by native to-hit/dam bonuses */
+    if (o_ptr->to_h && o_ptr->tval != TV_GLOVES && o_ptr->tval != TV_BOOTS)
+        return FEEL_GOOD;
+
+    /*ID and go home*/
+    if (simple_item_check(o_ptr)) return FEEL_NONE;
 
     return FEEL_AVERAGE;
 }
@@ -79,17 +82,16 @@ static byte value_check_aux2(object_type *o_ptr)
     /* Ego-Items -- except cursed/broken ones */
     if (object_is_ego(o_ptr)) return FEEL_ENCHANTED;
 
-	/*ID and go home*/
-	if (simple_item_check(o_ptr)) return FEEL_NONE;
-
     /* Good armor bonus */
     if (o_ptr->to_a > 0) return FEEL_ENCHANTED;
 
-    /* Don't be fooled by native to-hit/dam bonuses */
-    if (o_ptr->tval == TV_GLOVES || o_ptr->tval == TV_BOOTS) return FEEL_AVERAGE;
-
     /* Good weapon bonuses */
-    if (o_ptr->to_h) return FEEL_ENCHANTED;
+    /* Don't be fooled by native to-hit/dam bonuses */
+    if (o_ptr->to_h && o_ptr->tval != TV_GLOVES && o_ptr->tval != TV_BOOTS)
+        return FEEL_ENCHANTED;
+
+    /*ID and go home*/
+    if (simple_item_check(o_ptr)) return FEEL_NONE;
 
     return FEEL_AVERAGE;
 }
@@ -3501,7 +3503,7 @@ static void _dispatch_command(int old_now_turn)
         case '<':
         {
             if (p_ptr->wild_mode)
-                change_wild_mode();
+                change_wild_mode(FALSE);
             else
             {
                 /* Player grid */
@@ -3527,7 +3529,7 @@ static void _dispatch_command(int old_now_turn)
                         break;
                     }
 
-                    change_wild_mode();
+                    change_wild_mode(FALSE);
                 }
                 else /* no stair / map change is possible */
                 {
