@@ -289,11 +289,13 @@ static void _mystic_insights_spell(int cmd, variant *res)
         var_set_string(res, "Identifies an object.");
         break;
     case SPELL_CAST:
-	default:
         {
             bool b = ident_spell(NULL);
             var_set_bool(res, b);
         }
+        break;
+    default:
+        default_spell(cmd, res);
         break;
     }
 }
