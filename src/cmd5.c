@@ -142,7 +142,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
 
     /* Get a spell from the user */
 
-    choice = (always_show_list || use_menu) ? ESCAPE : 1;
+    choice = ESCAPE;
     while (!flag)
     {
         if (choice == ESCAPE) choice = ' ';
@@ -316,6 +316,288 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
 
     /* Success */
     return TRUE;
+}
+
+
+static bool item_tester_learn_spell(object_type *o_ptr)
+{
+    s32b choices = realm_choices2[p_ptr->pclass];
+
+    if (p_ptr->pclass == CLASS_PRIEST)
+    {
+        if (is_good_realm(p_ptr->realm1))
+        {
+            choices &= ~(CH_DEATH | CH_DAEMON);
+        }
+        else
+        {
+            choices &= ~(CH_LIFE | CH_CRUSADE);
+        }
+    }
+
+    if (!obj_is_book(o_ptr)) return FALSE;
+    if (o_ptr->tval == TV_MUSIC_BOOK && p_ptr->pclass == CLASS_BARD) return TRUE;
+    else if (o_ptr->tval == TV_HEX_BOOK && p_ptr->pclass == CLASS_HIGH_MAGE && REALM1_BOOK == o_ptr->tval) return TRUE;
+    else if (REALM1_BOOK == o_ptr->tval || REALM2_BOOK == o_ptr->tval) return TRUE;
+    else if (!is_magic(tval2realm(o_ptr->tval))) return FALSE;
+    if (choices & (0x0001 << (tval2realm(o_ptr->tval) - 1))) return TRUE;
+    return FALSE;
+}
+
+static void change_realm2(int next_realm)
+{
+    int i, j = 0;
+    for (i = 0; i < 64; i++)
+    {
+        p_ptr->spell_order[j] = p_ptr->spell_order[i];
+        if (p_ptr->spell_order[i] < 32) j++;
+    }
+    for (; j < 64; j++)
+        p_ptr->spell_order[j] = 99;
+
+    for (i = 32; i < 64; i++)
+    {
+        p_ptr->spell_exp[i] = SPELL_EXP_UNSKILLED;
+    }
+    p_ptr->spell_learned2 = 0L;
+    p_ptr->spell_worked2 = 0L;
+    p_ptr->spell_forgotten2 = 0L;
+
+    p_ptr->old_realm |= 1 << (p_ptr->realm2-1);
+    p_ptr->realm2 = next_realm;
+
+    p_ptr->notice |= (PN_OPTIMIZE_PACK); /* cf obj_cmp's initial hack */
+    p_ptr->update |= (PU_SPELLS);
+    handle_stuff();
+
+    /* Load an autopick preference file */
+    autopick_load_pref(0);
+}
+
+
+/*
+ * Study a book to gain a new spell/prayer
+ */
+void do_cmd_study(void)
+{
+    obj_prompt_t prompt = {0};
+    int          i;
+    int          increment = 0;
+    bool         learned = FALSE;
+    int          spell = -1; /* Spells of realm2 will have an increment of +32 */
+    cptr         p = spell_category_name(mp_ptr->spell_book);
+
+    if (!p_ptr->realm1)
+    {
+        msg_print("You cannot read books!");
+        return;
+    }
+
+    if (p_ptr->blind || no_lite())
+    {
+        msg_print("You cannot see!");
+        return;
+    }
+
+    if (p_ptr->confused)
+    {
+        msg_print("You are too confused!");
+        return;
+    }
+
+    if (!p_ptr->new_spells)
+    {
+        msg_format("You cannot learn any new %ss!", p);
+        return;
+    }
+
+    if (p_ptr->special_defense & KATA_MUSOU)
+        set_action(ACTION_NONE);
+
+/*  Please, no more -more-!
+    msg_format("You can learn %d new %s%s.", p_ptr->new_spells, p,
+        (p_ptr->new_spells == 1?"":"s"));
+
+    msg_print(NULL);*/
+
+
+    /* Get an item */
+    prompt.prompt = "Study which book?";
+    prompt.error = "You have no books that you can read.";
+    prompt.filter = item_tester_learn_spell;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
+    
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
+
+    if (prompt.obj->tval == REALM2_BOOK) increment = 32;
+    else if (prompt.obj->tval != REALM1_BOOK)
+    {
+        if (!get_check("Really, change magic realm? ")) return;
+        change_realm2(tval2realm(prompt.obj->tval));
+        increment = 32;
+        autopick_alter_obj(prompt.obj, FALSE);
+    }
+
+    /* Track the object kind */
+    object_kind_track(prompt.obj->k_idx);
+
+    /* Hack -- Handle stuff */
+    handle_stuff();
+
+    /* Mage -- Learn a selected spell */
+    if (mp_ptr->spell_book != TV_LIFE_BOOK)
+    {
+        /* Ask for a spell, allow cancel */
+        if (!get_spell(&spell, "study", prompt.obj->sval, FALSE, prompt.obj->tval - TV_LIFE_BOOK + 1, FALSE)
+            && (spell == -1)) return;
+
+    }
+    /* Priest -- Learn a random prayer */
+    else
+    {
+        int k = 0;
+
+        int gift = -1;
+
+        /* Extract spells */
+        for (spell = 0; spell < 32; spell++)
+        {
+            /* Check spells in the book */
+            if ((fake_spell_flags[prompt.obj->sval] & (1L << spell)))
+            {
+                /* Skip non "okay" prayers */
+                if (!spell_okay(spell, FALSE, TRUE,
+                    (increment ? p_ptr->realm2 : p_ptr->realm1), FALSE)) continue;
+
+                /* Hack -- Prepare the randomizer */
+                k++;
+
+                /* Hack -- Apply the randomizer */
+                if (one_in_(k)) gift = spell;
+            }
+        }
+
+        /* Accept gift */
+        spell = gift;
+    }
+
+    /* Nothing to study */
+    if (spell < 0)
+    {
+        msg_format("You cannot learn any %ss in that book.", p);
+        return;
+    }
+
+    if (increment) spell += increment;
+
+    /* Learn the spell */
+    if (spell < 32)
+    {
+        if (p_ptr->spell_learned1 & (1L << spell)) learned = TRUE;
+        else p_ptr->spell_learned1 |= (1L << spell);
+    }
+    else
+    {
+        if (p_ptr->spell_learned2 & (1L << (spell - 32))) learned = TRUE;
+        else p_ptr->spell_learned2 |= (1L << (spell - 32));
+    }
+
+    if (learned)
+    {
+        int max_exp = (spell < 32) ? SPELL_EXP_MASTER : SPELL_EXP_EXPERT;
+        int old_exp = p_ptr->spell_exp[spell];
+        int new_rank = EXP_LEVEL_UNSKILLED;
+        cptr name = do_spell(increment ? p_ptr->realm2 : p_ptr->realm1, spell%32, SPELL_NAME);
+
+        if (old_exp >= max_exp)
+        {
+            msg_format("You don't need to study this %s anymore.", p);
+            return;
+        }
+        if (!get_check(format("You will study the %s of %s again. Are you sure? ", p, name)))
+        {
+            return;
+        }
+        else if (old_exp >= SPELL_EXP_EXPERT)
+        {
+            p_ptr->spell_exp[spell] = SPELL_EXP_MASTER;
+            new_rank = EXP_LEVEL_MASTER;
+        }
+        else if (old_exp >= SPELL_EXP_SKILLED)
+        {
+            if (spell >= 32) p_ptr->spell_exp[spell] = SPELL_EXP_EXPERT;
+            else p_ptr->spell_exp[spell] += SPELL_EXP_EXPERT - SPELL_EXP_SKILLED;
+            new_rank = EXP_LEVEL_EXPERT;
+        }
+        else if (old_exp >= SPELL_EXP_BEGINNER)
+        {
+            p_ptr->spell_exp[spell] = SPELL_EXP_SKILLED + (old_exp - SPELL_EXP_BEGINNER) * 2 / 3;
+            new_rank = EXP_LEVEL_SKILLED;
+        }
+        else
+        {
+            p_ptr->spell_exp[spell] = SPELL_EXP_BEGINNER + old_exp / 3;
+            new_rank = EXP_LEVEL_BEGINNER;
+        }
+        msg_format("Your proficiency of %s is now %s rank.", name, exp_level_str[new_rank]);
+    }
+    else
+    {
+        /* Find the next open entry in "p_ptr->spell_order[]" */
+        for (i = 0; i < 64; i++)
+        {
+            /* Stop at the first empty space */
+            if (p_ptr->spell_order[i] == 99) break;
+        }
+
+        /* Add the spell to the known list */
+        p_ptr->spell_order[i++] = spell;
+
+        /* Mention the result */
+        msg_format("You have learned the %s of %s.",
+            p, do_spell(increment ? p_ptr->realm2 : p_ptr->realm1, spell % 32, SPELL_NAME));
+    }
+
+    /* Take a turn */
+    energy_use = 100;
+
+    switch (mp_ptr->spell_book)
+    {
+    case TV_LIFE_BOOK:
+        virtue_add(VIRTUE_FAITH, 1);
+        break;
+    case TV_DEATH_BOOK:
+    case TV_NECROMANCY_BOOK:
+        virtue_add(VIRTUE_UNLIFE, 1);
+        break;
+    case TV_NATURE_BOOK:
+        virtue_add(VIRTUE_NATURE, 1);
+        break;
+    default:
+        virtue_add(VIRTUE_KNOWLEDGE, 1);
+        break;
+    }
+
+    /* Sound */
+    sound(SOUND_STUDY);
+
+    /* One less spell available */
+    p_ptr->learned_spells++;
+#if 0
+    /* Message if needed */
+    if (p_ptr->new_spells)
+    {
+        /* Message */
+        msg_format("You can learn %d more %s%s.", p_ptr->new_spells, p,
+                   (p_ptr->new_spells != 1) ? "s" : "");
+    }
+#endif
+
+    p_ptr->update |= PU_SPELLS;
+    p_ptr->redraw |= PR_EFFECTS;
+    p_ptr->window |= PW_OBJECT;
 }
 
 
@@ -542,6 +824,7 @@ void do_cmd_cast(void)
         return;
     }
 
+
     /* Require lite */
     if (p_ptr->blind || no_lite())
     {
@@ -594,13 +877,6 @@ void do_cmd_cast(void)
     handle_stuff();
 
     use_realm = tval2realm(book->tval);
-
-	if (use_realm == REALM_HISSATSU && !equip_find_first(object_is_melee_weapon))
-    {
-        if (flush_failure) flush();
-        msg_print("You need to wield a weapon!");
-        return;
-    }
 
     /* Ask for a spell */
     if (!get_spell(&spell, spl_verb, book->sval, TRUE, use_realm, FALSE))
@@ -783,6 +1059,72 @@ void do_cmd_cast(void)
         }
 
         /* A spell was cast */
+        if (!(increment ?
+            (p_ptr->spell_worked2 & (1L << spell)) :
+            (p_ptr->spell_worked1 & (1L << spell)))
+            && (p_ptr->pclass != CLASS_SORCERER)
+            && (p_ptr->pclass != CLASS_RED_MAGE))
+        {
+            int e = s_ptr->sexp;
+
+            /* The spell worked */
+            if (use_realm == p_ptr->realm1)
+            {
+                p_ptr->spell_worked1 |= (1L << spell);
+            }
+            else
+            {
+                p_ptr->spell_worked2 |= (1L << spell);
+            }
+
+            /* Gain experience */
+            gain_exp(e * vaikeustaso);
+
+            /* Redraw object recall */
+            p_ptr->window |= (PW_OBJECT);
+
+            switch (use_realm)
+            {
+            case REALM_LIFE:
+                virtue_add(VIRTUE_TEMPERANCE, 1);
+                virtue_add(VIRTUE_COMPASSION, 1);
+                virtue_add(VIRTUE_VITALITY, 1);
+                virtue_add(VIRTUE_DILIGENCE, 1);
+                break;
+            case REALM_DEATH:
+            case REALM_NECROMANCY:
+                virtue_add(VIRTUE_UNLIFE, 1);
+                virtue_add(VIRTUE_JUSTICE, -1);
+                virtue_add(VIRTUE_FAITH, -1);
+                virtue_add(VIRTUE_VITALITY, -1);
+                break;
+            case REALM_DAEMON:
+                virtue_add(VIRTUE_JUSTICE, -1);
+                virtue_add(VIRTUE_FAITH, -1);
+                virtue_add(VIRTUE_HONOUR, -1);
+                virtue_add(VIRTUE_TEMPERANCE, -1);
+                break;
+            case REALM_CRUSADE:
+                virtue_add(VIRTUE_FAITH, 1);
+                virtue_add(VIRTUE_JUSTICE, 1);
+                virtue_add(VIRTUE_SACRIFICE, 1);
+                virtue_add(VIRTUE_HONOUR, 1);
+                break;
+            case REALM_NATURE:
+                virtue_add(VIRTUE_NATURE, 1);
+                virtue_add(VIRTUE_HARMONY, 1);
+                break;
+            case REALM_HEX:
+                virtue_add(VIRTUE_JUSTICE, -1);
+                virtue_add(VIRTUE_FAITH, -1);
+                virtue_add(VIRTUE_HONOUR, -1);
+                virtue_add(VIRTUE_COMPASSION, -1);
+                break;
+            default:
+                virtue_add(VIRTUE_KNOWLEDGE, 1);
+                break;
+            }
+        }
 
         virtue_on_cast_spell(use_realm, need_mana, chance);
 
@@ -797,6 +1139,91 @@ void do_cmd_cast(void)
             default: break;
         }
 
+        if ((mp_ptr->spell_xtra & MAGIC_GAIN_EXP) && (attack_spell_hack != ASH_USELESS_ATTACK))
+        {
+            int  index = (increment ? 32 : 0)+spell;
+            s16b cur_exp = p_ptr->spell_exp[index];
+            int  dlvl = MAX(base_level, dun_level); /* gain prof in wilderness ... */
+            s16b exp_gain = 0;
+
+            if (dlvl) /* ... but not in town */
+            {  /* You'll need to spreadsheet this to see if this is any good ...
+                * Try a cross tab spell level vs dun level. Here is a rough summary
+                * of minimum dlvl to reach desired proficiency (but remember that
+                * interpolation smooths things out. So you can reach 1530 prof with
+                * a L50 spell on DL90, for instance):
+                * SLvl  Be  Sk  Ex  Ma
+                *   50  24  57  73 100
+                *   40  19  47  61  84
+                *   30  14  37  49  68
+                *   20   9  27  36  51
+                *   10   4  17  24  35
+                *    5   1  12  18  27
+                *    1   1   8  13  20 */
+                int ratio = (17 + vaikeustaso) * 100 / (10 + dlvl);
+                point_t max_tbl[4] = { {60, 1600}, {100, 1200}, {200, 900}, {300, 0} };
+                int max_exp = interpolate(ratio, max_tbl, 4);
+
+                if (cur_exp < max_exp)
+                {
+                    if (!coffee_break)
+                    {
+                        point_t gain_tbl[9] = { /* 0->900->1200->1400->1600 */
+                            {0, 128}, {200, 64}, {400, 32}, {600, 16},
+                            {800, 8}, {1000, 4}, {1200, 2}, {1400, 1}, {1600, 1} };
+                        exp_gain = interpolate(cur_exp, gain_tbl, 9);
+                    }
+                    else {
+                        point_t gain_tbl[9] = { /* 0->900->1200->1400->1600 */
+                            {0, 640}, {200, 320}, {400, 160}, {600, 80},
+                            {800, 40}, {1000, 20}, {1200, 10}, {1400, 5}, {1600, 3} };
+                        exp_gain = interpolate(cur_exp, gain_tbl, 9);
+                    }
+                }
+                else if (p_ptr->wizard)
+                {
+                    msg_format("<color:B>When casting an <color:R>L%d</color> spell on "
+                        "<color:R>DL%d</color> your max proficiency is <color:R>%d</color> "
+                        "(Current: <color:R>%d</color>).</color> <color:D>%d</color>",
+                        vaikeustaso, dlvl, max_exp, cur_exp, ratio);
+                }
+                if (exp_gain)
+                {
+                    if (attack_spell_hack == ASH_NOT_ATTACK) exp_gain += ((coffee_break > 0) ? (exp_gain / 2) : (exp_gain * 2));
+                    if ((cur_exp + exp_gain) > max_exp) exp_gain = MAX(0, max_exp - cur_exp);
+                }
+            }
+
+            if (exp_gain)
+            {
+                int  old_level = spell_exp_level(cur_exp);
+                int  new_level = old_level;
+                int  max = increment ? SPELL_EXP_EXPERT : SPELL_EXP_MASTER;
+
+                p_ptr->spell_exp[index] += exp_gain;
+                if (p_ptr->spell_exp[index] > max)
+                    p_ptr->spell_exp[index] = max;
+                new_level = spell_exp_level(p_ptr->spell_exp[index]);
+                if (new_level > old_level)
+                {
+                    cptr desc[5] = { "Unskilled", "a Beginner", "Skilled", "an Expert", "a Master" };
+                    msg_format("You are now <color:B>%s</color> in <color:R>%s</color>.",
+                        desc[new_level],
+                        do_spell(use_realm, spell % 32, SPELL_NAME));
+                }
+                else if (p_ptr->wizard || easy_damage)
+                {
+                    msg_format("You now have <color:B>%d</color> proficiency in <color:R>%s</color>.",
+                        p_ptr->spell_exp[index],
+                        do_spell(use_realm, spell % 32, SPELL_NAME));
+                }
+                else if (p_ptr->spell_exp[index]/100 > cur_exp/100)
+                {
+                    msg_format("<color:B>You are getting more proficient with <color:R>%s</color>.</color>",
+                        do_spell(use_realm, spell % 32, SPELL_NAME));
+                }
+            }
+        }
         attack_spell_hack = ASH_USELESS_ATTACK;
     }
 
@@ -1075,6 +1502,7 @@ int calculate_upkeep(void)
     else
     {
         p_ptr->upkeep_warning = FALSE;
+        p_ptr->upset_okay = FALSE;
         if (p_ptr->upkeep_warning != old_warning) p_ptr->redraw |= (PR_STATUS);
         return 0;
     }
@@ -1254,15 +1682,7 @@ bool rakuba(int dam, bool force)
 
     if (!p_ptr->riding) return FALSE;
     if (p_ptr->prace == RACE_MON_RING) return FALSE; /* cf ring_process_m instead ... */
-	if ((!force || !dam) && p_ptr->prace == RACE_ICKY_THING && r_ptr->flags1 & (RF1_NEVER_MOVE)) return FALSE; /*It's stuck on you*/
     if (p_ptr->wild_mode) return FALSE;
-
-	/* Don't lose our symbiote unless it dies */
-	if (p_ptr->prace == RACE_ICKY_THING && r_ptr->flags1 & (RF1_NEVER_MOVE))
-	{
-		if (m_ptr->hp >= 0 && !force)
-			return FALSE;
-	}
 
     if (dam >= 0 || force)
     {
@@ -1381,7 +1801,6 @@ bool do_riding(bool force)
     int x, y, dir = 0;
     cave_type *c_ptr;
     monster_type *m_ptr;
-	bool symbiosis = FALSE;
 
     if (!get_rep_dir2(&dir)) return FALSE;
     y = py + ddy[dir];
@@ -1427,9 +1846,6 @@ bool do_riding(bool force)
 
         m_ptr = &m_list[c_ptr->m_idx];
 
-		/* Special rules / dialogue for symbiosis as opposed to normal riding */
-		symbiosis = p_ptr->prace == RACE_ICKY_THING && r_info[m_ptr->r_idx].flags1 & (RF1_NEVER_MOVE);
-
         if (!c_ptr->m_idx || !m_ptr->ml)
         {
             msg_print("Here is no monster.");
@@ -1443,12 +1859,33 @@ bool do_riding(bool force)
             return FALSE;
         }
 
-        if (m_ptr->r_idx == MON_AUDE)
+        if ((m_ptr->r_idx == MON_AUDE) && (!prace_is_(RACE_MON_RING)))
         {
-			msg_print("In your dreams.");
+            int noppa = randint0(9);
+            switch (noppa)
+            {
+             case 0: 
+             case 1: { msg_print("In your dreams."); break; }
+             case 2: 
+             case 3: { msg_print("No can do."); break; }
+             case 4: { msg_print("What game do you think you're playing, Leisure Suit Larry?"); break; }
+             case 5: { msg_print("What game do you think you're playing, Frogspawn?"); break; }
+             default: { msg_print("Feature turned off due to the controversy aroused by the release of FrogComposband 6.9.cream."); break; }
+            }
             return FALSE;
         }
 
+        if (m_ptr->r_idx == MON_SHEEP)
+        {
+            int noppa = randint0(3);
+            switch (noppa)
+            {
+             case 0: { msg_print("Aivan sairas kaveri kun tuollaista aikoo puuhata!"); break; }
+             case 1: { msg_print("I'm not going to judge you, but... what the hell, I'm going to judge you. WHAT THE HELL?"); break; }
+             default: { msg_print("Holy bleating bleatity bleat!"); break; }
+            }
+            return FALSE;
+        }
         if (p_ptr->prace == RACE_MON_RING)
         {
             if (!mon_is_type(m_ptr->r_idx, SUMMON_RING_BEARER))
@@ -1459,13 +1896,13 @@ bool do_riding(bool force)
         }
         else
         {
-            if (!(r_info[m_ptr->r_idx].flags7 & RF7_RIDING) && !symbiosis)
+            if (!(r_info[m_ptr->r_idx].flags7 & RF7_RIDING))
             {
                 msg_print("This monster doesn't seem suitable for riding.");
 
                 return FALSE;
             }
-            if (warlock_is_(WARLOCK_DRAGONS) && !(r_info[m_ptr->r_idx].flags3 & RF3_DRAGON) && !symbiosis)
+            if (warlock_is_(WARLOCK_DRAGONS) && !(r_info[m_ptr->r_idx].flags3 & RF3_DRAGON))
             {
                 msg_print("You are a dragon rider!");
                 return FALSE;
@@ -1491,7 +1928,7 @@ bool do_riding(bool force)
 
             return FALSE;
         }
-        if ( p_ptr->prace != RACE_MON_RING && !symbiosis
+        if ( p_ptr->prace != RACE_MON_RING
           && r_info[m_ptr->r_idx].level > randint1((skills_riding_current() / 50 + p_ptr->lev / 2 + 20)))
         {
             if (r_info[m_ptr->r_idx].level > (skills_riding_current() / 50 + p_ptr->lev / 2 + 20))
@@ -1592,7 +2029,7 @@ static void do_name_pet(void)
         }
 
         /* Get a new inscription (possibly empty) */
-        if (get_string("Name: ", out_val, 15))
+        if (get_string("Name: ", out_val, 16))
         {
             if (out_val[0])
             {
@@ -1636,7 +2073,7 @@ void do_cmd_pet(void)
     powers[num++] = PET_DISMISS;
 
     sprintf(target_buf, "specify a target of pet (now:%s)",
-        (pet_t_m_idx ? (p_ptr->image ? "something strange" : (r_name + r_info[m_list[pet_t_m_idx].ap_r_idx].name)) : "nothing"));
+        (pet_t_m_idx ? (p_ptr->image ? "something strange" : ((m_list[pet_t_m_idx].mflag2 & MFLAG2_KNOWN) ? (r_name + r_info[m_list[pet_t_m_idx].ap_r_idx].name) : "Monster")) : "nothing"));
     power_desc[num] = target_buf;
 
     powers[num++] = PET_TARGET;
@@ -1811,7 +2248,7 @@ void do_cmd_pet(void)
                 I2A(0), I2A(num - 1));
     }
 
-    choice = (always_show_list || use_menu) ? ESCAPE : 1;
+    choice = ESCAPE;
 
     /* Get a command from the user */
     while (!flag)
@@ -1988,6 +2425,7 @@ void do_cmd_pet(void)
                     pet_t_m_idx = target_who;
                 else
                     pet_t_m_idx = cave[target_row][target_col].m_idx;
+                if (m_list[pet_t_m_idx].mflag2 & MFLAG2_FUZZY) m_list[pet_t_m_idx].mflag2 &= ~(MFLAG2_KNOWN);
             }
             project_length = 0;
 

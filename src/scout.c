@@ -354,20 +354,14 @@ static spell_info _spells[] =
     { -1, -1, -1, NULL}
 };
 
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
-    int ct = 0;
-
     if (heavy_armor())
     {
         msg_print("Your talents are disrupted!");
-        return 0;
+        return NULL;
     }
-    ct = get_spells_aux(spells, max, _spells);
-    if (ct == 0)
-        msg_print("You have no powers yet! Why not go kill stuff?");
-
-    return ct;
+    return _spells;
 }
 
 static bool _cave_is_open(int y, int x)
@@ -468,10 +462,7 @@ static void _character_dump(doc_ptr doc)
 
     if (!disrupt && p_ptr->lev >= 5)
     {
-        spell_info spells[MAX_SPELLS];
-        int        ct = _get_spells(spells, MAX_SPELLS);
-
-        py_display_spells(doc, spells, ct);
+        py_dump_spells(doc);
     }
 
     doc_printf(doc, "<topic:Abilities>================================== <color:keypress>A</color>bilities ==================================\n\n");
@@ -545,28 +536,10 @@ static void _move_player(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(20, 30));
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *scout_get_class(void)
@@ -608,7 +581,7 @@ class_t *scout_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
-        me.get_spells = _get_spells;
+        me.get_spells_fn = _get_spells;
         me.move_player = _move_player;
         me.character_dump = _character_dump;
 

@@ -10,11 +10,12 @@ Please choose one of the following help sections:
     [f] Game Play Options
     [g] Disturbance Options
     [h] Auto-Destroyer Options
-    [i] Base Delay Factor
-    [j] Hitpoint Warning
-    [k] Autosave Options
-    [l] Window Flags
-    [m] Cheating Options
+    [i] List Display Options
+    [j] Base Delay Factor
+    [k] Hitpoint Warning
+    [l] Autosave Options
+    [m] Window Flags
+    [n] Cheating Options
 
     (?) Help System Commands
 

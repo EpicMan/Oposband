@@ -231,14 +231,12 @@ void troika_wipe_timeouts(void)
 static void _birth(void)
 {
     disciple_birth(); 
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CONFUSION, 2);
     _troika_ini_quests();
     _troika_ini_spells();
     troika_wipe_timeouts();
-	p_ptr->proficiency[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-	p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
 }
 
 static void _make_troika_weapon(int sval)
@@ -319,39 +317,46 @@ static void _troika_event(int effect)
                     dummy2 = SV_DAGGER;
                     break;
                 case 2: case 3:
-                    dummy2 = SV_DIRK;
+                    dummy2 = SV_MAIN_GAUCHE;
                     break;
                 case 4:
-                    dummy2 = SV_CAT_CLAW;
+                    dummy2 = SV_TANTO;
                     break;
                 case 5: case 6:
-                    dummy2 = SV_THRUSTING_SWORD;
+                    dummy2 = SV_RAPIER;
                     break;
                 case 7: case 8:
-                    dummy2 = SV_SHORT_SWORD;
+                    dummy2 = SV_SMALL_SWORD;
                     break;
                 case 9: case 10:
-                    dummy2 = SV_CAT_CLAW;
+                    dummy2 = SV_BASILLARD;
                     break;
                 case 11: case 12: case 13:
                     dummy2 = SV_SHORT_SWORD;
                     break;
                 case 14: case 15:
-                    dummy2 = SV_CRYSKNIFE;
+                    dummy2 = SV_SABRE;
                     break;
                 case 16: case 17:
-                    dummy2 = SV_MEDIUM_SWORD;
+                    dummy2 = SV_CUTLASS;
                     break;
                 case 18:
                     dummy2 = SV_WAKIZASHI;
                     break;
                 case 19:
-                case 20:
-                    dummy2 = SV_CURVED_SWORD;
+                    dummy2 = SV_KHOPESH;
                     break;
-                case 21: case 22: case 23:
-				case 24: case 25:
-					dummy2 = SV_LONG_SWORD;
+                case 20:
+                    dummy2 = SV_TULWAR;
+                    break;
+                case 21:
+                    dummy2 = SV_BROAD_SWORD;
+                    break;
+                case 22: case 23:
+                    dummy2 = SV_LONG_SWORD;
+                    break;
+                case 24: case 25:
+                    dummy2 = SV_SCIMITAR;
                     break;
                 case 26:
                     dummy2 = SV_NINJATO;
@@ -360,25 +365,34 @@ static void _troika_event(int effect)
                     dummy2 = SV_KATANA;
                     break;
                 case 28: case 29:
-                    dummy2 = SV_BROAD_SWORD;
+                    dummy2 = SV_BASTARD_SWORD;
                     break;
                 case 30:
-                    dummy2 = SV_EXECUTIONERS_SWORD;
+                    dummy2 = SV_GREAT_SCIMITAR;
                     break;
-				case 31: case 32: case 33:
+                case 31:
+                    dummy2 = SV_CLAYMORE;
+                    break;
+                case 32:
+                    dummy2 = SV_ESPADON;
+                    break;
+                case 33:
                     dummy2 = SV_TWO_HANDED_SWORD;
                     break;
-                case 34: case 35:
-                    dummy2 = SV_GREATSWORD;
+                case 34:
+                    dummy2 = SV_FLAMBERGE;
+                    break;
+                case 35:
+                    dummy2 = SV_NO_DACHI;
                     break;
                 case 36:
                     dummy2 = SV_EXECUTIONERS_SWORD;
                     break;
                 case 37:
-                    dummy2 = SV_BUSTER_SWORD;
+                    dummy2 = SV_ZWEIHANDER;
                     break;
                 case 38:
-                    dummy2 = SV_FALCON_SWORD;
+                    dummy2 = SV_HAYABUSA;
                     break;
                 case 39:
                     dummy2 = SV_BLADE_OF_CHAOS;
@@ -583,7 +597,7 @@ static void _troika_event(int effect)
         }
         case REW_CURSE_AR:
         {
-            int slot = equip_random_slot(object_is_armor);
+            int slot = equip_random_slot(object_is_armour);
             if (slot)
             {
                 msg_format("The voice of %s booms out:",
@@ -622,7 +636,7 @@ static void _troika_event(int effect)
                     }
                     else
                     {
-                        int slot = equip_random_slot(object_is_armor);
+                        int slot = equip_random_slot(object_is_armour);
                         if (slot)
                             curse_armor(slot);
                         else
@@ -654,7 +668,7 @@ static void _troika_event(int effect)
             }
             if (one_in_(2))
             {
-                int slot = equip_random_slot(object_is_armor);
+                int slot = equip_random_slot(object_is_armour);
                 if (slot)
                     curse_armor(slot);
             }
@@ -2065,7 +2079,7 @@ static int _troika_get_spells_learned(spell_info* spells, int alku, int kumpi)
             dest = &spells[alku + (ct++)];
             dest->level = _my_spell_taso[kumpi][i];
             dest->cost = src->cost;
-            dest->fail = calculate_fail_rate(dest->level, src->fail, p_ptr->stat_ind[A_STR]);
+            dest->fail = src->fail;
             dest->fn = src->fn;
         }
     }
@@ -2223,23 +2237,20 @@ static void _troika_save(savefile_ptr file)
     }
 }
 
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
+    static spell_info spells[MAX_SPELLS];
     int laskuri = _troika_get_spells_learned(spells, 0, 0);
     troika_spell_hack = laskuri;
     laskuri += _troika_get_spells_learned(spells, laskuri, 1);
-    return laskuri;
+    spells[laskuri].fn = NULL;
+    return spells;
 }
 
 static void _troika_dump(doc_ptr doc)
 {
     _dump_quests(doc);
-    {
-        spell_info spells[MAX_SPELLS];
-        int        ct = _get_spells(spells, MAX_SPELLS);
-
-        py_display_spells(doc, spells, ct);
-    }
+    py_dump_spells(doc);
 }
 
 bool troika_dispel_timeouts(void)
@@ -2399,7 +2410,7 @@ class_t *troika_get_class(void)
         me.caster_info = _caster_info;
         me.gain_level = _gain_level;
         me.character_dump = _troika_dump;
-        me.get_spells = _get_spells;
+        me.get_spells_fn = _get_spells;
         me.load_player = _troika_load;
         me.save_player = _troika_save;
         init = TRUE;

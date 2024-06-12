@@ -260,7 +260,9 @@ discuss each of these in turn.
   ~  Leave on the floor
   
   These are the primary actions. Pick-up is assumed if the rule does 
-  not begin with !, ; or ~.
+  not begin with !, ; or ~. Note that if the always_pickup option is 
+  on, then ; and ~ will be overridden by it; and even ! is overridden 
+  unless the leave_mogaminator option is also on.
   
   In addition, there are the following action letters that augment the 
   primary action:

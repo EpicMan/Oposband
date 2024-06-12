@@ -355,7 +355,7 @@ void black_marketeer_mut(int cmd, variant *res)
     }
 }
 
-void blank_face_mut(int cmd, variant* res)
+void blank_face_mut(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -369,7 +369,7 @@ void blank_face_mut(int cmd, variant* res)
         msg_print("Your facial features return.");
         break;
     case SPELL_MUT_DESC:
-        var_set_string(res, "Your face is featureless (-4 CHR).");
+        var_set_string(res, "Your face is featureless (-1 CHR).");
         break;
     default:
         default_spell(cmd, res);
@@ -424,7 +424,7 @@ void beak_mut(int cmd, variant *res)
         a.ds = 4;
         a.weight = 30;
         a.blows = 100;
-        a.msg = "You peck";
+        a.msg = "You peck.";
         a.name = "Beak";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;
@@ -756,6 +756,9 @@ void draconian_resistance_mut(int cmd, variant *res)
         case DRACONIAN_SHADOW:
             var_set_string(res, "You gain extra nether resistance.");
             break;
+		case DRACONIAN_SILVER:
+			var_set_string(res, "You gain extra free action.");
+			break;
         }
         break;
     case SPELL_HELP_DESC:
@@ -791,6 +794,9 @@ void draconian_resistance_mut(int cmd, variant *res)
         case DRACONIAN_SHADOW:
             res_add(RES_NETHER);
             break;
+		case DRACONIAN_SILVER:
+			p_ptr->free_act++;
+			break;
         }
         break;
     default:
@@ -879,6 +885,7 @@ void draconian_strike_mut(int cmd, variant *res)
         case DRACONIAN_BRONZE: var_set_string(res, "Attack an adjacent opponent with a confusing blow."); break;
         case DRACONIAN_CRYSTAL: var_set_string(res, "Attack an adjacent opponent with a shredding blow."); break;
         case DRACONIAN_SHADOW: var_set_string(res, "Attack an adjacent opponent with a vampiric blow."); break;
+		case DRACONIAN_SILVER: var_set_string(res, "Attack an adjacent opponent with a retarding blow."); break;
         }
         break;
     case SPELL_MUT_DESC:
@@ -900,6 +907,7 @@ void draconian_strike_mut(int cmd, variant *res)
             case DRACONIAN_BRONZE: var_set_string(res, "You will be able to attack an adjacent opponent with a confusing blow."); break;
             case DRACONIAN_CRYSTAL: var_set_string(res, "You will be able to attack an adjacent opponent with a shredding blow."); break;
             case DRACONIAN_SHADOW: var_set_string(res, "You will be able to attack an adjacent opponent with a vampiric blow."); break;
+			case DRACONIAN_SILVER: var_set_string(res, "You will be able to attack an adjacent opponent with a retarding blow."); break;
             }
         }
         break;
@@ -915,6 +923,7 @@ void draconian_strike_mut(int cmd, variant *res)
         case DRACONIAN_GREEN: mode = DRACONIAN_STRIKE_POIS; break;
         case DRACONIAN_GOLD: mode = DRACONIAN_STRIKE_STUN; break;
         case DRACONIAN_BRONZE: mode = DRACONIAN_STRIKE_CONF; break;
+		case DRACONIAN_SILVER: mode = DRACONIAN_STRIKE_INERT; break;
         case DRACONIAN_CRYSTAL: mode = PY_ATTACK_VORPAL; break;
         case DRACONIAN_SHADOW: mode = PY_ATTACK_VAMP; break;
         }
@@ -933,6 +942,7 @@ void draconian_strike_mut(int cmd, variant *res)
             break;
         case DRACONIAN_GOLD:
         case DRACONIAN_BRONZE:
+		case DRACONIAN_SILVER:
             var_set_int(res, 20);
             break;
         case DRACONIAN_CRYSTAL:
@@ -1556,11 +1566,177 @@ void horns_mut(int cmd, variant *res)
         a.ds = 6;
         a.weight = 150;
         a.blows = 100;
-        a.msg = "You impale";
+        a.msg = "You impale.";
         a.name = "Horns";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;
     }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_chr_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Overconfidence");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("You become overconfident!");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("You are no longer overconfident.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "Overconfidence makes you sloppy.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Highly charismatic you may be; but getting too caught up in your own hype results in overconfidence and sloppy work. Lack of sufficient concentration gives you penalties to melee and shooting accuracy and to device and spell failure rates, similar to those from the Lazy personality.");
+        break;
+    case SPELL_CALC_BONUS:
+        p_ptr->skills.dev -= 10;
+        p_ptr->skills.thn -= 16;
+        p_ptr->skills.thb -= 10;
+        p_ptr->to_m_chance += 10;
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_con_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Pushed to the Limits");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("Your body is pushed to its limits.");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("Your body is no longer pushed to its limits.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "You suffer from frequent bouts of unwellness.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Your constitution and endurance are extraordinary; but as with many highly athletic people, your immune system has trouble keeping up. You suffer from frequent bouts of unwellness which temporarily decrease your Constitution and Dexterity.");
+        break;
+    case SPELL_PROCESS:
+        if ((!p_ptr->unwell) && (one_in_(200)))
+        {
+            disturb(0, 0);
+            set_unwell(50, TRUE);
+        }
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_dex_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Nimbler than Your Body");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("You are too agile for your body.");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("You are no longer too agile for your body.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "You occasionally sprain a muscle in combat.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Agility is your strongest point; but there is only so much you can do in a human body. You sometimes sprain a muscle while hitting monsters, dodging enemy blows or firing projectiles; this temporarily reduces your speed by 10.");
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_int_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Overactive Imagination");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("Your imagination becomes overactive.");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("Your imagination is no longer overactive.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "You have an overactive imagination.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Your brain is highly developed - for a human - but perhaps sometimes you can have too much of a good thing? Your overactive imagination makes you vulnerable to fear, and reduces your effective character level by 10 for all fear-related player/monster interactions.");
+        break;
+    case SPELL_CALC_BONUS:
+        res_add_vuln(RES_FEAR);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_str_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Unbalancing Strikes");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("You can no longer control your own strength.");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("You can control your own strength again.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "The power of your strongest hits throws you off-balance.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Strength is your greatest asset; but you now hit with too much power to control. Every critical hit you score in melee will unbalance you; you cannot score further criticals in that round, and since you need extra time to regain your balance, such a round will consume 1.2 turns instead of 1.");
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+void human_wis_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Attuned to God");
+        break;
+    case SPELL_GAIN_MUT:
+        msg_print("You no longer feel any connection to evil creatures.");
+        break;
+    case SPELL_LOSE_MUT:
+        msg_print("You are no longer disconnected from evil minds.");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "You feel no connection to creatures of evil.");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "You are extremely wise, and have spent so much time in meditation that your mind is now fully attuned to the divine; but as a consequence, you feel no connection to evil monsters. You cannot detect any evil monster telepathically, even with spells or equipment of telepathy.");
+        break;
     default:
         default_spell(cmd, res);
         break;
@@ -1812,6 +1988,7 @@ void loremaster_mut(int cmd, variant *res)
         break;
     case SPELL_GAIN_MUT:
         msg_print("You feel quite knowledgeable.");
+        identify_pack();
         break;
     case SPELL_LOSE_MUT:
         msg_print("You know longer know so much.");
@@ -1957,9 +2134,7 @@ void nausea_mut(int cmd, variant *res)
 
             set_food(PY_FOOD_WEAK);
 
-            if (music_singing_any()) bard_stop_singing();
-            if (hex_spelling_any()) stop_hex_spell_all();
-            warlock_stop_singing();
+            stop_mouth();
         }
         break;
     default:
@@ -2491,7 +2666,7 @@ void scorpion_tail_mut(int cmd, variant *res)
         a.weight = 50;
         a.blows = 100;
         a.effect[0] = GF_POIS;
-        a.msg = "You sting";
+        a.msg = "You lash.";
         a.name = "Tail";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;
@@ -2589,12 +2764,11 @@ void silly_voice_mut(int cmd, variant *res)
     case SPELL_GAIN_MUT:
         msg_print("Your voice turns into a ridiculous squeak!");
         break;
-
     case SPELL_LOSE_MUT:
         msg_print("Your voice returns to normal.");
         break;
     case SPELL_MUT_DESC:
-        var_set_string(res, "Your voice is a silly squeak (-1 CHR).");
+        var_set_string(res, "Your voice is a silly squeak (-4 CHR).");
         break;
     default:
         default_spell(cmd, res);
@@ -2806,7 +2980,7 @@ void tentacles_mut(int cmd, variant *res)
         a.ds = 5;
         a.weight = 50;
         a.blows = 100;
-        a.msg = "You lash with your tentacles";
+        a.msg = "You hit with your tentacles.";
         a.name = "Tentacles";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;
@@ -2869,7 +3043,7 @@ void trunk_mut(int cmd, variant *res)
         a.ds = 4;
         a.weight = 200;
         a.blows = 100;
-        a.msg = "You crush with your trunk";
+        a.msg = "You hit with your trunk.";
         a.name = "Trunk";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         break;

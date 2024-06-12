@@ -450,10 +450,15 @@ See [h] for more details on wilderness dungeons.
 
 Wilderness Dungeons and Where to Find Them
 
-This is a full list of all non-random wilderness dungeons... or is it? 
+This is a full list of the standard wilderness dungeons... or is it? 
 Dungeons are ordered by shallowest depth; and to avoid spoilers (only 
 the shallowest depth is visible on the overworld map) this is the only 
 depth indicated.
+
+Note that you will never find all of these dungeons in a single game! 
+Some will always be shuffled out of existence to limit the number of 
+dungeons or the number of pantheons; but play the game enough times, 
+and you will eventually conquer all of them.
   
     Warrens          Level 1   Accessed from Outpost.
     Angband          Level 1   Northeast of Morivant, must be conquered 
@@ -462,17 +467,21 @@ depth indicated.
     Icky Cave        Level 10  Accessed from Thalos.
     Tidal Cave       Level 15  South of Morivant.
     Orc Cave         Level 15  North of Outpost.
+    Troll Cave       Level 18  North of Outpost.
+    Plains of Oz     Level 18  Southeast of Morivant.
     Labyrinth        Level 20  West of Outpost.
     Camelot          Level 20  West of Outpost.
                                Often visited together with Labyrinth.
     Witch Wood       Level 25  Southeast of Morivant.
     Battlefield      Level 30  Southeast of Morivant.
-                               Often visited together with Witch Wood.
+                               Often visited en route to Telmora.
     Lonely Mountain  Level 30  Mountains southwest of Morivant.
                                Access requires levitation.
     Chameleon Cave   Level 30  Southeast of Telmora.
     Giant's Hall     Level 30  Mountains southeast of Angband.
                                Access requires levitation.
+    Snow Castle      Level 30  Mountains southeast of Angband.
+                               Levitation recommended.
     Eyrie            Level 40  Mountains west of Telmora.
                                Access requires levitation.
     Castle           Level 40  East of the road from Telmora to Angwil.
@@ -484,12 +493,18 @@ depth indicated.
     Graveyard        Level 50  East of Angwil.
     Volcano          Level 50  West of Outpost. Entrance in lava field.
     Numenor          Level 55  Deep sea north of Anambar.
+    Atlantis         Level 55  Deep sea north of Anambar.
     Dark Cave        Level 55  Northwest of Angwil.
+    Disaster Area    Level 60  Northwest of Angwil.
     Dragon's Lair    Level 60  South of Angwil.
+    Asgard           Level 64  Swampy coast northeast of Graveyard.
     Pyramidal Mound  Level 64  Northwest of Telmora, north of Eyrie.
+    Mount Meru       Level 72  Mountains south of Eyrie.
+                               Access requires levitation.
     Mine             Level 75  Island northeast of Anambar.
     R'lyeh           Level 80  Deep sea northwest of the Dark Cave.
     Mount Olympus    Level 80  Island northwest of Thalos.
+    Mystery Cave     Level ?   ??????
     
   --
   Original   : (??)

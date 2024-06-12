@@ -701,6 +701,7 @@ static bool double_check_immunity(object_type * o_ptr)
             case 3: case 4: case 5: case 6:
                 add_flag(o_ptr->flags, OF_SHOW_MODS);
                 o_ptr->to_h += 5 + randint1(10);
+                o_ptr->to_d += 5 + randint1(10);
                 break;
             case 7: case 8:
                 if (!have_flag(o_ptr->flags, OF_BLOWS))
@@ -720,7 +721,7 @@ static bool double_check_immunity(object_type * o_ptr)
                 break;
             }
         }
-        else if (object_is_armor(o_ptr))
+        else if (object_is_armour(o_ptr))
         {
             for (i = 0; i < ct; i++)
                 random_resistance(o_ptr);
@@ -738,6 +739,7 @@ static bool double_check_immunity(object_type * o_ptr)
             case 3: case 4: case 5: case 6:
                 add_flag(o_ptr->flags, OF_SHOW_MODS);
                 o_ptr->to_h += 5 + randint1(10);    /* These will get trimmed later ... */
+                o_ptr->to_d += 5 + randint1(10);
                 break;
             case 7: case 8:
                 o_ptr->to_a += 5 + randint1(10);
@@ -774,6 +776,7 @@ static bool double_check_immunity(object_type * o_ptr)
             case 2:
                 add_flag(o_ptr->flags, OF_SHOW_MODS);
                 o_ptr->to_h += 5 + randint1(10);    /* These will get trimmed later ... */
+                o_ptr->to_d += 5 + randint1(10);
                 break;
 
             case 3:
@@ -1288,7 +1291,7 @@ static void random_misc(object_type * o_ptr)
         case 24:
         case 25:
         case 26:
-            if (object_is_armor(o_ptr))
+            if (object_is_armour(o_ptr))
                 random_misc(o_ptr);
             else
             {
@@ -1299,16 +1302,17 @@ static void random_misc(object_type * o_ptr)
         case 28:
         case 29:
         {
-            int bonus_h;
+            int bonus_h, bonus_d;
             add_flag(o_ptr->flags, OF_SHOW_MODS);
             bonus_h = 4 + (randint1(11));
-			if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && 
-                (o_ptr->tval != TV_DAGGER) && (o_ptr->tval != TV_STAVES) && (o_ptr->tval != TV_AXE) &&
-				(o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
+            bonus_d = 4 + (randint1(11));
+            if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM) && (o_ptr->tval != TV_HAFTED) && (o_ptr->tval != TV_DIGGING) && (o_ptr->tval != TV_GLOVES) && (o_ptr->tval != TV_RING))
             {
                 bonus_h /= 2;
+                bonus_d /= 2;
             }
             o_ptr->to_h += bonus_h;
+            o_ptr->to_d += bonus_d;
             break;
         }
         case 30:
@@ -1453,7 +1457,7 @@ static void random_slay_aux(object_type *o_ptr)
         case 17:
         case 18:
         case 19:
-            if (o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER)
+            if (o_ptr->tval == TV_SWORD)
             {
                 add_flag(o_ptr->flags, OF_VORPAL);
                 if (!artifact_bias && one_in_(9))
@@ -1463,7 +1467,7 @@ static void random_slay_aux(object_type *o_ptr)
                 random_slay_aux(o_ptr);
             break;
         case 20:
-            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES || o_ptr->tval == TV_DIGGING)
+            if (o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_DIGGING)
                 add_flag(o_ptr->flags, OF_IMPACT);
             else
                 random_slay_aux(o_ptr);
@@ -1547,12 +1551,12 @@ static void random_slay_aux(object_type *o_ptr)
             {
                 if (randint1(1250) <= object_level - 50)
                     add_flag(o_ptr->flags, OF_KILL_EVIL);
-                else if ((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_DAGGER) && randint1(625) <= object_level - 50)
+                else if (o_ptr->tval == TV_SWORD && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_VORPAL2);
                     break;
                 }
-                else if ((o_ptr->tval == TV_HAFTED || o_ptr->tval == TV_STAVES) && randint1(625) <= object_level - 50)
+                else if (o_ptr->tval == TV_HAFTED && randint1(625) <= object_level - 50)
                 {
                     add_flag(o_ptr->flags, OF_STUN);
                     break;
@@ -1582,7 +1586,7 @@ static void random_slay(object_type *o_ptr)
                 one_high_resistance(o_ptr);
             return;
         }
-        else if (o_ptr->sval == SV_HARP)
+        else if (obj_is_harp(o_ptr))
         {
             if (one_in_(2))
                 random_resistance(o_ptr);
@@ -1630,7 +1634,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_PRIESTLY:
-        if(o_ptr->tval != TV_HAFTED && o_ptr->tval == TV_STAVES &&
+        if((o_ptr->tval == TV_SWORD || o_ptr->tval == TV_POLEARM) &&
            !(have_flag(o_ptr->flags, OF_BLESSED)))
         {
             /* A free power for "priestly" random artifacts */
@@ -1660,7 +1664,7 @@ static void random_slay(object_type *o_ptr)
         break;
 
     case BIAS_ROGUE:
-        if ((((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_DAGGER)) ||
+        if ((((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_DAGGER)) ||
              ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_SPEAR))) &&
              !(have_flag(o_ptr->flags, OF_THROWING)))
         {
@@ -1783,19 +1787,23 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
     if (o_ptr->tval == TV_LITE)
     {
         cptr filename;
-        switch (power)
+        if (have_flag(o_ptr->flags, OF_DARKNESS)) filename = "lite_drk.txt";
+        else
         {
-        case 0:
-            filename = "lite_cursed.txt";
-            break;
-        case 1:
-            filename = "lite_low.txt";
-            break;
-        case 2:
-            filename = "lite_med.txt";
-            break;
-        default:
-            filename = "lite_high.txt";
+            switch (power)
+            {
+            case 0:
+                filename = "lite_cursed.txt";
+                break;
+            case 1:
+                filename = "lite_low.txt";
+                break;
+            case 2:
+                filename = "lite_med.txt";
+                break;
+            default:
+                filename = "lite_high.txt";
+            }
         }
         get_random_name_aux_aux(filename, bias_hack, 40, return_name);
     }
@@ -1824,16 +1832,16 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
         switch (power)
         {
         case 0:
-            filename = "amulet_cursed.txt";
+            filename = "amu_cursed.txt";
             break;
         case 1:
-            filename = "amulet_low.txt";
+            filename = "amu_low.txt";
             break;
         case 2:
-            filename = "amulet_med.txt";
+            filename = "amu_med.txt";
             break;
         default:
-            filename = "amulet_high.txt";
+            filename = "amu_high.txt";
         }
         get_random_name_aux_aux(filename, bias_hack, 80, return_name);
     }
@@ -1846,7 +1854,7 @@ static void get_random_name_aux(char *return_name, object_type *o_ptr, int power
     {
         cptr filename;
 
-        if (object_is_armor(o_ptr))
+        if (object_is_armour(o_ptr))
         {
             if (magik(40))
             {
@@ -2015,7 +2023,7 @@ static _slot_weight_t _slot_weight_tbl[] = {
     {"Rings", object_is_ring, 55},
     {"Amulets", object_is_amulet, 40},
     {"Lights", object_is_lite, 36},
-    {"Body Armor", object_is_body_armor, 80},
+    {"Body Armor", object_is_body_armour, 80},
     {"Cloaks", object_is_cloak, 43},
     {"Helmets", object_is_helmet, 50},
     {"Gloves", object_is_gloves, 45},
@@ -2033,7 +2041,7 @@ int get_slot_weight(obj_ptr obj)
      * completely ridiculous */
     if ((obj->tval == TV_BOW) && (obj->sval > SV_RANGED_MAX_NORMAL) && (obj->sval != SV_NAMAKE_BOW))
     {
-        return ((obj->sval == SV_HARP) && (p_ptr->pclass == CLASS_BARD)) ? 50 : 40;
+        return ((obj_is_harp(obj)) && (p_ptr->pclass == CLASS_BARD)) ? 50 : 40;
     }
 
     for (i = 0; ; i++)
@@ -2073,7 +2081,7 @@ int get_slot_power(obj_ptr obj)
         if (d < 12)
             w = w * d / 12;
     }
-    else if (object_is_body_armor(obj))
+    else if (object_is_body_armour(obj))
     {
         int ac = k_info[obj->k_idx].ac;
         if (ac < 16)
@@ -2129,14 +2137,14 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (have_flag(o_ptr->flags, OF_NO_REMOVE)) return 0;
     if (o_ptr->tval == TV_QUIVER) return 0;
 
-    if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_FALCON_SWORD)
+    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_HAYABUSA)
         is_falcon_sword = TRUE;
 
     immunity_hack = FALSE;
     slaying_hack = 0;
     has_pval = FALSE;
 
-    if (o_ptr->tval == TV_BOW && o_ptr->sval == SV_HARP)
+    if (obj_is_harp(o_ptr))
         has_pval = TRUE;
 
     /* Hack for Demeter. Torches start with a pval of 4000! Not sure about lanterns ... */
@@ -2230,8 +2238,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_DEVICEMASTER:
             case CLASS_YELLOW_MAGE:
             case CLASS_GRAY_MAGE:
-			case CLASS_CHAOS_MAGE:
-				artifact_bias = BIAS_MAGE;
+                artifact_bias = BIAS_MAGE;
                 warrior_artifact_bias = 20;
                 break;
             case CLASS_PRIEST:
@@ -2265,10 +2272,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 artifact_bias = BIAS_CHAOS;
                 warrior_artifact_bias = 60;
                 break;
-			case CLASS_HEXBLADE:
-				artifact_bias = BIAS_CHR;
-				warrior_artifact_bias = 60;
-				break;
             case CLASS_LAWYER:
             case CLASS_POLITICIAN:
             case CLASS_MONK:
@@ -2289,10 +2292,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_TIME_LORD:
                 warrior_artifact_bias = 20;
                 break;
-			case CLASS_IMITATOR:
-				artifact_bias = BIAS_RANGER;
-				warrior_artifact_bias = 40;
-				break;
             case CLASS_BEASTMASTER:
                 artifact_bias = BIAS_CHR;
                 warrior_artifact_bias = 30;
@@ -2496,9 +2495,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         case TV_SWORD:
         case TV_HAFTED:
         case TV_POLEARM:
-        case TV_DAGGER:
-        case TV_AXE:
-        case TV_STAVES:
         case TV_DIGGING:
             switch (randint1(7))
             {
@@ -2508,6 +2504,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 break;
             case 3:
                 if ( slaying_hack == 0 /* OK: Slaying can now only happen once! */
+                    && (!object_is_(o_ptr, TV_POLEARM, SV_DEATH_SCYTHE))
                     && (is_falcon_sword || !have_flag(o_ptr->flags, OF_BLOWS)))
                 {
                     object_kind *k_ptr = &k_info[o_ptr->k_idx];
@@ -2548,12 +2545,19 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     if (one_in_(7))
                     {
                         o_ptr->to_h += randint1(8);
+                        o_ptr->to_d += randint1(8);
+                        boosted_dam = TRUE;
+                        boosted_hit = TRUE;
+                    }
+                    else if (one_in_(2))
+                    {
+                        o_ptr->to_h += randint1(8);
                         boosted_hit = TRUE;
                     }
                     else
                     {
-                        o_ptr->to_h += randint1(8);
-                        boosted_hit = TRUE;
+                        o_ptr->to_d += randint1(8);
+                        boosted_dam = TRUE;
                     }
                 }
                 else
@@ -2650,6 +2654,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->flags, OF_SHOW_MODS);
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
                 else if (one_in_(3))
                 {
@@ -2676,6 +2681,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->flags, OF_SHOW_MODS);
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                     break;
                 }
                 else if (one_in_(2))
@@ -2745,6 +2751,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->flags, OF_SHOW_MODS);
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
                 else
                 {
@@ -2756,6 +2763,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->flags, OF_SHOW_MODS);
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                     break;
                 }
                 else if (one_in_(2))
@@ -2787,7 +2795,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     break;
                 case 3:
                     if (!has_resistance
-                      && (object_is_body_armor(o_ptr) || object_is_shield(o_ptr))
+                      && (object_is_body_armour(o_ptr) || object_is_shield(o_ptr))
                       && one_in_(4) )
                     {
                         add_flag(o_ptr->flags, OF_RES_ACID);
@@ -2820,7 +2828,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     else if (!boosted_ac)
                     {
                         o_ptr->to_a += randint1(8);
-                        if (object_is_body_armor(o_ptr) && one_in_(7))
+                        if (object_is_body_armour(o_ptr) && one_in_(7))
                             o_ptr->ac += 5;
 
                         boosted_ac = TRUE;
@@ -2829,6 +2837,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     {
                         add_flag(o_ptr->flags, OF_SHOW_MODS);
                         o_ptr->to_h = 4 + (randint1(11));
+                        o_ptr->to_d = 4 + (randint1(11));
                     }
                     else if (o_ptr->tval == TV_GLOVES && one_in_(2))
                     {
@@ -2844,7 +2853,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                         one_high_resistance(o_ptr);
                     break;
                 case 4:
-                    if (!(object_is_body_armor(o_ptr) || object_is_shield(o_ptr))
+                    if (!(object_is_body_armour(o_ptr) || object_is_shield(o_ptr))
                       || one_in_(3) )
                     {
                         random_misc(o_ptr);
@@ -2867,13 +2876,16 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             else if (one_in_(4))
             {
                 o_ptr->to_h = 0 - randint1(10);
+                o_ptr->to_d = (one_in_(2)) ? 0 - randint1(10) : randint1(7);
                 jatka = FALSE;
             }
         }
         if ((jatka) && (one_in_(2)))
         {
-            if (one_in_(6))
+            if (o_ptr->to_d > 0) o_ptr->to_d = 0 - o_ptr->to_d;
+            else if (one_in_(6))
             {
+                o_ptr->to_d = 0 - randint1(10);
                 o_ptr->to_h = (one_in_(2)) ? 0 - randint1(10) : randint1(7);
             }
         }
@@ -2951,19 +2963,22 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     }
 
     /* give it some plusses... */
-    if (object_is_armor(o_ptr))
+    if (object_is_armour(o_ptr))
     {
         int a = randint1(5) + m_bonus(5, lev) + m_bonus(10, lev);
         int max = 20;
-        if (object_is_body_armor(o_ptr)) max += 5;
+        if (object_is_body_armour(o_ptr)) max += 5;
         o_ptr->to_a += a;
         if (o_ptr->to_a > max - 5) o_ptr->to_a = trim(o_ptr->to_a, max - 5, max, lev);
     }
     else if (object_is_weapon_ammo(o_ptr))
     {
         int h = randint1(5) + m_bonus(5, lev) + m_bonus(10, lev);
+        int d = randint1(5) + m_bonus(5, lev) + m_bonus(10, lev);
         o_ptr->to_h += h;
-        if (o_ptr->to_h > 20) o_ptr->to_h = trim(o_ptr->to_h, 20, 25, lev);
+        o_ptr->to_d += d;
+        if (o_ptr->to_h > 22) o_ptr->to_h = trim(o_ptr->to_h, 20, 25, lev);
+        if (o_ptr->to_d > 20) o_ptr->to_d = trim(o_ptr->to_h, 20, 25, lev);
 
         if ((have_flag(o_ptr->flags, OF_WIS)) && (o_ptr->pval > 0)) add_flag(o_ptr->flags, OF_BLESSED);
     }
@@ -2990,16 +3005,17 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (have_flag(o_ptr->flags, OF_BRAND_FIRE))
         add_flag(o_ptr->flags, OF_LITE);
 
-    if ( !obj_has_effect(o_ptr) && !object_is_ammo(o_ptr) )
+    if ( !obj_has_effect(o_ptr)
+      && !object_is_ammo(o_ptr) )
     {
-        int odds = object_is_armor(o_ptr) ? ACTIVATION_CHANCE * 2 : ACTIVATION_CHANCE;
+        int odds = object_is_armour(o_ptr) ? ACTIVATION_CHANCE * 2 : ACTIVATION_CHANCE;
         if (one_in_(odds))
         {
             effect_add_random(o_ptr, artifact_bias);
         }
     }
 
-    if (object_is_armor(o_ptr) || o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
+    if (object_is_armour(o_ptr) || o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
     {
         int lower1 = 20, lower2 = 10;
 
@@ -3009,14 +3025,16 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             lower2 = 20;
         }
 
-        while ((o_ptr->to_h+o_ptr->to_h) > lower1)
+        while ((o_ptr->to_d+o_ptr->to_h) > lower1)
         {
-            if (one_in_(o_ptr->to_h) && one_in_(o_ptr->to_h)) break;
+            if (one_in_(o_ptr->to_d) && one_in_(o_ptr->to_h)) break;
+            o_ptr->to_d -= (s16b)randint0(3);
             o_ptr->to_h -= (s16b)randint0(3);
         }
-        while ((o_ptr->to_h+o_ptr->to_h) > lower2 && !immunity_hack)
+        while ((o_ptr->to_d+o_ptr->to_h) > lower2 && !immunity_hack)
         {
-            if (one_in_(o_ptr->to_h) || one_in_(o_ptr->to_h)) break;
+            if (one_in_(o_ptr->to_d) || one_in_(o_ptr->to_h)) break;
+            o_ptr->to_d -= (s16b)randint0(3);
             o_ptr->to_h -= (s16b)randint0(3);
         }
     }
@@ -3027,9 +3045,10 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         add_flag(o_ptr->flags, OF_FREE_ACT);
     }
 
-    if (o_ptr->tval == TV_BOW && o_ptr->sval == SV_HARP)
+    if (obj_is_harp(o_ptr))
     {
         o_ptr->to_h = 0;
+        o_ptr->to_d = 0;
         remove_flag(o_ptr->flags, OF_SHOW_MODS);
     }
 
@@ -3043,12 +3062,13 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     {
         /* rescale damage ... heavy crossbows shoot 0.75 while slings shoot 1.40x
          * damage on the bow should reflect this! */
-        o_ptr->to_h = o_ptr->to_h * bow_energy(o_ptr->sval) / 7150;
+        o_ptr->to_d = o_ptr->to_d * bow_energy(o_ptr->sval) / 7150;
     }
 
-    if ((o_ptr->tval == TV_DAGGER) && (o_ptr->sval == SV_POISON_NEEDLE))
+    if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_DOKUBARI))
     {
         o_ptr->to_h = 0;
+        o_ptr->to_d = 0;
         remove_flag(o_ptr->flags, OF_BLOWS);
         remove_flag(o_ptr->flags, OF_BRAND_MANA);
         remove_flag(o_ptr->flags, OF_SLAY_ANIMAL);
@@ -3134,7 +3154,8 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         obj_display(o_ptr);
         no_karrot_hack = FALSE;
 
-        if (!get_string(ask_msg, dummy_name, sizeof dummy_name) || !dummy_name[0])
+        if (!get_string(ask_msg, dummy_name, sizeof dummy_name)
+            || !dummy_name[0])
         {
             get_random_name(new_name, o_ptr, power_level);
         }
@@ -3240,7 +3261,8 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         {
             o_ptr->dd = 6;
             o_ptr->ds = 6;
-            o_ptr->to_h = 25;
+            o_ptr->to_h = 22;
+            o_ptr->to_d = 25;
         }
         else
         {
@@ -3253,6 +3275,7 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         if (giant_is_(GIANT_FIRE)) /* Boss reward for Fire Giants */
         {
             o_ptr->to_h = 10;
+            o_ptr->to_d = 10;
             o_ptr->to_a = 0;
             add_flag(o_ptr->flags, OF_SLAY_EVIL);
             give_resistance = TRUE;
@@ -3260,6 +3283,7 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         else if (warlock_is_(WARLOCK_GIANTS)) /* Pseudo-boss reward for Giant Warlocks */
         {
             o_ptr->to_h = 5;
+            o_ptr->to_d = 5;
             o_ptr->to_a = 0;
         }
         else
@@ -3334,7 +3358,13 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
             o_ptr->to_a = 20;
         }
         else
+        {
             add_flag(o_ptr->flags, OF_VULN_LITE);
+            if ((comp_mode) && (p_ptr->prace != RACE_VAMPIRE) && (!player_obviously_poly_immune(FALSE)))
+            {
+                add_flag(o_ptr->flags, OF_TY_CURSE);
+            }
+        }
     }
 
     if (o_ptr->name1 == ART_MURAMASA)
@@ -3553,8 +3583,9 @@ bool create_replacement_art(int a_idx, object_type *o_ptr, byte origin)
     if (object_is_weapon_ammo(&forge1))
     {
         forge1.to_h = MAX(10, forge1.to_h);
+        forge1.to_d = MAX(10, forge1.to_d);
     }
-    if (object_is_armor(&forge1))
+    if (object_is_armour(&forge1))
     {
         forge1.to_a = MAX(10, forge1.to_a);
     }
@@ -3641,7 +3672,7 @@ bool create_named_art_aux_aux(int a_idx, object_type *o_ptr)
 
     o_ptr->name1 = a_idx;
     o_ptr->pval = a_ptr->pval;
-    if ((object_is_(o_ptr, TV_BOW, SV_HARP)) && (p_ptr->pclass != CLASS_BARD))
+    if ((obj_is_harp(o_ptr)) && (p_ptr->pclass != CLASS_BARD))
         o_ptr->pval -= (o_ptr->pval / 2);
     o_ptr->ac = a_ptr->ac;
     o_ptr->dd = a_ptr->dd;
@@ -3649,6 +3680,7 @@ bool create_named_art_aux_aux(int a_idx, object_type *o_ptr)
     o_ptr->mult = a_ptr->mult;
     o_ptr->to_a = a_ptr->to_a;
     o_ptr->to_h = a_ptr->to_h;
+    o_ptr->to_d = a_ptr->to_d;
     o_ptr->weight = a_ptr->weight;
 
     return TRUE;

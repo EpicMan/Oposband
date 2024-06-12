@@ -216,18 +216,6 @@ static bool _inscribe_pack_hack = FALSE;
 #define ADD_FLG_NOUN(FLG) (ADD_FLG(FLG), prev_flg = FLG)
 #define IS_FLG(FLG) (entry->flag[FLG / 32] & (1L << (FLG % 32)))
 
-/* Always fully know basic items */
-bool_hack simple_item_check(object_type *o_ptr)
-{
-	/* Only for weapons, armor, lites and ammo */
-	if (o_ptr->tval >= TV_SHOT && o_ptr->tval <= TV_LITE)
-	{
-		identify_item(o_ptr);
-		return TRUE;
-	}
-
-	return FALSE;
-}
 
 /*
  * A function to create new entry
@@ -587,7 +575,8 @@ bool object_is_icky(object_type *o_ptr, bool assume_id)
         class_t *class_ptr = get_class();
         if ((o_ptr->tval == TV_GLOVES) && (class_ptr->caster_info) && ((assume_id) || (obj_is_identified(o_ptr)) || (o_ptr->feeling == FEEL_AVERAGE) || (o_ptr->feeling == FEEL_GOOD)))
         {
-            if (get_caster_info()->options & CASTER_GLOVE_ENCUMBRANCE)
+            caster_info *caster_ptr = get_caster_info();
+            if ((caster_ptr) && (caster_ptr->options & CASTER_GLOVE_ENCUMBRANCE))
             {
                 u32b flgs[OF_ARRAY_SIZE];
                 obj_flags(o_ptr, flgs);
@@ -693,7 +682,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         /* Ego objects */
         if (object_is_ego(o_ptr))
         {
-            if (object_is_weapon_armor_ammo(o_ptr))
+            if (object_is_weapon_armour_ammo(o_ptr))
             {
                 /*
                  * Base name of ego weapons and armors
@@ -725,7 +714,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
             /* Wearable nameless object */
             if (object_is_ammo(o_ptr))
             {
-                if (o_ptr->to_h)
+                if (o_ptr->to_h || o_ptr->to_d)
                     ADD_FLG(FLG_GOOD);
                 else
                     ADD_FLG(FLG_AVERAGE);
@@ -911,9 +900,10 @@ static void init_autopick(void)
 
 
 #define PT_DEFAULT 0
-#define PT_WITH_PNAME 1
-#define PT_WITH_OTHERNAME 2
-#define PT_USERDEFAULT 3
+#define PT_WITH_PREFNAME 1
+#define PT_WITH_PNAME 2
+#define PT_WITH_OTHERNAME 3
+#define PT_USERDEFAULT 4
 
 /*
  *  Get file name for autopick preference
@@ -929,6 +919,10 @@ static cptr pickpref_filename(int filename_mode, char *other_base)
 
     case PT_USERDEFAULT:
         return format("%s-UserDefault.prf", namebase);
+
+    case PT_WITH_PREFNAME:
+        if (!strlen(pref_save_base)) strcpy(pref_save_base, player_base); /* paranoia */
+        return format("%s-%s.prf", namebase, pref_save_base);
 
     case PT_WITH_PNAME:
         return format("%s-%s.prf", namebase, player_base);
@@ -949,6 +943,25 @@ static bool write_text_lines(cptr filename, cptr *lines_list);
 static cptr *read_text_lines(cptr filename);
 static void free_text_lines(cptr *lines_list);
 
+#define _LINES_LIST_INIT() \
+  if (err == 0) \
+  { \
+      lines_list = read_text_lines(buf); \
+      if (!lines_list) err = 1; \
+  }
+
+#define _LINES_LIST_UPDATE() \
+        if ((!err) && (lines_list)) \
+        { \
+            my_strcpy(buf, pickpref_filename(PT_WITH_PREFNAME, NULL), sizeof(buf)); \
+            (void)write_text_lines(buf, lines_list); \
+        } \
+        if (lines_list) \
+        { \
+            free_text_lines(lines_list); \
+        }
+
+
 /*
  * Load an autopick preference file
  */
@@ -962,25 +975,10 @@ void autopick_load_pref(byte mode)
     /* Free old entries */
     init_autopick();
 
-    /* Try a filename with player name */
-    my_strcpy(buf, pickpref_filename(PT_WITH_PNAME, NULL), sizeof(buf));
-
-    /* Load the file */
-    err = process_autopick_file(buf);
-
-    if (err == 0 && disp_mes)
+    if (!appl_hack)
     {
-        /* Success */
-        msg_format("Loaded '%s'.", buf);
-    }
-
-    /* NOTE: This does not look for either the regular pickpref.prf file
-     * in lib/pref, nor does it look for lib/user/pickpref-UserDefault.prf.
-     * It looks for a copy of pickpref.prf in lib/user */
-    if (0 > err)
-    {
-        /* Use default name */
-        my_strcpy(buf, pickpref_filename(PT_DEFAULT, NULL), sizeof(buf));
+        /* Try a filename with pref base */
+        my_strcpy(buf, pickpref_filename(PT_WITH_PREFNAME, NULL), sizeof(buf));
 
         /* Load the file */
         err = process_autopick_file(buf);
@@ -992,17 +990,37 @@ void autopick_load_pref(byte mode)
         }
     }
 
-    /* Load old preferences after ordinal bump */
+    /* Compatibility */
+    if ((appl_hack) || ((err) && (mode & ALP_CHECK_NUMERALS)))
+    {
+        cptr *lines_list = NULL;
+        /* Use full player name */
+        my_strcpy(buf, pickpref_filename(PT_WITH_PNAME, NULL), sizeof(buf));
+
+        /* Load the file */
+        err = process_autopick_file(buf);
+
+        if (err == 0 && disp_mes)
+        {
+            /* Success */
+            msg_format("Loaded '%s'.", buf);
+        }
+        if ((!err) && (!streq(player_base, pref_save_base)))
+        {
+            _LINES_LIST_INIT()
+            _LINES_LIST_UPDATE()
+        }
+    }
+
     if ((err) && (mode & ALP_CHECK_NUMERALS) && (name_is_numbered(player_name)))
     {
         char old_py_name[32];
-        cptr *lines_list = NULL;
         strcpy(old_py_name, player_name);
         temporary_name_hack = TRUE;
 
         while (err != 0)
         {
-            bump_numeral(player_name, -1);
+            if (!bump_numeral(player_name, -1)) break;
             process_player_name(FALSE);
 
             /* Try a filename with old player name */
@@ -1015,24 +1033,29 @@ void autopick_load_pref(byte mode)
                 /* Success */
                 msg_format("Loaded '%s'.", buf);
             }
-            if (err == 0)
-            {
-                lines_list = read_text_lines(buf);
-                if (!lines_list) err = 1;
-            }
+            if (!err) strcpy(pref_save_base, player_base); /* reduce file proliferation */
             if (!name_is_numbered(player_name)) break;
         }
         strcpy(player_name, old_py_name);
         process_player_name(FALSE);
         temporary_name_hack = FALSE;
-        if ((!err) && (lines_list))
+    }
+
+    /* NOTE: This does not look for either the regular pickpref.prf file
+     * in lib/pref, nor does it look for lib/user/pickpref-UserDefault.prf.
+     * It looks for a copy of pickpref.prf in lib/user */
+    if (err)
+    {
+        /* Use default name */
+        my_strcpy(buf, pickpref_filename(PT_DEFAULT, NULL), sizeof(buf));
+
+        /* Load the file */
+        err = process_autopick_file(buf);
+
+        if (err == 0 && disp_mes)
         {
-            my_strcpy(buf, pickpref_filename(PT_WITH_PNAME, NULL), sizeof(buf));
-            (void)write_text_lines(buf, lines_list);
-        }
-        if (lines_list)
-        {
-            free_text_lines(lines_list);
+            /* Success */
+            msg_format("Loaded '%s'.", buf);
         }
     }
 
@@ -1054,20 +1077,8 @@ void autopick_load_pref(byte mode)
             /* Success */
             msg_format("Loaded '%s'.", buf);
         }
-        if (err == 0)
-        {
-            lines_list = read_text_lines(buf);
-            if (!lines_list) err = 1;
-        }
-        if ((!err) && (lines_list))
-        {
-            my_strcpy(buf, pickpref_filename(PT_WITH_PNAME, NULL), sizeof(buf));
-            (void)write_text_lines(buf, lines_list);
-        }
-        if (lines_list)
-        {
-            free_text_lines(lines_list);
-        }
+        _LINES_LIST_INIT()
+        _LINES_LIST_UPDATE()
     }
 
     if (err && disp_mes)
@@ -1481,6 +1492,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (!object_is_known(o_ptr)) return FALSE;
 
         if (o_ptr->to_h <= entry->bonus &&
+            o_ptr->to_d <= entry->bonus &&
             o_ptr->to_a <= entry->bonus &&
             o_ptr->pval <= entry->bonus)
         {
@@ -1692,7 +1704,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
                 return FALSE;
 
             /* Average are not okay */
-            if (o_ptr->to_a <= 0 && (o_ptr->to_h) <= 0)
+            if (o_ptr->to_a <= 0 && (o_ptr->to_h + o_ptr->to_d) <= 0)
                 return FALSE;
         }
 
@@ -1775,7 +1787,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
                 return FALSE;
 
             /* Good are not okay */
-            if (o_ptr->to_a > 0 || (o_ptr->to_h) > 0)
+            if (o_ptr->to_a > 0 || (o_ptr->to_h + o_ptr->to_d) > 0)
                 return FALSE;
         }
 
@@ -1898,7 +1910,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     }
     else if (IS_FLG(FLG_ARMORS))
     {
-        if (!object_is_armor(o_ptr))
+        if (!object_is_armour(o_ptr))
             return FALSE;
     }
     else if (IS_FLG(FLG_SHIELDS))
@@ -2144,7 +2156,7 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
     }
 
     if (leave_equip)
-        if (object_is_weapon_armor_ammo(o_ptr)) return FALSE;
+        if (object_is_weapon_armour_ammo(o_ptr)) return FALSE;
 
     if (leave_chest)
         if ((o_ptr->tval == TV_CHEST) && o_ptr->pval) return FALSE;
@@ -2343,8 +2355,8 @@ static void _sense_object_floor(object_type *o_ptr)
     if (object_is_known(o_ptr)) return;
     if ((!obj_can_sense1(o_ptr)) && (!obj_can_sense2(o_ptr))) return;
 
-    o_ptr->ident |= IDENT_SENSE;
-    o_ptr->feeling = value_check_aux1(o_ptr);
+    o_ptr->feeling = value_check_aux1(o_ptr, TRUE);
+    if (!(o_ptr->ident & IDENT_KNOWN)) o_ptr->ident |= IDENT_SENSE;
 }
 
 /* Automatically identify objects, consuming requisite resources.
@@ -2432,7 +2444,6 @@ static void _get_obj(obj_ptr obj)
     else if ((p_ptr->auto_pseudo_id) || (p_ptr->munchkin_pseudo_id))
     {
         _sense_object_floor(obj);
-        equip_learn_flag(OF_LORE1);
     }
 
     if ((!obj) || (!obj->k_idx)) return;
@@ -2564,7 +2575,7 @@ static bool clear_auto_register(void)
     bool autoregister = FALSE;
     bool okay = TRUE;
 
-    path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(PT_WITH_PNAME, NULL));
+    path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(PT_WITH_PREFNAME, NULL));
     pref_fff = my_fopen(pref_file, "r");
 
     if (!pref_fff)
@@ -2734,7 +2745,7 @@ bool autopick_autoregister(object_type *o_ptr)
     }
 
     /* Try a filename with player name */
-    path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(PT_WITH_PNAME, NULL));
+    path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(PT_WITH_PREFNAME, NULL));
     pref_fff = my_fopen(pref_file, "r");
 
     if (!pref_fff)
@@ -2749,7 +2760,7 @@ bool autopick_autoregister(object_type *o_ptr)
         else
         {
             char buf[80];
-            my_strcpy(buf, pickpref_filename(PT_WITH_PNAME, NULL), sizeof(buf));
+            my_strcpy(buf, pickpref_filename(PT_WITH_PREFNAME, NULL), sizeof(buf));
             msg_print("Mogaminator preferences initialized. Turn on the <color:o>no_mogaminator</color> option if you wish to deactivate the Mogaminator.");
             process_autopick_file(buf);
             _inscribe_pack();
@@ -3377,7 +3388,7 @@ static void prepare_default_pickpref(bool silent)
 
     sprintf(buf_usersrc, "%s", pickpref_filename(PT_USERDEFAULT, NULL));
     sprintf(buf_src, "%s", pickpref_filename(PT_DEFAULT, NULL));
-    sprintf(buf_dest, "%s", pickpref_filename(PT_WITH_PNAME, NULL));
+    sprintf(buf_dest, "%s", pickpref_filename(PT_WITH_PREFNAME, NULL));
 
     /* Open new file */
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, buf_dest);
@@ -3446,9 +3457,24 @@ static cptr *read_pickpref_text_lines(int *filename_mode_p, char *other_base)
     }
 
     /* Try a filename with player name */
-    *filename_mode_p = PT_WITH_PNAME;
+    *filename_mode_p = PT_WITH_PREFNAME;
     strcpy(buf, pickpref_filename(*filename_mode_p, NULL));
     lines_list = read_text_lines(buf);
+
+    if ((!lines_list) && (!streq(player_base, pref_save_base)))
+    {
+        /* Compatibility - try full name */
+        *filename_mode_p = PT_WITH_PNAME;
+        strcpy(buf, pickpref_filename(*filename_mode_p, NULL));
+        lines_list = read_text_lines(buf);
+
+        if (lines_list)
+        {
+            *filename_mode_p = PT_WITH_PREFNAME;
+            prepare_default_pickpref(FALSE);
+            return lines_list;
+        }
+    }
 
     if (!lines_list)
     {
@@ -3459,7 +3485,7 @@ static cptr *read_pickpref_text_lines(int *filename_mode_p, char *other_base)
 
         if (lines_list)
         {
-            *filename_mode_p = PT_WITH_PNAME;
+            *filename_mode_p = PT_WITH_PREFNAME;
             prepare_default_pickpref(FALSE);
             return lines_list;
         }
@@ -3474,7 +3500,7 @@ static cptr *read_pickpref_text_lines(int *filename_mode_p, char *other_base)
 
         if (lines_list)
         {
-            *filename_mode_p = PT_WITH_PNAME;
+            *filename_mode_p = PT_WITH_PREFNAME;
             prepare_default_pickpref(FALSE);
             return lines_list;
         }
@@ -3483,7 +3509,7 @@ static cptr *read_pickpref_text_lines(int *filename_mode_p, char *other_base)
     if (!lines_list)
     {
         /* There is no preference file in the user directory */
-        *filename_mode_p = PT_WITH_PNAME;
+        *filename_mode_p = PT_WITH_PREFNAME;
         strcpy(buf, pickpref_filename(*filename_mode_p, NULL));
 
         /* Copy the default autopick file to the user directory */
@@ -5562,7 +5588,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
         {
             char lataa_minut[80];
             int pituus;
-            strcpy(lataa_minut, player_base);
+            strcpy(lataa_minut, pref_save_base);
             if (!get_string("Load: ", lataa_minut, 78)) break;
             pituus = strlen(lataa_minut);
 
@@ -5582,7 +5608,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
             tb->cx = tb->cy = 0;
             tb->mark = 0;
             tb->changed = TRUE;
-            tb->filename_mode = PT_WITH_PNAME;
+            tb->filename_mode = PT_WITH_PREFNAME;
             break;
         }
     case EC_SAVE:
@@ -6599,7 +6625,7 @@ void do_cmd_edit_autopick(void)
     tb->last_destroyed = NULL;
     tb->dirty_flags = DIRTY_ALL | DIRTY_MODE | DIRTY_EXPRESSION;
     tb->dirty_line = -1;
-    tb->filename_mode = PT_WITH_PNAME;
+    tb->filename_mode = PT_WITH_PREFNAME;
 
     if (game_turn < old_autosave_turn)
     {

@@ -110,7 +110,7 @@ Gives device skills equal to +1 Md.</indent>
 Gives a shooting speed increase equal to +1 Xs.</indent>
 
   <indent><color:G>Power Sorcery</color>
-Increases your spellpower by +15%, but decreases your life rating by 3 points.</indent>
+Increases your spellpower by +15%, but decreases your life multiplier by 3 points.</indent>
 
   <indent><color:G>Nervous Casting</color>
 Increases your spellpower by +15%, but makes you vulnerable to fear.</indent>
@@ -152,4 +152,4 @@ Gives you access to the Shuffle spell, and automatically gives Self Knowledge if
 </style>
 
 
-<color:s>Automatically generated for Oposband 0.4.0.</color>
+<color:s>Automatically generated for FrogComposband 7.1.salmiak.</color>

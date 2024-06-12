@@ -37,25 +37,11 @@ M:#####################
 
 R:OBJ(long sword)
 
-?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Water-Spirit] ]
-R:OBJ(trident)
-
-?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Earth-Spirit] ]
-R:OBJ(^club$)
-
-#Air spirits use swords
-
-?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Fire-Spirit] ]
-R:OBJ(^whip$)
-
 ?:[EQU $RACE Beholder Spider Ring]
 R:OBJ(^ring$):EGO(protection)
 
 ?:[EQU $RACE Centipede]
 R:OBJ(metal shod boots)
-
-?:[EQU $RACE Orc]
-R:OBJ(curved sword)
 
 ?:[EQU $RACE Dragon]
 R:OBJ(^cloak$)
@@ -76,7 +62,7 @@ R:OBJ(^ring$):EGO(protection)
 R:OBJ(studded leather gloves)
 
 ?:[EQU $CLASS Duelist]
-R:OBJ(fencer sword)
+R:OBJ(rapier)
 
 ?:[EQU $CLASS Archaeologist]
 R:OBJ(^whip$)
@@ -96,11 +82,14 @@ R:OBJ(katana)
 ?:[EQU $CLASS Mauler]
 R:OBJ(potion of cure critical wounds)
 
+?:[EQU $CLASS Warrior Paladin]
+R:OBJ(broad sword)
+
 ?:[EQU $CLASS Priest]
-R:OBJ(mace)
+R:OBJ(war hammer)
 
 ?:[EQU $RACE Angel]
-R:OBJ(mace)
+R:OBJ(war hammer)
 
 ?:[EQU $CLASS Weaponsmith]
 R:OBJ(broad axe)
@@ -109,7 +98,7 @@ R:OBJ(broad axe)
 R:OBJ(broad axe)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-R:OBJ(mace)
+R:OBJ(war hammer)
 
 ?:[EQU $CLASS Ninja Ninja-Lawyer]
 R:OBJ(^dagger$)
@@ -128,5 +117,8 @@ R:OBJ(^pike$)
 
 ?:[EQU $RACE Filthy-Rag]
 R:OBJ(robe):EGO(protection)
+
+?:[AND [EQU $SPEED 2] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
+R:OBJ(WAND_BOLT_ELEC)
 
 # vim: filetype=q :

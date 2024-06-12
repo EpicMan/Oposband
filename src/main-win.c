@@ -101,7 +101,6 @@
  */
 #define USE_SAVER
 
-
 /*
  * Menu constants -- see "ANGBAND.RC"
  */
@@ -598,7 +597,23 @@ static BYTE win_pal[256] =
     VID_MAGENTA | VID_BRIGHT,    /* Light Red XXX */
     VID_GREEN | VID_BRIGHT,        /* Light Green */
     VID_BLUE | VID_BRIGHT,        /* Light Blue */
-    VID_YELLOW                    /* Light Umber XXX */
+    VID_YELLOW,                    /* Light Umber XXX */
+    VID_GREEN,                  /* Int. Green */
+    VID_MAGENTA | VID_BRIGHT,   /* Pink */
+    VID_BLUE | VID_BRIGHT,      /* Int. Blue */
+    VID_MAGENTA,                /* Purple */
+    VID_GREEN | VID_BRIGHT,     /* Blue-Green */
+    VID_BLUE | VID_BRIGHT,      /* Sky-Blue */
+    VID_YELLOW,                 /* Mud */
+    VID_YELLOW,                 /* Dark Yellow */
+    VID_CYAN,                   /* Turquoise */
+    VID_RED | VID_BRIGHT,       /* Light Orange */
+    VID_MAGENTA | VID_BRIGHT,   /* Lilac */
+    VID_BLUE,                   /* Dark Purple */
+    VID_BLUE,                   /* Dark Sky-Blue */
+    VID_WHITE,                  /* Pale Blue */
+    VID_RED,                    /* Dark Pink */
+    VID_RED,                    /* Chestnut */
 };
 
 
@@ -977,6 +992,11 @@ static void save_prefs(void)
     strcpy(buf, arg_sound ? "1" : "0");
     WritePrivateProfileString("Angband", "Sound", buf, ini_file);
 
+    wsprintf(buf, "%d", object_list_width);
+    WritePrivateProfileString("Angband", "ObjListWidth", buf, ini_file);
+    wsprintf(buf, "%d", monster_list_width);
+    WritePrivateProfileString("Angband", "MonListWidth", buf, ini_file);
+
     /* Save window prefs */
     for (i = 0; i < MAX_TERM_DATA; ++i)
     {
@@ -1043,6 +1063,10 @@ static void load_prefs_aux(int i)
     td->pos_x = GetPrivateProfileInt(sec_name, "PositionX", td->pos_x, ini_file);
     td->pos_y = GetPrivateProfileInt(sec_name, "PositionY", td->pos_y, ini_file);
 
+    if (i == 0)
+    {
+    }
+
     /* Window Z position */
     if (i > 0)
     {
@@ -1067,6 +1091,9 @@ static void load_prefs(void)
 
     /* Extract the "arg_sound" flag */
     arg_sound = (GetPrivateProfileInt("Angband", "Sound", 0, ini_file) != 0);
+
+    object_list_width = MAX(24, GetPrivateProfileInt("Angband", "ObjListWidth", object_list_width, ini_file));
+    monster_list_width = MAX(24, GetPrivateProfileInt("Angband", "MonListWidth", monster_list_width, ini_file));
 
     /* Load window prefs */
     for (i = 0; i < MAX_TERM_DATA; ++i)
@@ -1221,7 +1248,7 @@ static int new_palette(void)
 #endif /* USE_GRAPHICS */
 
     /* Size of palette */
-    pLogPalSize = sizeof(LOGPALETTE) + (nEntries + 16) * sizeof(PALETTEENTRY);
+    pLogPalSize = sizeof(LOGPALETTE) + (nEntries + MAX_COLOR) * sizeof(PALETTEENTRY);
 
     /* Allocate palette */
     pLogPal = (LPLOGPALETTE)ralloc(pLogPalSize);
@@ -1230,7 +1257,7 @@ static int new_palette(void)
     pLogPal->palVersion = 0x300;
 
     /* Make room for bitmap and normal data */
-    pLogPal->palNumEntries = nEntries + 16;
+    pLogPal->palNumEntries = nEntries + MAX_COLOR;
 
     /* Save the bitmap data */
     for (i = 0; i < nEntries; i++)
@@ -1239,7 +1266,7 @@ static int new_palette(void)
     }
 
     /* Save the normal data */
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < MAX_COLOR; i++)
     {
         LPPALETTEENTRY p;
 
@@ -2175,7 +2202,7 @@ static errr Term_text_win(int x, int y, int n, byte a, const char *s)
     }
     else if (paletted)
     {
-        SetTextColor(hdc, win_clr[a&0x0F]);
+        SetTextColor(hdc, win_clr[a&COLOR_MASK]);
     }
     else
     {
@@ -4487,6 +4514,7 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
     WNDCLASS wc;
     HDC hdc;
     MSG msg;
+    vec_ptr scores;
 
     /* Unused */
     (void)nCmdShow;
@@ -4612,8 +4640,12 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
     /* Did the user double click on a save file? */
     check_for_save_file(lpCmdLine);
 
+#if 0
     Term_flush();
-
+    display_news();
+    c_prt(TERM_YELLOW, "                 [Choose 'New' or 'Open' from the 'File' menu]", Term->hgt - 1, 0);
+    Term_fresh();
+#else
 	const int max_n = 19;
 	srand(time(NULL));
 	int n = (rand() % max_n) + 1;
@@ -4622,7 +4654,7 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
 	while (loop)
 	{
 		display_news_win(n);
-		c_prt(TERM_YELLOW, "         [Choose 'N'ew character, 'O'pen' savefile, High 'S'cores, '?' Help or 'Q'uit]", Term->hgt - 1, 0);
+		c_prt(TERM_YELLOW, "         ['N'ew game, 'O'pen saved game, High 'S'cores, '?' Help or 'Q'uit]", Term->hgt - 1, 0);
 		Term_fresh();
 
 		int cmd = inkey_special(TRUE);
@@ -4646,7 +4678,7 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
 			/* View high scores*/
 		case 's':
 		case 'S':
-			vec_ptr scores = scores_load(NULL);
+			scores = scores_load(NULL);
 			scores_display(scores);
 			vec_free(scores);
 
@@ -4667,7 +4699,7 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
 			break;
 		}
 	}
-
+#endif
     /* Process messages forever */
     while (GetMessage(&msg, NULL, 0, 0))
     {

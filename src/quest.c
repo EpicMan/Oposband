@@ -163,16 +163,34 @@ void quest_complete(quest_ptr q, point_t p)
     {
         int x = p.x;
         int y = p.y;
-        int nx,ny;
+        int dist = 1;
+        int yrk = 50, maxyrk = 50;
+        int nx = x, ny = y;
 
-        while (cave_perma_bold(y, x) || cave[y][x].o_idx || (cave[y][x].info & CAVE_OBJECT) )
+        while (cave_perma_bold(y, x) || cave[ny][nx].o_idx || (cave[ny][nx].info & CAVE_OBJECT) )
         {
-            scatter(&ny, &nx, y, x, 1, 0);
-            y = ny; x = nx;
+            scatter(&ny, &nx, y, x, dist, 0);
+            yrk--;
+            if ((yrk > (maxyrk / 2)) && (!projectable(py, px, ny, nx))) continue;
+            if (!yrk)
+            {
+                dist++;
+                maxyrk = MIN(120, 50 + (20 * dist));
+                yrk = maxyrk;
+                if (dist > 10) /* Screw this */
+                {
+                    ny = y;
+                    nx = x;
+                    break;
+                }
+            }
         }
+        y = ny; x = nx;
 
         cmsg_print(TERM_L_BLUE, "A magical staircase appears...");
-        if ((!coffee_break) || (dun_level == 99))
+        /* The following check must use dungeon_type since it may not match
+         * q->dungeon */
+        if (((!coffee_break) && (!(d_info[dungeon_type].flags1 & DF1_ALL_SHAFTS))) || (dun_level == 99))
         {
             cave_set_feat(y, x, feat_down_stair);
         }
@@ -247,14 +265,13 @@ void quest_complete(quest_ptr q, point_t p)
         if (!p_ptr->noscore) p_ptr->total_winner = TRUE;
 
         /* Redraw the "title" */
-        if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->pclass == CLASS_CHAOS_MAGE) || mut_present(MUT_CHAOS_GIFT))
+        if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || mut_present(MUT_CHAOS_GIFT))
         {
             msg_format("The voice of %s booms out:", chaos_patrons[p_ptr->chaos_patron]);
             msg_print("'Thou art donst well, mortal!'");
         }
 
         /* Congratulations */
-		/* TODO: Maybe change verbiage so suicide isn't the end? */
         msg_print("*** CONGRATULATIONS ***");
         msg_print("You have won the game!");
         msg_print("You may retire (commit suicide) when you are ready.");
@@ -1046,6 +1063,7 @@ void get_purple_questor(quest_ptr q)
         if (r_ptr->rarity > 100) continue;
         if (r_ptr->flags7 & RF7_FRIENDLY) continue;
         if (r_ptr->flags7 & RF7_AQUATIC) continue;
+        if (r_ptr->flags3 & RF3_COMPOST) continue;
         if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
         if (r_ptr->flags7 & (RF7_UNIQUE2 | RF7_NAZGUL)) continue;
         if (r_ptr->flagsx & RFX_SUPPRESS) continue; /* paranoia */
@@ -1144,6 +1162,8 @@ static int _quest_dungeon(quest_ptr q)
     /* move wargs quest from 'Warrens' to 'Angband' */
     if (d && no_wilderness)
         d = DUNGEON_ANGBAND;
+    /* handle suppressed dungeons, make big honking assumption */
+    if ((d) && (d_info[d].flags1 & DF1_SUPPRESSED)) d = d_info[d].alt;
     return d;
 }
 
@@ -1169,7 +1189,7 @@ static quest_ptr _find_quest(int dungeon, int level)
 
     /* Prevent quests from becoming uncompletable in forced-descent mode
      * should the player request them too late (adapted from Pos-R) */
-    if ((!result) && (ironman_downward) && (dungeon == DUNGEON_ANGBAND) &&
+    if ((!result) && (only_downward()) && (dungeon == DUNGEON_ANGBAND) &&
         (level < 99))
     {
         for (i = 0; i < vec_length(v); i++)
@@ -1255,8 +1275,9 @@ void quests_on_restore_floor(int dungeon, int level)
 void _dungeon_boss_death(mon_ptr mon)
 {
     monster_race *r_ptr = &r_info[mon->r_idx];
+    bool chameleon_king_hack = ((dungeon_type == DUNGEON_CHAMELEON) && (mon->mflag2 & MFLAG2_CHAMELEON) && (r_ptr->flags1 & RF1_UNIQUE));
     if (!dungeon_type) return;
-    if ((!(r_ptr->flags7 & RF7_GUARDIAN)) || (d_info[dungeon_type].final_guardian != mon->r_idx)) return;
+    if ((!chameleon_king_hack) && ((!(r_ptr->flags7 & RF7_GUARDIAN)) || (d_info[dungeon_type].final_guardian != mon->r_idx))) return;
     if (!politician_dungeon_on_statup(dungeon_type)) return;
     else {
         int k_idx = d_info[dungeon_type].final_object ? d_info[dungeon_type].final_object
@@ -1281,6 +1302,8 @@ void _dungeon_boss_death(mon_ptr mon)
                     /* Hack -- Memorize location of artifact in saved floors */
                     if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                 }
+                else if (!preserve_mode)
+                    a_ptr->generated = TRUE;
 
                 /* Prevent rewarding both artifact and "default" object */
                 if (!d_info[dungeon_type].final_object) k_idx = 0;
@@ -1307,6 +1330,12 @@ void _dungeon_boss_death(mon_ptr mon)
         {
             int tval = realm2tval(p_ptr->realm1);
             k_idx = lookup_kind(tval, 3);
+        }
+
+        if (dungeon_type == DUNGEON_MYSTERY)
+        {
+            acquirement(py, px, 1 + (dun_level / 30), TRUE, FALSE, ORIGIN_MYSTERY);
+            k_idx = 0;
         }
 
         if (k_idx)
@@ -1610,7 +1639,6 @@ void quests_on_leave(void)
         }
     }
     /* Hack: Return to surface */
-    leave_bldg = TRUE;
     if ((q->flags & QF_GENERATE) && !q->dungeon)
         dun_level = 0;
     _current = 0;
@@ -1852,7 +1880,8 @@ void quests_load(savefile_ptr file)
         assert(q);
         q->status = savefile_read_byte(file);
         q->completed_lev = savefile_read_byte(file);
-        q->completed_turn = savefile_read_u32b(file);
+        if (savefile_is_older_than(file, 7,0,6,7)) q->completed_turn = 0;
+        else q->completed_turn = savefile_read_u32b(file);
         q->goal_current = savefile_read_s16b(file);
         q->seed  = savefile_read_u32b(file);
         if ((q->flags & QF_RANDOM) || (q->flags & QF_PURPLE))
@@ -1867,6 +1896,16 @@ void quests_load(savefile_ptr file)
             a_info[q->goal_idx].gen_flags |= OFG_QUESTITEM;
     }
     _current = savefile_read_s16b(file);
+    if ((savefile_is_older_than(file, 7, 1, 1, 1)) && (!no_wilderness) && (r_info[MON_METATRON].max_num == 1))
+    {
+        quest_ptr q = quests_get(QUEST_METATRON);
+        assert(q);
+        if (q->status == QS_UNTAKEN)
+        {
+            q->status = QS_TAKEN;
+            r_info[MON_METATRON].flagsx |= RFX_QUESTOR;
+        }
+    }
 }
 
 void quests_save(savefile_ptr file)

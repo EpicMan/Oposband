@@ -31,18 +31,6 @@ int mystic_get_toggle(void)
     return result;
 }
 
-static void _on_browse(int which)
-{
-    bool screen_hack = screen_is_saved();
-    if (screen_hack) screen_load();
-
-    display_weapon_mode = which;
-    do_cmd_knowledge_weapon();
-    display_weapon_mode = 0;
-
-    if (screen_hack) screen_save();
-}
-
 /****************************************************************
  * Spells
  ****************************************************************/
@@ -84,7 +72,7 @@ static void _acid_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_ACID));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_ACID);
+        display_weapon_info_aux(MYSTIC_ACID);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -107,7 +95,7 @@ static void _cold_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_COLD));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_COLD);
+        display_weapon_info_aux(MYSTIC_COLD);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -150,7 +138,7 @@ static void _crushing_blow_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_CRITICAL));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_CRITICAL);
+        display_weapon_info_aux(MYSTIC_CRITICAL);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -189,7 +177,7 @@ static void _elec_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_ELEC));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_ELEC);
+        display_weapon_info_aux(MYSTIC_ELEC);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -228,7 +216,7 @@ static void _fire_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_FIRE));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_FIRE);
+        display_weapon_info_aux(MYSTIC_FIRE);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -282,18 +270,8 @@ static void _mystic_insights_spell(int cmd, variant *res)
     case SPELL_NAME:
         var_set_string(res, "Mystic Insights");
         break;
-    case SPELL_DESC:
-        var_set_string(res, "Discover the inner truths of an item");
-        break;
-    case SPELL_SPOIL_DESC:
-        var_set_string(res, "Identifies an object.");
-        break;
-    case SPELL_CAST:
-	default:
-        {
-            bool b = ident_spell(NULL);
-            var_set_bool(res, b);
-        }
+    default:
+        probing_spell(cmd, res);
         break;
     }
 }
@@ -328,7 +306,7 @@ static void _poison_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MYSTIC_POIS));
         break;
     case SPELL_ON_BROWSE:
-        _on_browse(MYSTIC_POIS);
+        display_weapon_info_aux(MYSTIC_POIS);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -454,7 +432,7 @@ static void _summon_spiders_spell(int cmd, variant *res)
 /****************************************************************
  * Spell Table and Exports
  ****************************************************************/
-static spell_info _spells[] =
+static spell_info _get_spells[] =
 {
     /*lvl cst fail spell */
     {  1,  0,  0, samurai_concentration_spell},
@@ -484,10 +462,6 @@ static spell_info _spells[] =
     { -1, -1, -1, NULL}
 };
 
-static int _get_spells(spell_info* spells, int max)
-{
-    return get_spells_aux(spells, max, _spells);
-}
 static void _calc_bonuses(void)
 {
     p_ptr->monk_lvl = p_ptr->lev;
@@ -551,32 +525,6 @@ static caster_info * _caster_info(void)
     }
     return &me;
 }
-static void _birth(void)
-{
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
-}
-static void _character_dump(doc_ptr doc)
-{
-    spell_info spells[MAX_SPELLS];
-    int        ct = _get_spells(spells, MAX_SPELLS);
-
-    py_display_spells(doc, spells, ct);
-}
 class_t *mystic_get_class(void)
 {
     static class_t me = {0};
@@ -605,9 +553,8 @@ class_t *mystic_get_class(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  2;
         me.base_skills = bs;
-        me.birth = _birth;
         me.extra_skills = xs;
         me.life = 100;
         me.base_hp = 4;
@@ -620,7 +567,7 @@ class_t *mystic_get_class(void)
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
-        me.character_dump = _character_dump;
+        me.character_dump = py_dump_spells;
         me.known_icky_object = skills_obj_is_icky_weapon;
         init = TRUE;
     }

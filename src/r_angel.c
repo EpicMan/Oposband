@@ -1,13 +1,13 @@
 #include "angband.h"
 
 static cptr _desc =
-    "Archons are astral beings on a holy mission. Their wings allow them to "
+    "Angels are heavenly beings on a holy mission. Their wings allow them to "
     "fly over chasms and pits. They are rarely fooled by invisibility, and "
     "become resistant to the elements as they mature. Their stats are truly awe-inspiring, "
     "and their divine magic extremely strong, offering good offense combined with detection, "
-    "healing, melee enhancement and utility. Archons are one of the most powerful "
+    "healing, melee enhancement and utility. Angels are one of the most powerful "
     "races, but they also gain levels extremely slowly.\n \n"
-    "Archons have a humanoid body type; they use the same equipment slots as most normal "
+    "Angels have a humanoid body type; they use the same equipment slots as most normal "
     "player races, and have no innate melee attacks. Wisdom is their primary spell stat.";
 
 static void _birth(void)
@@ -19,7 +19,7 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_HEALING));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_MACE));
@@ -61,7 +61,7 @@ static void _psycho_spear_spell(int cmd, variant *res)
     }
 }
 
-static spell_info _spells[] = {
+static spell_info _get_spells[] = {
     {  1,  1, 30, punishment_spell},
     {  2,  2, 30, bless_spell},
     {  3,  2, 30, confuse_spell},
@@ -86,9 +86,6 @@ static spell_info _spells[] = {
     { 50, 50, 65, starburst_II_spell},
     { -1, -1, -1, NULL}
 };
-static int _get_spells(spell_info* spells, int max) {
-    return get_spells_aux(spells, max, _spells);
-}
 
 static void _calc_bonuses(void) {
     /* cf calc_torch in xtra1.c for the 'extra light' */
@@ -166,37 +163,37 @@ static void _gain_level(int new_level) {
     if (p_ptr->current_r_idx == MON_ANGEL && new_level >= 10)
     {
         p_ptr->current_r_idx = MON_ARCHANGEL;
-        msg_print("You have evolved into a full Archon.");
+        msg_print("You have evolved into an Archangel.");
         p_ptr->redraw |= PR_MAP;
     }
     if (p_ptr->current_r_idx == MON_ARCHANGEL && new_level >= 20)
     {
         p_ptr->current_r_idx = MON_CHERUB;
-        msg_print("You have evolved into a Archon Guardian.");
+        msg_print("You have evolved into a Cherub.");
         p_ptr->redraw |= PR_MAP;
     }
     if (p_ptr->current_r_idx == MON_CHERUB && new_level >= 30)
     {
         p_ptr->current_r_idx = MON_SERAPH;
-        msg_print("You have evolved into a Archon Justicar.");
+        msg_print("You have evolved into a Seraph.");
         p_ptr->redraw |= PR_MAP;
     }
     if (p_ptr->current_r_idx == MON_SERAPH && new_level >= 40)
     {
         p_ptr->current_r_idx = MON_ARCHON;
-        msg_print("You have evolved into an Archon Exemplar.");
+        msg_print("You have evolved into an Archon.");
         p_ptr->redraw |= PR_MAP;
     }
     if (p_ptr->current_r_idx == MON_ARCHON && new_level >= 45)
     {
         p_ptr->current_r_idx = MON_PLANETAR;
-        msg_print("You have evolved into a Greater Archon.");
+        msg_print("You have evolved into a Planetar.");
         p_ptr->redraw |= PR_MAP;
     }
     if (p_ptr->current_r_idx == MON_PLANETAR && new_level >= 50)
     {
         p_ptr->current_r_idx = MON_SOLAR;
-        msg_print("You have evolved into a Paragon Archon.");
+        msg_print("You have evolved into a Solar.");
         p_ptr->redraw |= PR_MAP;
     }
 }
@@ -204,7 +201,7 @@ static race_t *_solar_get_race_t(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;
-    static cptr   titles[7] =  {"Lesser Archon", "Archon", "Archon Guardian", "Archon Justicar", "Archon Exemplar", "Greater Archon", "Paragon Archon"};
+    static cptr   titles[7] =  {"Angel", "Archangel", "Cherub", "Seraph", "Archon", "Planetar", "Solar"};
     int           rank = 0;
 
     if (p_ptr->lev >= 10) rank++;
@@ -251,7 +248,7 @@ static caster_info * _caster_info(void)
     static bool init = FALSE;
     if (!init)
     {
-        me.magic_desc = "astral power";
+        me.magic_desc = "divine power";
         me.which_stat = A_WIS;
         me.encumbrance.max_wgt = 450;
         me.encumbrance.weapon_pct = 67;
@@ -275,7 +272,7 @@ race_t *mon_angel_get_race(void)
         result = _solar_get_race_t();
     }
 
-    result->name = "Lesser Archon";
+    result->name = "Angel";
     result->desc = _desc;
     result->flags = RACE_IS_MONSTER;
     result->birth = _birth;

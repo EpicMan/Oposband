@@ -78,18 +78,11 @@ void _learning_spell(int cmd, variant *res)
     }
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _bluemage_powers[] =
 {
-    int ct = 0;
-
-    spell_info* spell = &spells[ct++];
-    spell->level = 1;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = _learning_spell;
-
-    return ct;
-}
+    { A_NONE, { 1, 0,  0, _learning_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static caster_info * _caster_info(void)
 {
@@ -110,26 +103,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
     new_mane = FALSE;
 }
 
@@ -179,8 +155,8 @@ static void _load(savefile_ptr file)
         for (j = 0; j < count; j++)
         {
             s16b effect = savefile_read_s16b(file);
-            s16b lore = savefile_read_s16b(file);
-            s16b seniority = savefile_read_s16b(file);
+            s16b lore = savefile_is_older_than(file, 7, 1, 1, 2) ? 0 : savefile_read_s16b(file);
+            s16b seniority = savefile_is_older_than(file, 7, 1, 1, 3) ? 0 : savefile_read_s16b(file);
             if ((i < MST_COUNT) && (!p_ptr->is_dead)) blue_mage_learn_spell_aux(i, effect, lore, seniority, FALSE);
         }
     }
@@ -229,7 +205,7 @@ class_t *blue_mage_get_class(void)
         me.save_player = _save;
         me.load_player = _load;
         /*TODO: me.get_spells = _get_spells;*/
-        me.get_powers = _get_powers;
+        me.get_powers = _bluemage_powers;
         me.character_dump = _dump;
         init = TRUE;
     }

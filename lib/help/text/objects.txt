@@ -765,12 +765,12 @@ List of Abbreviations
   Dx : affects dexterity              Li : resistance to light
   Cn : affects constitution           Dk : resistance to darkness
   Ch : affects charisma               Cf : resistance to confusion
-  Md : affects magic devices          Nt : resistance to nether
+  Md : affects device skill           Nt : resistance to nether
   Sl : affects stealth                Nx : resistance to nexus
   Sr : affects searching ability      So : resistance to sound
   If : affects infravision            Sh : resistance to shards
   Dg : affects tunneling ability      Ca : resistance to chaos
-  Lf : affects your life rating       Di : resistance to disenchantment
+  Lf : affects life multiplier        Di : resistance to disenchantment
   *Ac: immune to acid                 Ti : resistance to time
   *El: immune to electricity          Bl : resistance to blindness
   *Fi: immune to fire                 Fe : resistance to fear
@@ -783,21 +783,22 @@ List of Abbreviations
   Fa : free action                    [At: aura of retaliation
   Si : see invisible                  [M : anti-magic shell
   Hl : hold life                      [T : prevents teleportation
-  Sd : slow digestion                 [Mr: magic resistance
-  Id : loremastery (auto-identify)    [Sm: anti-summoning shell
-  Rg : regeneration                   |A : acid brand
+  Sd : slow digestion                 [Sm: anti-summoning shell
+  Rg : regeneration                   [Mr: magic resistance
+  Rm : mana recovery                  |A : acid brand
   Lv : levitation                     |E : electricity brand
-  Lu : extra light                    |F : fire brand
-  Wr : provides warning               |Co: cold brand
-  Xm : extra might when shooting      |P : poison brand
-  Xs : extra shots (shooting speed)   |Dk: darkness brand
-  Te : random teleportaion            |V : vampiric weapon
+  Nv : night vision                   |F : fire brand
+  Lu : extra light                    |Co: cold brand
+  Wr : provides warning               |P : poison brand
+  Xm : extra might when shooting      |Dk: darkness brand
+  Xs : extra shots (shooting speed)   |Ca: mark of chaos
+  Te : random teleportation           |V : vampiric weapon
   Ag : aggravate monsters             |Q : impact weapon
-  Bs : blessed                        |S : sharp weapon
-  Ty : ancient foul curse             |SS: really sharp weapon
-  Ds : darkness                       |M : mana brand
-  Nv : night vision                   |Ca: mark of chaos
-  Wm : weaponmastery (extra dice)     |St: hits to stun
+  Bs : blessed                        |St: hits to stun
+  Ty : ancient foul curse             |S : sharp weapon
+  Ds : darkness                       |SS: really sharp weapon
+  Wm : weaponmastery (extra dice)     |M : mana brand
+  Id : loremastery (auto-identify)
 
   /* : slay evil                      /X* : *slay* evil
   /p : slay human                     /Xp : *slay* human
@@ -832,6 +833,8 @@ radius, aggravates monsters, is both vampiric and sharp (|V and |S;
 notice the second | does not repeat), has *slay* demons, also slays 
 evil and grants ESP demons as well. (Quick quiz: which item is it?)
 
+See [n] for a more detailed explanation of these object properties.
+
 Inscriptions: Summary
 
 Inscription Form     Meaning
@@ -865,7 +868,7 @@ $                    Disable warning prompt.
                      Command-Letter command is issued, provided the 
                      inscribed object is currently being worn.
 
-Be sure to read [n] if this is unclear to you.
+Be sure to read [o] if this is unclear to you.
 
 --
 Original   : (??)

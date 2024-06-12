@@ -149,14 +149,16 @@ strongest, they do have the advantage of steady development that keeps
 them powerful through all phases of the game. The same thing could be 
 said of weaponsmiths.
 
-Demigods and Amberites are two of the most powerful races, but they 
-also have a very steep leveling-up penalty, which can be a significant 
-drawback if you want to go places fast. The "plain" human is actually a 
-surprisingly powerful pick, since humans level up very fast but still 
-get two demigod powers at levels 20 and 40.
+Demigods, Archons, Balrogs, Klackons and Draconians are all highly 
+powerful races, but they also have a very steep leveling-up penalty, 
+which can be a significant drawback if you want to go places fast. The 
+"plain" human is actually surprisingly powerful especially in the early 
+going, thanks to its low level-up penalty and early access to a demigod 
+talent.
 
 At the opposite end, yeek tourists and snotling tourists are extremely 
-weak combinations, used by players looking for the ultimate challenge.
+weak combinations, used by players looking for a challenge. Not that it 
+makes much of a difference on a Nightmare-mode Sexy thrall...
 
 
 Q: How do I put arrows (or other projectiles) in my quiver?
@@ -273,6 +275,19 @@ still can't find the entrance, check the overworld map to confirm you
 haven't moved out of the right area, and then try again.
 
 
+Q: I have "stumbled onto something interesting" in the wilderness. What 
+does that mean?
+
+A: It means some special feature has randomly generated nearby. It 
+might be an unusual room, enclosure or clearing, potentially full of 
+monsters or loot; a random shop in the wilderness; a dangerous (or 
+simply quirky) monster formation; or even an entrance into a random 
+dungeon. Sometimes these features are easy to spot, sometimes they are 
+more easily missed; whether you are sufficiently intrigued by the 
+interesting area to try to locate it is entirely up to you, and it is 
+unlikely you will miss much if you leave it unexplored.
+
+
 Q: I want to play as an Android, Balrog, Golem, Skeleton, Zombie, 
 Spectre, or Ent. But normal food doesn't seem to work for me, and there 
 are no reliable sources of Satisfy Hunger. How do I avoid starvation?
@@ -285,12 +300,13 @@ races do also get some sustenance from normal food, just not very
 much.)
 
 
-Q: I'm playing as a berserker, and cannot read scrolls. How do I remove 
+Q: I'm playing as a Berserker, and cannot read scrolls. How do I remove 
 a curse?
 
-A: You can simply 't'ake off the cursed equipment. Since cursed items 
-will attempt to stick, you may need to try the 't'ake off command more 
-than once.
+A: A berserker can simply 't'ake off cursed equipment, uncursing it in 
+the process; though as cursed items will attempt to stick, this may 
+take a few tries. A Beorning in bear form can also remove curses this 
+way.
 
 
 Q: Berserkers cannot use scrolls or rods. How do I get out of the 
@@ -632,17 +648,44 @@ from the Lucky personality) do not count towards this penalty. Mana
 regeneration is not affected by mutations.
 
 
+Q: I am playing an Igor, and have acquired a fair number of body parts 
+from dissected corpses, but none of them seem to do anything special. 
+Am I missing something?
+
+A: Igor body parts are very unpredictable: which parts you get from a 
+monster (and what positive and negative effects they have, if any) 
+depends on the level and thematic properties of the monster dissected, 
+the level and dexterity of the Igor, and sheer random luck. Strong, 
+high-level monsters give better body parts, but don't neglect all those 
+random ant and orc corpses either - there are just so many you will get 
+lucky with one eventually.
+
+All interesting body part properties are indicated in the object 
+description, so you will know when you find a part that might be worth 
+keeping.
+
+
+Q: Can I safely dissect wanted corpses on an Igor without missing out 
+on the rewards?
+
+A: Yes. The only individual body parts that bounty offices accept as 
+proof of a kill are a monster's head and its ears; but an Igor who 
+dissects a wanted corpse will take great care to preserve one of the 
+two (usually the ears), which can then be turned in. (It is possible to 
+find another body part worth keeping in addition to the ears.)
+
+
 Q: How important is Telepathy?
 
 A: Full telepathy is extremely nice to have - it tells you about 
 approaching threats, helps you locate fleeing or blinking enemies, and 
 even allows you to spot monsters that might otherwise be invisible to 
-you. However, it is still more of a convenience than something that you 
-absolutely need, especially if you have easy and reliable access to 
-Detection and have no or minimal problems seeing invisible creatures. A 
-player without telepathy needs to detect monsters more often but can 
-usually get by. Staves of Telepathy are also a handy option for players 
-without permanent telepathy.
+you. It is not absolutely needed, but most players generally try to 
+have it by the endgame. A player with no telepathy needs to detect very 
+often and must see invisible monsters reliably.
+
+Staves of Telepathy are a handy option for players without permanent 
+telepathy from equipment.
 
 
 Q: What does Reflection do? How important is it?
@@ -669,14 +712,15 @@ A: Levitation gives access to dark pits and mountainous wilderness,
 prevents overburdened characters from drowning in deep water, reduces 
 damage from standing in (or over) deep lava or toxic waste, reduces 
 damage from gravity, helps against the side-effects of gravity and 
-storm winds, eliminates movement speed penalties in wooded areas, and 
-allows you to harmlessly fly over some types of floor traps. It is a 
-necessity for entering mountainous areas (and a practical necessity for 
-entering deep seas on an overburdened character); it is very handy, but 
-not strictly necessary, for navigating the Cloning Pits quest as well 
-as dungeons with dark pits or deep water. In other situations it is not 
-very important; items that give levitation but are otherwise not that 
-great can be left at home to be shuffled in when needed.
+storm winds, eliminates movement speed penalties in wooded or snowy 
+areas, and allows you to harmlessly fly over some types of floor traps. 
+It is a necessity for entering mountainous areas (and a practical 
+necessity for entering deep seas on an overburdened character); it is 
+very handy (but not strictly necessary) for navigating snowy areas, the 
+Cloning Pits quest, and dungeons with dark pits or deep water. In other 
+situations Levitation is not very important; items that give levitation 
+but are otherwise not that great can be left at home to be shuffled in 
+when needed.
 
 
 Q: What is Warning? Is it something I need... and what do the strange 
@@ -738,16 +782,34 @@ enchanting items beyond that is. Trying to enchant an artifact or a
 pile of multiple items raises the failure probability even higher.
 
 
+Q: What does Mundanity do? Is it good or bad?
+
+A: Mundanity allows you to turn an item of your choosing into a 
+perfectly average item. It removes all bonuses, resistances and other 
+enhancements not inherent to the object kind; this includes removing 
+the random resistances on Dragon Wings and the like, but not the 
+guaranteed resistances on Dragon Scale Mails. Mundanity also removes 
+all curses.
+
+Mundanity has two main uses: to create an average item that can be used 
+as a reforge base, and to remove powerful curses. It is the only way to 
+remove a Permanent Curse from an item. Mundanity can be very useful, 
+but don't use it on the wrong item by accident... Essence absorption on 
+Weaponsmiths (and item monsters like Death-Swords) always mundanizes 
+the target item.
+
+
 Q: Staves of Destruction are supposed to be great, yet mine doesn't 
 seem to do anything when I use it! What's wrong?
 
 A: A number of items and spells do nothing when used on a town quest 
 level (any quest level not located inside a dungeon). In addition to 
 Destruction, this includes all Genocide, Mass Genocide and Annihilation 
-effects, as well as Teleport Level.
+effects, Teleport Level, and capture ball activations against non-pets.
 
-Destruction also does not work in the wilderness or in the Witch Wood. 
-This is because outdoors there's no ceiling to bring down!
+Destruction also does not work in the wilderness, and its effectiveness 
+is reduced on the Plains of Oz and in the Witch Wood. This is because 
+outdoors there's no ceiling to bring down!
 
 
 Q: What do monsters' vampiric attacks do?
@@ -762,6 +824,10 @@ A: Unlife attacks are very similar to vampiric attacks, but instead of
 healing the monster they make the monster more powerful. A powerful 
 monster has a higher AC, hits harder and casts more dangerous spells.
 
+Only Unlife attacks directed at the player can make a monster stronger. 
+Unlife attacks directed at a monster will not make the attacker more 
+powerful, but can make the target monster less powerful.
+
 
 Q: What do the player's vampiric attacks do?
 
@@ -774,6 +840,11 @@ recover first.) Vampiric attacks are very useful and powerful; however,
 they only work on living monsters. Many strong monsters, like golems, 
 vortices, demons, undead and the Serpent of Chaos, are immune to 
 vampirism.
+
+Monsters can never recover the lost max HP, although drained uniques 
+will be back to their normal HP (as well as normal, pre-Unlife monster 
+power) if encountered again on a subsequent level. Capturing a monster 
+with a Capture Ball also reverts it back to its normal maximum HP.
 
 
 Q: What are "life points", anyway?
@@ -813,16 +884,16 @@ available in most towns, also restores life points.
 Q: I also have a "life rating", unrelated to my life points. Actually, 
 I seem to have several life ratings! Just how is my max HP calculated?
 
-A: Every character has a random "life rating" between 87% and 117%. 
-This rating (the life rating proper) corresponds to the overall result 
-of 49 randomly rolled HP gains (one for every character level after the 
-first); the HP gains (and thus, your life rating) can be re-rolled 
-during the game in several ways, most commonly by drinking a Potion of 
-New Life. You are born with no knowledge of how good your life rating 
-is, but drinking a Potion of Self Knowledge (or *Enlightenment*) will 
-enlighten you. This is the only life rating you can affect in any way 
-during play, and is the one displayed on your character sheet, if 
-known.
+A: Every character has a random "life rating" between 0 and 76. This 
+rating (the life rating proper) corresponds to the overall result 
+(between 223 and 299) of 49 randomly rolled HP gains (one for every 
+character level after the first); the HP gains (and thus, your life 
+rating) can be re-rolled during the game in several ways, most commonly 
+by drinking a Potion of New Life. You are born with no knowledge of how 
+good your life rating is, but drinking a Potion of Self Knowledge (or 
+*Enlightenment*) will enlighten you. This is the only life rating you 
+can affect in any way during play, and is the one displayed on your 
+character sheet, if known.
 
 The random life rating only accounts for about half of the HP you get 
 per level; the other half is non-random. The non-random gains always 
@@ -835,11 +906,11 @@ even distribution.
 
 These two main contributions to your max HP are added together and 
 multiplied by four non-random modifiers; the first three are the life 
-rating multipliers of your race, your class and your personality. 
-(These are prominently displayed at character generation, and new 
-players are frequently confused by their relationship to the randomly 
-generated life rating proper.) The fourth multiplier is based on your 
-CON and any +Life or -Life items equipped.
+multipliers of your race, your class and your personality. (These are 
+prominently displayed at character generation, and new players are 
+frequently confused by their relationship to the randomly generated 
+life rating proper.) The fourth multiplier is based on your CON and any 
++Life or -Life items equipped.
 
 Finally, after the multipliers, some lump sums are added (your class 
 base HP, race base HP, and any HP from active buffs like heroism); and 
@@ -847,12 +918,17 @@ your effective maximum HP is adjusted to account for any reduction in
 your life points. It's a complicated system, but during the game you 
 only need to worry about your random life rating and your CON!
 
+Life ratings were previously displayed (and in many variants are still 
+displayed) on a percentage scale of 87% to 117%, with 87% corresponding 
+to absolute values of 0-2 and 117% to 73-76; the average on this scale 
+was around 102-103%, corresponding to 36-41.
+
 
 Q: When should I reroll my life rating with a Potion of New Life?
 
 A: In general, you should never reroll unless you know what your life 
 rating is, or have a very good reason to suspect that it's atrociously 
-low. The average life rating is 102% (not 100%), so that's the 
+low. The average life rating is around 39/76 (not 38), so that's the 
 theoretical break-even point for a single Potion of New Life; but in 
 practice, if you're already doing well, the risks of rolling a really 
 bad life may outweigh the potential benefits of rolling a great one. So 
@@ -996,6 +1072,25 @@ their special abilities to "enchant" a poison needle, but this has no
 actual effect on the needle's performance.) Poison needles have a 100% 
 hit chance, unless the player is dual-wielding, in which case they have 
 a 50% hit chance.
+
+
+Q: What do Rune Swords do? Are they as bad as they look?
+
+A: Rune Swords start out extremely weak, but they gain power as you 
+kill monsters (especially uniques) with them. If you find a Rune Sword 
+early and use it into the deep endgame, it will eventually be very 
+strong offensively.
+
+Growing a Rune Sword takes a long time, and it will also pick up a 
+number of negative attributes along the way - increasing AC penalties, 
+aggravation, and eventually (in the very late game) the Ancient Foul 
+Curse. The positive attributes of a Rune Sword, moreover, are purely 
+offensive; it will never provide resistances, stat bonuses or 
+additional abilities like many other strong weapons; and since Rune 
+Swords are permanently cursed, the only way to unwield them is to 
+essentially destroy them with Mundanity. For these reasons, most 
+players are quite wary of using Rune Swords, but the game has been won 
+with them many times.
 
 
 Q: Are Sexy Swimsuits just a useless joke item, or can they be actually 

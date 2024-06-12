@@ -7,8 +7,8 @@
 
 extern void py_display(void);
 extern void py_display_birth(void);
-extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
-extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
+extern void py_display_spells(doc_ptr doc, power_info *table, int ct);
+extern void py_display_powers(doc_ptr doc, power_info *table, int ct);
 extern void py_display_character_sheet(doc_ptr doc);
 extern void py_display_dungeons(doc_ptr doc);
 
@@ -122,7 +122,7 @@ static void _build_general1(doc_ptr doc)
         else
             doc_printf(doc, " Realm      : <color:B>%s</color>\n", realm_names[p_ptr->realm1]);
     }
-    else if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->pclass == CLASS_CHAOS_MAGE) || mut_present(MUT_CHAOS_GIFT))
+    else if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || mut_present(MUT_CHAOS_GIFT))
     {
         doc_printf(doc, " Patron     : <color:B>%s</color>\n", chaos_patrons[p_ptr->chaos_patron]);
         patron_listed = TRUE;
@@ -130,7 +130,7 @@ static void _build_general1(doc_ptr doc)
     else
         doc_newline(doc);
 
-    if (((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->pclass == CLASS_CHAOS_MAGE) || mut_present(MUT_CHAOS_GIFT)) && (!patron_listed))
+    if (((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || mut_present(MUT_CHAOS_GIFT)) && (!patron_listed))
         doc_printf(doc, " Patron     : <color:B>%s</color>\n", chaos_patrons[p_ptr->chaos_patron]);
     else
         doc_newline(doc);
@@ -153,7 +153,7 @@ static void _build_general1(doc_ptr doc)
 
     doc_printf(doc, " Gold       : <color:G>%8d</color>\n", p_ptr->au);
     doc_printf(doc, " Kills      : <color:G>%8d</color>\n", ct_kills());
-    doc_printf(doc, " Uniques    : <color:G>%8d</color>\n", ct_uniques());
+    doc_printf(doc, " Uniques    : <color:G>%8d</color>\n", ct_uniques(CTU_INCLUDE_SUPPRESSED | CTU_INCLUDE_RARE | CTU_COUNT_DEAD));
     doc_printf(doc, " Artifacts  : <color:G>%8.8s</color>\n",
                             no_artifacts ? "N/A" : format("%d+%d" , ct_artifacts(), stats_rand_art_counts.found));
     doc_newline(doc);
@@ -230,12 +230,7 @@ static void _build_general2(doc_ptr doc)
                         p_ptr->csp > (p_ptr->msp * mana_warn) / 10 ? 'y' : 'r',
                     string_buffer(s));
 
-	int ac = p_ptr->dis_ac + p_ptr->dis_to_a;
-	int ac_percentage = 100 - ac_melee_pct(ac);
-	if (ac_percentage >= 10)
-		doc_printf(doc, "<tab:9>AC   : %3d <color:G>(%2d%c)</color>\n", ac, ac_percentage, '%');
-	else
-		doc_printf(doc, "<tab:9>AC   : %3d  <color:G>(%d%c)</color>\n", ac, ac_percentage, '%');
+    doc_printf(doc, "<tab:9>AC   : <color:G>%9d</color>\n", p_ptr->dis_ac + p_ptr->dis_to_a);
 
     /* Dump speed ... What a monster! */
     {
@@ -416,7 +411,7 @@ static _flagzilla_ptr _flagzilla_alloc(void)
                 add_flag(flagzilla->obj_flgs[i], OF_MAGIC_RESISTANCE);
                 break;
             case RUNE_SHADOW:
-                if (object_is_body_armor(o_ptr) || o_ptr->tval == TV_CLOAK)
+                if (object_is_body_armour(o_ptr) || o_ptr->tval == TV_CLOAK)
                     add_flag(flagzilla->obj_flgs[i], OF_STEALTH);
                 break;
             case RUNE_HASTE:
@@ -663,15 +658,18 @@ static void _build_flags1(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_slays_imp(doc, "Cold Brand", OF_BRAND_COLD, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Pois Brand", OF_BRAND_POIS, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Mana Brand", OF_BRAND_MANA, OF_INVALID, flagzilla);
+    _build_slays_imp(doc, "Dark Brand", OF_BRAND_DARK, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Sharpness", OF_VORPAL, OF_VORPAL2, flagzilla);
     _build_slays_imp(doc, "Stunning", OF_STUN, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Quake", OF_IMPACT, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Vampiric", OF_BRAND_VAMP, OF_INVALID, flagzilla);
     _build_slays_imp(doc, "Chaotic", OF_BRAND_CHAOS, OF_INVALID, flagzilla);
-    _build_flags(doc, "Add Blows", OF_BLOWS, OF_DEC_BLOWS, flagzilla);
+    _build_flags(doc, "Extra Blows", OF_BLOWS, OF_DEC_BLOWS, flagzilla);
+    _build_flags(doc, "Extra Shots", OF_XTRA_SHOTS, OF_INVALID, flagzilla);
+    _build_flags(doc, "Extra Might", OF_XTRA_MIGHT, OF_INVALID, flagzilla);
     _build_flags(doc, "Blessed", OF_BLESSED, OF_INVALID, flagzilla);
     _build_flags(doc, "Riding", OF_RIDING, OF_INVALID, flagzilla);
-    _build_flags(doc, "Tunnel", OF_TUNNEL, OF_INVALID, flagzilla);
+    _build_flags(doc, "Digging", OF_TUNNEL, OF_INVALID, flagzilla);
     _build_flags(doc, "Throwing", OF_THROWING, OF_INVALID, flagzilla);
 }
 
@@ -698,6 +696,7 @@ static void _display_known_count(doc_ptr doc, int total, int flg)
 static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
 {
     int _tmp;
+    s32b _regen = (s32b)p_ptr->regen * py_food_regen();
     _equippy_chars(doc, 14);
     _equippy_heading(doc, "Abilities", 14);
 
@@ -713,16 +712,30 @@ static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_flags(doc, "Slow Digest", OF_SLOW_DIGEST, OF_INVALID, flagzilla);
 
     _build_flags_imp(doc, "Regenerate", OF_REGEN, OF_INVALID, flagzilla);
-    doc_printf(doc, " %3d%%\n", p_ptr->regen); /* TODO: Only display known amount ... but then again, you can feel this, no? */
+    doc_printf(doc, " %3d%%\n", p_ptr->regen);
 
-    _build_flags(doc, "Levitation", OF_LEVITATION, OF_INVALID, flagzilla);
-    _build_flags(doc, "Perm Lite", OF_LITE, OF_DARKNESS, flagzilla);
-    _build_flags(doc, "Reflection", OF_REFLECT, OF_INVALID, flagzilla);
+    _build_flags_imp(doc, " HP Regen", OF_INVALID, OF_SLOW_REGEN, flagzilla);
+    doc_printf(doc, " %3d%%\n", _regen / PY_REGEN_NORMAL * mutant_regenerate_mod / 100);
+
+    _build_flags_imp(doc, " SP Regen", OF_REGEN_MANA, OF_INVALID, flagzilla);
+    if (p_ptr->msp) doc_printf(doc, " %3d%%", ((p_ptr->pclass == CLASS_RUNE_KNIGHT || p_ptr->pclass == CLASS_RAGE_MAGE || mimic_no_regen()) ? 0 : (p_ptr->mana_regen ? _regen * 2 : _regen) / PY_REGEN_NORMAL));
+    doc_newline(doc);
 
     _build_flags_imp(doc, "Hold Life", OF_HOLD_LIFE, OF_INVALID, flagzilla);
     _display_known_count(doc, p_ptr->hold_life, OF_HOLD_LIFE);
 
-    _build_flags(doc, "Life Rating", OF_LIFE, OF_DEC_LIFE, flagzilla);
+    _build_flags(doc, "Levitation", OF_LEVITATION, OF_INVALID, flagzilla);
+    _build_flags(doc, "Perm Lite", OF_LITE, OF_DARKNESS, flagzilla);
+    _build_flags(doc, "Reflection", OF_REFLECT, OF_INVALID, flagzilla);
+    _build_flags(doc, "Nightvision", OF_NIGHT_VISION, OF_INVALID, flagzilla);
+
+    _build_flags_imp(doc, "Life Mult", OF_LIFE, OF_DEC_LIFE, flagzilla);
+    _tmp = (p_ptr->life - adj_con_mhp[p_ptr->stat_ind[A_CON]]);
+    if (_tmp != 0)
+    {
+        doc_printf(doc, " %+3d%%", _tmp);
+    }
+    doc_newline(doc);
 
     _build_flags(doc, "Dec Mana", OF_DEC_MANA, OF_INVALID, flagzilla);
     _build_flags(doc, "Easy Spell", OF_EASY_SPELL, OF_INVALID, flagzilla);
@@ -751,7 +764,7 @@ static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
     doc_newline(doc);
 
     if (_build_flags_imp(doc, "Magic Res", OF_MAGIC_RESISTANCE, OF_INVALID, flagzilla))
-        doc_printf(doc, " %+3d%%", p_ptr->magic_resistance);
+            doc_printf(doc, " %+3d%%", p_ptr->magic_resistance);
     doc_newline(doc);
 
     if (_build_flags_imp(doc, "Infravision", OF_INFRA, OF_INVALID, flagzilla))
@@ -1035,11 +1048,11 @@ static void _build_equipment(doc_ptr doc)
 /****************************** Combat ************************************/
 static void _build_melee(doc_ptr doc)
 {
-	doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
     if (p_ptr->prace == RACE_MON_RING) return;
     if (possessor_can_attack() && !p_ptr->weapon_ct && !p_ptr->innate_attack_ct) return;
     {
         int i;
+        doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
         for (i = 0; i < MAX_HANDS; i++)
         {
             if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
@@ -1066,7 +1079,7 @@ static void _build_shooting(doc_ptr doc)
 }
 
 /****************************** Magic ************************************/
-void py_display_powers(doc_ptr doc, spell_info *table, int ct)
+void py_display_powers(doc_ptr doc, power_info *table, int ct)
 {
     int i;
     variant vn, vd, vc, vfm;
@@ -1081,7 +1094,8 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
     for (i = 0; i < ct; i++)
     {
-        spell_info     *spell = &table[i];
+        power_info     *power = &table[i];
+        spell_info     *spell = &power->spell;
         spell_stats_ptr stats = spell_stats(spell);
 
         spell->fn(SPELL_NAME, &vn);
@@ -1108,30 +1122,46 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
 
 static void _build_powers(doc_ptr doc)
 {
-    spell_info spells[MAX_SPELLS];
-    int        ct = 0;
-    race_t    *race_ptr = get_race();
-    class_t   *class_ptr = get_class();
-
-    if (race_ptr->get_powers)
-        ct += (race_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
-
-    if (class_ptr->get_powers)
-        ct += (class_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
-
-    ct += mut_get_powers(spells + ct, MAX_SPELLS - ct);
+    power_info spells[MAX_SPELLS];
+    int ct = get_power_table(spells);
 
     py_display_powers(doc, spells, ct);
 }
 
-void py_display_spells(doc_ptr doc, spell_info *table, int ct)
+void py_display_spells(doc_ptr doc, power_info *table, int ct)
 {
     if (!ct) return;
     doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
     py_display_spells_aux(doc, table, ct);
 }
 
-void py_display_spells_aux(doc_ptr doc, spell_info *table, int ct)
+void py_dump_spells(doc_ptr doc)
+{
+    power_info spells[MAX_SPELLS];
+    class_t *class_ptr = get_class();
+    int ct = 0;
+    if (class_ptr->get_spells)
+        ct += get_spells_aux(spells, MAX_SPELLS, class_ptr->get_spells, TRUE);
+    else if (class_ptr->get_spells_fn)
+        ct += get_spells_aux(spells, MAX_SPELLS, class_ptr->get_spells_fn(), TRUE);
+
+    if (ct > 0) py_display_spells(doc, spells, ct);
+}
+
+void py_dump_spells_aux(doc_ptr doc)
+{
+    power_info spells[MAX_SPELLS];
+    class_t *class_ptr = get_class();
+    int ct = 0;
+    if (class_ptr->get_spells)
+        ct += get_spells_aux(spells, MAX_SPELLS, class_ptr->get_spells, TRUE);
+    else if (class_ptr->get_spells_fn)
+        ct += get_spells_aux(spells, MAX_SPELLS, class_ptr->get_spells_fn(), TRUE);
+
+    if (ct > 0) py_display_spells_aux(doc, spells, ct);
+}
+
+void py_display_spells_aux(doc_ptr doc, power_info *table, int ct)
 {
     int i;
     variant vn, vd, vc, vfm;
@@ -1143,22 +1173,33 @@ void py_display_spells_aux(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "    <color:G>%-25.25s Lvl Cost Fail %-15.15s  Cast Fail</color>\n", "", "Desc");
+    if (prace_is_(RACE_MON_MUMMY))
+        doc_printf(doc, "    <color:G>%-25.25s Lvl Cost Fail %-18.18s  Cast Fail</color>\n", "", "Desc");
+    else doc_printf(doc, "    <color:G>%-25.25s Lvl Cost Fail %-15.15s  Cast Fail</color>\n", "", "Desc");
 
     for (i = 0; i < ct; i++)
     {
-        spell_info     *spell = &table[i];
+        spell_info     *spell = &table[i].spell;
         spell_stats_ptr stats = spell_stats(spell);
 
         spell->fn(SPELL_NAME, &vn);
         spell->fn(SPELL_INFO, &vd);
-        spell->fn(SPELL_COST_EXTRA, &vc);
+/*      spell->fn(SPELL_COST_EXTRA, &vc); */
         spell->fn(SPELL_FAIL_MIN, &vfm);
 
-        doc_printf(doc, " %c) %-25.25s %3d %4d %3d%% %-15.15s %5d %4d %3d%%\n",
-            I2A(i),
+        if (prace_is_(RACE_MON_MUMMY))
+        {
+            doc_printf(doc, " %c) %-25.25s %3d %4d %3d%% %-18.18s %5d %4d %3d%%\n",
+            multicase[i],
             var_get_string(&vn),
-            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)),
+            spell->level, spell->cost, MAX(spell->fail, var_get_int(&vfm)),
+            var_get_string(&vd),
+            stats->ct_cast, stats->ct_fail, spell_stats_fail(stats));
+        }
+        else doc_printf(doc, " %c) %-25.25s %3d %4d %3d%% %-15.15s %5d %4d %3d%%\n",
+            multicase[i],
+            var_get_string(&vn),
+            spell->level, spell->cost, MAX(spell->fail, var_get_int(&vfm)),
             var_get_string(&vd),
             stats->ct_cast, stats->ct_fail,
             spell_stats_fail(stats)
@@ -1175,17 +1216,8 @@ void py_display_spells_aux(doc_ptr doc, spell_info *table, int ct)
 
 static void _build_spells(doc_ptr doc)
 {
-    spell_info spells[MAX_SPELLS];
-    int        ct = 0;
-    race_t    *race_ptr = get_race();
-    /*class_t   *class_ptr = get_class_t();*/
-
-    if (race_ptr->get_spells)
-        ct += (race_ptr->get_spells)(spells + ct, MAX_SPELLS - ct);
-
-    /* TODO: Some classes prompt the user at this point ...
-    if (class_ptr->get_spells)
-        ct += (class_ptr->get_spells)(spells + ct, MAX_SPELLS - ct); */
+    power_info spells[MAX_SPELLS];
+    int        ct = get_spell_table(spells, MAX_SPELLS, FALSE);
 
     py_display_spells(doc, spells, ct);
 }
@@ -1280,7 +1312,8 @@ static void _build_uniques(doc_ptr doc)
                  * how many you are dealing with. Skip the Arena uniques and any
                  * uniques suppressed this game, but count up the rest. */
                 else if ( 0 < r_ptr->rarity && r_ptr->rarity <= 100
-                       && !(r_ptr->flagsx & RFX_SUPPRESS) )
+                       && !(r_ptr->flagsx & RFX_SUPPRESS) && ((!r_ptr->dungeon) ||
+                        (!(d_info[r_ptr->dungeon].flags1 & DF1_SUPPRESSED))))
                 {
                     ct_uniques_alive++;
                 }
@@ -1424,7 +1457,10 @@ static void _build_pets(doc_ptr doc)
         doc_printf(doc, "  Allow cast attack spell:            %s\n", (p_ptr->pet_extra_flags & PF_ATTACK_SPELL) ? "ON" : "OFF");
         doc_printf(doc, "  Allow cast summon spell:            %s\n", (p_ptr->pet_extra_flags & PF_SUMMON_SPELL) ? "ON" : "OFF");
         doc_printf(doc, "  Allow involve player in area spell: %s\n", (p_ptr->pet_extra_flags & PF_BALL_SPELL) ? "ON" : "OFF");
-		doc_printf(doc, "  Riding Skill:                       %d\n", skills_riding_current());
+        if (p_ptr->wizard || easy_damage)
+        {
+            doc_printf(doc, "  Riding Skill:                       %d\n", skills_riding_current());
+        }
 
         doc_newline(doc);
     }
@@ -2166,6 +2202,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_POTION, SV_POTION_INC_DEX);
     _object_counts_imp(doc, TV_POTION, SV_POTION_INC_CON);
     _object_counts_imp(doc, TV_POTION, SV_POTION_INC_CHR);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_LIQUID_LOGRUS);
     _object_counts_imp(doc, TV_POTION, SV_POTION_NEW_LIFE);
     _object_counts_imp(doc, TV_POTION, SV_POTION_EXPERIENCE);
     _group_counts_tval_imp(doc, TV_POTION, "Totals");
@@ -2174,7 +2211,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_PHASE_DOOR);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_IDENTIFY);
-/*    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);*/
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
     if (class_uses_spell_scrolls(p_ptr->pclass))
@@ -2240,7 +2277,7 @@ static void _build_statistics(doc_ptr doc)
         _device_counts_imp(doc, TV_STAFF, EFFECT_HEAL);
         _device_counts_imp(doc, TV_STAFF, EFFECT_TELEPATHY);
         _device_counts_imp(doc, TV_STAFF, EFFECT_SPEED);
-/*        _device_counts_imp(doc, TV_STAFF, EFFECT_IDENTIFY_FULL); */
+        _device_counts_imp(doc, TV_STAFF, EFFECT_IDENTIFY_FULL);
         _device_counts_imp(doc, TV_STAFF, EFFECT_DESTRUCTION);
         _device_counts_imp(doc, TV_STAFF, EFFECT_HEAL_CURING);
         _device_counts_imp(doc, TV_STAFF, EFFECT_GENOCIDE);
@@ -2318,7 +2355,7 @@ static void _build_statistics(doc_ptr doc)
 
     if ((p_ptr->is_dead) || (p_ptr->knowledge & KNOW_HPRATE))
     {
-        doc_printf(doc, "  <color:G>Life Rating</color>:  %d%%\n\n", p_ptr->life_rating);
+        doc_printf(doc, "  <color:G>Life Rating</color>: %s\n\n", life_rating_desc(TRUE));
     }
 }
 
@@ -2326,8 +2363,10 @@ static void _build_statistics(doc_ptr doc)
 typedef dungeon_info_type *dun_ptr;
 static int _cmp_d_lvl(dun_ptr l, dun_ptr r)
 {
-    if (l->maxdepth < r->maxdepth) return -1;
-    if (l->maxdepth > r->maxdepth) return 1;
+    int ld = (l->id == DUNGEON_MYSTERY) ? max_dlv[l->id] : l->maxdepth;
+    int rd = (r->id == DUNGEON_MYSTERY) ? max_dlv[r->id] : r->maxdepth;
+    if (ld < rd) return -1;
+    if (ld > rd) return 1;
     if (l->id < r->id) return -1;
     if (l->id > r->id) return 1;
     return 0;
@@ -2399,6 +2438,8 @@ void py_display_dungeons(doc_ptr doc)
             doc_printf(doc, "Now, you are in the quest '%s'.\n", lyhytnimi(quests_get_current(), &quest_name));
             free((vptr)quest_name);
         }
+        else if (p_ptr->inside_arena)
+            doc_printf(doc, "Now, you are in the %s %s.\n", town_name(p_ptr->town_num), map_name());
         else
             doc_insert(doc, "Hmmm ... Where are you?");
     }
@@ -2467,6 +2508,7 @@ static cptr _game_speed_text[GAME_SPEED_MAX] = {
 
 static void _build_options(doc_ptr doc)
 {
+    int i, loydetty = 0;
     doc_printf(doc, "<topic:Options>=================================== <color:keypress>O</color>ptions ===================================\n\n");
 
     if (game_mode != GAME_MODE_NORMAL)
@@ -2488,11 +2530,19 @@ static void _build_options(doc_ptr doc)
     if (thrall_mode)
         doc_printf(doc, " Thrall Mode:        On\n");
 
+    doc_printf(doc, " Preserve Mode:      %s\n", preserve_mode ? "On" : "Off");
+
     if (small_level_type <= SMALL_LVL_MAX)
          doc_printf(doc, " Level Size:         %s\n", lv_size_options[small_level_type]);
 
-	if (no_id)
-		doc_printf(doc, " All items pre-IDed: On\n");
+    if (easy_damage)
+		doc_printf(doc, " Easy Damage Info:   On\n");
+
+	if (easy_id)
+		doc_printf(doc, " Easy Identify:      On\n");
+	
+	if (easy_lore)
+		doc_printf(doc, " Easy Lore:          On\n");
 
     if (no_wilderness)
         doc_printf(doc, " Wilderness:         Off\n");
@@ -2521,11 +2571,19 @@ static void _build_options(doc_ptr doc)
     if (ironman_nightmare)
         doc_printf(doc, " <color:v>Nightmare Mode</color>:     On\n");
 
-    doc_printf(doc, " Arena Levels:       %s\n", ironman_empty_levels ? "*Always*" :
-                                                    empty_levels ? "Sometimes" : "Never");
+    doc_printf(doc, " Arena Levels:       %s\n", empty_lv_description[generate_empty]);
 
-    if ((single_pantheon) && (game_pantheon > 0) && (game_pantheon < PANTHEON_MAX))
-        doc_printf(doc, " Pantheon:           %s\n", pant_list[game_pantheon].name);
+    doc_printf(doc, " Pantheon%s          ", ((pantheon_count == 1) ? ": " : "s:"));
+    for (i = 1; i < PANTHEON_MAX; i++)
+    {
+        if (is_active_pantheon(i))
+        {
+            if (loydetty) doc_printf(doc, ", ");
+            doc_printf(doc, "%s", pant_list[i].name);
+            loydetty++;
+        }
+    }
+    doc_printf(doc, "\n");
 
     if (no_artifacts)
         doc_printf(doc, " No Artifacts:       On\n");
@@ -2544,6 +2602,13 @@ static void _build_options(doc_ptr doc)
     if (comp_mode)
         doc_printf(doc, " Competition Mode:   On\n");
 
+    {
+        int mult = score_mult();
+        doc_printf(doc, "\n Score Multiplier:   %d.%02d%%\n", mult / 100, mult % 100);
+        if (p_ptr->noscore) doc_printf(doc, " Adjusted Score:     %d\n", hof_score());
+        else doc_printf(doc, " Adjusted Score:     <color:B>%d</color>\n", hof_score());
+    }
+
     if (p_ptr->noscore)
         doc_printf(doc, "\n <color:v>You have done something illegal.</color>\n");
 
@@ -2555,9 +2620,8 @@ static void _build_quests(doc_ptr doc)
 {
     doc_printf(doc, "<topic:uQuests>==================================== Q<color:keypress>u</color>ests ===================================\n\n");
     quests_doc(doc);
-    if (!no_wilderness || !ironman_downward || coffee_break)
+/*     if (!no_wilderness || !ironman_downward || coffee_break)*/
     {
-        doc_newline(doc);
         if (p_ptr->arena_number < 0)
         {
             if (p_ptr->arena_number <= ARENA_DEFEATED_OLD_VER)
@@ -2586,6 +2650,7 @@ static void _build_quests(doc_ptr doc)
                 p_ptr->arena_number != 1 ? "ies" : "y");
         }
     }
+    doc_newline(doc);
 }
 
 static int _max_depth(void)
@@ -2611,6 +2676,24 @@ static bool _is_retired(void)
     return FALSE;
 }
 
+int oook_score(void)
+{
+    int tulos = p_ptr->max_max_exp;
+    if ((easy_damage) && ((p_ptr->total_winner) || (tulos > 6500000L))) tulos = ((tulos - 6500000L) / 2) + 6500000L;
+    return tulos;
+}
+
+s32b hof_score(void)
+{
+    u32b tulos = (u32b)p_ptr->max_max_exp;
+    u32b mult = (u32b)score_mult();
+    s32b bigtulos = 0L;
+    if (!tulos) return 0;
+    s64b_mul(&bigtulos, &tulos, 0L, mult);
+    s64b_div(&bigtulos, &tulos, 0L, 10000L);
+    return (s32b)tulos;
+}
+
 char *version_modifier(void)
 {
     return format("%s%s%s", coffee_break ? (coffee_break == SPEED_INSTA_COFFEE ? " (insta-coffee)" : " (coffee)") : "", thrall_mode ? " (thrall)" : "", wacky_rooms ? " (wacky)" : "");
@@ -2626,15 +2709,15 @@ static void _add_html_header(doc_ptr doc)
     string_append_s(header, "<head>\n");
     string_append_s(header, " <meta name='filetype' value='character dump'>\n");
     string_printf(header,  " <meta name='variant' value='%s'>\n", VERSION_NAME);
-    string_printf(header,  " <meta name='variant_version' value='%d.%d.%d%s'>\n", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
+    string_printf(header,  " <meta name='variant_version' value='%d.%d.%s%s'>\n", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
     string_printf(header,  " <meta name=\"character_name\" value=\"%s\">\n", player_name);
     string_printf(header,  " <meta name='race' value='%s'>\n", get_true_race()->name);
     string_printf(header,  " <meta name='class' value='%s'>\n", get_class()->name);
     string_printf(header,  " <meta name='level' value='%d'>\n", p_ptr->max_plv);
-    string_printf(header,  " <meta name='experience' value='%d'>\n", p_ptr->max_max_exp);
-    string_printf(header,  " <meta name='turncount' value='%d'>\n", game_turn);
+    string_printf(header,  " <meta name='experience' value='%d'>\n", oook_score());
+    string_printf(header,  " <meta name='turncount' value='%d'>\n", turn_real(game_turn));
     string_printf(header,  " <meta name='max_depth' value='%d'>\n", _max_depth());
-    string_printf(header,  " <meta name='score' value='%d'>\n", total_points()); /* ?? Does oook need this? */
+    string_printf(header,  " <meta name='score' value='%d'>\n", hof_score()); /* ?? Does oook need this? */
     string_printf(header,  " <meta name='fame' value='%d'>\n", p_ptr->fame);
 
     /* For angband.oook.cz ... I'm not sure what is best for proper display of html dumps so I'll need to ask pav
@@ -2661,7 +2744,7 @@ void py_display_character_sheet(doc_ptr doc)
 {
     _add_html_header(doc);
 
-    doc_insert(doc, "<style:wide>  [Oposband <$:version> Character Dump]\n");
+    doc_insert(doc, "<style:wide>  [FrogComposband <$:version> Character Dump]\n");
     if (p_ptr->total_winner)
         doc_insert(doc, "              <color:B>***WINNER***</color>\n");
     else if (p_ptr->is_dead)

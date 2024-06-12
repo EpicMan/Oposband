@@ -19,14 +19,18 @@
 
 
 /* Room types for generate_lake() */
-#define LAKE_T_LAVA        1
-#define LAKE_T_WATER       2
-#define LAKE_T_CAVE        3
-#define LAKE_T_EARTH_VAULT 4
-#define LAKE_T_AIR_VAULT   5
-#define LAKE_T_WATER_VAULT 6
-#define LAKE_T_FIRE_VAULT  7
-
+enum
+{
+    LAKE_T_LAVA = 1,
+    LAKE_T_WATER,
+    LAKE_T_CAVE,
+    LAKE_T_EARTH_VAULT,
+    LAKE_T_AIR_VAULT,
+    LAKE_T_WATER_VAULT,
+    LAKE_T_FIRE_VAULT,
+    LAKE_T_NUKE_VAULT,
+    LAKE_T_MAX
+};
 
 /* Room types for room_build() */
 enum {
@@ -227,8 +231,5 @@ extern void build_maze_vault(int x0, int y0, int xsize, int ysize, bool is_vault
 extern void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno);
 extern bool vault_aux_chapel_g(int r_idx);
 extern bool vault_aux_chapel_e(int r_idx);
-
-/* Special feature rooms */
-extern int generate_table_room(int y1, int x1, int y2, int x2);
 
 #endif

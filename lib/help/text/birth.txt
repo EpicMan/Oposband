@@ -135,10 +135,10 @@ birth choices. It is the value in this row that gets added to your
 starting stats.
 
 Other fields in the table include:
-  Life: Life Rating Multiplier. This value multiplies your maximum hit 
-        points (HP). Hit points are your character's health; if your 
-        hit points go below zero, you die and the game is over! See [c] 
-        for more on how your maximum hit points are calculated.
+  Life: Life Multiplier. This value multiplies your maximum hit points 
+        (HP). Hit points are your character's health; if your hit 
+        points go below zero, you die and the game is over! See [c] for 
+        more on how your maximum hit points are calculated.
   BHP:  Short for Base Hit Points, this value is a lump sum added to 
         your starting hit points to make the early game easier.
   Exp:  Short for Experience Factor, this percentage determines how 
@@ -468,8 +468,8 @@ often, but not always, go up with character level:
   shooting speed and reduce the chance your ammunition breaks on 
   impact. Strength and Dexterity can boost your Archery, although this 
   boost only affects your accuracy and not the additional bonuses 
-  noted. Like Melee skill, Archery improves naturally with character 
-  level for all characters except Sorcerers.
+  noted. Archery improves naturally with character level for all 
+  characters except Berserkers and Sorcerers.
 
   Saving Throw
   Saving Throw is the ability of your character to resist the effects 

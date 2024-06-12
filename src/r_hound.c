@@ -101,7 +101,7 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 3;
+    forge.to_d = 3;
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS));
@@ -131,7 +131,7 @@ void hound_calc_innate_attacks(void)
 
         a.weight = 100;
         calc_innate_blows(&a, 200);
-        a.msg = "You claw";
+        a.msg = "You claw.";
         a.name = "Claw";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -156,7 +156,7 @@ void hound_calc_innate_attacks(void)
         }
 
         calc_innate_blows(&a, 300);
-        a.msg = "You bite";
+        a.msg = "You bite.";
         a.name = "Bite";
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
     }
@@ -233,13 +233,16 @@ static int _breath_amount(void)
 
 static cptr _breath_desc(void)
 {
+    gf_info_ptr gf;
     switch (p_ptr->current_r_idx)
     {
     case MON_AETHER_HOUND: return "almost anything";
     case MON_HOUND_OF_TINDALOS: return "nether or time";
     case MON_MULTI_HUED_HOUND: return "acid, fire, cold, lightning or poison";
     }
-    return gf_name(_breath_effect());
+    gf = gf_lookup(_breath_effect());
+    if (gf) return gf->name;
+    return "something";
 }
 
 static void _breathe_spell(int cmd, variant *res)
@@ -250,8 +253,13 @@ static void _breathe_spell(int cmd, variant *res)
         var_set_string(res, "Breathe");
         break;
     case SPELL_DESC:
-        var_set_string(res, format("Breathes %s at your opponent.", _breath_desc()));
+    {
+        static char elly[40];
+        strcpy(elly, _breath_desc());
+        str_tolower(elly);
+        var_set_string(res, format("Breathes %s at your opponent.", elly));
         break;
+    }
     case SPELL_INFO:
         var_set_string(res, info_damage(0, 0, _breath_amount()));
         break;
@@ -396,11 +404,14 @@ static power_info _tindalos_powers[] = {
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static int _get_powers(spell_info* spells, int max) {
-    int ct = get_powers_aux(spells, max, _powers);
+static power_info *_get_powers(void) {
+    static power_info spells[MAX_SPELLS];
+    int max = MAX_SPELLS;
+    int ct = get_powers_aux(spells, max, _powers, FALSE);
     if (p_ptr->current_r_idx == MON_HOUND_OF_TINDALOS)
-        ct += get_powers_aux(spells + ct, max - ct, _tindalos_powers);
-    return ct;
+        ct += get_powers_aux(spells + ct, max - ct, _tindalos_powers, FALSE);
+    spells[ct].spell.fn = NULL;
+    return spells;
 }
 static void _calc_bonuses(void) {
     int to_a = py_prorata_level_aux(25, 1, 2, 2);
@@ -728,7 +739,7 @@ race_t *mon_hound_get_race(void)
 
         me.calc_innate_attacks = hound_calc_innate_attacks;
         me.calc_bonuses = _calc_bonuses;
-        me.get_powers = _get_powers;
+        me.get_powers_fn = _get_powers;
         me.get_flags = _get_flags;
         me.gain_level = _gain_level;
         me.birth = _birth;

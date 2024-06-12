@@ -97,9 +97,6 @@ static _group_t _groups[] = {
         {{ _TYPE_MELEE, TV_SWORD, "Swords", 5, 0 },
          { _TYPE_MELEE, TV_POLEARM, "Polearms", 5, 0 },
          { _TYPE_MELEE, TV_HAFTED, "Hafted", 5, 0 },
-         { _TYPE_MELEE, TV_DAGGER, "Daggers", 5, 0 },
-         { _TYPE_MELEE, TV_STAVES, "Staves", 5, 0 },
-         { _TYPE_MELEE, TV_AXE, "Axes", 5, 0 },
          { _TYPE_MELEE, TV_DIGGING, "Diggers", 5, 0 },
          { _TYPE_MELEE, _MARTIAL_ARTS, "Martial Arts", 5, 0 },
          { 0 }}},
@@ -448,16 +445,16 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     info_ptr->dis_to_d += info.to_d;
 }
 
-int skillmaster_weapon_prof(int prof)
+int skillmaster_weapon_prof(int tval)
 {
-    int pts = _get_skill_pts(_TYPE_MELEE, prof + TV_WEAPON_BEGIN);
+    int pts = _get_skill_pts(_TYPE_MELEE, tval);
     assert(0 <= pts && pts <= 5);
     return _melee_info[pts].prof;
 }
 
 bool skillmaster_weapon_is_icky(int tval)
 {
-    if (_get_skill_pts(_TYPE_MELEE, tval) || _get_skill_pts(_TYPE_SHOOT, _THROWING))
+    if (((TV_DIGGING <= tval) && (_get_skill_pts(_TYPE_MELEE, tval))) || (_get_skill_pts(_TYPE_SHOOT, _THROWING)))
         return FALSE;
     return TRUE;
 }
@@ -542,10 +539,10 @@ typedef struct { int skill; int back; int mult; int energy; } _throw_info_t;
 static _throw_info_t _throw_info[6] = {
     {   0, 15, 100, 100 },
     {  12, 18, 100, 100 },
-    {  28, 21, 150,  90 }, /* 40 Dex for 1% fail */
-    {  48, 24, 200,  80 }, /* 36 Dex for 1% fail */
-    {  72, 27, 300,  60 }, /* 33 Dex for 1% fail */
-    { 100, 30, 400,  50 }, /* 29 Dex for 1% fail */
+    {  28, 21, 150,  90 }, /* 18/220 Dex for 1% fail */
+    {  48, 24, 200,  80 }, /* 18/180 Dex for 1% fail */
+    {  72, 27, 300,  60 }, /* 18/150 Dex for 1% fail */
+    { 100, 30, 400,  50 }, /* 18/110 Dex for 1% fail */
 };
 
 static void _shoot_calc_bonuses(void)
@@ -1211,8 +1208,9 @@ static void _skills_calc_bonuses(void)
     switch (pts)
     {
     case 3: p_ptr->telepathy = TRUE;
-    case 2: p_ptr->auto_pseudo_id = TRUE;
+    case 2: p_ptr->auto_id = TRUE;
     case 1: p_ptr->see_inv++;
+            p_ptr->auto_pseudo_id = TRUE;
     }
 
     pts = _get_skill_pts(_TYPE_SKILLS, _SPEED);
@@ -1230,7 +1228,7 @@ void _skills_get_flags(u32b flgs[OF_ARRAY_SIZE])
     switch (pts)
     {
     case 3: add_flag(flgs, OF_TELEPATHY);
-    case 2: add_flag(flgs, OF_LORE1);
+    case 2: add_flag(flgs, OF_LORE2);
     case 1: add_flag(flgs, OF_SEE_INVIS);
     }
 
@@ -1571,19 +1569,22 @@ void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     _skills_get_flags(flgs);
 }
 
-static void _add_power(spell_info* spell, ang_spell fn)
+static void _add_power(power_info* power, ang_spell fn)
 {
     /* Powers are generally granted without cost, or fail. They are available
      * immediately upon purchase, and there is no relevant stat to consider */
-    spell->level = 1;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = fn;
+    power->spell.level = 1;
+    power->spell.cost = 0;
+    power->spell.fail = 0;
+    power->spell.fn = fn;
+    power->stat = A_NONE;
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info *_get_powers(void)
 {
+    static power_info spells[MAX_SPELLS];
     int ct = 0;
+    int max = MAX_SPELLS;
 
     if (ct < max && _get_skill_pts(_TYPE_SHOOT, _THROWING) > 0)
         _add_power(&spells[ct++], _throw_weapon_spell);
@@ -1606,7 +1607,9 @@ static int _get_powers(spell_info* spells, int max)
     if (ct < max && _get_skill_pts(_TYPE_ABILITY, _RODEO) > 0)
         _add_power(&spells[ct++], rodeo_spell);
 
-    return ct;
+    spells[ct].spell.fn = NULL;
+
+    return spells;
 }
 
 static void _dump_book(doc_ptr doc, object_type *spellbook)
@@ -1767,7 +1770,7 @@ class_t *skillmaster_get_class(void)
         me.gain_level = _gain_level;
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
-        me.get_powers = _get_powers;
+        me.get_powers_fn = _get_powers;
         me.get_flags = _get_flags;
         me.load_player = _load_player;
         me.save_player = _save_player;
