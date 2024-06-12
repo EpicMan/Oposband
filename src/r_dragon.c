@@ -38,7 +38,6 @@ static void _dragon_birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.to_h = 3;
-    forge.to_d = 3;
     forge.pval = 1;
     add_flag(forge.flags, OF_STR);
     add_flag(forge.flags, OF_DEX);
@@ -185,7 +184,6 @@ static int _breath_effect(void)
         int effects[] = { GF_SOUND, GF_SHARDS, GF_CHAOS, GF_DISENCHANT, -1 };
         return _get_effect(effects);
     }
-	case DRAGON_SILVER: return GF_INERT;
     }
     return 0;
 }
@@ -210,7 +208,6 @@ static int _breath_amount(void)
     case DRAGON_CRYSTAL:
     case DRAGON_BRONZE:
     case DRAGON_GOLD:
-	case DRAGON_SILVER:
         amt = MIN(450, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
         break;
 
@@ -262,7 +259,6 @@ static cptr _breath_desc(void)
     case DRAGON_ETHEREAL: return "light, dark or confusion";
     case DRAGON_CRYSTAL: return "shards";
     case DRAGON_BALANCE: return "sound, shards, chaos or disenchantment";
-	case DRAGON_SILVER: return "inertia";
     }
     return 0;
 }
@@ -335,7 +331,6 @@ static int _attack_level(void)
     case DRAGON_CRYSTAL:
     case DRAGON_BRONZE:
     case DRAGON_GOLD:
-	case DRAGON_SILVER:
         l = MAX(1, l * 90 / 100);
         break;
 
@@ -369,7 +364,7 @@ static void _calc_innate_attacks(void)
 
         a.weight = 100 + l;
         calc_innate_blows(&a, 400);
-        a.msg = "You claw.";
+        a.msg = "You claw";
         a.name = "Claw";
 
         /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
@@ -397,7 +392,7 @@ static void _calc_innate_attacks(void)
             calc_innate_blows(&a, 150);
         else
             a.blows = 100;
-        a.msg = "You bite.";
+        a.msg = "You bite";
         a.name = "Bite";
 
         /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
@@ -539,9 +534,9 @@ static spell_info _lore_spells[] = {
     { 12, 10, 60, identify_spell },
     { 15, 12, 60, sense_surroundings_spell },
     { 20, 15, 60, detection_spell },
-    { 22, 17, 60, probing_spell },
+    { 22, 17, 60, word_of_power_spell },
     { 25, 20, 65, self_knowledge_spell },
-    { 30, 25, 70, identify_fully_spell },
+    { 30, 25, 70, alter_reality_spell },
     { 40, 50, 90, clairvoyance_spell },
     { -1, -1, -1, NULL}
 };
@@ -905,7 +900,7 @@ static obj_ptr _get_reforge_dest(int max_power)
     sprintf(buf, "Reforge which object (Max Power = %d)? ", max_power);
     prompt.prompt = buf;
     prompt.error = "You have nothing to reforge.";
-    prompt.filter = item_tester_hook_nameless_weapon_armour;
+    prompt.filter = item_tester_hook_nameless_weapon_armor;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -1916,28 +1911,28 @@ static spell_info _domination_spells[] = {
     { -1, -1, -1, NULL}
 };
 
-static spell_info *_realm_get_spells(void)
+int _realm_get_spells(spell_info* spells, int max)
 {
     switch (p_ptr->dragon_realm)
     {
     case DRAGON_REALM_LORE:
-        return _lore_spells;
+        return get_spells_aux(spells, max, _lore_spells);
     case DRAGON_REALM_BREATH:
-        return _breath_spells;
+        return get_spells_aux(spells, max, _breath_spells);
     case DRAGON_REALM_ATTACK:
-        return _attack_spells;
+        return get_spells_aux(spells, max, _attack_spells);
     case DRAGON_REALM_ARMOR:
-        return _armor_spells;
+        return get_spells_aux(spells, max, _armor_spells);
     case DRAGON_REALM_CRAFT:
-        return _craft_spells;
+        return get_spells_aux(spells, max, _craft_spells);
     case DRAGON_REALM_CRUSADE:
-        return _crusade_spells;
+        return get_spells_aux(spells, max, _crusade_spells);
     case DRAGON_REALM_DEATH:
-        return _death_spells;
+        return get_spells_aux(spells, max, _death_spells);
     case DRAGON_REALM_DOMINATION:
-        return _domination_spells;
+        return get_spells_aux(spells, max, _domination_spells);
     }
-    return NULL;
+    return 0;
 }
 
 static void _realm_calc_bonuses(void)
@@ -2146,7 +2141,7 @@ void dragon_tail_sweep_spell(int cmd, variant *res)
 
             a.weight = 100 + l;
             a.blows = 100;
-            a.msg = "You hit.";
+            a.msg = "You hit";
             a.name = "Tail";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -2184,19 +2179,25 @@ void dragon_wing_storm_spell(int cmd, variant *res)
     }
 }
 
-static power_info _dragon_get_powers[] = {
+static power_info _dragon_powers[] = {
     { A_CON, {  1,  0, 30, _breathe_spell}},
     { A_DEX, { 20,  7,  0, dragon_reach_spell}},
     { A_DEX, { 25, 10,  0, dragon_tail_sweep_spell}},
     { A_DEX, { 30, 20,  0, dragon_wing_storm_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-static power_info _steel_get_powers[] = {
+static power_info _steel_powers[] = {
     { A_DEX, { 20,  7,  0, dragon_reach_spell}},
     { A_DEX, { 25, 10,  0, dragon_tail_sweep_spell}},
     { A_DEX, { 30, 20,  0, dragon_wing_storm_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
+static int _dragon_get_powers(spell_info* spells, int max) {
+    if (p_ptr->psubrace == DRAGON_STEEL)
+        return get_powers_aux(spells, max, _steel_powers);
+    else
+        return get_powers_aux(spells, max, _dragon_powers);
+}
 
 /**********************************************************************
  * Elemental Dragon (Red, White, Blue, Black, Green)
@@ -3113,109 +3114,6 @@ static race_t *_bronze_get_race_t(void)
 }
 
 /**********************************************************************
-* Silver: Young -> Mature -> Ancient
-**********************************************************************/
-static void _silver_calc_bonuses(void) {
-	int l = p_ptr->lev;
-	int to_a = py_prorata_level(75);
-	int ac = 15 + (l / 10) * 2;
-
-	p_ptr->ac += ac;
-	p_ptr->dis_ac += ac;
-
-	p_ptr->to_a += to_a;
-	p_ptr->dis_to_a += to_a;
-
-	p_ptr->free_act++;
-
-	if (p_ptr->lev >= 30)
-	{
-		p_ptr->pspeed += 3;
-		p_ptr->free_act++;
-	}
-	if (p_ptr->lev >= 40)
-	{
-		p_ptr->pspeed += 2;
-	}
-	_dragon_calc_bonuses();
-}
-static void _silver_get_flags(u32b flgs[OF_ARRAY_SIZE]) {
-	add_flag(flgs, OF_FREE_ACT);
-	if (p_ptr->lev >= 30)
-	{
-		add_flag(flgs, OF_SPEED);
-	}
-	_dragon_get_flags(flgs);
-}
-static void _silver_birth(void) {
-	p_ptr->current_r_idx = MON_YOUNG_SILVER_DRAGON;
-	_dragon_birth();
-}
-static void _silver_gain_level(int new_level) {
-	if (p_ptr->current_r_idx == MON_YOUNG_SILVER_DRAGON && new_level >= 20)
-	{
-		p_ptr->current_r_idx = MON_MATURE_SILVER_DRAGON;
-		msg_print("You have evolved into a Mature Silver Dragon.");
-		p_ptr->redraw |= PR_MAP;
-	}
-	if (p_ptr->current_r_idx == MON_MATURE_SILVER_DRAGON && new_level >= 30)
-	{
-		p_ptr->current_r_idx = MON_ANCIENT_SILVER_DRAGON;
-		msg_print("You have evolved into an Ancient Silver Dragon.");
-		p_ptr->redraw |= PR_MAP;
-	}
-}
-static race_t *_silver_get_race_t(void)
-{
-	static race_t me = { 0 };
-	static bool   init = FALSE;
-	static cptr   titles[3] = { "Young Silver Dragon", "Mature Silver Dragon", "Ancient Silver Dragon" };
-	int           rank = 0;
-
-	if (p_ptr->lev >= 20) rank++;
-	if (p_ptr->lev >= 30) rank++;
-
-	if (!init)
-	{           /* dis, dev, sav, stl, srh, fos, thn, thb */
-		skills_t bs = { 28,  35,  38,   2,  25,  26,  55,  30 };
-		skills_t xs = { 8,   9,  11,   0,   0,   0,  20,   7 };
-
-		me.subdesc =
-			"Silver Dragons are wyrms of inertia. While they are not quite as strong as most other "
-			"dragons, they eventually slow monsters with their bite attack. Also, they become "
-			"more and more resistant to sslowing as they mature.";
-
-		me.skills = bs;
-		me.extra_skills = xs;
-
-		me.infra = 5;
-		me.exp = 250;
-
-		me.birth = _silver_birth;
-		me.get_powers = _dragon_get_powers;
-		me.calc_bonuses = _silver_calc_bonuses;
-		me.get_flags = _silver_get_flags;
-		me.gain_level = _silver_gain_level;
-		init = TRUE;
-	}
-
-	if (spoiler_hack || birth_hack)
-		me.subname = "Silver Dragon";
-	else
-		me.subname = titles[rank];
-
-	me.stats[A_STR] = 0 + 2 * rank;
-	me.stats[A_INT] = -1 + 2 * rank;
-	me.stats[A_WIS] = -2 + rank;
-	me.stats[A_DEX] = -2 + 2 * rank;
-	me.stats[A_CON] = -1 + 2 * rank;
-	me.stats[A_CHR] = -1 + 2 * rank;
-	me.life = 100 + 5 * rank;
-
-	return &me;
-}
-
-/**********************************************************************
  * Gold: Young -> Mature -> Ancient
  **********************************************************************/
 static void _gold_calc_bonuses(void) {
@@ -3412,7 +3310,7 @@ static race_t *_steel_get_race_t(void)
         me.birth = _steel_birth;
         me.calc_bonuses = _steel_calc_bonuses;
         me.get_flags = _steel_get_flags;
-        me.get_powers = _steel_get_powers;
+        me.get_powers = _dragon_get_powers;
         me.gain_level = _steel_gain_level;
         init = TRUE;
     }
@@ -3476,9 +3374,6 @@ race_t *mon_dragon_get_race(int psubrace)
     case DRAGON_STEEL:
         result = _steel_get_race_t();
         break;
-	case DRAGON_SILVER:
-		result = _silver_get_race_t();
-		break;
     default: /* Birth Menus */
         result = _nether_get_race_t();
     }
@@ -3492,12 +3387,12 @@ race_t *mon_dragon_get_race(int psubrace)
             result->stats[i] += realm->stats[i];
 
         result->caster_info = _caster_info;
-        result->get_spells_fn = _realm_get_spells;
+        result->get_spells = _realm_get_spells;
     }
     else
     {
         result->caster_info = NULL;
-        result->get_spells_fn = NULL;
+        result->get_spells = NULL;
     }
 
     result->name = "Dragon";

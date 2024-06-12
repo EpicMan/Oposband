@@ -23,7 +23,6 @@ Please choose one of the following help sections:
     [p] Pseudo-ID
     [q] List of Abbreviations
     [r] Inscriptions: Summary
-    [s] Equipment Properties
 
     (?) Help System Commands
 

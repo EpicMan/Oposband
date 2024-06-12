@@ -44,8 +44,6 @@ MonsterRaces.txt \
 monster.txt \
 objects_contents.txt \
 objects.txt \
-objflags_contents.txt \
-objflags.txt \
 option_contents.txt \
 option.txt \
 Orcs.txt \
@@ -61,8 +59,6 @@ Runeknights.txt \
 Skillmasters.txt \
 small_lv.txt \
 speed.txt \
-speedsys.txt \
-speedsys_contents.txt \
 start.txt \
 status_contents.txt \
 status.txt \

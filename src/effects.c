@@ -82,8 +82,7 @@ void set_action(int typ)
 
     p_ptr->action = typ;
 
-    /* Must call after setting the new action to prevent recursive loops */
-    if ((prev_typ == ACTION_SING) || (prev_typ == ACTION_SPELL)) stop_mouth();
+    if (prev_typ == ACTION_SING) bard_stop_singing();
 
     switch (p_ptr->action)
     {
@@ -109,35 +108,6 @@ void set_action(int typ)
     if (p_ptr->action == ACTION_GLITTER || prev_typ == ACTION_GLITTER)
         p_ptr->update |= PU_FLOW;
     p_ptr->redraw |= (PR_STATE);
-}
-
-/* Stop singing or spelling
- * Compare stop_mouth() in racial.c */
-void interrupt_singing(bool take_energy)
-{
-    warlock_stop_singing();
-    if (music_singing_any() || hex_spelling_any())
-    {
-        cptr str = (music_singing_any()) ? "singing" : "spelling";
-        p_ptr->magic_num1[1] = p_ptr->magic_num1[0];
-        p_ptr->magic_num1[0] = 0;
-        msg_format("Your %s is interrupted.", str);
-        p_ptr->action = ACTION_NONE;
-
-        /* Recalculate bonuses */
-        p_ptr->update |= (PU_BONUS | PU_HP);
-
-        /* Redraw map */
-        p_ptr->redraw |= (PR_MAP | PR_STATUS | PR_STATE);
-
-        /* Update monsters */
-        p_ptr->update |= (PU_MONSTERS);
-
-        /* Window stuff */
-        p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-
-        if (take_energy) p_ptr->energy_need += PY_ENERGY_NEED();
-    }
 }
 
 /* reset timed flags */
@@ -166,8 +136,6 @@ void reset_tim_flags(void)
     p_ptr->blessed = 0;         /* Timed -- Blessed */
     p_ptr->tim_invis = 0;       /* Timed -- Invisibility */
     p_ptr->tim_infra = 0;       /* Timed -- Infra Vision */
-    p_ptr->tim_poet = 0;        /* Timed -- Poet */
-    p_ptr->tim_understanding = 0; /* Timed -- Auto-ID */
     p_ptr->tim_regen = 0;       /* Timed -- Regeneration */
     p_ptr->tim_stealth = 0;     /* Timed -- Stealth */
     p_ptr->tim_esp = 0;
@@ -238,7 +206,7 @@ void reset_tim_flags(void)
 
     wild_reset_counters();
 
-    while(p_ptr->energy_need < 0) p_ptr->energy_need += PY_ENERGY_NEED();
+    while(p_ptr->energy_need < 0) p_ptr->energy_need += ENERGY_NEED();
     world_player = FALSE;
 
     if ((p_ptr->pclass == CLASS_BERSERKER) || (beorning_is_(BEORNING_FORM_BEAR))) p_ptr->shero = 1;
@@ -327,7 +295,7 @@ bool p_inc_minislow(int lisays)
 
 void p_inc_fatigue(int check_mut, int lisays)
 {
-    if ((((!check_mut) || (!mut_present(check_mut))) && (!p_ptr->no_air)) || (lisays < 1)) return;
+    if ((!check_mut) || (!mut_present(check_mut)) || (lisays < 1)) return;
 
     /* Check for easy tiring */
     if ((one_in_(16 - p_ptr->minislow)) || ((check_mut == MUT_EASY_TIRING2) && (one_in_(6))))
@@ -350,22 +318,11 @@ bool m_inc_minislow(monster_type *m_ptr, int lisays)
 
     if (!tulos) return FALSE;
 
-    check_mon_health_redraw(m_ptr->id);
-
     /* Check if the player's mount was affected */
     if ((p_ptr->riding == m_ptr->id) && (!p_ptr->leaving))
         p_ptr->update |= PU_BONUS;
 
     return TRUE;
-}
-
-void check_muscle_sprains(int chance, char *viesti)
-{
-    if (!mut_present(MUT_HUMAN_DEX)) return;
-    if (!one_in_(chance)) return;
-    if (p_ptr->slow) return;
-    msg_format("%s", viesti);
-    set_slow(50 + randint1(50), FALSE);
 }
 
 /* TODO: Timed player effects needs a complete rework ... */
@@ -376,7 +333,7 @@ bool disenchant_player(void)
     if (disciple_is_(DISCIPLE_TROIKA)) result = troika_dispel_timeouts();
     for (; attempts; attempts--)
     {
-        switch (randint1(33))
+        switch (randint1(32))
         {
         case 1:
             if (p_ptr->fast)
@@ -529,7 +486,11 @@ bool disenchant_player(void)
         case 19:
             if (p_ptr->oppose_acid || p_ptr->oppose_cold || p_ptr->oppose_elec || p_ptr->oppose_fire || p_ptr->oppose_pois || p_ptr->spin)
             {
-                (void)set_oppose_base(0, TRUE);
+                (void)set_oppose_acid(0, TRUE);
+                (void)set_oppose_elec(0, TRUE);
+                (void)set_oppose_fire(0, TRUE);
+                (void)set_oppose_cold(0, TRUE);
+                (void)set_oppose_pois(0, TRUE);
                 (void)set_spin(0, TRUE);
                 result = TRUE;
                 return result;
@@ -633,20 +594,27 @@ bool disenchant_player(void)
             }
             break;
         case 32:
-            warlock_stop_singing();
             if (music_singing_any() || hex_spelling_any())
             {
-                interrupt_singing(TRUE);
-                result = TRUE;
-                return result;
-            }
-            break;
-        case 33:
-            if (p_ptr->tim_poet)
-            {
-                (void)set_tim_poet(0, TRUE);
-                result = TRUE;
-                return result;
+                cptr str = (music_singing_any()) ? "singing" : "spelling";
+                p_ptr->magic_num1[1] = p_ptr->magic_num1[0];
+                p_ptr->magic_num1[0] = 0;
+                msg_format("Your %s is interrupted.", str);
+                p_ptr->action = ACTION_NONE;
+
+                /* Recalculate bonuses */
+                p_ptr->update |= (PU_BONUS | PU_HP);
+
+                /* Redraw map */
+                p_ptr->redraw |= (PR_MAP | PR_STATUS | PR_STATE);
+
+                /* Update monsters */
+                p_ptr->update |= (PU_MONSTERS);
+
+                /* Window stuff */
+                p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
+
+                p_ptr->energy_need += ENERGY_NEED();
             }
             break;
         }
@@ -679,8 +647,6 @@ void dispel_player(void)
 
     (void)set_tim_invis(0, TRUE);
     (void)set_tim_infra(0, TRUE);
-    (void)set_tim_poet(0, TRUE);
-    (void)set_tim_understanding(0, TRUE);
     (void)set_tim_esp(0, TRUE);
     (void)set_tim_esp_magical(0, TRUE);
     (void)set_tim_regen(0, TRUE);
@@ -696,7 +662,11 @@ void dispel_player(void)
     (void)set_tim_eyeeye(0, TRUE);
     (void)set_magicdef(0, TRUE);
     (void)set_resist_magic(0, TRUE);
-    (void)set_oppose_base(0, TRUE);
+    (void)set_oppose_acid(0, TRUE);
+    (void)set_oppose_elec(0, TRUE);
+    (void)set_oppose_fire(0, TRUE);
+    (void)set_oppose_cold(0, TRUE);
+    (void)set_oppose_pois(0, TRUE);
     (void)set_ultimate_res(0, TRUE);
     (void)set_spin(0, TRUE);
     
@@ -763,7 +733,29 @@ void dispel_player(void)
         p_ptr->special_attack &= ~(ATTACK_CONFUSE);
         msg_print("Your hands stop glowing.");
     }
-    interrupt_singing(TRUE);
+
+    if (music_singing_any() || hex_spelling_any())
+    {
+        cptr str = (music_singing_any()) ? "singing" : "spelling";
+        p_ptr->magic_num1[1] = p_ptr->magic_num1[0];
+        p_ptr->magic_num1[0] = 0;
+        msg_format("Your %s is interrupted.", str);
+        p_ptr->action = ACTION_NONE;
+
+        /* Recalculate bonuses */
+        p_ptr->update |= (PU_BONUS | PU_HP);
+
+        /* Redraw map */
+        p_ptr->redraw |= (PR_MAP | PR_STATUS | PR_STATE);
+
+        /* Update monsters */
+        p_ptr->update |= (PU_MONSTERS);
+
+        /* Window stuff */
+        p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
+
+        p_ptr->energy_need += ENERGY_NEED();
+    }
 }
 
 
@@ -860,7 +852,7 @@ bool set_mimic(int v, int p, bool do_dec)
     p_ptr->redraw |= (PR_BASIC | PR_STATUS | PR_MAP | PR_EQUIPPY | PR_EFFECTS);
 
     /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_TORCH);
+    p_ptr->update |= (PU_BONUS | PU_HP | PU_TORCH);
     handle_stuff();
 
     /* Result */
@@ -951,25 +943,6 @@ bool set_blind(int v, bool do_dec)
     return (TRUE);
 }
 
-void lose_kata(void)
-{
-    msg_print("Your posture gets loose.");
-    p_ptr->special_defense &= ~(KATA_MASK);
-    p_ptr->update |= (PU_BONUS);
-    p_ptr->update |= (PU_MONSTERS);
-    p_ptr->redraw |= (PR_STATE);
-    p_ptr->redraw |= (PR_STATUS);
-    p_ptr->action = ACTION_NONE;
-}
-
-void lose_kamae(void)
-{
-    msg_print("Your posture gets loose.");
-    p_ptr->special_defense &= ~(KAMAE_MASK);
-    p_ptr->update |= (PU_BONUS);
-    p_ptr->redraw |= (PR_STATE);
-    p_ptr->action = ACTION_NONE;
-}
 
 /*
  * Set "p_ptr->confused", notice observable changes
@@ -1001,11 +974,21 @@ bool set_confused(int v, bool do_dec)
             }
             if (p_ptr->action == ACTION_KAMAE)
             {
-                lose_kamae();
+                msg_print("Your posture gets loose.");
+                p_ptr->special_defense &= ~(KAMAE_MASK);
+                p_ptr->update |= (PU_BONUS);
+                p_ptr->redraw |= (PR_STATE);
+                p_ptr->action = ACTION_NONE;
             }
             else if (p_ptr->action == ACTION_KATA)
             {
-                lose_kata();
+                msg_print("Your posture gets loose.");
+                p_ptr->special_defense &= ~(KATA_MASK);
+                p_ptr->update |= (PU_BONUS);
+                p_ptr->update |= (PU_MONSTERS);
+                p_ptr->redraw |= (PR_STATE);
+                p_ptr->redraw |= (PR_STATUS);
+                p_ptr->action = ACTION_NONE;
             }
 
             /* Sniper */
@@ -1237,13 +1220,6 @@ bool set_image(int v, bool do_dec)
 
             p_ptr->counter = FALSE;
             notice = TRUE;
-
-            /* Hack - image turn */
-            image_turn = game_turn;
-        }
-        else if (game_turn > image_turn + 25)
-        {
-            image_turn = game_turn;
         }
     }
 
@@ -2319,7 +2295,7 @@ bool set_lightspeed(int v, bool do_dec)
         }
         else if (!p_ptr->lightspeed)
         {
-            msg_print("You feel yourself moving extremely fast!");
+            msg_print("You feel yourself moving extremely faster!");
 
             notice = TRUE;
             virtue_add(VIRTUE_PATIENCE, -1);
@@ -2485,69 +2461,7 @@ bool set_unwell(int v, bool do_dec)
     if (!notice) return (FALSE);
 
     /* Disturb */
-    if ((disturb_state) && ((!new_eff) || (!old_eff)) && (!mut_present(MUT_HUMAN_CON))) disturb(0, 0);
-
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-    p_ptr->redraw |= (PR_STATUS);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Result */
-    return (TRUE);
-}
-
-/*
- * Set "p_ptr->no_air", notice observable changes
- */
-bool set_no_air(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > NO_AIR_MAX) ? NO_AIR_MAX : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    if ((p_ptr->no_air) && (v >= p_ptr->no_air)) return FALSE;
-
-    if (py_on_surface()) v = 0; /* too much air */
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->no_air && !do_dec)
-        {
-            if (p_ptr->no_air > v) return FALSE;
-        }
-        else if (!p_ptr->no_air)
-        {
-            msg_print("Suddenly, the cave feels devoid of air!");
-            notice = TRUE;
-        }
-    }
-
-    /* Shut */
-    else
-    {
-        if (p_ptr->no_air)
-        {
-            msg_print("Air rushes back into the dungeon!");
-            no_air_monster = 0;
-
-            notice = TRUE;
-        }
-    }
-
-    /* Use the value */
-    p_ptr->no_air = v;
-
-    /* Nothing to notice */
-    if (!notice) return (FALSE);
-
-    /* Disturb */
-    if (disturb_state) disturb(0, 0);
+    if ((disturb_state) && ((!new_eff) || (!old_eff))) disturb(0, 0);
 
     /* Recalculate bonuses */
     p_ptr->update |= (PU_BONUS);
@@ -3143,7 +3057,7 @@ bool set_invuln(int v, bool do_dec)
             /* Window stuff */
             p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
 
-            p_ptr->energy_need += PY_ENERGY_NEED();
+            p_ptr->energy_need += ENERGY_NEED();
         }
     }
 
@@ -3419,134 +3333,6 @@ bool set_tim_infra(int v, bool do_dec)
     return (TRUE);
 }
 
-/*
- * Set "p_ptr->tim_poet", notice observable changes
- */
-bool set_tim_poet(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->tim_poet && !do_dec)
-        {
-            if (p_ptr->tim_poet > v) return FALSE;
-        }
-        else if (!p_ptr->tim_poet)
-        {
-            msg_print("The wisdom of Kvasir flows through you!");
-
-            notice = TRUE;
-        }
-    }
-
-    /* Shut */
-    else
-    {
-        if (p_ptr->tim_poet)
-        {
-            msg_print("You stop feeling wise and eloquent.");
-
-            notice = TRUE;
-        }
-    }
-
-    /* Use the value */
-    p_ptr->tim_poet = v;
-
-    /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
-
-    /* Nothing to notice */
-    if (!notice) return (FALSE);
-
-    /* Disturb */
-    if (disturb_state) disturb(0, 0);
-
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-
-    /* Update the monsters */
-    p_ptr->update |= (PU_MONSTERS);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Result */
-    return (TRUE);
-}
-
-/*
- * Set "p_ptr->tim_understanding", notice observable changes
- */
-bool set_tim_understanding(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->tim_understanding && !do_dec)
-        {
-            if (p_ptr->tim_understanding > v) return FALSE;
-        }
-        else if (!p_ptr->tim_understanding)
-        {
-            msg_print("You feel like a loremaster!");
-            identify_pack();
-
-            notice = TRUE;
-        }
-    }
-
-    /* Shut */
-    else
-    {
-        if (p_ptr->tim_understanding)
-        {
-            msg_print("You stop feeling like a loremaster.");
-
-            notice = TRUE;
-        }
-    }
-
-    /* Use the value */
-    p_ptr->tim_understanding = v;
-
-    /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
-
-    /* Nothing to notice */
-    if (!notice) return (FALSE);
-
-    /* Disturb */
-    if (disturb_state) disturb(0, 0);
-
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-
-    /* Update the monsters */
-    p_ptr->update |= (PU_MONSTERS);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Result */
-    return (TRUE);
-}
-
-
 
 /*
  * Set "p_ptr->tim_regen", notice observable changes
@@ -3736,7 +3522,7 @@ bool set_superstealth(bool set)
     {
         if (p_ptr->special_defense & NINJA_S_STEALTH)
         {
-            if ((disturb_minor) && (!p_ptr->exit_bldg))
+            if (disturb_minor)
                 msg_print("<color:y>You are exposed to common sight once more.</color>");
 
             notice = TRUE;
@@ -4875,18 +4661,6 @@ bool set_oppose_pois(int v, bool do_dec)
     return (TRUE);
 }
 
-/* Set temporary resistance to the base elements */
-bool set_oppose_base(int v, bool do_dec)
-{
-    bool notice = FALSE;
-    if (set_oppose_acid(v, do_dec)) notice = TRUE;
-    if (set_oppose_elec(v, do_dec)) notice = TRUE;
-    if (set_oppose_fire(v, do_dec)) notice = TRUE;
-    if (set_oppose_cold(v, do_dec)) notice = TRUE;
-    if (set_oppose_pois(v, do_dec)) notice = TRUE;
-    return notice;
-}
-
 /*
  * Set "p_ptr->spin", notice observable changes
  */
@@ -5017,7 +4791,7 @@ bool set_stun(int v, bool do_dec)
     if (p_ptr->is_dead) return FALSE;
 
     if (p_ptr->no_stun) v = 0;
-    slot = equip_find_first(object_is_body_armour);
+    slot = equip_find_first(object_is_body_armor);
     if (slot && equip_obj(slot)->rune == RUNE_WATER) v = 0;
     if (psion_mental_fortress()) v = 0;
 
@@ -5047,7 +4821,13 @@ bool set_stun(int v, bool do_dec)
         }
         if (p_ptr->special_defense & KATA_MASK)
         {
-            lose_kata();
+            msg_print("Your posture gets loose.");
+            p_ptr->special_defense &= ~(KATA_MASK);
+            p_ptr->update |= (PU_BONUS);
+            p_ptr->update |= (PU_MONSTERS);
+            p_ptr->redraw |= (PR_STATE);
+            p_ptr->redraw |= (PR_STATUS);
+            p_ptr->action = ACTION_NONE;
         }
         if (p_ptr->concent) reset_concentration(TRUE);
         if (hex_spelling_any()) stop_hex_spell_all();
@@ -5233,7 +5013,7 @@ bool set_food(int v)
     v = (v > 20000) ? 20000 : (v < 0) ? 0 : v;
 
     /* CTK: I added a "food bar" to track hunger ... */
-    if (easy_damage || p_ptr->wizard)
+    if (p_ptr->wizard)
     {
         old_pct = p_ptr->food * 100 / PY_FOOD_FULL;
         new_pct = v * 100 / PY_FOOD_FULL;
@@ -5418,7 +5198,7 @@ bool set_food(int v)
 
         if (p_ptr->wild_mode && (new_aux < 2))
         {
-            change_wild_mode();
+            change_wild_mode(FALSE);
         }
 
         /* Change */
@@ -5460,42 +5240,19 @@ bool set_food(int v)
  */
 bool inc_stat(int stat)
 {
-    int value, gain;
+    int value;
 
     /* Then augment the current/max stat */
     value = p_ptr->stat_cur[stat];
 
-    /* Cannot go above 18/100 */
+    /* Cannot go above peak */
     if (value < p_ptr->stat_max_max[stat])
     {
         /* Gain one (sometimes two) points */
-        if (value < 18)
-        {
-            int chance = ((value == 17) ? 58 : (mut_present(MUT_BAD_LUCK)) ? 80 : (p_ptr->good_luck) ? 70 : 75);
-            gain = ((randint0(100) < chance) ? 1 : 2);
-            value += gain;
-        }
-        else if (value < (p_ptr->stat_max_max[stat]-2))
-        {                                                  /* v--- Scale all calcs by 10 */
-            int delta = (p_ptr->stat_max_max[stat] - value) * 10;
-            int pct = rand_range(200, 350);                /* Note: Old spread was about 14% to 40% */
-            int max_value = p_ptr->stat_max_max[stat] - 1; /* e.g. 18/99 if max is 18/100 */
-            int gain;
+		value += ((randint0(100) < 75) ? 1 : 2);
 
-            gain = delta * pct / 1000;
-            gain = (gain + 5) / 10; /* round back to an integer */
-            if (gain < 2)
-                gain = 2;
-
-            value += gain;
-            if (value > max_value)
-                value = max_value;
-        }
-        /* Gain one point at a time */
-        else
-        {
-            value++;
-        }
+		if (value >  p_ptr->stat_max_max[stat])
+			value = p_ptr->stat_max_max[stat];
 
         /* Save the new value */
         p_ptr->stat_cur[stat] = value;
@@ -5533,7 +5290,7 @@ bool inc_stat(int stat)
  */
 bool dec_stat(int stat, int amount, int permanent)
 {
-    int cur, max, loss, same, res = FALSE;
+    int cur, max, same, res = FALSE;
 
 
     /* Acquire current value */
@@ -5546,38 +5303,10 @@ bool dec_stat(int stat, int amount, int permanent)
     /* Damage "current" value */
     if (cur > 3)
     {
-        /* Handle "low" values */
-        if (cur <= 18)
-        {
-            if (amount > 90) cur--;
-            if (amount > 50) cur--;
-            if (amount > 20) cur--;
-            cur--;
-        }
-
-        /* Handle "high" values */
-        else
-        {
-            /* Hack -- Decrement by a random amount between one-quarter */
-            /* and one-half of the stat bonus times the percentage, with a */
-            /* minimum damage of half the percentage. -CWS */
-            loss = (((cur-18) / 2 + 1) / 2 + 1);
-
-            /* Paranoia */
-            if (loss < 1) loss = 1;
-
-            /* Randomize the loss */
-            loss = ((randint1(loss) + loss) * amount) / 100;
-
-            /* Maximal loss */
-            if (loss < amount/2) loss = amount/2;
-
-            /* Lose some points */
-            cur = cur - loss;
-
-            /* Hack -- Only reduce stat to 17 sometimes */
-            if (cur < 18) cur = (amount <= 20) ? 18 : 17;
-        }
+        if (amount > 90) cur--;
+        if (amount > 50) cur--;
+        if (amount > 20) cur--;
+        cur--;
 
         /* Prevent illegal values */
         if (cur < 3) cur = 3;
@@ -5593,31 +5322,10 @@ bool dec_stat(int stat, int amount, int permanent)
         if (stat == A_WIS || stat == A_INT)
             virtue_add(VIRTUE_ENLIGHTENMENT, -2);
 
-        /* Handle "low" values */
-        if (max <= 18)
-        {
-            if (amount > 90) max--;
-            if (amount > 50) max--;
-            if (amount > 20) max--;
-            max--;
-        }
-
-        /* Handle "high" values */
-        else
-        {
-            /* Hack -- Decrement by a random amount between one-quarter */
-            /* and one-half of the stat bonus times the percentage, with a */
-            /* minimum damage of half the percentage. -CWS */
-            loss = (((max-18) / 2 + 1) / 2 + 1);
-            loss = ((randint1(loss) + loss) * amount) / 100;
-            if (loss < amount/2) loss = amount/2;
-
-            /* Lose some points */
-            max = max - loss;
-
-            /* Hack -- Only reduce stat to 17 sometimes */
-            if (max < 18) max = (amount <= 20) ? 18 : 17;
-        }
+        if (amount > 90) max--;
+        if (amount > 50) max--;
+        if (amount > 20) max--;
+        max--;
 
         /* Hack -- keep it clean */
         if (same || (max < cur)) max = cur;
@@ -5699,9 +5407,12 @@ bool hp_player_aux(int num)
     if ((p_ptr->prace == RACE_EINHERI) || (p_ptr->mimic_form == RACE_EINHERI)) num /= 2;
     if (disciple_is_(DISCIPLE_YEQREZH)) num = hp_player_yeqrezh(num);
 
-    /* Healing needed */
+	/* Healing needed */
     if (p_ptr->chp < p_ptr->mhp)
     {
+		/* Display amount healed */
+		if (num && show_damage) msg_format("(Healed <color:G>+%d</color>)", num);
+    
         if ((num > 0) && (p_ptr->chp < (p_ptr->mhp/3)))
             virtue_add(VIRTUE_TEMPERANCE, 1);
 
@@ -5750,7 +5461,7 @@ bool lp_player(int num)
     {
         if (p_ptr->pclass != CLASS_MONSTER)
         {
-            int which;
+            int which = -1;
             switch (randint1(5))
             {
             case 1: which = RACE_VAMPIRE; break;
@@ -5935,12 +5646,9 @@ bool do_res_stat(int stat)
 bool do_inc_stat(int stat)
 {
     bool res;
-    static byte specmess = 0;
 
     /* Restore strength */
     res = res_stat(stat);
-
-    if (specmess) specmess--;
 
     /* Attempt to increase */
     if (inc_stat(stat))
@@ -5958,23 +5666,8 @@ bool do_inc_stat(int stat)
         else if (stat == A_CON)
             virtue_add(VIRTUE_VITALITY, 1);
 
-        if ((p_ptr->stat_cur[stat] == 19) && (!specmess) && (one_in_(4)))
-        {
-            if ((!mut_present(MUT_BAD_LUCK)) || (!one_in_(2)))
-            {
-                msg_format("You get the rare double stat boost! Wow! You feel incredibly %s!", desc_stat_pos[stat]);
-                specmess = 6;
-            }
-            else
-            {
-                msg_format("<color:G>You are blessed by Lady Luck and get the rare double stat boost!</color> Wow! You feel incredibly %s! To think you felt so weighed down by that black aura, by the people who called you a bringer of bad luck! It just goes to show, it's not the names they call you that matter, it's the willpower that helps you persevere until in these moments of sweet bliss, against all odds, you triumph!", desc_stat_pos[stat]);
-                specmess = 12;
-            }
-        }        
-        else /* Normal message */
-        {
-            msg_format("Wow! You feel very %s!", desc_stat_pos[stat]);
-        }
+        /* Message */
+        msg_format("Wow! You feel very %s!", desc_stat_pos[stat]);
 
 
         /* Notice */
@@ -6034,11 +5727,6 @@ static void _forget(obj_ptr obj)
         obj->ident &= ~(IDENT_TRIED);
         obj->ident &= ~(IDENT_KNOWN);
         obj->ident &= ~(IDENT_SENSE);
-        if ((p_ptr->auto_pseudo_id) && ((obj_can_sense1(obj)) || (obj_can_sense2(obj))))
-        {
-            obj->feeling = value_check_aux1(obj, TRUE);
-            if (!(obj->ident & (IDENT_KNOWN))) obj->ident |= IDENT_SENSE;
-        }
     }
 }
 
@@ -6102,6 +5790,34 @@ void do_poly_wounds(void)
     }
 }
 
+void do_energise(void)
+{
+	/* Dizzying rush of arcane power */
+	s16b sp_diff = (p_ptr->msp - p_ptr->csp);
+	s16b change = damroll(p_ptr->lev, 5);
+	bool Nasty_effect = one_in_(5);
+
+	if (!sp_diff) return;
+
+	msg_print("You feel a dizzying rush of power.");
+
+	sp_player(change);
+	if (Nasty_effect)
+	{
+		msg_print("You feel disoriented!");
+		switch (randint0(3)) {
+		case 0:
+			if (!res_save_default(RES_CONF))
+				set_confused(p_ptr->confused + randint0(3) + 3, FALSE);
+		case 1:
+			if (!res_save_default(RES_CHAOS))
+				set_image(p_ptr->image + randint0(8) + 8, FALSE);
+		case 2:
+			if (!res_save_default(RES_SOUND))
+				set_stun(p_ptr->stun + randint0(4) + 2, FALSE);
+		}
+	}
+}
 
 /*
  * Change player race
@@ -6116,13 +5832,9 @@ void change_race(int new_race, cptr effect_msg)
     if (get_race()->flags & RACE_IS_MONSTER) return;
     if (get_race_aux(new_race, 0)->flags & RACE_IS_MONSTER) return;
     if (old_race == RACE_ANDROID) return;
-    if (player_obviously_poly_immune(FALSE)) return;
+    if (player_obviously_poly_immune()) return;
     if (new_race == old_race) return;
-    if (comp_mode)
-    {
-        nonlethal_ty_substitute(TRUE);
-        return;
-    }
+    if (comp_mode) return;
 
     _lock = TRUE;
 
@@ -6175,7 +5887,7 @@ void change_race(int new_race, cptr effect_msg)
     p_ptr->psubrace = 0;
 
     /* Experience factor */
-    p_ptr->expfact = calc_exp_factor();
+    if (!xp_penalty_to_score) p_ptr->expfact = calc_exp_factor();
 
     do_cmd_rerate(FALSE);
 
@@ -6192,8 +5904,9 @@ void change_race(int new_race, cptr effect_msg)
     /* Check changes to body template (e.g. Centaurs) */
     equip_on_change_race();
 
-    p_ptr->redraw |= (PR_BASIC | PR_STATUS | PR_MAP | PR_EQUIPPY | PR_EFFECTS);
-    p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_TORCH);
+    p_ptr->redraw |= (PR_BASIC);
+
+    p_ptr->update |= (PU_BONUS);
 
     handle_stuff();
 
@@ -6478,8 +6191,17 @@ int take_hit(int damage_type, int damage, cptr hit_from)
     }
 
     
-    if ((p_ptr->wizard || easy_damage) && (damage > 0))
-        msg_format("You take %d damage.", damage);
+	if (show_damage && damage > 0)
+	{
+		if (hit_from == "poison")
+			msg_format("(<color:g>Poison: %d</color>)", damage);
+		else if (hit_from == "a fatal wound")
+			msg_format("(<color:R>Bleed: %d</color>)", damage);
+		else if (hit_from == "starvation")
+			msg_format("(<color:R>Starving: %d</color>)", damage);
+		else
+			msg_format("<color:r>(%d)</color>", damage);
+	}
 
     p_ptr->chp -= damage;
     if(damage_type == DAMAGE_GENO && p_ptr->chp < 0)
@@ -6614,7 +6336,7 @@ int take_hit(int damage_type, int damage, cptr hit_from)
         (p_ptr->chp < (shuffling_hack_hp / 2)) && ((shuffling_hack_hp - p_ptr->chp) >= (p_ptr->mhp / 5)) &&
         (randint0(p_ptr->mhp / 3) >= p_ptr->chp))
     {
-        split_shuffle(0);
+        split_shuffle(FALSE);
         shuffling_hack_hp = 0;
     }
 
@@ -6643,7 +6365,7 @@ int take_hit(int damage_type, int damage, cptr hit_from)
     warning_hack_hp = 0;
     if (p_ptr->wild_mode && !p_ptr->leaving && (p_ptr->chp < MAX(warning, p_ptr->mhp/5)))
     {
-        change_wild_mode();
+        change_wild_mode(FALSE);
     }
     else if ((disciple_is_(DISCIPLE_TROIKA)) && (p_ptr->mhp / (MAX(1, old_chp - p_ptr->chp))) < 6) /* counterintuitively, the MAX(1,) is needed - the difference actually can be zero in some strange circumstances */
     {
@@ -7414,7 +7136,7 @@ bool set_tim_dark_stalker(int v, bool do_dec)
         {
             if (p_ptr->pclass == CLASS_ROGUE || p_ptr->pclass == CLASS_SKILLMASTER)
                 msg_print("You begin to tread softly.");
-            else if (p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_RUNE_KNIGHT || prace_is_(RACE_MON_MUMMY))
+            else if (p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_RUNE_KNIGHT)
                 msg_print("You are cloaked in darkness.");
             else
                 msg_print("You begin to stalk your prey.");
@@ -7428,7 +7150,7 @@ bool set_tim_dark_stalker(int v, bool do_dec)
         {
             if (p_ptr->pclass == CLASS_ROGUE || p_ptr->pclass == CLASS_SKILLMASTER)
                 msg_print("You no longer tread softly.");
-            else if (p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_RUNE_KNIGHT || prace_is_(RACE_MON_MUMMY))
+            else if (p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_RUNE_KNIGHT)
                 msg_print("You are no longer cloaked in darkness.");
             else
                 msg_print("You no longer stalk your prey.");

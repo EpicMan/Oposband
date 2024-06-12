@@ -36,12 +36,24 @@ static void _take_photo_spell(int cmd, variant *res)
     }
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_NONE, { 1, 0, 0, _take_photo_spell}},
-    { A_INT, { 25, 20, 30, identify_fully_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 1;
+    spell->cost = 0;
+    spell->fail = 0;
+    spell->fn = _take_photo_spell;
+
+    spell = &spells[ct++];
+    spell->level = 15;
+    spell->cost = 20;
+    spell->fail = calculate_fail_rate(spell->level, 30, p_ptr->stat_ind[A_INT]);
+    spell->fn = identify_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -72,7 +84,6 @@ static void _load_player(savefile_ptr file)
     u32b old_max_race;
     unsigned int i;
     _ini_photo_list();
-    if (savefile_is_older_than(file, 7, 0, 5, 2)) return;
     old_max_race = savefile_read_u32b(file);
     for (i = 0; i < old_max_race; i++)
     {
@@ -104,6 +115,22 @@ static void _birth(void)
     py_birth_obj_aux(TV_SHOT, SV_PEBBLE, rand_range(20, 40));
     p_ptr->au += 2000;
     _ini_photo_list();
+
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 int tourist_sell_photo_aux(object_type *o_ptr, int amount, bool merkitse)
@@ -147,9 +174,9 @@ class_t *tourist_get_class(void)
                     "Intelligence determines a tourist's spellcasting ability.\n \n"
                     "Tourists are always seeing more of the world to add to their stock "
                     "of information; no other class can compete with their "
-                    "identification skills. They have two class powers - 'Take a "
-                    "Photograph' and 'Identify True'. Their magic is based on Arcane, "
-                    "and - aside from identify - is very weak indeed.";
+                    "identification skills. They have a class power - 'Take a "
+                    "Photograph' Their magic is based on Arcane, and - aside from "
+					"identify - is very weak indeed.";
 
         me.stats[A_STR] = -2;
         me.stats[A_INT] = -1;

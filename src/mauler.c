@@ -100,12 +100,6 @@ bool do_blow(int type)
     int dir;
     int m_idx = 0;
 
-    if ((!p_ptr->weapon_ct) && (!attack_mode_allows_innate(type)))
-    {
-        msg_print("You need to wield a weapon!");
-        return FALSE;
-    }
-
     /* For ergonomics sake, use currently targeted monster. This allows
        a macro of \e*tmaa or similar to pick an adjacent foe, while
        \emaa*t won't work, since get_rep_dir2() won't allow a target. */
@@ -228,7 +222,14 @@ static void _critical_blow_spell(int cmd, variant *res)
         break;
     case SPELL_ON_BROWSE:
     {
-        display_weapon_info_aux(MAULER_CRITICAL_BLOW);
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        display_weapon_mode = MAULER_CRITICAL_BLOW;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
     }
@@ -253,7 +254,14 @@ static void _crushing_blow_spell(int cmd, variant *res)
         break;
     case SPELL_ON_BROWSE:
     {
-        display_weapon_info_aux(MAULER_CRUSHING_BLOW);
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        display_weapon_mode = MAULER_CRUSHING_BLOW;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
     }
@@ -340,7 +348,14 @@ static void _knockback_spell(int cmd, variant *res)
         break;
     case SPELL_ON_BROWSE:
     {
-        display_weapon_info_aux(MAULER_KNOCKBACK);
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        display_weapon_mode = MAULER_KNOCKBACK;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
     }
@@ -446,16 +461,9 @@ static void _smash_wall_spell(int cmd, variant *res)
             cave_alter_feat(y, x, FF_HURT_ROCK);
             p_ptr->update |= PU_FLOW;
         }
-        else if ((cave_have_flag_bold(y, x, FF_TUNNEL)) && (cave_have_flag_bold(y, x, FF_HURT_FIRE)))
-        {
-            cave_alter_feat(y, x, FF_HURT_FIRE);
-            p_ptr->update |= PU_FLOW;
-        }
         else if (cave_have_flag_bold(y, x, FF_TREE))
         {
-            if (cave_have_flag_bold(y, x, FF_SNOW))
-                cave_set_feat(y, x, feat_snow_floor);
-            else cave_set_feat(y, x, one_in_(3) ? feat_brake : feat_grass);
+            cave_set_feat(y, x, one_in_(3) ? feat_brake : feat_grass);
         }
         else
         {
@@ -502,7 +510,14 @@ void stunning_blow_spell(int cmd, variant *res)
         break;
     case SPELL_ON_BROWSE:
     {
-        display_weapon_info_aux(MAULER_STUNNING_BLOW);
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        display_weapon_mode = MAULER_STUNNING_BLOW;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
     }
@@ -551,15 +566,22 @@ static spell_info _spells[] =
     { -1, -1, -1, NULL}
 };
 
-static spell_info *_get_spells(void)
+static int _get_spells(spell_info* spells, int max)
 {
+    int ct;
+
     if (!_weapon_check())
     {
         msg_print("Rargh! You need to wield a single weapon with both hands to properly maul stuff!");
-        return NULL;
+        return 0;
     }
 
-    return _spells;
+    ct = get_spells_aux(spells, max, _spells);
+    
+    if (ct == 0)
+        msg_print("Rargh! Go maul something for more experience!");
+
+    return ct;
 }
 
 static void _calc_bonuses(void)
@@ -662,7 +684,10 @@ static void _character_dump(doc_ptr doc)
 {
     if (_weapon_check() && p_ptr->lev >= 5)
     {
-        py_dump_spells(doc);
+        spell_info spells[MAX_SPELLS];
+        int        ct = _get_spells(spells, MAX_SPELLS);
+
+        py_display_spells(doc, spells, ct);
     }
 }
 
@@ -671,6 +696,25 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_TWO_HANDED_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS, 1);
+
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *mauler_get_class(void)
@@ -698,7 +742,7 @@ class_t *mauler_get_class(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 110;
@@ -711,7 +755,7 @@ class_t *mauler_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
-        me.get_spells_fn = _get_spells;
+        me.get_spells = _get_spells;
         me.character_dump = _character_dump;
         init = TRUE;
     }

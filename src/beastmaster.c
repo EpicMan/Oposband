@@ -1,11 +1,23 @@
 #include "angband.h"
 
-static power_info _beastmaster_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_CHR, { 1, 0, 70, dominate_living_I_spell}},
-    { A_CHR, {30, 0, 70, dominate_living_II_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 1;
+    spell->cost = 0;
+    spell->fail = calculate_fail_rate(spell->level, 70, p_ptr->stat_ind[A_CHR]);
+    spell->fn = dominate_living_I_spell;
+
+    spell = &spells[ct++];
+    spell->level = 30;
+    spell->cost = 0;
+    spell->fail = calculate_fail_rate(spell->level, 70, p_ptr->stat_ind[A_CHR]);
+    spell->fn = dominate_living_II_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -29,8 +41,26 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     py_birth_obj_aux(TV_POLEARM, SV_SPEAR, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_RIDING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_MASTER;
 }
 
 class_t *beastmaster_get_class(void)
@@ -69,7 +99,7 @@ class_t *beastmaster_get_class(void)
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/
-        me.get_powers = _beastmaster_powers;
+        me.get_powers = _get_powers;
         me.character_dump = spellbook_character_dump;
         init = TRUE;
     }

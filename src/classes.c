@@ -8,7 +8,7 @@
 
 bool class_is_deprecated(int i)
 {
-    return (i == CLASS_XXX12);
+    return FALSE;
 }
 
 int lookup_class_idx(cptr name)
@@ -114,6 +114,9 @@ class_t *result = NULL;
     case CLASS_HIGH_MAGE:
         result = high_mage_get_class();
         break;
+	case CLASS_IMITATOR:
+		result = imitator_get_class();
+		break;
     case CLASS_LAWYER:
         result = lawyer_get_class();
         break;
@@ -218,6 +221,12 @@ class_t *result = NULL;
         break;
     case CLASS_YELLOW_MAGE:
         result = yellow_mage_get_class();
+		break;
+	case CLASS_CHAOS_MAGE:
+		result = chaos_mage_get_class();
+        break;
+	case CLASS_HEXBLADE:
+		result = hexblade_get_class();
         break;
     }
 

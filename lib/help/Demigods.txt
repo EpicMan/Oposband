@@ -11,7 +11,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   180%       Infravision 0'
@@ -25,7 +25,7 @@ Intelligence  +2        Device      <color:y>Good         </color>
 Wisdom        +2        Save        <color:y>Good         </color>
 Dexterity     +2        Stealth     <color:R>Poor         </color>
 Constitution  +2        Searching   <color:o>Fair         </color>
-Charisma      +2        Perception  <color:r>Bad          </color>
+Charisma      +2        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   250%       Infravision 0'
@@ -39,7 +39,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +2        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   240%       Infravision 0'
@@ -53,7 +53,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:y>Good         </color>
 Dexterity     +1        Stealth     <color:o>Fair         </color>
 Constitution  +3        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  107%       Melee       <color:G>Excellent    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   240%       Infravision 0'
@@ -67,7 +67,7 @@ Intelligence  +3        Device      <color:y>Very Good    </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   240%       Infravision 0'
@@ -81,7 +81,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:R>Poor         </color>
 Dexterity     +1        Stealth     <color:r>Bad          </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   240%       Infravision 0'
@@ -95,7 +95,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:y>Good         </color>
 Constitution  +1        Searching   <color:G>Excellent    </color>
-Charisma      +1        Perception  <color:y>Good         </color>
+Charisma      +1        Perception  <color:y>Very Good    </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   240%       Infravision 0'
@@ -109,7 +109,7 @@ Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   230%       Infravision 0'
@@ -123,7 +123,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +3        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:G>Excellent    </color>
 Experience   230%       Infravision 0'
@@ -137,7 +137,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   230%       Infravision 0'
@@ -151,7 +151,7 @@ Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        +3        Save        <color:y>Good         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   220%       Infravision 0'
@@ -165,7 +165,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:y>Good         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +1        Perception  <color:r>Bad          </color>
+Charisma      +1        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   220%       Infravision 0'
@@ -179,7 +179,7 @@ Intelligence  +1        Device      <color:o>Fair         </color>
 Wisdom        +1        Save        <color:o>Fair         </color>
 Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:o>Fair         </color>
-Charisma      +3        Perception  <color:r>Bad          </color>
+Charisma      +3        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
 Base HP       20        Archery     <color:y>Good         </color>
 Experience   220%       Infravision 0'
@@ -223,19 +223,19 @@ Aphrodite    <color:o>Fair         </color> <color:o>Fair         </color> <colo
 <topic:Skills2><style:heading>Table 3 - Demigod Skill Bonus Table II</style>
 <style:table>
              <color:w>Searching     Perception    Melee         Archery       Infra</color>
-Minor-God    <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Zeus         <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
-Poseidon     <color:o>Fair         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:y>Good         </color>    0'
-Hades        <color:o>Fair         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:y>Good         </color>    0'
-Athena       <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Ares         <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
-Hermes       <color:G>Excellent    </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Apollo       <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Artemis      <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:G>Excellent    </color>    0'
-Hephaestus   <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
-Hera         <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Demeter      <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
-Aphrodite    <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Minor-God    <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Zeus         <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
+Poseidon     <color:o>Fair         </color> <color:R>Poor         </color> <color:G>Excellent    </color> <color:y>Good         </color>    0'
+Hades        <color:o>Fair         </color> <color:R>Poor         </color> <color:G>Excellent    </color> <color:y>Good         </color>    0'
+Athena       <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Ares         <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
+Hermes       <color:G>Excellent    </color> <color:y>Very Good    </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Apollo       <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Artemis      <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color>    0'
+Hephaestus   <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Good         </color>    0'
+Hera         <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Demeter      <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
+Aphrodite    <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Good         </color>    0'
 
 </style>
 <topic:Powers><style:heading>Table 4 - Demigod Special Powers</style>
@@ -324,29 +324,7 @@ Allows you to reach full proficiency with any weapon (but does not make icky wea
 Protects your mind from hallucination and Eldritch Horrors.</indent>
 
 
-<topic:Weaknesses><style:heading>Table 5 - Human Weaknesses</style>
-
-Normal humans receive one demigod talent, but they also acquire a special human weakness on reaching level 35. Each weakness corresponds to one of the six basic stats; which weakness a human gets depends on their primary spellcasting stat. Characters with no spell stat are assumed to be warrior-like and receive the Unbalancing Strikes weakness.
-
-  <indent><color:R>Unbalancing Strikes</color>
-Strength is your greatest asset; but you now hit with too much power to control. Every critical hit you score in melee will unbalance you; you cannot score further criticals in that round, and since you need extra time to regain your balance, such a round will consume 1.2 turns instead of 1.</indent>
-
-  <indent><color:R>Overactive Imagination</color>
-Your brain is highly developed - for a human - but perhaps sometimes you can have too much of a good thing? Your overactive imagination makes you vulnerable to fear, and reduces your effective character level by 10 for all fear-related player/monster interactions.</indent>
-
-  <indent><color:R>Attuned to God</color>
-You are extremely wise, and have spent so much time in meditation that your mind is now fully attuned to the divine; but as a consequence, you feel no connection to evil monsters. You cannot detect any evil monster telepathically, even with spells or equipment of telepathy.</indent>
-
-  <indent><color:R>Nimbler than Your Body</color>
-Agility is your strongest point; but there is only so much you can do in a human body. You sometimes sprain a muscle while hitting monsters, dodging enemy blows or firing projectiles; this temporarily reduces your speed by 10.</indent>
-
-  <indent><color:R>Pushed to the Limits</color>
-Your constitution and endurance are extraordinary; but as with many highly athletic people, your immune system has trouble keeping up. You suffer from frequent bouts of unwellness which temporarily decrease your Constitution and Dexterity.</indent>
-
-  <indent><color:R>Overconfidence</color>
-Highly charismatic you may be; but getting too caught up in your own hype results in overconfidence and sloppy work. Lack of sufficient concentration gives you penalties to melee and shooting accuracy and to device and spell failure rates, similar to those from the Lazy personality.</indent>
 
 
 
-
-<color:s>Automatically generated for FrogComposband 7.1.salmiak.</color>
+<color:s>Automatically generated for Oposband 0.4.0.</color>

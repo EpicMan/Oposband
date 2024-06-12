@@ -47,10 +47,13 @@ static void _divide_spell(int cmd, variant *res)
         break;
     }
 }
-static power_info _jelly_get_powers[] = {
+static power_info _jelly_powers[] = {
     { A_CON, { 1, 10, 0, _divide_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _jelly_get_powers(spell_info* spells, int max) {
+    return get_powers_aux(spells, max, _jelly_powers);
+}
 static void _jelly_calc_innate_attacks(void)
 {
     if (equip_is_empty_hand(0))
@@ -66,7 +69,7 @@ static void _jelly_calc_innate_attacks(void)
         a.weight = 100;
         a.effect[0] = GF_ACID;
         calc_innate_blows(&a, 600);
-        a.msg = "You shoot acid.";
+        a.msg = "You shoot acid";
         a.name = "Pseudopod";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -87,7 +90,6 @@ static void _black_ooze_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_ACID);
     add_flag(flgs, OF_RES_POIS);
     add_flag(flgs, OF_IM_BLIND);
-    add_flag(flgs, OF_NIGHT_VISION);
 }
 race_t *_black_ooze_get_race_t(void)
 {
@@ -101,7 +103,7 @@ race_t *_black_ooze_get_race_t(void)
         me.skills = bs;
         me.extra_skills = xs;
 
-        me.subname = "Black ooze";
+        me.subname = "Black Ooze";
 
         me.stats[A_STR] =  1;
         me.stats[A_INT] = -5;
@@ -151,7 +153,7 @@ race_t *_gelatinous_cube_get_race_t(void)
         me.skills = bs;
         me.extra_skills = xs;
 
-        me.subname = "Gelatinous cube";
+        me.subname = "Gelatinous Cube";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] = -10;
@@ -208,7 +210,7 @@ race_t *_acidic_cytoplasm_get_race_t(void)
         me.skills = bs;
         me.extra_skills = xs;
 
-        me.subname = "Acidic cytoplasm";
+        me.subname = "Acidic Cytoplasm";
 
         me.stats[A_STR] =  3;
         me.stats[A_INT] = -7;
@@ -238,7 +240,6 @@ static void _shoggoth_calc_bonuses(void)
     p_ptr->no_eldritch = TRUE;
 
     res_add(RES_TELEPORT);
-    res_add_vuln(RES_LITE);
 
     _acidic_cytoplasm_calc_bonuses();
 }
@@ -246,7 +247,6 @@ static void _shoggoth_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     add_flag(flgs, OF_SPEED);
     add_flag(flgs, OF_REGEN);
-    add_flag(flgs, OF_VULN_LITE);
     _acidic_cytoplasm_get_flags(flgs);
 }
 race_t *_shoggoth_get_race_t(void)
@@ -321,11 +321,11 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.pval = 1;
-    forge.to_d = 3;
+    forge.to_h = 3;
     add_flag(forge.flags, OF_STR);
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
     py_birth_obj(&forge);
 }
 
@@ -380,17 +380,6 @@ bool jelly_eat_object(object_type *o_ptr)
 {
     char o_name[MAX_NLEN];
     object_desc(o_name, o_ptr, OD_COLOR_CODED);
-    /* Confirm eating artifacts */
-    if ((object_is_artifact(o_ptr)) && ((obj_is_identified(o_ptr)) || (o_ptr->feeling == FEEL_SPECIAL) || (o_ptr->feeling == FEEL_TERRIBLE)))
-    {
-        char buf[255];
-        strcpy(buf, format("<color:v>Really eat</color> %s? <color:y>[Y/n]</color>\n", o_name));
-        if (!paranoid_msg_prompt(buf, 0))
-        {
-            energy_use = 0;
-            return FALSE;
-        }
-    }
     set_food(MIN(PY_FOOD_FULL - 1, p_ptr->food + o_ptr->weight * 50 * o_ptr->number));
     msg_format("You assimilate %s into your gelatinous frame.", o_name);
     /* TODO: Consider giving timed benefits based on what is absorbed.

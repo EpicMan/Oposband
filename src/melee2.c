@@ -300,34 +300,6 @@ static bool get_enemy_dir(int m_idx, int *mm)
     return TRUE;
 }
 
-void mon_kill_mon(mon_ptr mon, int who)
-{
-    monster_race *r_ptr = &r_info[mon->r_idx];
-    bool do_drop = FALSE;
-
-    if ((who > 0) && (is_pet(&m_list[who])))
-        do_drop = TRUE;
-
-    /* Mega-hack - silver angels shouldn't drop a can of toys every time */
-    if ((do_drop) && (mon->r_idx == MON_A_SILVER))
-    {
-        if (r_ptr->r_akills < MAX_SHORT) r_ptr->r_akills++;
-        if (r_ptr->r_tkills < MAX_SHORT) r_ptr->r_tkills++;
-    }
-
-    pack_on_slay_monster(mon->id);
-
-    if (who > 0) monster_gain_exp(who, mon->id);
-
-    mon_check_kill_unique(mon->id);
-
-    /* Generate treasure */
-    monster_death(mon->id, do_drop);
-
-    /* Delete the monster */
-    delete_monster_idx(mon->id);
-}
-
 
 /*
  * Hack, based on mon_take_hit... perhaps all monster attacks on
@@ -338,12 +310,17 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     monster_type    *m_ptr = &m_list[m_idx];
 
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
+    bool             who_is_pet = FALSE;
 
     char m_name[160];
 
     bool seen = mon_show_msg(m_ptr);
+
     /* Can the player be aware of this attack? */
     bool known = (m_ptr->cdis <= MAX_SIGHT);
+
+    if (who && is_pet(&m_list[who]))
+        who_is_pet = TRUE;
 
     /* Extract monster name */
     monster_desc(m_name, m_ptr, 0);
@@ -359,7 +336,7 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
 
     if (p_ptr->riding && (m_idx == p_ptr->riding)) disturb(1, 0);
 
-    if ((melee_challenge) && (!is_pet(m_ptr)) && (m_idx != who)) dam = 0;
+    if ((melee_challenge) && (!is_pet(m_ptr))) dam = 0;
 
     if (MON_INVULNER(m_ptr) && randint0(PENETRATE_INVULNERABILITY))
     {
@@ -394,11 +371,13 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     /* It is dead now... or is it? */
     if (m_ptr->hp < 0)
     {
-        if ( ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
-          && !p_ptr->inside_battle
-          && !prace_is_(RACE_MON_QUYLTHULG))
+        /* CJR - Experimental: Lets pets/friendlies kill questors/uniques as well, also make it obvious whenever they die */
+        if /*(*/ ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
+          /*&& !p_ptr->inside_battle
+          && !prace_is_(RACE_MON_QUYLTHULG))*/
         {
-            m_ptr->hp = 1;
+            known = TRUE; seen = TRUE;
+            /*m_ptr->hp = 1;*/
         }
         else
         {
@@ -437,7 +416,17 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
                 }
             }
 
-            mon_kill_mon(m_ptr, who);
+            pack_on_slay_monster(m_idx);
+
+            monster_gain_exp(who, m_idx);
+
+            mon_check_kill_unique(m_idx);
+
+            /* Generate treasure */
+            monster_death(m_idx, who_is_pet);
+
+            /* Delete the monster */
+            delete_monster_idx(m_idx);
 
             /* Not afraid */
             (*fear) = FALSE;
@@ -1923,12 +1912,6 @@ bool mon_attack_mon(int m_idx, int t_idx)
                 if (!e.effect) break;
                 if (e.pct && randint1(100) > e.pct) continue;
 
-                /* Check for death between effects */
-                if (t_ptr->fx != x_saver || t_ptr->fy != y_saver)
-                {
-                    break;
-                }
-
                 damage = damroll(e.dd + to_dd, e.ds);
                 if (stun)
                     damage -= damage * MIN(100, stun) / 150;
@@ -1964,6 +1947,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
                 case RBE_LOSE_CHR:
                 case RBE_LOSE_ALL:
                 case RBE_DRAIN_EXP:
+				case RBE_HALLUCINATE:
                     pt = 0;
                     break;
 
@@ -1987,12 +1971,6 @@ bool mon_attack_mon(int m_idx, int t_idx)
                     if (!explode)
                         _mon_gf_mon(m_idx, t_ptr, pt, damage);
 
-                    /* Check for death (again) */
-                    if (t_ptr->fx != x_saver || t_ptr->fy != y_saver)
-                    {
-                        break;
-                    }
-
                     switch (effect_type)
                     {
                     case BLOW_EFFECT_TYPE_FEAR:
@@ -2006,8 +1984,16 @@ bool mon_attack_mon(int m_idx, int t_idx)
                     case BLOW_EFFECT_TYPE_HEAL:
                         if ((monster_living(tr_ptr)) && (damage > 2))
                         {
+                            bool did_heal = FALSE;
+
+                            if (m_ptr->hp < m_ptr->maxhp) did_heal = TRUE;
+
                             /* Heal */
-                            bool did_heal = hp_mon(m_ptr, damroll(4, damage / 6), FALSE);
+                            m_ptr->hp += damroll(4, damage / 6);
+                            if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
+
+                            /* Redraw (later) if needed */
+                            check_mon_health_redraw(m_idx);
 
                             /* Special message */
                             if (see_m && did_heal)
@@ -2015,12 +2001,6 @@ bool mon_attack_mon(int m_idx, int t_idx)
                                 msg_format("%^s appears healthier.", m_name);
                             }
                         }
-                        break;
-                    }
-
-                    /* Check for death (sigh...) */
-                    if (t_ptr->fx != x_saver || t_ptr->fy != y_saver)
-                    {
                         break;
                     }
 
@@ -2112,7 +2092,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
         else
         {
             /* Analyze failed attacks */
-           switch (method)
+            switch (method)
             {
             case RBM_HIT:
             case RBM_TOUCH:
@@ -2211,6 +2191,22 @@ static bool check_hp_for_feat_destruction(feature_type *f_ptr, monster_type *m_p
            (m_ptr->hp >= MAX(m_ptr->maxhp / 3, 200));
 }
 
+/* Most monsters have 40% chance to hop up on tables, slow ones are 20% */
+static int monster_jump_chance(monster_race *r_ptr, monster_type *m_ptr)
+{
+	/* FLyers ignore tables*/
+	if (r_ptr->flags7 & RF7_CAN_FLY) return 100;
+
+	/* Passwall monsters ignore tables */
+	if (r_ptr->flags2 & RF2_PASS_WALL) return 100;
+
+	/*Climbers are very good at climbing*/
+	if (r_ptr->flags7 & RF7_CAN_CLIMB) return 80;
+
+
+	/* Default chance is 40% */
+	return 40;
+}
 /*
  * Process a monster
  *
@@ -2308,7 +2304,7 @@ static void process_monster(int m_idx)
         int upkeep_factor = calculate_upkeep();
         while ((upkeep_factor > SAFE_UPKEEP_PCT) && (p_ptr->upset_okay)) /* Neglected pets */
         {
-            if (unique_is_friend(real_r_idx(m_ptr))) break;
+            if (unique_is_friend(m_ptr->r_idx)) break;
             if (m_ptr->r_idx == MON_MONKEY_CLONE) break;
             if (p_ptr->csp * 3 > p_ptr->msp) 
             {
@@ -2453,18 +2449,14 @@ static void process_monster(int m_idx)
             bool skip = FALSE;
             monster_desc(m_name, m_ptr, 0);
 
-            if (m_ptr->r_idx != MON_DAWN)
+            for (i = 0; i < MAX_MON_BLOWS; i++)
             {
-                for (i = 0; i < MAX_MON_BLOWS; i++)
+                if (r_ptr->blows[i].method == RBM_EXPLODE)
                 {
-                    if (r_ptr->blows[i].method == RBM_EXPLODE)
-                    {
-                        skip = TRUE;
-                        break;
-                    }
+                    skip = TRUE;
+                    break;
                 }
             }
-            else skip = TRUE;
 
             if (skip) {} /* Kamikaze pets fight to death */
             else if (is_riding_mon && riding_pinch < 2)
@@ -2673,9 +2665,7 @@ static void process_monster(int m_idx)
         }
 
         /* Some monsters can speak */
-        if (((ap_r_ptr->flags2 & RF2_CAN_SPEAK) ||
-            ((m_ptr->r_idx == MON_BUSH) && (p_ptr->image) && (is_hostile(m_ptr)) && (one_in_(8)))) &&
-            aware && is_aware(m_ptr) &&
+        if ((ap_r_ptr->flags2 & RF2_CAN_SPEAK) && aware && is_aware(m_ptr) &&
             m_idx != p_ptr->riding &&
             one_in_(SPEAK_CHANCE) &&
             player_has_los_bold(oy, ox) &&
@@ -2752,7 +2742,6 @@ static void process_monster(int m_idx)
                 char m_name[80];
                 monster_desc(m_name, m_ptr, 0);
                 msg_format("%^s is no longer confused.", m_name);
-                mon_lore_3(m_ptr, RF3_CLEAR_HEAD);
             }
         }
     }
@@ -3528,23 +3517,9 @@ static void process_monster(int m_idx)
 
             if (have_flag(f_ptr->flags, FF_TREE))
             {
-                if (!(r_ptr->flags7 & RF7_CAN_FLY) && !(r_ptr->flags2 & RF2_PASS_WALL) && !(r_ptr->flags8 & RF8_WILD_WOOD))
+                if (!(r_ptr->flags7 & RF7_CAN_FLY) && !(r_ptr->flags8 & RF8_WILD_WOOD))
                 {
                     m_ptr->energy_need += ENERGY_NEED();
-                }
-            }
-            else if (have_flag(f_ptr->flags, FF_SNOW))
-            {
-                if (!(r_ptr->flags7 & RF7_CAN_FLY) && !(r_ptr->flags2 & RF2_PASS_WALL) && !(r_ptr->flags8 & RF8_WILD_SNOW))
-                {
-                    m_ptr->energy_need += ENERGY_NEED() * 2 / 5;
-                }
-            }
-            else if (have_flag(f_ptr->flags, FF_SLUSH))
-            {
-                if (!(r_ptr->flags7 & RF7_CAN_FLY) && !(r_ptr->flags2 & RF2_PASS_WALL) && !(r_ptr->flags8 & RF8_WILD_SNOW))
-                {
-                    m_ptr->energy_need += ENERGY_NEED() / 9;
                 }
             }
             if (have_flag(f_ptr->flags, FF_WEB) && r_ptr->d_char != 'S')
@@ -3558,6 +3533,28 @@ static void process_monster(int m_idx)
                     cave_set_feat(ny, nx, floor_type[randint0(100)]);
                 }
             }
+
+			/* Moving onto tables can fail, wasting a turn */
+			if (have_flag(f_ptr->flags, FF_TABLE))
+			{
+				feature_type* of_ptr = &f_info[cave[oy][ox].feat];
+				/*If you are on the table already, no problem */
+				/* Otherwise, you have to pass a jumping test */
+				if (!have_flag(of_ptr->flags, FF_TABLE))
+				{
+					if (randint1(100) > monster_jump_chance(r_ptr, m_ptr))
+					{
+						if (see_m)
+						{
+							char m_name[80];
+							monster_desc(m_name, m_ptr, is_pet(m_ptr) ? MD_ASSUME_VISIBLE : 0);
+							msg_format("%^s fails to climb onto the table!", m_name);
+						}
+						return;
+					}
+						
+				}
+			}
 
             if (!is_riding_mon)
             {
@@ -3951,7 +3948,7 @@ void process_monsters(void)
         /* Ignore "dead" monsters */
         if (!m_ptr->r_idx) continue;
 
-        if ((p_ptr->wild_mode) && (i != p_ptr->riding)) continue;
+        if (p_ptr->wild_mode) continue;
 
         /* Handle "fresh" monsters */
         if (m_ptr->mflag & MFLAG_BORN)
@@ -3965,8 +3962,6 @@ void process_monsters(void)
 
         if (game_turn%TURNS_PER_TICK == 0)
             process_mon_mtimed(m_ptr);
-
-        if (p_ptr->wild_mode) continue;
 
         /* Hack -- Require proximity */
         if (p_ptr->action == ACTION_GLITTER)
@@ -4034,10 +4029,6 @@ void process_monsters(void)
 
         else if (m_ptr->target_y) test = TRUE;
 
-        else if (m_ptr->mflag2 & MFLAG2_HURT) test = TRUE;
-
-        else if (mon_is_superbuff(m_ptr, TRUE)) test = TRUE;
-
         /* Do nothing */
         if (!test)
             continue;
@@ -4074,8 +4065,6 @@ void process_monsters(void)
         /* Not enough energy to move */
         if (m_ptr->energy_need > 0) continue;
 
-        energy_need_hack = SPEED_TO_ENERGY(speed);
-
         /* Use up "some" energy */
         m_ptr->energy_need += ENERGY_NEED();
 
@@ -4091,7 +4080,7 @@ void process_monsters(void)
         {
             char m_name[80];
             monster_desc(m_name, m_ptr, 0);
-            msg_format("%^s gets back up and looks mad as hell.", m_name);
+            msg_format("%^s gets back up and looks angry.", m_name);
             m_ptr->mflag2 &= ~MFLAG2_TRIPPED;
             mon_anger(m_ptr);
             continue;
@@ -4232,9 +4221,6 @@ bool set_monster_fast(int m_idx, int v)
 
     if (!notice) return FALSE;
 
-    if (m_ptr->ml)
-        check_mon_health_redraw(m_idx);
-
     if ((p_ptr->riding == m_idx) && !p_ptr->leaving)
         p_ptr->update |= PU_BONUS;
 
@@ -4261,9 +4247,6 @@ bool set_monster_slow(int m_idx, int v)
     m_ptr->mtimed[MTIMED_SLOW] = v;
 
     if (!notice) return FALSE;
-
-    if (m_ptr->ml)
-        check_mon_health_redraw(m_idx);
 
     if ((p_ptr->riding == m_idx) && !p_ptr->leaving)
         p_ptr->update |= PU_BONUS;
@@ -4363,7 +4346,7 @@ bool set_monster_invulner(int m_idx, int v, bool energy_need)
     {
         if (MON_INVULNER(m_ptr))
         {
-            if (energy_need && !p_ptr->wild_mode) m_ptr->energy_need += energy_need_clipper_aux(SPEED_TO_ENERGY(m_ptr->mspeed));
+            if (energy_need && !p_ptr->wild_mode) m_ptr->energy_need += ENERGY_NEED();
             notice = TRUE;
         }
     }
@@ -4505,7 +4488,7 @@ static void process_mon_mtimed(mon_ptr mon)
             }
         }
     }
-    if ((mon->minislow) && (randint0(race->flags2 & RF2_REGENERATE ? 50 : 100) < mon->minislow) && ((!p_ptr->no_air) || (!monster_living(race))))
+    if ((mon->minislow) && (randint0(race->flags2 & RF2_REGENERATE ? 50 : 100) < mon->minislow))
     {
         (void)m_inc_minislow(mon, -1);
     }
@@ -4632,7 +4615,6 @@ void monster_gain_exp(int m_idx, int s_idx)
 
     /* Paranoia */
     if (m_idx <= 0 || s_idx <= 0) return;
-    if (m_idx == s_idx) return;
 
     m_ptr = &m_list[m_idx];
 
@@ -4662,32 +4644,32 @@ void monster_gain_exp(int m_idx, int s_idx)
     if (!dun_level) new_exp /= 5;
 
     /* Experimental: Share the xp with the player */
+    /* CJR: do not subtract % from pet, they should get full xp from kill */
     if (is_pet(m_ptr))
     {
         int  div = 5;
-        bool penalty = TRUE;
         int  exp;
         int  pmult = 1;
 
-        if ( prace_is_(RACE_MON_QUYLTHULG)
-          || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx) )
+        if ( prace_is_(RACE_MON_QUYLTHULG) || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx) 
+            || ((prace_is_(RACE_ICKY_THING) && p_ptr->riding == m_idx) && r_info[m_ptr->r_idx].flags1 & (RF1_NEVER_MOVE))
+            )
         {
             div = 1;
-            penalty = FALSE;
         }
 
         if ((coffee_break) && (p_ptr->lev < 50))
         {
             if (py_in_dungeon()) pmult = coffee_break + 1;
             if ((prace_is_(RACE_MON_QUYLTHULG))
-              || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx)) pmult += (py_in_dungeon() ? 2 : (coffee_break - 1));
+                    || (prace_is_(RACE_MON_RING) && p_ptr->riding == m_idx)
+                    || ((prace_is_(RACE_ICKY_THING) && p_ptr->riding == m_idx) && r_info[m_ptr->r_idx].flags1 & (RF1_NEVER_MOVE))) 
+                pmult += (py_in_dungeon() ? 2 : (coffee_break - 1));
         }
 
         exp = new_exp / div;
         gain_exp(exp * pmult);
         p_ptr->pet_lv_kills++;
-        if (penalty)
-            new_exp -= exp;
         if (pmult > 1) new_exp *= 2;
         if (new_exp < 0) new_exp = 0;
     }

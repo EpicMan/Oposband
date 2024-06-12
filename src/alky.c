@@ -63,9 +63,9 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_CONFUSION,				30, 1, _CTIER0 },
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_SLEEP,					60, 1, _CTIER0 },
-{ SV_POTION_LIQUID_LOGRUS,		        360, 75, _CTIER2 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_LOSE_MEMORIES,			80, 1, _CTIER0 },
-{ SV_POTION_MEAD_OF_POETRY,		        1000, 999, _CTIER2 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_RUINATION,				100, 55, _CTIER1 },
 { SV_POTION_DEC_STR,				40, 1, _CTIER0 },
 { SV_POTION_DEC_INT,				40, 1, _CTIER0 },
@@ -147,8 +147,26 @@ static void _birth(void)
 	_alchemist_shero = 0;
 
 	py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-	py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+	py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
 	py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+
+	p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+	p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+	p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+	p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_EXPERT;
+	p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+	p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
+	p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+	p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
+	p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+	p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+	p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 static object_type *_which_obj(int tval, int slot)
@@ -590,7 +608,6 @@ bool _evaporate_aux(object_type *o_ptr){
 		case SV_POTION_HEALING:			blastType = GF_DISP_UNDEAD;	dam = plev * 10; maxPow = 450;		break;
 		case SV_POTION_STAR_HEALING:	blastType = GF_DISP_UNDEAD;	dam = plev * 15; maxPow = 850;	    break;
 		case SV_POTION_SLEEP:			blastType = GF_OLD_SLEEP; dam = 25 + 7 * (plev / 10);		    break;
-		case SV_POTION_LIQUID_LOGRUS:		blastType = GF_CHAOS; dam = plev * 5; break;
 
 		case SV_POTION_DEC_CHR:
 		case SV_POTION_DEC_STR:
@@ -623,7 +640,6 @@ bool _evaporate_aux(object_type *o_ptr){
 		case SV_POTION_HEALING:			desc = "It produces a cloud of raw life energy!";	break;
 		case SV_POTION_STAR_HEALING:	desc = "It produces a blast of raw life energy!";	break;
 		case SV_POTION_SLEEP:			desc = "It produces a cloud of sleeping gas!";	break;
-		case SV_POTION_LIQUID_LOGRUS:   	desc = "It produces a cloud of raw Logrus!";	break;
 		case SV_POTION_DEC_CHR:
 		case SV_POTION_DEC_STR:
 		case SV_POTION_DEC_DEX:
@@ -1044,7 +1060,6 @@ static void _load_list(savefile_ptr file)
 	for (i = 0; i < _CTIER_MAX; i++){
 		_CHEM[i] = savefile_read_s32b(file);
 	}
-	if (savefile_is_older_than(file, 7, 0, 9, 0)) return;
 	_alchemist_hero = savefile_read_u16b(file);
 	_alchemist_shero = savefile_read_u16b(file);
 }
@@ -1138,17 +1153,44 @@ static caster_info * _caster_info(void)
 	return &me;
 }
 
-static power_info _alky_powers[] =
-{
-    { A_NONE, { 1, 0,  0, _create_infusion_spell}},
-    { A_NONE, { 1, 0,  0, _reproduce_infusion_spell}},
-    { A_NONE, { 1, 0,  0, _break_down_potion_spell}},
-    { A_INT,  { 5, 8, 25, _evaporate_spell}},
-    { A_INT,  {20, 5, 30, alchemy_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
-
 /* Class Info */
+static int _get_powers(spell_info* spells, int max)
+{
+	int ct = 0;
+
+	spell_info* spell = &spells[ct++];
+	spell->level = 1;
+	spell->cost = 0;
+	spell->fail = 0;
+	spell->fn = _create_infusion_spell;
+
+	spell = &spells[ct++];
+	spell->level = 1;
+	spell->cost = 0;
+	spell->fail = 0;
+	spell->fn = _reproduce_infusion_spell;
+
+	spell = &spells[ct++];
+	spell->level = 1;
+	spell->cost = 0;
+	spell->fail = 0;
+	spell->fn = _break_down_potion_spell;
+
+	spell = &spells[ct++];
+	spell->level = 5;
+	spell->cost = 8;
+	spell->fail = calculate_fail_rate(spell->level, 25, p_ptr->stat_ind[A_INT]); 
+	spell->fn = _evaporate_spell;
+
+	spell = &spells[ct++];
+	spell->level = 20;
+	spell->cost = 5;
+	spell->fail = calculate_fail_rate(spell->level, 30, p_ptr->stat_ind[A_INT]);
+	spell->fn = alchemy_spell;
+
+	return ct;
+}
+
 class_t *alchemist_get_class(void)
 {
 	static class_t me = { 0 };
@@ -1187,7 +1229,7 @@ class_t *alchemist_get_class(void)
 		me.pets = 30;
 
 		me.birth = _birth;
-		me.get_powers = _alky_powers;
+		me.get_powers = _get_powers;
 		me.calc_bonuses = _calc_bonuses;
 		me.character_dump = _character_dump;
 		me.get_flags = _get_flags;

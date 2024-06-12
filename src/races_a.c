@@ -3,12 +3,16 @@
 /****************************************************************
  * Amberite
  ****************************************************************/
-static power_info _amberite_get_powers[] =
+static power_info _amberite_powers[] =
 {
     { A_INT, {30, 50, 70, shadow_shifting_spell}},
     { A_WIS, {40, 75, 75, pattern_mindwalk_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _amberite_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _amberite_powers);
+}
 static void _amberite_calc_bonuses(void)
 {
     p_ptr->sustain_con = TRUE;
@@ -38,7 +42,7 @@ race_t *amberite_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis =  4;
         me.skills.dev =  3;
@@ -86,7 +90,7 @@ int android_obj_exp(object_type *o_ptr)
 
     value = _obj_value(o_ptr);
     if (value <= 0) return 0;
-    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI) && p_ptr->personality != PERS_SEXY
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT) && p_ptr->personality != PERS_SEXY
         && p_ptr->pclass != CLASS_POLITICIAN) value /= 32;
     if (value > 5000000) value = 5000000;
 
@@ -135,7 +139,7 @@ int android_obj_exp(object_type *o_ptr)
     }
     if (object_is_melee_weapon(o_ptr) || o_ptr->tval == TV_BOW)
         return exp / 48;
-    else if (object_is_body_armour(o_ptr))
+    else if (object_is_body_armor(o_ptr))
         return 3 * exp / 32;
     else
         return exp / 16;
@@ -161,51 +165,47 @@ void android_calc_exp(void)
 }
 
 
-static power_info *_android_get_powers(void)
+static int _android_get_powers(spell_info* spells, int max)
 {
-    static power_info android_powers[2] =
-    {
-        { A_STR, { -1, -1, -1, NULL }},
-        { -1, {-1, -1, -1, NULL}}
-    };
-    spell_info *spell = &android_powers[0].spell;
+    int         ct = 0;
+    spell_info *spell = &spells[ct++];
 
     if (p_ptr->lev < 10)
     {
         spell->level = 1;
         spell->cost = 7;
-        spell->fail = 30;
+        spell->fail = calculate_fail_rate(1, 30, p_ptr->stat_ind[A_STR]);
         spell->fn = android_ray_gun_spell;
     }
     else if (p_ptr->lev < 25)
     {
         spell->level = 10;
         spell->cost = 13;
-        spell->fail = 30;
+        spell->fail = calculate_fail_rate(10, 30, p_ptr->stat_ind[A_STR]);
         spell->fn = android_blaster_spell;
     }
     else if (p_ptr->lev < 35)
     {
         spell->level = 25;
         spell->cost = 26;
-        spell->fail = 40;
+        spell->fail = calculate_fail_rate(25, 40, p_ptr->stat_ind[A_STR]);
         spell->fn = android_bazooka_spell;
     }
     else if (p_ptr->lev < 45)
     {
         spell->level = 35;
         spell->cost = 40;
-        spell->fail = 50;
+        spell->fail = calculate_fail_rate(35, 50, p_ptr->stat_ind[A_STR]);
         spell->fn = android_beam_cannon_spell;
     }
     else
     {
         spell->level = 45;
         spell->cost = 60;
-        spell->fail = 70;
+        spell->fail = calculate_fail_rate(45, 70, p_ptr->stat_ind[A_STR]);
         spell->fn = android_rocket_spell;
     }
-    return android_powers;
+    return ct;
 }
 static void _android_calc_bonuses(void)
 {
@@ -265,7 +265,7 @@ race_t *android_get_race(void)
         me.stats[A_WIS] = -5;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis =  0;
         me.skills.dev = -3;
@@ -285,7 +285,7 @@ race_t *android_get_race(void)
 
         me.birth = _android_birth;
         me.calc_bonuses = _android_calc_bonuses;
-        me.get_powers_fn = _android_get_powers;
+        me.get_powers = _android_get_powers;
         me.get_flags = _android_get_flags;
         me.flags = RACE_IS_NONLIVING | RACE_NO_POLY;
 
@@ -317,8 +317,8 @@ race_t *archon_get_race(void)
     if (!init)
     {
         me.name = "Archon";
-        me.desc = "Archons are a higher class of angels. They are good at all skills, and are strong, "
-                    "wise, and a favorite with any people. They are able to see the unseen, and "
+        me.desc = "Archons are winged humanoids from the Astral Plane. They are good at all skills, and are "
+                    "strong, wise, and a favorite with any people. They are able to see the unseen, and "
                     "their wings allow them to safely fly over traps and other dangerous places. However, "
                     "belonging to a higher plane as they do, the experiences of this world do not leave "
                     "a strong impression on them and they gain levels slowly.";
@@ -356,11 +356,15 @@ race_t *archon_get_race(void)
 /****************************************************************
  * Balrog
  ****************************************************************/
-static power_info _balrog_get_powers[] =
+static power_info _balrog_powers[] =
 {
     { A_CON, {15, 10, 70, demon_breath_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _balrog_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _balrog_powers);
+}
 static void _balrog_calc_bonuses(void)
 {
     res_add(RES_FIRE);
@@ -411,7 +415,7 @@ race_t *balrog_get_race(void)
         me.stats[A_WIS] =-10;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -5;
 
         me.skills.dis = -3;
         me.skills.dev =  8;
@@ -460,11 +464,15 @@ static void _barbarian_gain_level(int new_level)
 		}
 	}
 }
-static power_info _barbarian_get_powers[] =
+static power_info _barbarian_powers[] =
 {
     { A_STR, {8, 10, 30, berserk_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _barbarian_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _barbarian_powers);
+}
 static void _barbarian_calc_bonuses(void)
 {
     res_add(RES_FEAR);
@@ -492,7 +500,7 @@ race_t *barbarian_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] =  0;
 
         me.skills.dis = -2;
         me.skills.dev = -7;
@@ -570,7 +578,7 @@ race_t *beastman_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -5;
         me.skills.dev = -1;
@@ -632,11 +640,15 @@ static void _boit_vomit_spell(int cmd, variant *res)
     }
 }
 
-static power_info _boit_get_powers[] =
+static power_info _boit_powers[] =
 {
     { A_STR, {1, 0, 0, _boit_vomit_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _boit_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _boit_powers);
+}
 static void _boit_calc_bonuses(void)
 {
     p_ptr->pspeed += 2;
@@ -746,15 +758,20 @@ void jump_spell(int cmd, variant *res)
     }
 }
 
-static power_info _centaur_get_powers[] =
+static power_info _centaur_powers[] =
 {
     { A_DEX, {15, 10, 50, jump_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
 
+static int _centaur_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _centaur_powers);
+}
+
 static void _centaur_calc_bonuses(void)
 {
-    int slot = equip_find_first(object_is_body_armour);
+    int slot = equip_find_first(object_is_body_armor);
     p_ptr->pspeed += p_ptr->lev / 10;
 
     if (slot)
@@ -791,7 +808,7 @@ static void _centaur_calc_innate_attacks(void)
 
     a.weight = 150;
     calc_innate_blows(&a, 200);
-    a.msg = "You kick.";
+    a.msg = "You kick";
     a.name = "Hooves";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -818,7 +835,7 @@ race_t *centaur_get_race(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis =  0;
         me.skills.dev = -3;
@@ -852,11 +869,15 @@ race_t *centaur_get_race(void)
 /****************************************************************
  * Cyclops
  ****************************************************************/
-static power_info _cyclops_get_powers[] =
+static power_info _cyclops_powers[] =
 {
     { A_STR, {20, 0, 50, throw_boulder_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _cyclops_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _cyclops_powers);
+}
 static void _cyclops_calc_bonuses(void)
 {
     res_add(RES_SOUND);
@@ -883,7 +904,7 @@ race_t *cyclops_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -3;
         me.stats[A_CON] =  4;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = -4;
         me.skills.dev = -3;
@@ -912,11 +933,15 @@ race_t *cyclops_get_race(void)
 /****************************************************************
  * Dark-Elf
  ****************************************************************/
-static power_info _dark_elf_get_powers[] =
+static power_info _dark_elf_powers[] =
 {
     { A_INT, {1, 2, 30, magic_missile_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _dark_elf_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _dark_elf_powers);
+}
 static void _dark_elf_calc_bonuses(void)
 {
     res_add(RES_DARK);
@@ -949,7 +974,7 @@ race_t *dark_elf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] =  3;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis = 5;
         me.skills.dev = 7;
@@ -999,7 +1024,6 @@ static int _draconian_breath_amount(void)
 
     case DRACONIAN_CRYSTAL:
     case DRACONIAN_GOLD:
-    case DRACONIAN_SILVER:
         amt = MIN(350, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
         break;
 
@@ -1036,7 +1060,6 @@ static cptr _draconian_breath_desc(void)
     case DRACONIAN_BRONZE: return "confusion";
     case DRACONIAN_GOLD: return "sound";
     case DRACONIAN_SHADOW: return "nether";
-	case DRACONIAN_SILVER: return "inertia";
     }
     return 0;
 }
@@ -1054,7 +1077,6 @@ static int _draconian_breath_effect(void)
     case DRACONIAN_GOLD: return GF_SOUND;
     case DRACONIAN_SHADOW: return GF_NETHER;
     case DRACONIAN_CRYSTAL: return GF_SHARDS;
-	case DRACONIAN_SILVER: return GF_INERT;
     }
     return 0;
 }
@@ -1108,11 +1130,15 @@ static void _draconian_breathe_spell(int cmd, variant *res)
     }
 }
 
-static power_info _draconian_get_powers[] =
+static power_info _draconian_powers[] =
 {
     { A_CON, {1, 0, 70, _draconian_breathe_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _draconian_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _draconian_powers);
+}
 static void _draconian_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
@@ -1197,10 +1223,6 @@ static void _draconian_get_flags(u32b flgs[OF_ARRAY_SIZE])
     case DRACONIAN_SHADOW:
         add_flag(flgs, OF_RES_NETHER);
         break;
-	case DRACONIAN_SILVER:
-		p_ptr->free_act++;
-		add_flag(flgs, OF_FREE_ACT);
-		break;
     }
 }
 /* cf design/dragons.ods */
@@ -1225,7 +1247,6 @@ static int _draconian_attack_level(void)
     case DRACONIAN_CRYSTAL:
     case DRACONIAN_BRONZE:
     case DRACONIAN_GOLD:
-	case DRACONIAN_SILVER:
         l = MAX(1, l * 90 / 100);
         break;
 
@@ -1249,6 +1270,7 @@ static int _draconian_attack_level(void)
         l = MAX(1, l * 110 / 100);
         break;
     case CLASS_RED_MAGE:
+	case CLASS_IMITATOR:
     case CLASS_WEAPONSMITH:
     case CLASS_ROGUE:
     case CLASS_ALCHEMIST:
@@ -1324,7 +1346,7 @@ static void _draconian_calc_innate_attacks(void)
 
         a.weight = 100 + l;
         calc_innate_blows(&a, 400);
-        a.msg = "You claw.";
+        a.msg = "You claw";
         a.name = "Claw";
 
         if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER)
@@ -1361,7 +1383,7 @@ static void _draconian_calc_innate_attacks(void)
             calc_innate_blows(&a, 150);
         else
             a.blows = 100;
-        a.msg = "You bite.";
+        a.msg = "You bite";
         a.name = "Bite";
 
         if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER)
@@ -1436,7 +1458,7 @@ race_t *draconian_get_race(int psubrace)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = -2;
         me.skills.dev = 1;
@@ -1580,12 +1602,6 @@ race_t *draconian_get_race(int psubrace)
             me.exp += 35;
             me.infra += 2;
             break;
-		case DRACONIAN_SILVER:
-			me.subname = "Silver";
-			me.subdesc = "Silver Draconians have an affinity for inertia, which they both breathe at will "
-						 "and resist. With the power of Dragon Strike, even their melee attacks will slow their enemies.";
-			me.exp += 25;
-			break;
         }
         subrace_init = psubrace;
     }
@@ -1646,7 +1662,7 @@ race_t *dunadan_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis =  4;
         me.skills.dev =  3;
@@ -1667,7 +1683,7 @@ race_t *dunadan_get_race(void)
         me.calc_bonuses = _dunadan_calc_bonuses;
         me.get_flags = _dunadan_get_flags;
 
-	me.gain_level = _dunadan_gain_level;
+		me.gain_level = _dunadan_gain_level;
         init = TRUE;
     }
 
@@ -1678,12 +1694,16 @@ race_t *dunadan_get_race(void)
 /****************************************************************
  * Dwarf
  ****************************************************************/
-static power_info _dwarf_get_powers[] =
+static power_info _dwarf_powers[] =
 {
     { A_WIS, {5, 5, 50, detect_doors_stairs_traps_spell}},
     { A_CHR, {10, 5, 50, detect_treasure_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _dwarf_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _dwarf_powers);
+}
 static void _dwarf_calc_bonuses(void)
 {
     res_add(RES_BLIND);
@@ -1710,7 +1730,7 @@ race_t *dwarf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = 2;
         me.skills.dev = 5;
@@ -1739,11 +1759,15 @@ race_t *dwarf_get_race(void)
 /****************************************************************
  * Einheri
  ****************************************************************/
-static power_info _einheri_get_powers[] =
+static power_info _einheri_powers[] =
 {
     { A_STR, {1, 10, 50, berserk_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _einheri_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _einheri_powers);
+}
 
 static void _einheri_gain_level(int new_level)
 {
@@ -1825,21 +1849,23 @@ race_t *einheri_get_race(void)
 /****************************************************************
  * Ent
  ****************************************************************/
-static power_info _ent_get_powers[] =
+static power_info _ent_powers[] =
 {
     { A_WIS, {10, 20, 70, summon_tree_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _ent_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _ent_powers);
+}
 static void _ent_calc_bonuses(void)
 {
     /*res_add_vuln(RES_FIRE); cf resists.c res_pct_aux() for an alternative*/
-    res_add(RES_POIS);
     if (!equip_find_first(object_is_melee_weapon))
         p_ptr->skill_dig += p_ptr->lev * 10;
 }
 static void _ent_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, OF_RES_POIS);
     /*add_flag(flgs, TR_VULN_FIRE);*/
 }
 static void _ent_birth(void)
@@ -1907,13 +1933,96 @@ race_t *ent_get_race(void)
 }
 
 /****************************************************************
+ * Ghoul
+ ****************************************************************/
+static power_info _ghoul_powers[] =
+{
+    { A_DEX, {30, 2, 40, detect_life_spell}},
+    { -1, {-1, -1, -1, NULL} }
+};
+static int _ghoul_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _ghoul_powers);
+}
+
+static void _ghoul_calc_bonuses(void)
+{
+    res_add(RES_NETHER);
+    p_ptr->hold_life++;
+    p_ptr->see_inv++;
+    res_add(RES_POIS);
+    p_ptr->slow_digest = TRUE;
+    if (p_ptr->lev >= 10) res_add(RES_COLD);
+}
+static void _ghoul_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_RES_NETHER);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SLOW_DIGEST);
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, OF_RES_COLD);
+}
+race_t* ghoul_get_race(void)
+{
+    static race_t me = { 0 };
+    static bool init = FALSE;
+
+    if (!init)
+    {
+        me.name = "Ghoul";
+        me.desc = "This race of undead preys upon the dead and dying. Ghouls can learn"
+        "to sense living creatures around them and, having killed them, can"
+        "feast upon their corpses gaining nourishment. As an undead being,"
+        "Ghouls naturally resist the effects of cold, poison and life-draining"
+        "attacks.  As they grow stronger the effects of darkness and nether"
+        "upon them decreases.  In addition, the Ghoul's touch may paralyze"
+        "some oponents. Ghoul's make adequate fighters and poor spell casters.";
+
+        me.stats[A_STR] =  0;
+        me.stats[A_INT] = -1;
+        me.stats[A_WIS] = -1;
+        me.stats[A_DEX] = -1;
+        me.stats[A_CON] =  1;
+        me.stats[A_CHR] = -5;
+
+        me.skills.dis = -3;
+        me.skills.dev = -3;
+        me.skills.sav =  6;
+        me.skills.stl =  1;
+        me.skills.srh =  0;
+        me.skills.fos = 10;
+        me.skills.thn =  5;
+        me.skills.thb =  0;
+
+        me.life = 95;
+        me.base_hp = 18;
+        me.exp = 125;
+        me.infra = 2;
+        me.shop_adjust = 125;
+
+        me.calc_bonuses = _ghoul_calc_bonuses;
+        me.get_powers = _ghoul_get_powers;
+        me.get_flags = _ghoul_get_flags;
+        init = TRUE;
+    }
+
+    return &me;
+}
+
+/****************************************************************
  * Gnome
  ****************************************************************/
-static power_info _gnome_get_powers[] =
+static power_info _gnome_powers[] =
 {
     { A_INT, {5, 2, 50, phase_door_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _gnome_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _gnome_powers);
+}
 static void _gnome_calc_bonuses(void)
 {
     p_ptr->free_act++;
@@ -1971,11 +2080,15 @@ race_t *gnome_get_race(void)
 /****************************************************************
  * Golem
  ****************************************************************/
-static power_info _golem_get_powers[] =
+static power_info _golem_powers[] =
 {
     { A_CON, {20, 20, 50, stone_skin_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _golem_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _golem_powers);
+}
 static void _golem_calc_bonuses(void)
 {
     int ac = 10 + (p_ptr->lev * 2 / 5);
@@ -2030,7 +2143,7 @@ race_t *golem_get_race(void)
         me.stats[A_WIS] = -5;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  4;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -5;
         me.skills.dev = -5;
@@ -2045,7 +2158,7 @@ race_t *golem_get_race(void)
         me.base_hp = 23;
         me.exp = 185;
         me.infra = 4;
-        me.flags = RACE_IS_NONLIVING | RACE_EATS_DEVICES;
+        me.flags = RACE_IS_NONLIVING;
         me.shop_adjust = 120;
 
         me.birth = _golem_birth;
@@ -2062,11 +2175,15 @@ race_t *golem_get_race(void)
 /****************************************************************
  * Half-Giant
  ****************************************************************/
-static power_info _half_giant_get_powers[] =
+static power_info _half_giant_powers[] =
 {
     { A_STR, {20, 10, 70, stone_to_mud_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _half_giant_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _half_giant_powers);
+}
 static void _half_giant_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
@@ -2094,7 +2211,7 @@ race_t *half_giant_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -6;
         me.skills.dev = -5;
@@ -2164,12 +2281,12 @@ race_t *half_orc_get_race(void)
                         "and so tend to pay more for goods in town. The human part of their "
 			"heritage allows them to select a talent at level 30.";
 
-		me.stats[A_STR] = 2;
+		me.stats[A_STR] =  2;
 		me.stats[A_INT] = -1;
-		me.stats[A_WIS] = 0;
-		me.stats[A_DEX] = 0;
-		me.stats[A_CON] = 1;
-		me.stats[A_CHR] = -1;
+		me.stats[A_WIS] =  0;
+		me.stats[A_DEX] =  0;
+		me.stats[A_CON] =  1;
+		me.stats[A_CHR] = -2;
 
 		me.skills.dis = -3;
 		me.skills.dev = -3;
@@ -2186,12 +2303,12 @@ race_t *half_orc_get_race(void)
 		me.infra = 3;
 		me.shop_adjust = 120;
 
-                me.flags = RACE_DEMI_TALENT;
+        me.flags = RACE_DEMI_TALENT;
 		me.calc_bonuses = _half_orc_calc_bonuses;
 		me.get_flags = _half_orc_get_flags;
 
 		me.gain_level = _half_orc_gain_level;
-		init = TRUE;
+		init = TRUE;    
 	}
 
 	return &me;
@@ -2200,11 +2317,15 @@ race_t *half_orc_get_race(void)
 /****************************************************************
  * Half-Titan
  ****************************************************************/
-static power_info _half_titan_get_powers[] =
+static power_info _half_titan_powers[] =
 {
-    { A_INT, {15, 10, 60, probing_spell}},
+    { A_INT, {15, 10, 60, word_of_power_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _half_titan_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _half_titan_powers);
+}
 static void _half_titan_calc_bonuses(void)
 {
     res_add(RES_CHAOS);
@@ -2224,15 +2345,15 @@ race_t *half_titan_get_race(void)
         me.desc = "Half-mortal descendants of the mighty titans, these immensely powerful creatures "
                     "put almost any other race to shame. They may lack the fascinating special powers "
                     "some other races have, but their enhanced attributes more than make up for that. "
-                    "They learn to estimate the strengths of their foes, and their love for law and "
+                    "They learn to speak words of power to their foes, and their love for law and "
                     "order makes them resistant to the effects of Chaos.";
-
+ 
         me.stats[A_STR] =  5;
         me.stats[A_INT] =  1;
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  3;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis = -5;
         me.skills.dev =  3;
@@ -2261,11 +2382,15 @@ race_t *half_titan_get_race(void)
 /****************************************************************
  * Half-Troll
  ****************************************************************/
-static power_info _half_troll_get_powers[] =
+static power_info _half_troll_powers[] =
 {
     { A_STR, {10, 12, 50, berserk_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _half_troll_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _half_troll_powers);
+}
 static void _half_troll_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
@@ -2295,7 +2420,7 @@ race_t *half_troll_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] = -3;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = -5;
         me.skills.dev = -6;
@@ -2354,7 +2479,7 @@ race_t *high_elf_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  3;
 
         me.skills.dis =  4;
         me.skills.dev =  9;
@@ -2382,11 +2507,15 @@ race_t *high_elf_get_race(void)
 /****************************************************************
  * Hobbit
  ****************************************************************/
-static power_info _hobbit_get_powers[] =
+static power_info _hobbit_powers[] =
 {
     { A_INT, {15, 10, 50, create_food_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _hobbit_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _hobbit_powers);
+}
 race_t *hobbit_get_race(void)
 {
     static race_t me = {0};
@@ -2425,7 +2554,11 @@ race_t *hobbit_get_race(void)
         me.shop_adjust = 100;
 
         me.get_powers = _hobbit_get_powers;
-        init = TRUE;
+        
+		/* Hobbits don't wear shoes! */
+		me.equip_template = &b_info[BODY_NO_SHOES];
+
+		init = TRUE;
     }
 
     return &me;
@@ -2434,21 +2567,11 @@ race_t *hobbit_get_race(void)
 /****************************************************************
  * Human
  ****************************************************************/
-static int _human_gain_weakness(void)
-{
-    caster_info *caster_ptr = get_caster_info();
-    int _mut, _stat = A_STR;
-    if ((caster_ptr) && (caster_ptr->which_stat > A_STR)) _stat = caster_ptr->which_stat;
-    _mut = (MUT_HUMAN_STR + _stat - A_STR);
-    mut_gain(_mut);
-    return _mut;
-}
-
 static void _human_gain_power(int which)
 {
 	 if (p_ptr->demigod_power[which] < 0)
 	 {
-		 int idx = (which == 1) ? _human_gain_weakness() : mut_gain_choice(mut_demigod_pred);
+		 int idx = mut_gain_choice(mut_demigod_pred);
 		 mut_lock(idx);
 		 p_ptr->demigod_power[which] = idx;
 	 }
@@ -2462,7 +2585,7 @@ static void _human_gain_level(int new_level)
 {
 	 if (new_level >= 20)
 		 _human_gain_power(0);
-	 if ((new_level >= 35) && (p_ptr->prace != RACE_DOPPELGANGER)) 
+	 if (new_level >= 40)
 		 _human_gain_power(1);
 }
 
@@ -2476,10 +2599,8 @@ race_t *human_get_race(void)
         me.name = "Human";
         me.desc = "Humans are average at everything, and tend to gain levels rapidly due "
                     "to their short life spans. No racial adjustments or intrinsics occur "
-                    "to characters choosing human. Humans receive one special talent at "
-                    "level 20, which helps make up for their apparent mediocrity; but at "
-                    "level 35 they acquire a special human weakness. See "
-                    "<link:Demigods.txt#Weaknesses> for more information.";
+                    "to characters choosing human. However, humans may select special talents "
+                    "at levels 20 and 40 that more than make up for their apparent mediocrity.";
 
         me.stats[A_STR] =  0;
         me.stats[A_INT] =  0;
@@ -2512,13 +2633,184 @@ race_t *human_get_race(void)
 }
 
 /****************************************************************
+ * Icky Thing
+ ****************************************************************/
+/* Charm an immobile monster and "ride" it. */
+static void _symbiosis_spell(int cmd, variant* res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Symbiosis");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charm an immobile monster and let it ride on you.");
+		break;
+	case SPELL_FLAGS:
+		var_set_int(res, PWR_CONFUSED);
+		break;
+	case SPELL_CAST:
+	{
+		char m_name[80];
+		monster_type* m_ptr;
+		monster_race* r_ptr;
+		int rlev;
+		bool tame_success = FALSE;
+
+		var_set_bool(res, FALSE);
+		if (p_ptr->riding)
+		{
+			msg_print("You already have a symbiant.");
+			return;
+		}
+		if (!do_riding(TRUE)) return;
+
+		var_set_bool(res, TRUE);
+
+		m_ptr = &m_list[p_ptr->riding];
+		r_ptr = &r_info[m_ptr->r_idx];
+		monster_desc(m_name, m_ptr, 0);
+		/*cmsg_format(TERM_L_GREEN, "You try to attach %s to yourself.", m_name);*/
+		
+		rlev = r_ptr->level;
+		if (r_ptr->flags1 & RF1_UNIQUE) rlev = rlev * 3 / 2;
+		if (rlev > 60) rlev = 60 + (rlev - 60) / 2;
+
+		if (!(r_ptr->flags1 & (RF1_NEVER_MOVE)))
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis with a moving creature!");
+			tame_success = FALSE;
+		}
+		else if (p_ptr->inside_arena || p_ptr->inside_battle)
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis in the arena!");
+			tame_success = FALSE;
+		}
+		else if ((r_ptr->flags7 & RF7_GUARDIAN) || (r_ptr->flagsx & RFX_QUESTOR))
+		{
+			cmsg_format(TERM_RED, "It is impossible to enter symbiosis with %s!", m_name);
+			tame_success = FALSE;
+		}
+		else if (!((skills_riding_current() / 120 + p_ptr->lev) >= rlev
+			&& rlev < p_ptr->lev * 3 / 2 + (p_ptr->lev / 5)))
+		{
+			cmsg_format(TERM_RED, "You are not powerful enough for %s to grow on.", m_name);
+			tame_success = FALSE;
+		}
+		else
+		{
+			tame_success = TRUE;
+		}
+
+		if (tame_success)
+		{
+			cmsg_format(TERM_L_GREEN, "You enter symbiosis with %s.", m_name);
+			set_pet(m_ptr);
+		}
+		else
+		{
+			rakuba(1, TRUE);
+			p_ptr->riding = 0;
+		}
+	}
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+static power_info _icky_thing_powers[] =
+{
+	{ A_CON, {2, 0, 0, _symbiosis_spell}},
+	{ -1, {-1, -1, -1, NULL} }
+};
+static int _icky_thing_get_powers(spell_info* spells, int max)
+{
+	return get_powers_aux(spells, max, _icky_thing_powers);
+}
+static void _icky_thing_calc_bonuses(void)
+{
+	res_add(RES_POIS);
+	if (p_ptr->lev >= 10) res_add(RES_ACID);
+}
+static void _icky_thing_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+	add_flag(flgs, OF_RES_POIS);
+	if (p_ptr->lev >= 10)
+		add_flag(flgs, OF_RES_ACID);
+}
+static void _icky_thing_birth(void)
+{
+	py_birth_obj_aux(TV_FOOD, SV_FOOD_SLIME_MOLD, 2 + rand_range(3, 7));
+	py_birth_light();
+}
+
+race_t* icky_thing_get_race(void)
+{
+	static race_t me = { 0 };
+	static bool init = FALSE;
+
+	if (!init)
+	{
+		me.name = "Icky thing";
+		me.desc = "Icky things are smallish, slimy, icky, blobby creatures. They"
+			"are despised and ignored by other creatures, this is a blessing in"
+			"disguise as being ignored means they are stealthy. "
+			"Icky things are fairly weak overall but their slimy coatings protect"
+			"them from poisons and eventually acid.  Icky things a good friends"
+			"of molds and other dungeon growths and even allow them to grow on"
+			"themselves in a symbiotic relationship (in game turns, they can 'ride'"
+			"immobile creatures, but in reverse as the icky thing walks around"
+			"instead of the mount).";
+
+		me.stats[A_STR] = -1;
+		me.stats[A_INT] = -1;
+		me.stats[A_WIS] = -1;
+		me.stats[A_DEX] = -1;
+		me.stats[A_CON] = -1;
+		me.stats[A_CHR] = -2;
+
+		me.skills.dis = -1;
+		me.skills.dev = -1;
+		me.skills.sav = 2;
+		me.skills.stl = 2;
+		me.skills.srh = 6;
+		me.skills.fos = 11;
+		me.skills.thn = 5;
+		me.skills.thb = -1;
+
+		me.life = 90;
+		me.base_hp = 10;
+		me.exp = 75;
+		me.infra = 3;
+		me.shop_adjust = 130;
+
+		me.calc_bonuses = _icky_thing_calc_bonuses;
+		me.get_flags = _icky_thing_get_flags;
+		me.get_powers = _icky_thing_get_powers;
+
+		/* Icky things have special slots */
+		me.equip_template = &b_info[BODY_ICKY_THING];
+
+		init = TRUE;
+	}
+
+	return &me;
+}
+
+/****************************************************************
  * Imp
  ****************************************************************/
-static power_info _imp_get_powers[] =
+static power_info _imp_powers[] =
 {
     { A_INT, {9, 8, 50, imp_fire_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _imp_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _imp_powers);
+}
 static void _imp_calc_bonuses(void)
 {
     res_add(RES_FIRE);

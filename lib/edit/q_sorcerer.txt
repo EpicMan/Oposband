@@ -9,7 +9,7 @@ D:the Sultan is growing concerned. Go kill him, I'll give you credit.
 ?:1
 
 ?:[EQU $QUEST64 Completed]
-D:Well done on the special examination. Here is your wizard's hat.
+D:Well done on the special examination. Here is your Magister's crown.
 ?:1
 
 ?:[EQU $QUEST64 Failed]
@@ -29,7 +29,6 @@ L:b:PATTERN_2
 L:c:PATTERN_3
 L:d:PATTERN_4
 L:A:PATTERN_START
-L:M:PATTERN_END
 L:L:PATTERN_EXIT
 L:p:FLOOR(ICKY):MON(old sorcerer, NO_SLEEP)
 L:$:OBJ(DEVICE)
@@ -43,13 +42,13 @@ M:#...b,,,,,,,,,,,,,,,b...#
 M:#...c,,,,,,,,,,,,,,,a...#
 M:#...d,,,,,,,p,,,,,,,d...#
 M:#...a,,,,,,,,,,,,,,,c...#
-M:#..^bbcdML,,,,,,,,,,b...#
+M:#..^bbcdaL,,,,,,,,,,b...#
 M:#..^^^^,,,,,,,,,,,,,a...#
 M:#..^Abc,,,,,,,,,,,cda...#
 M:#.....cdabcdabcdabc.....#
 M:####.................####
 M:#<...................+$$#
 M:#########################
-R:OBJ(pointy hat, DEPTH+25):EGO(magi)
+R:OBJ(jewel encrusted crown, DEPTH+25):EGO(magi)
 
 # vim: filetype=q :

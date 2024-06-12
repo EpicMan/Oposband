@@ -104,7 +104,13 @@ bool fear_set_p(int v)
             do_dec_stat(A_CHR);
         if (p_ptr->special_defense & KATA_MASK)
         {
-            lose_kata();
+            msg_print("Your posture gets loose.");
+            p_ptr->special_defense &= ~KATA_MASK;
+            p_ptr->update |= PU_BONUS;
+            p_ptr->update |= PU_MONSTERS;
+            p_ptr->redraw |= PR_STATE;
+            p_ptr->redraw |= PR_STATUS;
+            p_ptr->action = ACTION_NONE;
         }
         notice = TRUE;
         p_ptr->counter = FALSE;
@@ -223,8 +229,6 @@ static int _plev(void)
     int l = p_ptr->lev;
     if (personality_is_(PERS_CRAVEN))
         l = MAX(1, l - 5);
-    if (mut_present(MUT_HUMAN_INT))
-        l = MAX(1, l - 10);
     if (l <= 40)
         return 5 + l;
 
@@ -248,7 +252,7 @@ bool fear_save_p(int ml)
     /* Immunity to Fear?*/
     if (res_pct(RES_FEAR) >= 100) return TRUE;
 
-    pl = _plev() + adj_stat_save_fear[p_ptr->stat_ind[A_CHR]];
+    pl = _plev() + adj_stat_save_fear[MAX(p_ptr->stat_ind[A_CHR], p_ptr->stat_ind[A_STR])];
     if (pl < 1) pl = 1;
 
     rolls = 1 + p_ptr->resist[RES_FEAR];
@@ -278,7 +282,7 @@ bool life_save_p(int ml)
     int rolls;
     int i;
 
-    pl = _plev() + adj_stat_save[p_ptr->stat_ind[A_CHR]];
+    pl = _plev() + adj_stat_save[MAX(p_ptr->stat_ind[A_CHR], p_ptr->stat_ind[A_STR])];
     if (pl < 1) pl = 1;
 
     rolls = p_ptr->hold_life;
@@ -304,7 +308,7 @@ bool fear_save_m(monster_type *m_ptr)
 
     /* Player may not exert their force of will out of sight! */
     if (projectable(py, px, m_ptr->fy, m_ptr->fx))
-        pl += adj_stat_save[p_ptr->stat_ind[A_CHR]];
+        pl += adj_stat_save[MAX(p_ptr->stat_ind[A_CHR], p_ptr->stat_ind[A_STR])];
 
     if (pl <= 1) return TRUE;
 
@@ -425,12 +429,10 @@ bool fear_p_hurt_m(int m_idx, int dam)
     if (!melee_hack && (r_ptr->flags2 & RF2_AURA_FEAR))
     {
         int r_level = _r_level(r_ptr);
-        static s32b _last_fear_turn = 0; /* Only once per turn for non-melee */
-        if ((!fear_save_p(r_level)) && (game_turn != _last_fear_turn))
+        if (!fear_save_p(r_level))
         {
             mon_lore_2(m_ptr, RF2_AURA_FEAR);
             fear_add_p(r_level/MAX(1, m_ptr->cdis - 2));
-            _last_fear_turn = game_turn;
         }
     }
 
@@ -439,7 +441,7 @@ bool fear_p_hurt_m(int m_idx, int dam)
         int percentage = (100 * m_ptr->hp) / m_ptr->maxhp;
         int n = 10;
 
-        n = n * adj_fear_m[p_ptr->stat_ind[A_CHR]] / 100;
+        n = n * adj_fear_m[MAX(p_ptr->stat_ind[A_CHR], p_ptr->stat_ind[A_STR])] / 100;
 
         if ((n >= percentage) || (dam >= m_ptr->hp && randint0(100) < 80))
         {

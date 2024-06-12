@@ -12,7 +12,7 @@ level your fledgling character will be born with. In general, skills
 are influenced by level, race, class, stats and equipment. See the race 
 tables [c] below for a quick comparison of the various races.
 
-Human
+Humans
   Amberite
   The Amberites are a reputedly immortal race, who are endowed with 
   numerous advantages in addition to their longevity. They are very 
@@ -27,7 +27,7 @@ Human
     Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Good         
     Constitution  +3        Searching   Good         
-    Charisma      +0        Perception  Good         
+    Charisma      +2        Perception  Excellent    
     Life Rating  100%       Melee       Excellent    
     Base HP       20        Archery     Good         
     Experience   190%       Infravision 0'
@@ -46,7 +46,7 @@ Human
     Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Poor         
     Constitution  +2        Searching   Fair         
-    Charisma      +2        Perception  Bad          
+    Charisma      +0        Perception  Poor         
     Life Rating  103%       Melee       Excellent    
     Base HP       22        Archery     Good         
     Experience   135%       Infravision 0'
@@ -65,7 +65,7 @@ Human
     Wisdom        +1        Save        Fair         
     Dexterity     +1        Stealth     Poor         
     Constitution  +1        Searching   Fair         
-    Charisma      +1        Perception  Bad          
+    Charisma      +1        Perception  Poor         
     Life Rating  100%       Melee       Very Good    
     Base HP       20        Archery     Good         
     Experience   180%       Infravision 0'
@@ -83,7 +83,7 @@ Human
     Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Good         
     Constitution  +3        Searching   Good         
-    Charisma      +0        Perception  Good         
+    Charisma      +1        Perception  Excellent    
     Life Rating  100%       Melee       Excellent    
     Base HP       20        Archery     Good         
     Experience   160%       Infravision 0'
@@ -91,10 +91,9 @@ Human
   Human
   Humans are average at everything, and tend to gain levels rapidly due 
   to their short life spans. No racial adjustments or intrinsics occur 
-  to characters choosing human. Humans receive one special talent at 
-  level 20, which helps make up for their apparent mediocrity; but at 
-  level 35 they acquire a special human weakness. See [e] for more 
-  information.
+  to characters choosing human. However, humans may select special 
+  talents at levels 20 and 40 that more than make up for their apparent 
+  mediocrity.
   
     Stats                   Skills
     Strength      +0        Disarming   Fair         
@@ -102,7 +101,7 @@ Human
     Wisdom        +0        Save        Fair         
     Dexterity     +0        Stealth     Fair         
     Constitution  +0        Searching   Fair         
-    Charisma      +0        Perception  Fair         
+    Charisma      +0        Perception  Good         
     Life Rating  100%       Melee       Fair         
     Base HP       20        Archery     Fair         
     Experience   100%       Infravision 0'
@@ -119,15 +118,15 @@ Human
     Strength      -3        Disarming   Fair         
     Intelligence  +0        Device      Fair         
     Wisdom        -1        Save        Fair         
-    Dexterity     +0        Stealth     Fair         
+    Dexterity     -1        Stealth     Fair         
     Constitution  -1        Searching   Fair         
-    Charisma      -1        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating   97%       Melee       Very Bad     
     Base HP       15        Archery     Bad          
     Experience   145%       Infravision 0'
     
   
-Elf
+Elves
   Dark-Elf
   A cave-dwelling race unhampered by darkness attacks, dark-elves have 
   more in common with Nibelungs than with other elves. They have a 
@@ -141,7 +140,7 @@ Elf
     Wisdom        +2        Save        Very Good    
     Dexterity     +2        Stealth     Excellent    
     Constitution  -2        Searching   Superb       
-    Charisma      +3        Perception  Good         
+    Charisma      +1        Perception  Very Good    
     Life Rating   97%       Melee       Poor         
     Base HP       18        Archery     Good         
     Experience   155%       Infravision 50'
@@ -160,7 +159,7 @@ Elf
     Wisdom        -1        Save        Very Good    
     Dexterity     +3        Stealth     Excellent    
     Constitution  +1        Searching   Good         
-    Charisma      +1        Perception  Very Good    
+    Charisma      +3        Perception  Excellent    
     Life Rating   99%       Melee       Very Good    
     Base HP       19        Archery     Excellent    
     Experience   190%       Infravision 40'
@@ -170,9 +169,9 @@ Elf
   intelligent, extremely stealthy and at home with magical devices, but 
   their size handicaps them in physical combat. They greatly prefer 
   light headwear, and cannot think clearly with a heavy helmet 
-  squeezing their brains. Tomtes have the ability to assess monsters 
-  and items at a glance (they gain auto-identify at level 40); and 
-  being accustomed to long winters, they are not much bothered by cold.
+  squeezing their brains. Tomtes have the ability to sense monsters and 
+  items at a glance (they gain auto-identify at level 40); and being 
+  accustomed to long winters, they are not much bothered by cold.
   
     Stats                   Skills
     Strength      -4        Disarming   Excellent    
@@ -180,7 +179,7 @@ Elf
     Wisdom        +2        Save        Fair         
     Dexterity     +3        Stealth     Superb       
     Constitution  -3        Searching   Heroic       
-    Charisma      +0        Perception  Fair         
+    Charisma      +0        Perception  Good         
     Life Rating   94%       Melee       Fair         
     Base HP       13        Archery     Poor         
     Experience   150%       Infravision 40'
@@ -197,13 +196,13 @@ Elf
     Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Excellent    
     Constitution  -1        Searching   Superb       
-    Charisma      +1        Perception  Good         
+    Charisma      +2        Perception  Very Good    
     Life Rating   97%       Melee       Poor         
     Base HP       16        Archery     Excellent    
     Experience   125%       Infravision 30'
     
   
-Hobbit/Dwarf
+Hobbits/Dwarves
   Dwarf
   Dwarves are the headstrong miners and fighters of legend. They tend 
   to be strong and tough, but lack agility. Because they are so 
@@ -218,7 +217,7 @@ Hobbit/Dwarf
     Wisdom        +2        Save        Good         
     Dexterity     -2        Stealth     Poor         
     Constitution  +2        Searching   Superb       
-    Charisma      +1        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating  103%       Melee       Excellent    
     Base HP       22        Archery     Fair         
     Experience   135%       Infravision 50'
@@ -238,7 +237,7 @@ Hobbit/Dwarf
     Wisdom        -1        Save        Good         
     Dexterity     +2        Stealth     Excellent    
     Constitution  +1        Searching   Excellent    
-    Charisma      -1        Perception  Good         
+    Charisma      -1        Perception  Excellent    
     Life Rating   95%       Melee       Poor         
     Base HP       16        Archery     Good         
     Experience   115%       Infravision 40'
@@ -258,7 +257,7 @@ Hobbit/Dwarf
     Wisdom        +1        Save        Good         
     Dexterity     +3        Stealth     Superb       
     Constitution  +2        Searching   Heroic       
-    Charisma      +1        Perception  Excellent    
+    Charisma      +1        Perception  Superb       
     Life Rating   92%       Melee       Bad          
     Base HP       14        Archery     Very Good    
     Experience   120%       Infravision 40'
@@ -275,13 +274,13 @@ Hobbit/Dwarf
     Wisdom        +0        Save        Good         
     Dexterity     +1        Stealth     Good         
     Constitution  +1        Searching   Excellent    
-    Charisma      -2        Perception  Fair         
+    Charisma      -2        Perception  Good         
     Life Rating  101%       Melee       Very Good    
     Base HP       21        Archery     Fair         
     Experience   150%       Infravision 50'
     
   
-Fairy
+Fairies
   Shadow-Fairy
   Shadow-fairies are one of the several fairy races. They have wings, 
   and can fly over traps that may open up beneath them. Being creatures 
@@ -298,7 +297,7 @@ Fairy
     Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Superb       
     Constitution  -1        Searching   Heroic       
-    Charisma      -3        Perception  Excellent    
+    Charisma      +0        Perception  Superb       
     Life Rating   91%       Melee       Bad          
     Base HP       13        Archery     Fair         
     Experience   140%       Infravision 40'
@@ -318,20 +317,20 @@ Fairy
     Wisdom        +3        Save        Good         
     Dexterity     +3        Stealth     Excellent    
     Constitution  -2        Searching   Heroic       
-    Charisma      -2        Perception  Fair         
+    Charisma      +2        Perception  Good         
     Life Rating   92%       Melee       Bad          
     Base HP       14        Archery     Fair         
     Experience   135%       Infravision 40'
     
   
-Angel/Demon
+Archons/Demons
   Archon
-  Archons are a higher class of angels. They are good at all skills, 
-  and are strong, wise, and a favorite with any people. They are able 
-  to see the unseen, and their wings allow them to safely fly over 
-  traps and other dangerous places. However, belonging to a higher 
-  plane as they do, the experiences of this world do not leave a strong 
-  impression on them and they gain levels slowly.
+  Archons are winged humanoids from the Astral Plane. They are good at 
+  all skills, and are strong, wise, and a favorite with any people. 
+  They are able to see the unseen, and their wings allow them to safely 
+  fly over traps and other dangerous places. However, belonging to a 
+  higher plane as they do, the experiences of this world do not leave a 
+  strong impression on them and they gain levels slowly.
   
     Stats                   Skills
     Strength      +2        Disarming   Fair         
@@ -339,7 +338,7 @@ Angel/Demon
     Wisdom        +4        Save        Good         
     Dexterity     +1        Stealth     Good         
     Constitution  +2        Searching   Good         
-    Charisma      +3        Perception  Fair         
+    Charisma      +3        Perception  Good         
     Life Rating  103%       Melee       Very Good    
     Base HP       22        Archery     Good         
     Experience   200%       Infravision 30'
@@ -359,7 +358,7 @@ Angel/Demon
     Wisdom       -10        Save        Excellent    
     Dexterity     +2        Stealth     Bad          
     Constitution  +3        Searching   Fair         
-    Charisma      +2        Perception  Poor         
+    Charisma      -5        Perception  Fair         
     Life Rating  106%       Melee       Superb       
     Base HP       24        Archery     Fair         
     Experience   180%       Infravision 50'
@@ -377,13 +376,13 @@ Angel/Demon
     Wisdom        -1        Save        Poor         
     Dexterity     +1        Stealth     Good         
     Constitution  +2        Searching   Poor         
-    Charisma      -1        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating   99%       Melee       Good         
     Base HP       19        Archery     Fair         
     Experience    90%       Infravision 30'
     
   
-Orc/Troll/Giant
+Orcs/Trolls/Giants
   Cyclops
   With but one eye, a Cyclops can see more than many with two eyes. 
   They are headstrong, and loud noises bother them very little. They 
@@ -397,7 +396,7 @@ Orc/Troll/Giant
     Wisdom        -2        Save        Poor         
     Dexterity     -3        Stealth     Bad          
     Constitution  +4        Searching   Poor         
-    Charisma      -1        Perception  Very Bad     
+    Charisma      -3        Perception  Bad          
     Life Rating  108%       Melee       Superb       
     Base HP       24        Archery     Very Good    
     Experience   155%       Infravision 10'
@@ -414,7 +413,7 @@ Orc/Troll/Giant
     Wisdom        -2        Save        Poor         
     Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Very Bad     
+    Charisma      -2        Perception  Bad          
     Life Rating  108%       Melee       Superb       
     Base HP       26        Archery     Fair         
     Experience   150%       Infravision 30'
@@ -433,7 +432,7 @@ Orc/Troll/Giant
     Wisdom        +0        Save        Poor         
     Dexterity     +0        Stealth     Bad          
     Constitution  +1        Searching   Poor         
-    Charisma      -1        Perception  Very Bad     
+    Charisma      -2        Perception  Bad          
     Life Rating  103%       Melee       Superb       
     Base HP       20        Archery     Poor         
     Experience   110%       Infravision 30'
@@ -442,9 +441,9 @@ Orc/Troll/Giant
   Half-mortal descendants of the mighty titans, these immensely 
   powerful creatures put almost any other race to shame. They may lack 
   the fascinating special powers some other races have, but their 
-  enhanced attributes more than make up for that. They learn to 
-  estimate the strengths of their foes, and their love for law and 
-  order makes them resistant to the effects of Chaos.
+  enhanced attributes more than make up for that. They learn to speak 
+  words of power to their foes, and their love for law and order makes 
+  them resistant to the effects of Chaos.
   
     Stats                   Skills
     Strength      +5        Disarming   Bad          
@@ -452,7 +451,7 @@ Orc/Troll/Giant
     Wisdom        +2        Save        Fair         
     Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Fair         
-    Charisma      +3        Perception  Poor         
+    Charisma      +1        Perception  Fair         
     Life Rating  110%       Melee       Superb       
     Base HP       28        Archery     Fair         
     Experience   200%       Infravision 0'
@@ -472,7 +471,7 @@ Orc/Troll/Giant
     Wisdom        -1        Save        Poor         
     Dexterity     -3        Stealth     Bad          
     Constitution  +3        Searching   Poor         
-    Charisma      -2        Perception  Very Bad     
+    Charisma      -3        Perception  Bad          
     Life Rating  107%       Melee       Superb       
     Base HP       25        Archery     Poor         
     Experience   150%       Infravision 30'
@@ -488,7 +487,7 @@ Orc/Troll/Giant
     Wisdom        +0        Save        Poor         
     Dexterity     +1        Stealth     Poor         
     Constitution  +0        Searching   Fair         
-    Charisma      -2        Perception  Poor         
+    Charisma      -2        Perception  Fair         
     Life Rating   98%       Melee       Very Good    
     Base HP       19        Archery     Good         
     Experience    90%       Infravision 30'
@@ -506,7 +505,7 @@ Orc/Troll/Giant
     Wisdom        -1        Save        Poor         
     Dexterity     -1        Stealth     Bad          
     Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Very Bad     
+    Charisma      -2        Perception  Bad          
     Life Rating  106%       Melee       Superb       
     Base HP       23        Archery     Poor         
     Experience   140%       Infravision 0'
@@ -524,13 +523,13 @@ Orc/Troll/Giant
     Wisdom        -2        Save        Poor         
     Dexterity     -2        Stealth     Good         
     Constitution  -2        Searching   Fair         
-    Charisma      -5        Perception  Bad          
+    Charisma      -5        Perception  Poor         
     Life Rating   85%       Melee       Bad          
     Base HP       10        Archery     Poor         
     Experience    45%       Infravision 20'
     
   
-Shapeshifter
+Shapeshifters
   Beorning
   Beornings are a hardy, northern race of men, renowned for their 
   ability to assume the shape of a bear. Bear-formed Beornings greatly 
@@ -549,7 +548,7 @@ Shapeshifter
     Wisdom        +0        Save        Fair         
     Dexterity     -1        Stealth     Poor         
     Constitution  +1        Searching   Fair         
-    Charisma      -1        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating  104%       Melee       Very Good    
     Base HP       27        Archery     Poor         
     Experience   140%       Infravision 50'
@@ -566,7 +565,7 @@ Shapeshifter
     Wisdom        -3        Save        Very Bad     
     Dexterity     -3        Stealth     Superb       
     Constitution  -3        Searching   Very Bad     
-    Charisma      -3        Perception  Fair         
+    Charisma      -3        Perception  Good         
     Life Rating   85%       Melee       Very Bad     
     Base HP       12        Archery     Very Bad     
     Experience   150%       Infravision 0'
@@ -588,13 +587,13 @@ Shapeshifter
     Wisdom        +0        Save        Fair         
     Dexterity     +0        Stealth     Good         
     Constitution  +1        Searching   Excellent    
-    Charisma      +0        Perception  Fair         
+    Charisma      +0        Perception  Good         
     Life Rating  103%       Melee       Fair         
     Base HP       27        Archery     Fair         
     Experience   140%       Infravision 50'
     
   
-Undead
+The Undead
   Einheri
   Dead heroes returning to the mortal world for one last fight, 
   Einherjar are highly skilled in hand-to-hand combat and start with 
@@ -612,7 +611,7 @@ Undead
     Wisdom        +0        Save        Good         
     Dexterity     +2        Stealth     Poor         
     Constitution  +1        Searching   Superb       
-    Charisma      +1        Perception  Fair         
+    Charisma      +1        Perception  Good         
     Life Rating  113%       Melee       Superb       
     Base HP       44        Archery     Good         
     Experience   160%       Infravision 30'
@@ -634,7 +633,7 @@ Undead
     Wisdom        -2        Save        Fair         
     Dexterity     +0        Stealth     Poor         
     Constitution  +1        Searching   Poor         
-    Charisma      +1        Perception  Poor         
+    Charisma      -2        Perception  Fair         
     Life Rating  100%       Melee       Very Good    
     Base HP       21        Archery     Fair         
     Experience   115%       Infravision 20'
@@ -656,7 +655,7 @@ Undead
     Wisdom        +2        Save        Very Good    
     Dexterity     +2        Stealth     Superb       
     Constitution  -2        Searching   Excellent    
-    Charisma      -3        Perception  Very Good    
+    Charisma      -3        Perception  Excellent    
     Life Rating   90%       Melee       Bad          
     Base HP       13        Archery     Poor         
     Experience   250%       Infravision 50'
@@ -678,7 +677,7 @@ Undead
     Wisdom        -1        Save        Good         
     Dexterity     -1        Stealth     Excellent    
     Constitution  +1        Searching   Fair         
-    Charisma      +2        Perception  Poor         
+    Charisma      +2        Perception  Fair         
     Life Rating  102%       Melee       Good         
     Base HP       22        Archery     Fair         
     Experience   200%       Infravision 50'
@@ -696,13 +695,13 @@ Undead
     Wisdom        -6        Save        Fair         
     Dexterity     +1        Stealth     Poor         
     Constitution  +4        Searching   Poor         
-    Charisma      -3        Perception  Very Bad     
+    Charisma      -3        Perception  Bad          
     Life Rating  108%       Melee       Excellent    
     Base HP       24        Archery     Fair         
     Experience   180%       Infravision 20'
     
   
-Other
+Other Races
   Android
   An android is an artificial creation with a body of machinery. Their 
   intelligence almost matches that of organic races, though their 
@@ -724,7 +723,7 @@ Other
     Wisdom        -5        Save        Fair         
     Dexterity     +1        Stealth     Bad          
     Constitution  +3        Searching   Good         
-    Charisma      +0        Perception  Very Good    
+    Charisma      -2        Perception  Excellent    
     Life Rating  108%       Melee       Superb       
     Base HP       26        Archery     Good         
     Experience   200%       Infravision 0'
@@ -748,7 +747,7 @@ Other
     Wisdom        -1        Save        Poor         
     Dexterity     -1        Stealth     Poor         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Very Bad     
+    Charisma      -2        Perception  Bad          
     Life Rating  102%       Melee       Excellent    
     Base HP       22        Archery     Good         
     Experience   150%       Infravision 0'
@@ -766,7 +765,7 @@ Other
     Wisdom        -2        Save        Poor         
     Dexterity     -2        Stealth     Fair         
     Constitution  +0        Searching   Fair         
-    Charisma      -2        Perception  Fair         
+    Charisma      -2        Perception  Good         
     Life Rating   95%       Melee       Poor         
     Base HP       15        Archery     Poor         
     Experience    80%       Infravision 10'
@@ -787,7 +786,7 @@ Other
     Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Good         
     Constitution  +1        Searching   Good         
-    Charisma      +0        Perception  Very Bad     
+    Charisma      +1        Perception  Bad          
     Life Rating  103%       Melee       Very Good    
     Base HP       22        Archery     Good         
     Experience   190%       Infravision 0'
@@ -800,7 +799,7 @@ Other
   and resist cold instead. All draconians levitate. In addition, when 
   they mature enough, they may choose a special draconian power.
   
-  See [f] for more details on draconians.
+  See [e] for more details on draconians.
   
     Stats                   Skills
     Strength      +3        Disarming   Poor         
@@ -808,7 +807,7 @@ Other
     Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Poor         
     Constitution  +2        Searching   Fair         
-    Charisma      +2        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating  104%       Melee       Excellent    
     Base HP       22        Archery     Fair         
     Experience   190%       Infravision 20'
@@ -828,7 +827,7 @@ Other
     Wisdom        +2        Save        Fair         
     Dexterity     -4        Stealth     Poor         
     Constitution  +3        Searching   Fair         
-    Charisma      +0        Perception  Poor         
+    Charisma      +0        Perception  Fair         
     Life Rating  105%       Melee       Excellent    
     Base HP       25        Archery     Fair         
     Experience   135%       Infravision 0'
@@ -851,7 +850,7 @@ Other
     Wisdom        -5        Save        Good         
     Dexterity     -2        Stealth     Poor         
     Constitution  +4        Searching   Poor         
-    Charisma      +0        Perception  Poor         
+    Charisma      -2        Perception  Fair         
     Life Rating  105%       Melee       Superb       
     Base HP       23        Archery     Fair         
     Experience   185%       Infravision 40'
@@ -870,7 +869,7 @@ Other
     Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  +2        Searching   Poor         
-    Charisma      +1        Perception  Fair         
+    Charisma      -1        Perception  Good         
     Life Rating  105%       Melee       Good         
     Base HP       23        Archery     Good         
     Experience   170%       Infravision 20'
@@ -882,7 +881,7 @@ Other
   but renders them resistant to being confused. Due to their unearthly 
   calmness and serenity, Kutars are extremely stealthy. They learn the 
   special ability to expand their body horizontally; this increases 
-  their armour class, but renders them vulnerable to curses.
+  their armor class, but renders them vulnerable to curses.
   
     Stats                   Skills
     Strength      +0        Disarming   Poor         
@@ -890,7 +889,7 @@ Other
     Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Superb       
     Constitution  +2        Searching   Poor         
-    Charisma      +2        Perception  Bad          
+    Charisma      +3        Perception  Poor         
     Life Rating  102%       Melee       Fair         
     Base HP       21        Archery     Fair         
     Experience   175%       Infravision 0'
@@ -909,7 +908,7 @@ Other
     Wisdom        +4        Save        Good         
     Dexterity     +0        Stealth     Good         
     Constitution  -2        Searching   Excellent    
-    Charisma      -1        Perception  Good         
+    Charisma      -3        Perception  Very Good    
     Life Rating   97%       Melee       Bad          
     Base HP       18        Archery     Poor         
     Experience   150%       Infravision 40'
@@ -930,7 +929,7 @@ Other
     Wisdom        -2        Save        Fair         
     Dexterity     -4        Stealth     Good         
     Constitution  +5        Searching   Poor         
-    Charisma      +0        Perception  Very Bad     
+    Charisma      -1        Perception  Bad          
     Life Rating  108%       Melee       Superb       
     Base HP       26        Archery     Poor         
     Experience   175%       Infravision 20'
@@ -948,62 +947,85 @@ Other
     Wisdom        -2        Save        Good         
     Dexterity     +1        Stealth     Excellent    
     Constitution  -2        Searching   Excellent    
-    Charisma      -4        Perception  Excellent    
+    Charisma      -4        Perception  Superb       
     Life Rating   92%       Melee       Poor         
     Base HP       14        Archery     Fair         
     Experience    70%       Infravision 20'
+    
+  Icky thing
+  Icky things are smallish, slimy, icky, blobby creatures. Theyare 
+  despised and ignored by other creatures, this is a blessing 
+  indisguise as being ignored means they are stealthy. Icky things are 
+  fairly weak overall but their slimy coatings protectthem from poisons 
+  and eventually acid.  Icky things a good friendsof molds and other 
+  dungeon growths and even allow them to grow onthemselves in a 
+  symbiotic relationship (in game turns, they can 'ride'immobile 
+  creatures, but in reverse as the icky thing walks aroundinstead of 
+  the mount).
+  
+    Stats                   Skills
+    Strength      -1        Disarming   Poor         
+    Intelligence  -1        Device      Poor         
+    Wisdom        -1        Save        Fair         
+    Dexterity     -1        Stealth     Good         
+    Constitution  -1        Searching   Excellent    
+    Charisma      -2        Perception  Good         
+    Life Rating   90%       Melee       Good         
+    Base HP       10        Archery     Fair         
+    Experience    75%       Infravision 30'
     
   
 Table 1 - Race Statistic Bonus Table
 
              STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
-Amberite      +1   +2   +2   +2   +3   +0  100%  +20  190%  100%
-Barbarian     +3   -2   -1   +1   +2   +2  103%  +22  135%  120%
+Amberite      +1   +2   +2   +2   +3   +2  100%  +20  190%  100%
+Barbarian     +3   -2   -1   +1   +2   +0  103%  +22  135%  120%
 Demigod       +1   +1   +1   +1   +1   +1  100%  +20  180%  100%
-Dunadan       +1   +2   +2   +2   +3   +0  100%  +20  160%  100%
+Dunadan       +1   +2   +2   +2   +3   +1  100%  +20  160%  100%
 Human         +0   +0   +0   +0   +0   +0  100%  +20  100%  100%
-Igor          -3   +0   -1   +0   -1   -1   97%  +15  145%  110%
-Dark-Elf      -1   +3   +2   +2   -2   +3   97%  +18  155%  120%
-High-Elf      +1   +3   -1   +3   +1   +1   99%  +19  190%   90%
+Igor          -3   +0   -1   -1   -1   -1   97%  +15  145%  110%
+Dark-Elf      -1   +3   +2   +2   -2   +1   97%  +18  155%  120%
+High-Elf      +1   +3   -1   +3   +1   +3   99%  +19  190%   90%
 Tomte         -4   +2   +2   +3   -3   +0   94%  +13  150%  100%
-Wood-Elf      -1   +1   +2   +1   -1   +1   97%  +16  125%   95%
-Dwarf         +2   -2   +2   -2   +2   +1  103%  +22  135%  115%
+Wood-Elf      -1   +1   +2   +1   -1   +2   97%  +16  125%   95%
+Dwarf         +2   -2   +2   -2   +2   -1  103%  +22  135%  115%
 Gnome         -1   +2   -1   +2   +1   -1   95%  +16  115%  115%
 Hobbit        -2   +1   +1   +3   +2   +1   92%  +14  120%  100%
 Nibelung      +0   +1   +0   +1   +1   -2  101%  +21  150%  115%
-Shadow-Fairy  -2   +2   +2   +1   -1   -3   91%  +13  140%  110%
-Sprite        -4   +3   +3   +3   -2   -2   92%  +14  135%   90%
+Shadow-Fairy  -2   +2   +2   +1   -1   +0   91%  +13  140%  110%
+Sprite        -4   +3   +3   +3   -2   +2   92%  +14  135%   90%
 Archon        +2   +0   +4   +1   +2   +3  103%  +22  200%   90%
-Balrog        +4   +2  -10   +2   +3   +2  106%  +24  180%  140%
+Balrog        +4   +2  -10   +2   +3   -5  106%  +24  180%  140%
 Imp           +0   -1   -1   +1   +2   -1   99%  +19   90%  120%
-Cyclops       +4   -3   -2   -3   +4   -1  108%  +24  155%  135%
-Half-Giant    +4   -2   -2   -2   +3   +0  108%  +26  150%  125%
-Half-Orc      +2   -1   +0   +0   +1   -1  103%  +20  110%  120%
-Half-Titan    +5   +1   +2   -2   +3   +3  110%  +28  200%   90%
-Half-Troll    +4   -4   -1   -3   +3   -2  107%  +25  150%  135%
+Cyclops       +4   -3   -2   -3   +4   -3  108%  +24  155%  135%
+Half-Giant    +4   -2   -2   -2   +3   -2  108%  +26  150%  125%
+Half-Orc      +2   -1   +0   +0   +1   -2  103%  +20  110%  120%
+Half-Titan    +5   +1   +2   -2   +3   +1  110%  +28  200%   90%
+Half-Troll    +4   -4   -1   -3   +3   -3  107%  +25  150%  135%
 Kobold        +1   -1   +0   +1   +0   -2   98%  +19   90%  120%
-Ogre          +3   +0   -1   -1   +3   +0  106%  +23  140%  125%
+Ogre          +3   +0   -1   -1   +3   -2  106%  +23  140%  125%
 Snotling      -2   -2   -2   -2   -2   -5   85%  +10   45%  125%
 Beorning      +1   +0   +0   -1   +1   -1  104%  +27  140%  105%
 Doppelganger  -3   -3   -3   -3   -3   -3   85%  +12  150%  150%
 Werewolf      +1   +0   +0   +0   +1   +0  103%  +27  140%  100%
 Einheri       +2   +0   +0   +2   +1   +1  113%  +44  160%  100%
-Skeleton      +0   +1   -2   +0   +1   +1  100%  +21  115%  125%
+Skeleton      +0   +1   -2   +0   +1   -2  100%  +21  115%  125%
 Spectre       -5   +4   +2   +2   -2   -3   90%  +13  250%  135%
 Vampire       +3   +3   -1   -1   +1   +2  102%  +22  200%  130%
 Zombie        +2   -6   -6   +1   +4   -3  108%  +24  180%  140%
-Android       +3   -1   -5   +1   +3   +0  108%  +26  200%  120%
-Beastman      +2   -2   -1   -1   +2   +1  102%  +22  150%  130%
+Android       +3   -1   -5   +1   +3   -2  108%  +26  200%  120%
+Beastman      +2   -2   -1   -1   +2   -2  102%  +22  150%  130%
 Boit          -1   -2   -2   -2   +0   -2   95%  +15   80%  105%
-Centaur       +3   -2   +1   +2   +1   +0  103%  +22  190%   95%
-Draconian     +3   +0   +0   +1   +2   +2  104%  +22  190%  115%
+Centaur       +3   -2   +1   +2   +1   +1  103%  +22  190%   95%
+Draconian     +3   +0   +0   +1   +2   -1  104%  +22  190%  115%
 Ent           +3   +0   +2   -4   +3   +0  105%  +25  135%   95%
-Golem         +4   -5   -5   -2   +4   +0  105%  +23  185%  120%
-Klackon       +2   -1   -1   +1   +2   +1  105%  +23  170%  115%
-Kutar         +0   -1   -1   +1   +2   +2  102%  +21  175%   95%
-Mindflayer    -3   +4   +4   +0   -2   -1   97%  +18  150%  115%
-Tonberry      +4   +0   -2   -4   +5   +0  108%  +26  175%  115%
+Golem         +4   -5   -5   -2   +4   -2  105%  +23  185%  120%
+Klackon       +2   -1   -1   +1   +2   -1  105%  +23  170%  115%
+Kutar         +0   -1   -1   +1   +2   +3  102%  +21  175%   95%
+Mindflayer    -3   +4   +4   +0   -2   -3   97%  +18  150%  115%
+Tonberry      +4   +0   -2   -4   +5   -1  108%  +26  175%  115%
 Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
+Icky thing    -1   -1   -1   -1   -1   -2   90%  +10   75%  130%
 
 
 Table 2 - Race Skill Bonus Table I
@@ -1056,61 +1078,63 @@ Kutar        Poor          Fair          Fair          Superb
 Mindflayer   Excellent     Excellent     Good          Good         
 Tonberry     Bad           Poor          Fair          Good         
 Yeek         Fair          Fair          Good          Excellent    
+Icky thing   Poor          Poor          Fair          Good         
 
 
 Table 3 - Race Skill Bonus Table II
 
              Searching     Perception    Melee         Archery       Infra
-Amberite     Good          Good          Excellent     Good             0'
-Barbarian    Fair          Bad           Excellent     Good             0'
-Demigod      Fair          Bad           Very Good     Good             0'
-Dunadan      Good          Good          Excellent     Good             0'
-Human        Fair          Fair          Fair          Fair             0'
-Igor         Fair          Fair          Very Bad      Bad              0'
-Dark-Elf     Superb        Good          Poor          Good            50'
-High-Elf     Good          Very Good     Very Good     Excellent       40'
-Tomte        Heroic        Fair          Fair          Poor            40'
-Wood-Elf     Superb        Good          Poor          Excellent       30'
-Dwarf        Superb        Fair          Excellent     Fair            50'
-Gnome        Excellent     Good          Poor          Good            40'
-Hobbit       Heroic        Excellent     Bad           Very Good       40'
-Nibelung     Excellent     Fair          Very Good     Fair            50'
-Shadow-Fairy Heroic        Excellent     Bad           Fair            40'
-Sprite       Heroic        Fair          Bad           Fair            40'
-Archon       Good          Fair          Very Good     Good            30'
-Balrog       Fair          Poor          Superb        Fair            50'
-Imp          Poor          Fair          Good          Fair            30'
-Cyclops      Poor          Very Bad      Superb        Very Good       10'
-Half-Giant   Poor          Very Bad      Superb        Fair            30'
-Half-Orc     Poor          Very Bad      Superb        Poor            30'
-Half-Titan   Fair          Poor          Superb        Fair             0'
-Half-Troll   Poor          Very Bad      Superb        Poor            30'
-Kobold       Fair          Poor          Very Good     Good            30'
-Ogre         Poor          Very Bad      Superb        Poor             0'
-Snotling     Fair          Bad           Bad           Poor            20'
-Beorning     Fair          Fair          Very Good     Poor            50'
-Doppelganger Very Bad      Fair          Very Bad      Very Bad         0'
-Werewolf     Excellent     Fair          Fair          Fair            50'
-Einheri      Superb        Fair          Superb        Good            30'
-Skeleton     Poor          Poor          Very Good     Fair            20'
-Spectre      Excellent     Very Good     Bad           Poor            50'
-Vampire      Fair          Poor          Good          Fair            50'
-Zombie       Poor          Very Bad      Excellent     Fair            20'
-Android      Good          Very Good     Superb        Good             0'
-Beastman     Poor          Very Bad      Excellent     Good             0'
-Boit         Fair          Fair          Poor          Poor            10'
-Centaur      Good          Very Bad      Very Good     Good             0'
-Draconian    Fair          Fair          Excellent     Fair            20'
-Ent          Fair          Poor          Excellent     Fair             0'
-Golem        Poor          Poor          Superb        Fair            40'
-Klackon      Poor          Fair          Good          Good            20'
-Kutar        Poor          Bad           Fair          Fair             0'
-Mindflayer   Excellent     Good          Bad           Poor            40'
-Tonberry     Poor          Very Bad      Superb        Poor            20'
-Yeek         Excellent     Excellent     Poor          Fair            20'
+Amberite     Good          Excellent     Excellent     Good             0'
+Barbarian    Fair          Poor          Excellent     Good             0'
+Demigod      Fair          Poor          Very Good     Good             0'
+Dunadan      Good          Excellent     Excellent     Good             0'
+Human        Fair          Good          Fair          Fair             0'
+Igor         Fair          Good          Very Bad      Bad              0'
+Dark-Elf     Superb        Very Good     Poor          Good            50'
+High-Elf     Good          Excellent     Very Good     Excellent       40'
+Tomte        Heroic        Good          Fair          Poor            40'
+Wood-Elf     Superb        Very Good     Poor          Excellent       30'
+Dwarf        Superb        Good          Excellent     Fair            50'
+Gnome        Excellent     Excellent     Poor          Good            40'
+Hobbit       Heroic        Superb        Bad           Very Good       40'
+Nibelung     Excellent     Good          Very Good     Fair            50'
+Shadow-Fairy Heroic        Superb        Bad           Fair            40'
+Sprite       Heroic        Good          Bad           Fair            40'
+Archon       Good          Good          Very Good     Good            30'
+Balrog       Fair          Fair          Superb        Fair            50'
+Imp          Poor          Good          Good          Fair            30'
+Cyclops      Poor          Bad           Superb        Very Good       10'
+Half-Giant   Poor          Bad           Superb        Fair            30'
+Half-Orc     Poor          Bad           Superb        Poor            30'
+Half-Titan   Fair          Fair          Superb        Fair             0'
+Half-Troll   Poor          Bad           Superb        Poor            30'
+Kobold       Fair          Fair          Very Good     Good            30'
+Ogre         Poor          Bad           Superb        Poor             0'
+Snotling     Fair          Poor          Bad           Poor            20'
+Beorning     Fair          Good          Very Good     Poor            50'
+Doppelganger Very Bad      Good          Very Bad      Very Bad         0'
+Werewolf     Excellent     Good          Fair          Fair            50'
+Einheri      Superb        Good          Superb        Good            30'
+Skeleton     Poor          Fair          Very Good     Fair            20'
+Spectre      Excellent     Excellent     Bad           Poor            50'
+Vampire      Fair          Fair          Good          Fair            50'
+Zombie       Poor          Bad           Excellent     Fair            20'
+Android      Good          Excellent     Superb        Good             0'
+Beastman     Poor          Bad           Excellent     Good             0'
+Boit         Fair          Good          Poor          Poor            10'
+Centaur      Good          Bad           Very Good     Good             0'
+Draconian    Fair          Good          Excellent     Fair            20'
+Ent          Fair          Fair          Excellent     Fair             0'
+Golem        Poor          Fair          Superb        Fair            40'
+Klackon      Poor          Good          Good          Good            20'
+Kutar        Poor          Poor          Fair          Fair             0'
+Mindflayer   Excellent     Very Good     Bad           Poor            40'
+Tonberry     Poor          Bad           Superb        Poor            20'
+Yeek         Excellent     Superb        Poor          Fair            20'
+Icky thing   Excellent     Good          Good          Fair            30'
 
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

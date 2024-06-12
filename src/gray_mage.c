@@ -246,7 +246,7 @@ static void _birth(void)
     object_type forge;
     int i;
 
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+    object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
     py_birth_obj(&forge);
 
     if (p_ptr->psubclass == GRAY_MAGE_GOOD)
@@ -326,11 +326,18 @@ static void _save_player(savefile_ptr file)
     savefile_write_u16b(file, 0xFFFF); /* sentinel */
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_INT, { 25, 1, 90, eat_magic_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 25;
+    spell->cost = 1;
+    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_INT]);
+    spell->fn = eat_magic_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -684,8 +691,7 @@ class_t *gray_mage_get_class(int psubclass)
         me.exp = 130;
         me.pets = 30;
         me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
-                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG |
-                   CLASS_REGEN_MANA;
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
 
         me.caster_info = _caster_info;
         me.character_dump = _character_dump;

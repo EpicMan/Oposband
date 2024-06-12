@@ -35,7 +35,7 @@ static void _calc_innate_attacks(void)
         break;
     }
 
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -90,7 +90,14 @@ static void _super_attack_spell(int cmd, variant *res)
         break;
     case SPELL_ON_BROWSE:
     {
-        display_weapon_info_aux(PY_POWER_ATTACK);
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        display_weapon_mode = PY_POWER_ATTACK;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
     }
@@ -104,7 +111,7 @@ static power_info _powers[] =
 {
     { A_STR, { 10, 10, 30, berserk_spell} },
     { A_STR, { 22, 20, 50, _super_attack_spell} },
-//    { A_CON, { 28, 20, 50, resistance_spell} },
+    { A_CON, { 28, 20, 50, resistance_spell} },
     {    -1, { -1, -1, -1, NULL}}
 };
 
@@ -130,25 +137,22 @@ static power_info _troll_king_powers[] =
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static power_info *_get_powers(void)
+static int _get_powers(spell_info* spells, int max) 
 {
-    static power_info spells[MAX_SPELLS];
-    int max = MAX_SPELLS;
-    int ct = get_powers_aux(spells, max, _powers, FALSE);
+    int ct = get_powers_aux(spells, max, _powers);
     switch (p_ptr->current_r_idx)
     {
     case MON_AKLASH: 
-        ct += get_powers_aux(spells + ct, max - ct, _aklash_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _aklash_powers);
         break;
     case MON_STORM_TROLL: 
-        ct += get_powers_aux(spells + ct, max - ct, _storm_troll_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _storm_troll_powers);
         break;
     case MON_TROLL_KING: 
-        ct += get_powers_aux(spells + ct, max - ct, _troll_king_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _troll_king_powers);
         break;
     }
-    spells[ct].spell.fn = NULL;
-    return spells;
+    return ct;
 }
 
 /******************************************************************************
@@ -167,14 +171,14 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 7;
+    forge.to_h = 7;
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_CLUB));
     forge.weight = 100;
     forge.dd = 3;
     forge.ds = 4;
-    forge.to_d = 7;
+    forge.to_h = 7;
     py_birth_obj(&forge);
 
     py_birth_food();
@@ -453,7 +457,7 @@ race_t *mon_troll_get_race(int psubrace)
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_innate_attacks = _calc_innate_attacks;
-        me.get_powers_fn = _get_powers;
+        me.get_powers = _get_powers;
         me.get_flags = _get_flags;
         me.gain_level = _gain_level;
         me.birth = _birth;

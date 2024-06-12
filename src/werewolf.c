@@ -133,7 +133,7 @@ void _werewolf_calc_innate_attacks(void)
 
         a.weight = 100;
         calc_innate_blows(&a, 300);
-        a.msg = "You claw.";
+        a.msg = "You claw";
         a.name = "Claw";
 
         if (psion_combat()) psion_combat_innate_blows(&a);
@@ -153,7 +153,7 @@ void _werewolf_calc_innate_attacks(void)
         a.effect[0] = GF_MISSILE;
 
         calc_innate_blows(&a, 300);
-        a.msg = "You bite.";
+        a.msg = "You bite";
         a.name = "Bite";
         if (psion_combat()) psion_combat_innate_blows(&a);
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -197,24 +197,25 @@ void werewolf_change_shape_spell(int cmd, variant *res)
     }
 }
 
+/**********************************************************************
+ * Hounds: Evolution is tier based with a random choice from each tier.
+ **********************************************************************/
 static power_info _wolfpowers[] = {
-    { A_NONE,{  1,  0,  0, werewolf_change_shape_spell}},
     { A_DEX, {  1,  1, 30, hound_sniff_spell } },
     { A_DEX, { 10,  0,  0, hound_stalk_spell}},
     { A_DEX, { 25, 18, 30, hound_leap_spell}},
     {    -1, { -1, -1, -1, NULL}}
 };
-static power_info _manpowers[] = {
-    { A_NONE, {  1,  0,  0, werewolf_change_shape_spell}},
+static power_info _default_power[] = {
+    { A_DEX, {  1,  0,  0, werewolf_change_shape_spell}},
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static power_info *_get_powers(void)
-{
+static int _get_powers(spell_info* spells, int max) {
+    int ct = get_powers_aux(spells, max, _default_power);
     if (_werewolf_form == WEREWOLF_FORM_WOLF)
-        return _wolfpowers;
-    else
-        return _manpowers;
+        ct += get_powers_aux(spells + ct, max - ct, _wolfpowers);
+    return ct;
 }
 static void _calc_bonuses(void) {
     int to_a = py_prorata_level_aux(25, 1, 2, 2);
@@ -520,7 +521,7 @@ race_t *werewolf_get_race(void)
             me.exp = 140;
             me.base_hp = 27;
             me.calc_bonuses = _calc_bonuses;
-            me.get_powers_fn = _get_powers;
+            me.get_powers = _get_powers;
             me.get_flags = _get_flags;
             me.birth = _birth;
             me.boss_r_idx = MON_CARCHAROTH;
@@ -558,7 +559,7 @@ race_t *werewolf_get_race(void)
             me.stats[A_WIS] =  -1;
             me.stats[A_DEX] =  0;
             me.stats[A_CON] =  2;
-            me.stats[A_CHR] =  -1;
+            me.stats[A_CHR] =  -2;
             me.shop_adjust = 120;
 
             me.life = 105;

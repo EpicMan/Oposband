@@ -130,7 +130,7 @@ void _beorning_calc_innate_attacks(void)
 
         a.weight = 100;
         calc_innate_blows(&a, 386 + (l * 2));
-        a.msg = "You claw.";
+        a.msg = "You claw";
         a.name = "Claw";
 
         if (psion_combat()) psion_combat_innate_blows(&a);
@@ -164,11 +164,7 @@ void beorning_change_shape_spell(int cmd, variant *res)
         }
         _beorning_form = 1 - _beorning_form;
         _beorning_equip_on_change_form();
-        if (_beorning_form == BEORNING_FORM_BEAR)
-        {
-            msg_format("You turn into a bear!");
-            stop_mouth();
-        }
+        if (_beorning_form == BEORNING_FORM_BEAR) msg_format("You turn into a bear!");
         else msg_format("You turn into a human!");
         var_set_bool(res, TRUE);
         handle_stuff();
@@ -308,14 +304,11 @@ static power_info _default_power[] = {
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static power_info *_beorning_powers(void)
-{
-    static power_info spells[8] = {0};
-    int max = 7;
-    int ct = get_powers_aux(spells, max, _default_power, FALSE);
+static int _get_powers(spell_info* spells, int max) {
+    int ct = get_powers_aux(spells, max, _default_power);
     if (_beorning_form == BEORNING_FORM_BEAR)
-        ct += get_powers_aux(spells + ct, max - ct, _bear_powers, FALSE);
-    else ct += get_powers_aux(spells + ct, max - ct, _man_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _bear_powers);
+    else ct += get_powers_aux(spells + ct, max - ct, _man_powers);
     if ((_beorning_form == BEORNING_FORM_BEAR) && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_DUELIST))
     {
         static power_info _raging_swipe[2] = /* ugly but, hey, it works */
@@ -323,12 +316,10 @@ static power_info *_beorning_powers(void)
             {A_DEX, {42, 25, 30, _raging_swipe_spell}},
             {-1,    {-1, -1, -1, NULL}},
         };
-        ct += get_powers_aux(spells + ct, max - ct, _raging_swipe, FALSE);
+        if (p_ptr->lev >= 42) ct += get_powers_aux(spells + ct, max - ct, _raging_swipe);
     }
-    spells[ct].spell.fn = NULL;
-    return spells;
+    return ct;
 }
-
 static void _calc_bonuses(void)
 {
     int to_a = py_prorata_level_aux(80, 1, 1, 1) + 15;
@@ -464,8 +455,8 @@ race_t *beorning_get_race(void)
             me.infra = 5;
             me.exp = 140;
             me.calc_bonuses = _calc_bonuses;
+            me.get_powers = _get_powers;
             me.get_flags = _get_flags;
-            me.get_powers_fn = _beorning_powers;
             me.birth = _birth;
             me.load_player = _beorning_load;
             me.save_player = _beorning_save;

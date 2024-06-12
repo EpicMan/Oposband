@@ -300,7 +300,6 @@ bool mon_hook_dungeon(int r_idx)
         dungeon_info_type *d_ptr = &d_info[dungeon_type];
         if (no_wilderness && (r_ptr->flags1 & RF1_UNIQUE)) return TRUE;
         if ((d_ptr->mflags8 & RF8_WILD_MOUNTAIN) && (r_ptr->flags8 & RF8_WILD_MOUNTAIN)) return TRUE;
-        if ((d_ptr->mflags8 & RF8_WILD_SNOW) && (r_ptr->flags8 & RF8_WILD_SNOW)) return TRUE;
         return FALSE;
     }
     else
@@ -395,25 +394,6 @@ static bool mon_hook_mountain(int r_idx)
         return FALSE;
 }
 
-static bool mon_hook_snow(int r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
-
-    if (r_ptr->flags8 & RF8_WILD_SNOW)
-        return _mon_hook_wild_daytime_check(r_idx);
-    else
-        return FALSE;
-}
-
-static bool mon_hook_ice(int r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
-
-    if ((r_ptr->flags8 & RF8_WILD_SNOW) && (r_ptr->flags7 & (RF7_CAN_FLY | RF7_CAN_CLIMB | RF7_CAN_SWIM)))
-        return _mon_hook_wild_daytime_check(r_idx);
-    else
-        return FALSE;
-}
 
 static bool mon_hook_grass(int r_idx)
 {
@@ -466,29 +446,6 @@ static bool mon_hook_lava(int r_idx)
         return FALSE;
 }
 
-static bool mon_hook_shallow_nukage(int r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
-
-    if (!mon_hook_dungeon(r_idx)) return FALSE;
-
-    if ((r_ptr->flags7 & RF7_CAN_FLY) ||
-        (r_ptr->flagsr & RFR_IM_POIS) ||
-        ((r_ptr->flagsr & RFR_EFF_IM_POIS_MASK) && (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)))
-        return _mon_hook_wild_daytime_check(r_idx);
-    else
-        return FALSE;
-}
-
-static bool mon_hook_deep_nukage(int r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
-
-    if ((r_ptr->flags7 & RF7_CAN_FLY) || (r_ptr->flags7 & RF7_CAN_SWIM)) 
-        return mon_hook_shallow_nukage(r_idx);
-    else
-        return FALSE;
-}
 
 static bool mon_hook_floor(int r_idx)
 {
@@ -527,11 +484,6 @@ monster_hook_type get_wilderness_monster_hook(int x, int y)
         return mon_hook_volcano;
     case TERRAIN_MOUNTAIN:
         return mon_hook_mountain;
-    case TERRAIN_GLACIER:
-    case TERRAIN_SNOW:
-        return mon_hook_snow;
-    case TERRAIN_PACK_ICE:
-        return mon_hook_ice;
     default:
         return mon_hook_dungeon;
     }
@@ -574,22 +526,6 @@ monster_hook_type get_monster_hook2(int y, int x)
         return (monster_hook_type)mon_hook_lava;
     }
 
-    /* Nukage */
-    else if (have_flag(f_ptr->flags, FF_ACID))
-    {
-        /* Deep water */
-        if (have_flag(f_ptr->flags, FF_DEEP))
-        {
-            return (monster_hook_type)mon_hook_deep_nukage;
-        }
-
-        /* Shallow water */
-        else
-        {
-            return (monster_hook_type)mon_hook_shallow_nukage;
-        }
-    }
-
     else return (monster_hook_type)mon_hook_floor;
 }
 
@@ -601,14 +537,13 @@ void set_friendly(monster_type *m_ptr)
 
 void set_friendly_ingame(monster_type *m_ptr)
 {
-    quests_on_kill_mon(m_ptr);
     m_ptr->smart |= (1U << SM_FRIENDLY);
-    if (!(m_ptr->smart & (1U << SM_CLONED))) politician_set_friend(real_r_idx(m_ptr), TRUE);
+    quests_on_kill_mon(m_ptr);
+    politician_set_friend(m_ptr->r_idx, TRUE);
 }
 
 void set_pet(monster_type *m_ptr)
 {
-    if (!allow_pets) return;
     if (!is_pet(m_ptr)) check_pets_num_and_align(m_ptr, TRUE);
 
     quests_on_kill_mon(m_ptr);
@@ -617,7 +552,7 @@ void set_pet(monster_type *m_ptr)
     m_ptr->mflag2 |= MFLAG2_WASPET;
     if (!(r_info[m_ptr->r_idx].flags3 & (RF3_EVIL | RF3_GOOD)))
         m_ptr->sub_align = SUB_ALIGN_NEUTRAL;
-    politician_set_friend(real_r_idx(m_ptr), TRUE);
+    politician_set_friend(m_ptr->r_idx, TRUE);
 }
 
 /*
@@ -638,7 +573,7 @@ void set_hostile(monster_type *m_ptr)
 
     m_ptr->smart &= ~(1U << SM_PET);
     m_ptr->smart &= ~(1U << SM_FRIENDLY);
-    politician_set_friend(real_r_idx(m_ptr), FALSE);
+    politician_set_friend(m_ptr->r_idx, FALSE);
     for (i = 1; i < m_max; i++) /* The monster's dependents also turn hostile */
     {
         monster_type *mon = &m_list[i];
@@ -773,8 +708,9 @@ bool monster_can_cross_terrain(s16b feat, monster_race *r_ptr, u16b mode)
     if (have_flag(f_ptr->flags, FF_ACID))
     {
         /* Deep nukage */
-        if ((have_flag(f_ptr->flags, FF_DEEP)) && (!(((r_ptr->flags7 & RF7_CAN_SWIM) || lev)))) return FALSE;
-        else if ((!(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)) || (!(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK))) return FALSE;
+        if (have_flag(f_ptr->flags, FF_DEEP)) return FALSE;
+	
+	   if ((!(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)) || (!(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK))) return FALSE;
     }
 
     return TRUE;
@@ -805,14 +741,7 @@ static bool check_hostile_align(byte sub_align1, byte sub_align2)
     {
         if (((sub_align1 & SUB_ALIGN_EVIL) && (sub_align2 & SUB_ALIGN_GOOD)) ||
             ((sub_align1 & SUB_ALIGN_GOOD) && (sub_align2 & SUB_ALIGN_EVIL)))
-        {
-            static byte _weird_tester = (SUB_ALIGN_EVIL | SUB_ALIGN_GOOD);
-            if ((sub_align1 & _weird_tester) == _weird_tester)
-                return FALSE;
-            else if ((sub_align2 & _weird_tester) == _weird_tester)
-                return FALSE;
-            else return TRUE;
-        }
+            return TRUE;
     }
 
     /* Non-hostile alignment */
@@ -845,16 +774,9 @@ bool are_enemies(monster_type *m_ptr, monster_type *n_ptr)
         if (!is_pet(m_ptr) && !is_pet(n_ptr)) return FALSE;
     }
 
-/*  Maybe this would make things too easy...  
-    if (((m_ptr->r_idx == MON_VALI) && (n_ptr->r_idx == MON_SUGRIVA)) ||
-        ((n_ptr->r_idx == MON_VALI) && (m_ptr->r_idx == MON_SUGRIVA))) return TRUE; */
-
     /* Friendly vs. opposite aligned normal or pet */
     if (check_hostile_align(m_ptr->sub_align, n_ptr->sub_align))
     {
-        /* No monster fighting (option) except involving pets */
-        if (!allow_hostile_monster && !is_pet(m_ptr) && !is_pet(n_ptr)) return FALSE;
-
         if (((m_ptr->r_idx == MON_DJINNI) || (n_ptr->r_idx == MON_DJINNI)) && (is_hostile(m_ptr) == is_hostile(n_ptr))) return FALSE;
 
         if (!(m_ptr->mflag2 & MFLAG2_CHAMELEON) || !(n_ptr->mflag2 & MFLAG2_CHAMELEON)) return TRUE;

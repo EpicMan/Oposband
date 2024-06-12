@@ -33,7 +33,7 @@ static void _birth(void)
     skills_innate_init("Squash", WEAPON_EXP_BEGINNER, WEAPON_EXP_SKILLED);
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+    object_prep(&forge, lookup_kind(TV_DAGGER, SV_DAGGER));
     py_birth_obj(&forge);
     object_prep(&forge, lookup_kind(TV_CLOAK, SV_CLOAK));
     py_birth_obj(&forge);
@@ -58,7 +58,7 @@ static void _calc_innate_attacks(void)
         a.effect_chance[1] = 20;
 
         a.blows = 100;
-        a.msg = "You squash.";
+        a.msg = "You squash";
         a.name = "Squash";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -74,7 +74,7 @@ static void _calc_innate_attacks(void)
 
         if (p_ptr->lev >= 40) a.effect[1] = GF_OLD_DRAIN;
         calc_innate_blows(&a, 450);
-        a.msg = "You bite.";
+        a.msg = "You bite";
         a.name = "Bite";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -97,7 +97,6 @@ static void _calc_bonuses(void)
     res_add(RES_LITE);
     res_add(RES_CONF);
     res_add(RES_BLIND);
-    p_ptr->hold_life++;
     if (p_ptr->lev >= PUMP_LEVEL)
     {
         int to_a = 50 + py_prorata_level(50);
@@ -110,6 +109,7 @@ static void _calc_bonuses(void)
         p_ptr->to_a += to_a;
         p_ptr->dis_to_a += to_a;
         p_ptr->free_act++;
+        p_ptr->hold_life++;
         p_ptr->see_inv++;
         p_ptr->pspeed += (p_ptr->lev / 5);
     }
@@ -121,10 +121,10 @@ static void _calc_bonuses(void)
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
+    add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_RES_CONF);
     add_flag(flgs, OF_RES_LITE);
     add_flag(flgs, OF_RES_BLIND);
-    add_flag(flgs, OF_HOLD_LIFE);
     if (p_ptr->lev < PUMP_LEVEL) add_flag(flgs, OF_VULN_FIRE);
     else
     {
@@ -173,12 +173,19 @@ void _pumpkin_breathe_light_spell(int cmd, variant *res)
         break;
     }
 }
-static power_info _get_powers[] =
+static power_info _powers[] = 
 {
     { A_INT, {  5,  2, 20, scare_monster_spell} },
     { A_CON, { PUMP_LEVEL, 15,  0, _pumpkin_breathe_light_spell} },
     {    -1, { -1, -1, -1, NULL} }
 };
+
+static int _get_powers(spell_info* spells, int max) 
+{
+    int ct = get_powers_aux(spells, max, _powers);
+
+    return ct;
+}
 
 /**********************************************************************
  * Public

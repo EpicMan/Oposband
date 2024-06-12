@@ -1,7 +1,7 @@
 ?:[EQU $QUEST4 Taken InProgress]
 D:The vault outside the town was used as a minor fortress and
 D:stored many valuable items. It has since been overrun. Please
-D:find the small sword known as Sting and return it to us!
+D:find the short sword known as Sting and return it to us!
 D:The moment you find the sword, your quest will be complete.
 D:While the sword could be in any of the chambers, only look
 D:through one at a time. The monsters there are strong and we left
@@ -29,9 +29,9 @@ L:5:MON(*, DEPTH+2)
 L:9:OBJ(*, DEPTH+2):MON(*, DEPTH+4)
 L:*:TRAP(*, 25%):OBJ(*)
 L:a:ART(sting)
-L:b:OBJ(small sword, DEPTH+1)
-L:c:OBJ(small sword, DEPTH+1)
-L:d:OBJ(small sword, DEPTH+1)
+L:b:OBJ(short sword, DEPTH+1)
+L:c:OBJ(short sword, DEPTH+1)
+L:d:OBJ(short sword, DEPTH+1)
 !:SCRAMBLE(a,b,c,d)
 M:#####################################################
 M:#####################....9a*....#####################

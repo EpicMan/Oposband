@@ -451,7 +451,7 @@ static void _light_speed_spell(int cmd, variant *res)
  * Spell Table and Exports
  ****************************************************************/
 
-#define MAX_FORCETRAINER_SPELLS    15
+#define MAX_FORCETRAINER_SPELLS    14
 
 static spell_info _spells[MAX_FORCETRAINER_SPELLS] = 
 {
@@ -470,17 +470,15 @@ static spell_info _spells[MAX_FORCETRAINER_SPELLS] =
     { 32, 35,  65, _exploding_flame_spell},
     { 38, 42,  75, _super_kamehameha_spell},
     { 44, 50,  80, _light_speed_spell},
-    { -1, -1,  -1, NULL},
 };
 
-static spell_info *_get_spells(void)
+static int _get_spells(spell_info* spells, int max)
 {
     int i, hand;
-//    int ct = 0;
+    int ct = 0;
     int stat_idx = p_ptr->stat_ind[A_WIS];
     int penalty1 = 0;
     int penalty2 = 0;
-    static spell_info spells[MAX_FORCETRAINER_SPELLS];
 
     /* These penalties should only apply to Force spells ... at the moment, choice
        of a conventional spellbook and realm is handled elsewhere, but should some
@@ -506,28 +504,39 @@ static spell_info *_get_spells(void)
     for (i = 0; i < MAX_FORCETRAINER_SPELLS; i++)
     {
         spell_info *base = &_spells[i];
-        spells[i].fn = base->fn;
-        spells[i].level = base->level;
-        spells[i].cost = base->cost;
-        if (!base->fn) 
+        if (ct >= max) break;
+        if (base->level <= p_ptr->lev)
         {
-            spells[i].fail = 0;
-            continue;
+            spell_info* current = &spells[ct];
+            current->fn = base->fn;
+            current->level = base->level;
+            current->cost = base->cost;
+
+            /* The first penalty can be completely overcome by high level, etc. */
+            current->fail = calculate_fail_rate(base->level, base->fail + penalty1, stat_idx);            
+
+            /* But the second penalty effectively boosts the minimum fail rate */
+            current->fail += penalty2;
+            if (current->fail > 95) current->fail = 95;
+
+            ct++;
         }
-        /* The first penalty can be overcome... */ 
-        spells[i].fail = calculate_fail_rate(base->level, base->fail + penalty1, stat_idx);            
-        /* ...but the second penalty is just added */
-        spells[i].fail += penalty2;
-        if (spells[i].fail > 95) spells[i].fail = 95;
     }
-    return spells;
+    return ct;
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_WIS, {15, 0, 30, clear_mind_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 15;
+    spell->cost = 0;
+    spell->fail = calculate_fail_rate(spell->level, 30, p_ptr->stat_ind[A_WIS]);
+    spell->fn = clear_mind_spell;
+
+    return ct;
+}
 
 static void _calc_bonuses(void)
 {
@@ -599,17 +608,36 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(5, 10));
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 static void _character_dump(doc_ptr doc)
 {
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
     spellbook_character_dump(doc);
 
     doc_insert(doc, "<color:r>Realm:</color> <color:B>Force</color>\n");
-    py_dump_spells_aux(doc);
+    py_display_spells_aux(doc, spells, ct);
 }
 
 class_t *force_trainer_get_class(void)
@@ -647,7 +675,7 @@ class_t *force_trainer_get_class(void)
         me.stats[A_WIS] =  3;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 100;
@@ -661,7 +689,7 @@ class_t *force_trainer_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
-        me.get_spells_fn = _get_spells;
+        me.get_spells = _get_spells;
         me.get_powers = _get_powers;
         me.character_dump = _character_dump;
         me.known_icky_object = skills_obj_is_icky_weapon;

@@ -130,7 +130,10 @@ void obj_release(obj_ptr obj, int options)
     {
     case INV_FLOOR:
         if (!quiet)
-            msg_format("You see %s.", name);
+            if (p_ptr->blind)
+                msg_format("You feel %s.", name);
+            else
+                msg_format("You see %s.", name);
         if (obj->number <= 0)
             delete_object_idx(obj->loc.slot);
         break;
@@ -266,6 +269,9 @@ bool obj_can_sense1(obj_ptr obj)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_DAGGER:
+    case TV_AXE:
+    case TV_STAVES:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -301,7 +307,7 @@ bool obj_can_shoot(obj_ptr obj)
 {
     if (!obj_is_ammo(obj)) return FALSE;
     if (!equip_find_obj(TV_BOW, SV_ANY)) return FALSE;
-    return (object_is_suitable_ammo(obj));
+    return obj->tval == p_ptr->shooter_info.tval_ammo;
 }
 
 bool obj_is_blessed(obj_ptr obj)
@@ -359,6 +365,13 @@ bool obj_is_unknown(obj_ptr obj) { return !obj_is_known(obj); }
 bool obj_is_wand(obj_ptr obj)    { return obj->tval == TV_WAND; }
 
 bool obj_is_shooter(obj_ptr obj) { return obj->tval == TV_BOW; }
+
+bool obj_is_usable(obj_ptr obj)
+{
+	/* If object is a consumable, a device or has an activation  */
+	return (obj->tval == TV_FOOD || obj->tval == TV_POTION || obj->tval == TV_SCROLL || obj_is_device(obj) || obj_has_effect(obj));
+}
+
 bool obj_is_bow(obj_ptr obj)
 {
     if (!obj_is_shooter(obj)) return FALSE;
@@ -380,19 +393,13 @@ bool obj_is_crossbow(obj_ptr obj)
 bool obj_is_harp(obj_ptr obj)
 {
     if (!obj_is_shooter(obj)) return FALSE;
-    if (obj->sval != SV_HARP && obj->sval != SV_FLUTE) return FALSE;
+    if (obj->sval != SV_HARP) return FALSE;
     return TRUE;
 }
 bool obj_is_gun(obj_ptr obj)
 {
     if (!obj_is_shooter(obj)) return FALSE;
     if (obj->sval != SV_CRIMSON && obj->sval != SV_RAILGUN) return FALSE;
-    return TRUE;
-}
-bool obj_is_fake_bow(obj_ptr obj)
-{
-    if (!obj_is_shooter(obj)) return FALSE;
-    if (obj->sval != SV_HARP && obj->sval != SV_FLUTE && obj->sval != SV_CRIMSON && obj->sval != SV_RAILGUN) return FALSE;
     return TRUE;
 }
 /************************************************************************
@@ -477,8 +484,8 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     case TV_SHOT:
     case TV_ARROW:
     case TV_BOLT:
-        if (left->to_h + left->to_d < right->to_h + right->to_d) return -1;
-        if (left->to_h + left->to_d > right->to_h + right->to_d) return 1;
+        if (left->to_h < right->to_h) return -1;
+        if (left->to_h > right->to_h) return 1;
         break;
 
     case TV_ROD:
@@ -608,6 +615,8 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
         return FALSE;
 
     case TV_STATUE:
+        if (dest->sval != SV_PHOTO) break;
+        /* Fall Thru for monster check (Q: Why don't statues with same monster combine?) */
     case TV_FIGURINE:
     case TV_CORPSE:
         if (dest->pval != obj->pval) return FALSE;
@@ -625,6 +634,9 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
+    case TV_STAVES:
+    case TV_AXE:
+    case TV_DAGGER:
     case TV_BOOTS:
     case TV_GLOVES:
     case TV_HELM:
@@ -658,7 +670,6 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
 
         /* Require identical bonuses */
         if (dest->to_h != obj->to_h) return FALSE;
-        if (dest->to_d != obj->to_d) return FALSE;
         if (dest->to_a != obj->to_a) return FALSE;
         if (dest->pval != obj->pval) return FALSE;
 
@@ -1038,7 +1049,7 @@ static void _drop(obj_ptr obj)
 {
     char name[MAX_NLEN];
     object_desc(name, obj, OD_COLOR_CODED);
-    if (!silent_drop_hack) msg_format("You drop %s.", name);
+    msg_format("You drop %s.", name);
     drop_near(obj, 0, py, px);
     p_ptr->update |= PU_BONUS; /* Weight changed */
     if (obj->loc.where == INV_PACK)
@@ -1076,14 +1087,6 @@ void obj_drop(obj_ptr obj, int amt)
     else
     {
         obj->marked &= ~OM_WORN;
-        if (obj->name1) /* Track location of fixed artifacts */
-        {
-            a_info[obj->name1].floor_id = p_ptr->floor_id;
-        }
-        else if (obj->name3)
-        {
-            a_info[obj->name3].floor_id = p_ptr->floor_id;
-        }
         _drop(obj);
         obj->number = 0;
         obj_release(obj, OBJ_RELEASE_QUIET);
@@ -1242,7 +1245,7 @@ static void _destroy(obj_ptr obj)
 
     if (high_level_book(obj))
         spellbook_destroy(obj);
-    if (obj->to_a || obj->to_h || obj->to_d)
+    if (obj->to_a || obj->to_h)
         virtue_add(VIRTUE_ENCHANTMENT, -1);
 
     if (obj_value_real(obj) > 30000)
@@ -1251,7 +1254,7 @@ static void _destroy(obj_ptr obj)
     else if (obj_value_real(obj) > 10000)
         virtue_add(VIRTUE_SACRIFICE, 1);
 
-    if (obj->to_a != 0 || obj->to_d != 0 || obj->to_h != 0)
+    if (obj->to_a != 0 || obj->to_h != 0)
         virtue_add(VIRTUE_HARMONY, 1);
 }
 
@@ -1417,7 +1420,6 @@ void obj_load(obj_ptr obj, savefile_ptr file)
             break;
         case OBJ_SAVE_COMBAT:
             obj->to_h = savefile_read_s16b(file);
-            obj->to_d = savefile_read_s16b(file);
             break;
         case OBJ_SAVE_ARMOR:
             obj->to_a = savefile_read_s16b(file);
@@ -1593,11 +1595,10 @@ void obj_save(obj_ptr obj, savefile_ptr file)
         savefile_write_byte(file, OBJ_SAVE_TIMEOUT);
         savefile_write_s16b(file, obj->timeout);
     }
-    if (obj->to_h || obj->to_d)
+    if (obj->to_h)
     {
         savefile_write_byte(file, OBJ_SAVE_COMBAT);
         savefile_write_s16b(file, obj->to_h);
-        savefile_write_s16b(file, obj->to_d);
     }
     if (obj->to_a || obj->ac)
     {

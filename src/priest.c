@@ -1,27 +1,26 @@
 #include "angband.h"
 
-static power_info _get_good_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_WIS, { 35, 70, 90, bless_weapon_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+    spell_info* spell = &spells[ct++];
 
-static power_info _get_evil_powers[] =
-{
-    { A_WIS, { 42, 40, 80, evocation_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
-
-static power_info *_get_powers(void)
-{
     if (is_good_realm(p_ptr->realm1))
     {
-        return _get_good_powers;
+        spell->level = 35;
+        spell->cost = 70;
+        spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_WIS]);
+        spell->fn = bless_weapon_spell;
     }
     else
     {
-        return _get_evil_powers;
+        spell->level = 42;
+        spell->cost = 40;
+        spell->fail = calculate_fail_rate(spell->level, 80, p_ptr->stat_ind[A_WIS]);
+        spell->fn = evocation_spell;
     }
+
+    return ct;
 }
 
 static caster_info * _caster_info(void)
@@ -45,7 +44,7 @@ static bool _priest_weapon_is_icky(object_type *o_ptr)
 {
     if (!object_is_weapon(o_ptr)) return FALSE;
     if (!obj_is_identified(o_ptr)) return FALSE; /* Might be icky... but we don't know yet */
-    if ((o_ptr->tval != TV_SWORD) && (o_ptr->tval != TV_POLEARM)) return FALSE;
+    if ((o_ptr->tval == TV_HAFTED) || (o_ptr->tval == TV_STAVES)) return FALSE;
     if (is_evil_realm(p_ptr->realm1)) return FALSE;
     else
     {
@@ -57,7 +56,7 @@ static bool _priest_weapon_is_icky(object_type *o_ptr)
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
-    if (o_ptr->tval == TV_SWORD || o_ptr->tval == TV_POLEARM)
+    if (o_ptr->tval != TV_HAFTED && o_ptr->tval != TV_STAVES)
     {
         u32b flgs[OF_ARRAY_SIZE];
         obj_flags(o_ptr, flgs);
@@ -100,6 +99,21 @@ static void _birth(void)
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_HEALING, 1);
     py_birth_spellbooks();
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *priest_get_class(void)
@@ -153,7 +167,7 @@ class_t *priest_get_class(void)
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/
-        me.get_powers_fn = _get_powers;
+        me.get_powers = _get_powers;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.character_dump = spellbook_character_dump;
         me.known_icky_object = _priest_weapon_is_icky;

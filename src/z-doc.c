@@ -671,8 +671,8 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
             return pos;
         else if (result.type == DOC_TAG_COLOR)
         {
-            if ( result.arg_size == 1 && result.arg[0] != '*'
-              && !strchr(color_char, result.arg[0]) )
+            if ( result.arg_size == 1
+              && !strchr("dwsorgbuDWvyRGBU*", result.arg[0]) )
             {
                 return pos;
             }
@@ -744,7 +744,7 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
     {
-        string_ptr s = string_alloc_format("%d.%d.%s", VER_MAJOR, VER_MINOR, VER_PATCH);
+        string_ptr s = string_alloc_format("%d.%d.%d", VER_MAJOR, VER_MINOR, VER_PATCH);
         if (coffee_break == SPEED_COFFEE) string_append_s(s, "<color:U> (Coffee)</color>");
         if (coffee_break == SPEED_INSTA_COFFEE) string_append_s(s, "<color:U> (Instant Coffee)</color>");
         if (thrall_mode) string_append_s(s, "<color:R> (Thrall)</color>");
@@ -799,8 +799,25 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             else
             {
                 doc_style_t style = *doc_current_style(doc); /* copy */
-                byte new_attr = color_char_to_attr(tag->arg[0]);
-                if (new_attr != _INVALID_COLOR) style.color = new_attr;
+                switch (tag->arg[0])
+                {
+                case 'd': style.color = TERM_DARK; break;
+                case 'w': style.color = TERM_WHITE; break;
+                case 's': style.color = TERM_SLATE; break;
+                case 'o': style.color = TERM_ORANGE; break;
+                case 'r': style.color = TERM_RED; break;
+                case 'g': style.color = TERM_GREEN; break;
+                case 'b': style.color = TERM_BLUE; break;
+                case 'u': style.color = TERM_UMBER; break;
+                case 'D': style.color = TERM_L_DARK; break;
+                case 'W': style.color = TERM_L_WHITE; break;
+                case 'v': style.color = TERM_VIOLET; break;
+                case 'y': style.color = TERM_YELLOW; break;
+                case 'R': style.color = TERM_L_RED; break;
+                case 'G': style.color = TERM_L_GREEN; break;
+                case 'B': style.color = TERM_L_BLUE; break;
+                case 'U': style.color = TERM_L_UMBER; break;
+                }
                 doc_push_style(doc, &style);
             }
         }
@@ -1377,7 +1394,7 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
         for (; pos.x < cx; pos.x++)
         {
             char c = cell->c;
-            byte a = cell->a % MAX_COLOR;
+            byte a = cell->a & 0x0F;
 
             if (next_link)
             {
@@ -1461,7 +1478,7 @@ static void _doc_write_doc_file(doc_ptr doc, FILE *fp)
         for (; pos.x < cx; pos.x++)
         {
             char c = cell->c;
-            byte a = cell->a;
+            byte a = cell->a & 0x0F;
 
             if (!c) break;
 
@@ -1819,12 +1836,8 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
                     }
                 }
                 strcat(nuname, ".html");
-                sprintf(prompt, "Please note that the FrogComposband Ladder at angband.oook.cz only accepts HTML dumps.\n<color:y>Save dump as</color> <color:R>%s</color><color:y>? [y/n]</color>", nuname);
-                if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
-                {
-                    strcpy(buf, nuname);
-                    format = DOC_FORMAT_HTML;
-                }
+                sprintf(prompt, "Please note that the Oposband Ladder at angband.oook.cz only accepts HTML dumps.\n<color:y>Save dump as</color> <color:R>%s</color><color:y>? [y/n]</color>", nuname);
+                if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y') strcpy(buf, nuname);
             }
 
             fp2 = my_fopen(buf, "w");

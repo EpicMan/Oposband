@@ -181,6 +181,9 @@
     <ClCompile Include="src\angband.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\archaeologist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\archer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -218,6 +221,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\cave.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\chaos_mage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\chaos_warrior.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\classes.c">
@@ -317,6 +326,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\hex_mage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\high_mage.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\home.c">
@@ -565,6 +577,9 @@
     <ClCompile Include="src\races_k.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\races_mimic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\racial.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -733,6 +748,9 @@
     <ClCompile Include="src\z-doc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\z-doc-test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\z-form.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -748,6 +766,9 @@
     <ClCompile Include="src\z-virt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\chaos_patron.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\bluemage.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -760,26 +781,11 @@
     <ClCompile Include="src\timelord.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\imitator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\hexblade.c">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\archaeologist.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\chaos_warrior.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\high_mage.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\races_mf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_mummy.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hissatsu.c">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

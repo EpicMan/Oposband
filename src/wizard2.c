@@ -140,94 +140,10 @@ void strip_name(char *buf, int k_idx)
     strip_name_aux(buf, k_name + k_info[k_idx].name);
 }
 
-int _life_rating_aux(int lvl)
-{
-    return (p_ptr->player_hp[lvl-1]-100) * 100 / (50*(lvl-1));
-}
-
-int life_rating(void)
-{
-    return _life_rating_aux(PY_MAX_LEVEL);
-}
-
-cptr life_rating_desc(bool use_attr)
-{
-    int tulos = p_ptr->player_hp[PY_MAX_LEVEL - 1] / 10 - 223;
-    char buf[15];
-    byte attr;
-    if (!use_attr) return (percentage_life ? format("%d/100", life_rating()) : format("%d/76", tulos));
-    if (tulos >= 76) /* 76 is the max but let's be paranoid... */
-    {
-        strcpy(buf, "Optimal");
-        attr = TERM_VIOLET;
-    }
-    else if (tulos >= 66)
-    {
-        strcpy(buf, "Superb");
-        attr = TERM_GREEN; 
-    }
-    else if (tulos >= 57)
-    {
-        strcpy(buf, "Excellent");
-        attr = TERM_L_GREEN;
-    }
-    else if (tulos >= 48)
-    {
-        strcpy(buf, "Very Good");
-        attr = TERM_YELLOW;
-    }
-    else if (tulos >= 39)
-    {
-        strcpy(buf, "Good");
-        attr = TERM_YELLOW;
-    }
-    else if (tulos >= 29)
-    {
-        strcpy(buf, "Fair");
-        attr = TERM_ORANGE;
-    }
-    else if (tulos >= 19)
-    {
-        strcpy(buf, "Bad");
-        attr = TERM_L_RED;
-    }
-    else if (tulos >= 9)
-    {
-        strcpy(buf, "Very Bad");
-        attr = TERM_RED;
-    }
-    else
-    {
-        strcpy(buf, "Abysmal");
-        attr = TERM_L_DARK;
-    }
-    if (percentage_life) return format("<color:%c>%s</color> (%d%%)", attr_to_attr_char(attr), buf, life_rating());
-    else return format("<color:%c>%s</color> (%d/76)", attr_to_attr_char(attr), buf, tulos);
-}
-
 void do_cmd_rerate_aux(void)
 {
-    for(;;)
-    {
-        int i, pct;
-        p_ptr->player_hp[0] = 100;
-
-        for (i = 1; i < PY_MAX_LEVEL; i++)
-            p_ptr->player_hp[i] = p_ptr->player_hp[i - 1] + randint1(100);
-
-        /* These extra early checks give a slight boost to average life ratings (~39) */
-        pct = _life_rating_aux(5);
-        if (pct < 87) continue;
-
-        pct = _life_rating_aux(10);
-        if (pct < 87) continue;
-
-        pct = _life_rating_aux(25);
-        if (pct < 87) continue;
-
-        pct = life_rating();
-        if (87 <= pct && pct <= 117) break;
-    }
+	/*Min 87%, max 117%*/
+	p_ptr->life_rating = 87 + randint0(31);
 }
 
 void do_cmd_rerate(bool display)
@@ -240,7 +156,7 @@ void do_cmd_rerate(bool display)
 
     if (display)
     {
-        msg_format("Your life rating is now %s.", life_rating_desc(TRUE));
+        msg_format("Your life rate is %d/100 now.", p_ptr->life_rating);
         p_ptr->knowledge |= KNOW_HPRATE;
     }
     else
@@ -333,7 +249,7 @@ static void do_cmd_wiz_change_aux(void)
         sprintf(tmp_val, "%d", p_ptr->stat_max[i]);
 
         /* Query */
-        if (!get_string(ppp, tmp_val, 4)) return;
+        if (!get_string(ppp, tmp_val, 3)) return;
 
         /* Extract */
         tmp_int = atoi(tmp_val);
@@ -360,35 +276,25 @@ static void do_cmd_wiz_change_aux(void)
     if (tmp_s16b < WEAPON_EXP_UNSKILLED) tmp_s16b = WEAPON_EXP_UNSKILLED;
     if (tmp_s16b > WEAPON_EXP_MASTER) tmp_s16b = WEAPON_EXP_MASTER;
 
-    for (j = 0; j <= TV_WEAPON_END - TV_WEAPON_BEGIN; j++)
-    {
-        for (i = 0;i < 64;i++)
-        {
-            int max = skills_weapon_max(TV_WEAPON_BEGIN + j, i);
-            p_ptr->weapon_exp[j][i] = tmp_s16b;
-            if (p_ptr->weapon_exp[j][i] > max) p_ptr->weapon_exp[j][i] = max;
-        }
-    }
+    /* Max out player weapon proficiencies */
+    for (j = PROF_DIGGER; j <= PROF_DAGGER; j++)
+        p_ptr->proficiency[j] = MIN(tmp_s16b, skills_weapon_max(j));
+    
+    p_ptr->proficiency[PROF_BOW] = MIN(tmp_s16b, skills_bow_max(SV_SHORT_BOW));
+    p_ptr->proficiency[PROF_CROSSBOW] = MIN(tmp_s16b, skills_bow_max(SV_LIGHT_XBOW));
+    p_ptr->proficiency[PROF_SLING] = MIN(tmp_s16b, skills_bow_max(SV_SLING));
 
-    for (j = 0; j < 10; j++)
-    {
-        p_ptr->skill_exp[j] = tmp_s16b;
-        if (p_ptr->skill_exp[j] > s_info[p_ptr->pclass].s_max[j]) p_ptr->skill_exp[j] = s_info[p_ptr->pclass].s_max[j];
-    }
+    p_ptr->proficiency[PROF_MARTIAL_ARTS] = MIN(tmp_s16b, skills_martial_arts_max());
+    p_ptr->proficiency[PROF_DUAL_WIELDING] = MIN(tmp_s16b, skills_dual_wielding_max());
+    p_ptr->proficiency[PROF_RIDING] = MIN(tmp_s16b, skills_riding_max());
 
-    /* Hack for WARLOCK_DRAGONS. Of course, reading skill tables directly is forbidden, so this code is inherently wrong! */
-    p_ptr->skill_exp[SKILL_RIDING] = MIN(skills_riding_max(), tmp_s16b);
-
-    for (j = 0; j < 32; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_MASTER ? SPELL_EXP_MASTER : tmp_s16b);
-    for (; j < 64; j++)
-        p_ptr->spell_exp[j] = (tmp_s16b > SPELL_EXP_EXPERT ? SPELL_EXP_EXPERT : tmp_s16b);
+    p_ptr->proficiency[PROF_INNATE_ATTACKS] = MIN(tmp_s16b, skills_weapon_max(PROF_INNATE_ATTACKS));
 
     /* Default */
     sprintf(tmp_val, "%d", p_ptr->au);
 
     /* Query */
-    if (!get_string("Gold: ", tmp_val, 10)) return;
+    if (!get_string("Gold: ", tmp_val, 9)) return;
 
     /* Extract */
     tmp_long = atol(tmp_val);
@@ -404,7 +310,7 @@ static void do_cmd_wiz_change_aux(void)
     sprintf(tmp_val, "%d", p_ptr->max_exp);
 
     /* Query */
-    if (!get_string("Experience: ", tmp_val, 10)) return;
+    if (!get_string("Experience: ", tmp_val, 9)) return;
 
     /* Extract */
     tmp_long = atol(tmp_val);
@@ -423,7 +329,7 @@ static void do_cmd_wiz_change_aux(void)
     }
 
     sprintf(tmp_val, "%d", p_ptr->fame);
-    if (!get_string("Fame: ", tmp_val, 4)) return;
+    if (!get_string("Fame: ", tmp_val, 3)) return;
     tmp_long = atol(tmp_val);
     if (tmp_long < 0) tmp_long = 0L;
     p_ptr->fame = (s16b)tmp_long;
@@ -445,9 +351,16 @@ static void do_cmd_wiz_change(void)
 /* Blue-Mage - learn spells for free */
 static void do_cmd_wiz_blue_mage(void)
 {
-    int n = get_quantity("Which type? ", MST_COUNT - 1);
-    int e = get_quantity("Which effect? ", 200);
-    blue_mage_learn_spell_aux(n, e, 0, 0, TRUE);
+    if (p_ptr->pclass == CLASS_BLUE_MAGE) {
+        int n = get_quantity("Which type? ", MST_COUNT - 1);
+        int e = get_quantity("Which effect? ", 200);
+        blue_mage_learn_spell_aux(n, e, 0, 0, TRUE);
+    }
+    else if (p_ptr->pclass == CLASS_IMITATOR) {
+        int n = get_quantity("Which type? ", MST_COUNT - 1);
+        int e = get_quantity("Which effect? ", 200);
+        imitator_learn_spell_aux(n, e, 0, 0, TRUE);
+    }
 }
 
 /*
@@ -467,6 +380,9 @@ static tval_desc tvals[] =
     { TV_SWORD,             "Sword"                },
     { TV_POLEARM,           "Polearm"              },
     { TV_HAFTED,            "Hafted Weapon"        },
+    { TV_DAGGER,            "Dagger"               },
+    { TV_AXE,               "Axe"                  },
+    { TV_STAVES,            "Staff Weapon"         },
     { TV_BOW,               "Bow"                  },
     { TV_ARROW,             "Arrows"               },
     { TV_BOLT,              "Bolts"                },
@@ -813,7 +729,7 @@ static void do_cmd_wiz_jump(void)
         sprintf(tmp_val, "%d", dungeon_type);
 
         /* Ask for a level */
-        if (!get_string(ppp, tmp_val, 4)) return;
+        if (!get_string(ppp, tmp_val, 2)) return;
 
         tmp_dungeon_type = atoi(tmp_val);
         if (!d_info[tmp_dungeon_type].maxdepth || (tmp_dungeon_type > max_d_idx)) tmp_dungeon_type = DUNGEON_ANGBAND;
@@ -830,7 +746,7 @@ static void do_cmd_wiz_jump(void)
         /* Extract request */
         command_arg = atoi(tmp_val);
 
-        set_dungeon_type(tmp_dungeon_type);
+        dungeon_type = tmp_dungeon_type;
     }
 
     /* Paranoia */
@@ -849,7 +765,7 @@ static void do_cmd_wiz_jump(void)
 
     prepare_change_floor_mode(CFM_RAND_PLACE);
 
-    if (!dun_level) set_dungeon_type(0);
+    if (!dun_level) dungeon_type = 0;
     p_ptr->inside_arena = FALSE;
     p_ptr->wild_mode = FALSE;
 
@@ -1036,7 +952,7 @@ static void do_cmd_wiz_create_feature(void)
     sprintf(tmp_val, "%d", prev_feat);
 
     /* Query */
-    if (!get_string("Feature: ", tmp_val, 4)) return;
+    if (!get_string("Feature: ", tmp_val, 3)) return;
 
     /* Extract */
     tmp_feat = atoi(tmp_val);
@@ -1047,7 +963,7 @@ static void do_cmd_wiz_create_feature(void)
     sprintf(tmp_val, "%d", prev_mimic);
 
     /* Query */
-    if (!get_string("Feature (mimic): ", tmp_val, 4)) return;
+    if (!get_string("Feature (mimic): ", tmp_val, 3)) return;
 
     /* Extract */
     tmp_mimic = atoi(tmp_val);
@@ -1530,7 +1446,7 @@ static void _wiz_stats_inspect(int level)
 static void _wiz_stats_gather(int which_dungeon, int level, int reps)
 {
     int i;
-    set_dungeon_type(which_dungeon);
+    dungeon_type = which_dungeon;
     for (i = 0; i < reps; i++)
     {
         quests_on_leave();
@@ -1641,12 +1557,7 @@ void do_cmd_debug(void)
 
     /* Blue-Mage spells */
     case 'E':
-        if (p_ptr->pclass == CLASS_BLUE_MAGE) do_cmd_wiz_blue_mage();
-        break;
-
-    /* View item info */
-    case 'f':
-        identify_fully(NULL);
+        do_cmd_wiz_blue_mage();
         break;
 
     /* Create desired feature */
@@ -1678,20 +1589,18 @@ void do_cmd_debug(void)
     case 'h':
     {
         int i, r;
-        int tot = 0, min = 76, max = 0;
+        int tot = 0, min = 0, max = 0;
 
-        for (i = 0; i < 1000000; i++)
+        for (i = 0; i < 100; i++)
         {
             do_cmd_rerate_aux();
-/*            r = life_rating();*/
-            r = p_ptr->player_hp[PY_MAX_LEVEL - 1] / 10 - 223;
+            r = p_ptr->life_rating;
             tot += r;
-            min = MIN(min, r);
+            if (!min) min = r;
+            else min = MIN(min, r);
             max = MAX(max, r);
         }
-        /* The average is around 39.14 (aka 102.915%) */
-//        msg_format("Life Ratings: %d%% (%d%%-%d%%)", tot/1000, min, max);
-        msg_format("Life Ratings: %d.%02d (%d-%d%%)", tot/1000000, ((tot/10000) % 100), min, max);
+        msg_format("Life Ratings: %d%% (%d%%-%d%%)", tot/100, min, max);
 
     /*    do_cmd_rerate(TRUE); */
 
@@ -1767,8 +1676,8 @@ void do_cmd_debug(void)
             for (i = 0; i < 32; ++i)
                 mut_gain(i);
         }
-        else if (!mut_present(n)) mut_gain(n);
-        else mut_lose(n);
+        else
+            mut_gain(n);
         break;
     }
 
@@ -1896,7 +1805,7 @@ void do_cmd_debug(void)
 
         sprintf(tmp_val, "%d", p_ptr->exp);
         /* Query */
-        if (!get_string("Experience: ", tmp_val, 10)) break;
+        if (!get_string("Experience: ", tmp_val, 9)) break;
 
         /* Extract */
         tmp_long = atol(tmp_val);
@@ -1913,7 +1822,6 @@ void do_cmd_debug(void)
             /* Update */
             check_experience();
             p_ptr->max_plv = p_ptr->lev;
-            p_ptr->max_max_exp = tmp_long;
             do_cmd_redraw();
         }
         break;
@@ -2056,4 +1964,5 @@ static int i = 0;
 #endif
 
 #endif
+
 

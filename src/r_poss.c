@@ -185,7 +185,7 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 3;
+    forge.to_h = 3;
     py_birth_obj(&forge);
 
     py_birth_food();
@@ -355,7 +355,7 @@ static bool _skip_effect(int which)
     switch (which)
     {
     case RBE_CUT:
-    case RBE_DRAIN_EXP:
+    case RBE_DRAIN_EXP:  case RBE_HALLUCINATE:
     case RBE_LOSE_STR: case RBE_LOSE_INT: case RBE_LOSE_WIS:
     case RBE_LOSE_DEX: case RBE_LOSE_CON: case RBE_LOSE_CHR:
     case RBE_LOSE_ALL:
@@ -523,14 +523,34 @@ void possessor_attack(point_t where, bool *fear, bool *mdeath, int mode)
 /**********************************************************************
  * Spells
  **********************************************************************/
-void possessor_cast(void)
+void possessor_cast()
 {
-    mon_race_ptr race = &r_info[(p_ptr->pclass == CLASS_BLUE_MAGE) ? MON_SEXY_SWIMSUIT : p_ptr->current_r_idx];
+    mon_race_ptr race = &r_info[(p_ptr->pclass == CLASS_BLUE_MAGE || p_ptr->pclass == CLASS_IMITATOR) ? MON_SEXY_SWIMSUIT : p_ptr->current_r_idx];
     if (!race->spells)
     {
         if (p_ptr->pclass == CLASS_BLUE_MAGE) msg_print("You have not learned any spells yet.");
+        if (p_ptr->pclass == CLASS_IMITATOR) msg_print("You don't remember any actions to imitate.");
         else msg_print("Your current body has no spells.");
         return;
+    }
+    /* Imitators forget spells, and may end up without them */
+    if (p_ptr->pclass == CLASS_IMITATOR && r_info[MON_SEXY_SWIMSUIT].spells)
+    {
+        bool has_spells = FALSE;
+        for (int i = 0; i < MST_COUNT; i++)
+        {
+            if (r_info[MON_SEXY_SWIMSUIT].spells->groups[i] && r_info[MON_SEXY_SWIMSUIT].spells->groups[i]->count > 0)
+            {
+                has_spells = TRUE;
+                i = MST_COUNT;
+            }
+        }
+
+        if (!has_spells) 
+        {
+            msg_print("You don't remember any actions to imitate.");
+            return;
+        }
     }
     if (p_ptr->confused)
     {
@@ -673,42 +693,37 @@ static void _unpossess_spell(int cmd, variant *res)
     }
 }
 
-static void _add_power(power_info* power, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
+static void _add_power(spell_info* spell, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
 {
     int l = MIN(_max_lvl(), lvl); /* It's frustrating when a corpse can *never* use a given power ... */
-    power->spell.level = l;
-    power->spell.cost = cost;
-    power->spell.fail = fail;
-    power->spell.fn = fn;
-    power->stat = stat_idx;
+    spell->level = l;
+    spell->cost = cost;
+    spell->fail = calculate_fail_rate(l, fail, stat_idx); 
+    spell->fn = fn;
 }
 
-int possessor_get_powers(power_info* spells, int max)
+int possessor_get_powers(spell_info* spells, int max)
 {
     mon_race_ptr race = &r_info[p_ptr->current_r_idx];
     int          ct = 0;
     if (ct < max && (race->flags1 & RF1_TRUMP))
-        _add_power(&spells[ct++], 1, 0, 0, blink_toggle_spell, A_DEX);
+        _add_power(&spells[ct++], 1, 0, 0, blink_toggle_spell, p_ptr->stat_ind[A_DEX]);
     if (ct < max && (race->body.class_idx == CLASS_MAGE || race->body.class_idx == CLASS_HIGH_MAGE || race->body.class_idx == CLASS_SORCERER))
-        _add_power(&spells[ct++], 25, 1, 90, eat_magic_spell, A_INT);
+        _add_power(&spells[ct++], 25, 1, 90, eat_magic_spell, p_ptr->stat_ind[A_INT]);
     return ct;
 }
 
-static power_info *_get_powers(void)
+static int _get_powers(spell_info* spells, int max)
 {
-    static power_info spells[MAX_SPELLS];
     int ct = 0;
-    int max = MAX_SPELLS;
 
     if (/*p_ptr->current_r_idx == MON_POSSESSOR_SOUL &&*/ ct < max)
-        _add_power(&spells[ct++], 1, 0, 0, _possess_spell, A_DEX);
+        _add_power(&spells[ct++], 1, 0, 0, _possess_spell, p_ptr->stat_ind[A_DEX]);
     if (p_ptr->current_r_idx != MON_POSSESSOR_SOUL && ct < max)
-        _add_power(&spells[ct++], 1, 0, 0, _unpossess_spell, A_DEX);
+        _add_power(&spells[ct++], 1, 0, 0, _unpossess_spell, p_ptr->stat_ind[A_DEX]);
 
     ct += possessor_get_powers(spells + ct, max - ct);
-
-    spells[ct].spell.fn = NULL;
-    return spells;
+    return ct;
 }
 
 caster_info *possessor_caster_info(void)
@@ -1165,8 +1180,6 @@ void possessor_get_flags(u32b flgs[OF_ARRAY_SIZE])
         add_flag(flgs, OF_VULN_FIRE);
     if (r_ptr->flags3 & RF3_HURT_COLD)
         add_flag(flgs, OF_VULN_COLD);
-    if (!equip_can_wield_kind(TV_LITE, SV_LITE_FEANOR))
-        add_flag(flgs, OF_NIGHT_VISION);
 }
 
 /**********************************************************************
@@ -1259,7 +1272,7 @@ race_t *mon_possessor_get_race(void)
 
         me.birth = _birth;
 
-        me.get_powers_fn = _get_powers;
+        me.get_powers = _get_powers;
 
         me.calc_bonuses = possessor_calc_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;

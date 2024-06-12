@@ -110,79 +110,6 @@ static int _aura_dam_p(int taso)
     return 2 + damroll(taso * 2 - 1 + (p_ptr->lev / 10), 2 + (p_ptr->lev / 10));
 }
 
-bool drain_random_object(int who, int drain_amt, bool *drained)
-{
-    u32b flgs[OF_ARRAY_SIZE];
-    char buf[MAX_NLEN];
-    int k;
-
-    /* Find an item */
-    for (k = 0; k < 10; k++)
-    {
-        slot_t  slot = pack_random_slot(NULL);
-        obj_ptr obj;
-
-        if (!slot) continue;
-        obj = pack_obj(slot);
-        if (!obj) continue;
-        if (!obj_is_device(obj)) continue;
-
-        obj_flags(obj, flgs);
-        if (have_flag(flgs, OF_HOLD_LIFE))
-        {
-            *drained = TRUE; /* No food drain! */
-            return FALSE; /* Not obvious */
-        }
-
-        if (p_ptr->no_charge_drain)
-        {
-            *drained = TRUE; /* No food drain! */
-            return FALSE;
-        }
-
-        if (obj->tval == TV_ROD)
-            drain_amt /= 3;
-
-        if (drain_amt > device_sp(obj))
-            drain_amt = device_sp(obj);
-
-        if (p_ptr->pclass == CLASS_DEVICEMASTER)
-        {
-            int pl = p_ptr->lev;
-            int dl = obj->activation.difficulty;
-
-            if (devicemaster_is_speciality(obj))
-                pl *= 2;
-
-            if (pl >= randint1(dl))
-            {
-                msg_print("Energy begins to drain from your pack ... But you pull it back!");
-                *drained = TRUE; /* No food drain! */
-                return TRUE; /* Obvious effect */
-            }
-        }
-
-        object_desc(buf, obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
-              msg_format("Energy drains from your %s!", buf);
-        device_decrease_sp(obj, drain_amt);
-        *drained = TRUE;
-
-        /* Heal the monster */
-        if (who > 0)
-        {
-            monster_type *m_ptr = &m_list[who];
-            (void)hp_mon(m_ptr, drain_amt, FALSE);
-        }
-
-        /* Window stuff */
-        p_ptr->window |= (PW_INVEN);
-
-        /* Done */
-        return TRUE;
-    }
-    return FALSE;
-}
-
 /*
  * Attack the player via physical attacks.
  */
@@ -215,7 +142,10 @@ bool make_attack_normal(int m_idx)
     int opx = px;
 
     /* Silver monsters have special effects on werewolves */
-    bool track_werewolf_dam = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
+    bool track_werewolf_dam = (((p_ptr->prace == RACE_WEREWOLF) || (p_ptr->current_r_idx == MON_WEREWOLF1) || (p_ptr->current_r_idx == MON_WEREWOLF2)
+		|| (p_ptr->current_r_idx == MON_WERERAT1) || (p_ptr->current_r_idx == MON_WERERAT2)
+		|| (p_ptr->current_r_idx == MON_WEREBEAR1) || (p_ptr->current_r_idx == MON_WEREBEAR2)
+		|| (p_ptr->current_r_idx == MON_WEREWORM1) || (p_ptr->current_r_idx == MON_WEREWORM2)) && (r_ptr->flags7 & RF7_SILVER)) ? TRUE : FALSE;
 
     /* Not allowed to attack */
     if (r_ptr->flags1 & (RF1_NEVER_BLOW)) return (FALSE);
@@ -313,9 +243,6 @@ bool make_attack_normal(int m_idx)
         skill = blow->power + rlev*3;
         if (stun)
             skill -= skill*MIN(100, stun) / 150;
-
-        if ((p_ptr->no_air) && (monster_living(r_ptr)) && (one_in_(7)))
-            m_inc_minislow(m_ptr, 1);
 
         /* Monster hits player */
         if ( !blow->effects[0].effect  /* XXX B:BEG or B:INSULT */
@@ -465,7 +392,7 @@ bool make_attack_normal(int m_idx)
                 {
                     act = silly_attacks[randint0(MAX_SILLY_ATTACK)];
                 }
-                msg_format("%^s %s%s%s", m_name, act, do_silly_attack ? " you" : "", retaliation_hack ? ".<color:g>)</color>" : ".");
+                msg_format("%^s %s%s%s", m_name, act, do_silly_attack ? " you" : "", retaliation_hack ? "<color:g>)</color>" : "");
             }
 
             /* Hack -- assume all attacks are obvious */
@@ -518,7 +445,11 @@ bool make_attack_normal(int m_idx)
                     break; }
 
                 case RBE_DRAIN_CHARGES: {
+                    u32b flgs[OF_ARRAY_SIZE];
+                    char buf[MAX_NLEN];
                     bool drained = FALSE;
+                    int  drain_amt = rlev; /* TODO: Consider using damage instead. Indeed, I nerfed this effect
+                                              so all monsters should probably do some damage here as well. */
 
                     /* Take some damage */
                     effect_dam = reduce_melee_dam_p(effect_dam);
@@ -526,7 +457,73 @@ bool make_attack_normal(int m_idx)
 
                     if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
 
-                    obvious = drain_random_object(m_idx, rlev, &drained); /* TODO: Relate to damage instead? */
+                    /* Find an item */
+                    for (k = 0; k < 10; k++)
+                    {
+                        slot_t  slot = pack_random_slot(NULL);
+                        obj_ptr obj;
+
+                        if (!slot) continue;
+                        obj = pack_obj(slot);
+                        if (!obj) continue;
+                        if (!obj_is_device(obj)) continue;
+
+                        obj_flags(obj, flgs);
+                        if (have_flag(flgs, OF_HOLD_LIFE))
+                        {
+                            drained = TRUE; /* No food drain! */
+                            break;
+                        }
+
+                        if (obj->tval == TV_ROD)
+                            drain_amt /= 3;
+
+                        if (drain_amt > device_sp(obj))
+                            drain_amt = device_sp(obj);
+
+                        obvious = TRUE;
+
+                        if (p_ptr->no_charge_drain)
+                        {
+                            drained = TRUE; /* No food drain! */
+                            break;
+                        }
+
+                        if (p_ptr->pclass == CLASS_DEVICEMASTER)
+                        {
+                            int pl = p_ptr->lev;
+                            int dl = obj->activation.difficulty;
+
+                            if (devicemaster_is_speciality(obj))
+                                pl *= 2;
+
+                            if (pl >= randint1(dl))
+                            {
+                                msg_print("Energy begins to drain from your pack ... But you pull it back!");
+                                drained = TRUE; /* No food drain! */
+                                break;
+                            }
+                        }
+
+                        object_desc(buf, obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
+                        msg_format("Energy drains from your %s!", buf);
+                        device_decrease_sp(obj, drain_amt);
+                        drained = TRUE;
+
+                        /* Heal the monster */
+                        m_ptr->hp += drain_amt;
+                        if (m_ptr->hp > m_ptr->maxhp)
+                            m_ptr->hp = m_ptr->maxhp;
+
+                        /* Redraw (later) if needed */
+                        check_mon_health_redraw(m_idx);
+
+                        /* Window stuff */
+                        p_ptr->window |= (PW_INVEN);
+
+                        /* Done */
+                        break;
+                    }
 
                     if ( !drained
                       && (((!(get_race()->flags & RACE_IS_NONLIVING))
@@ -641,7 +638,6 @@ bool make_attack_normal(int m_idx)
 
                         if (!obj) continue;
                         if (object_is_artifact(obj)) continue;
-                        if ((obj->tval == TV_CAPTURE) && (obj->pval > 0) && (r_info[obj->pval].ball_num)) continue;
 
                         object_desc(o_name, obj, OD_OMIT_PREFIX);
 
@@ -699,9 +695,9 @@ bool make_attack_normal(int m_idx)
                         if (object_is_artifact(obj)) continue;
 
                         object_desc(o_name, obj, OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED);
-                        msg_format("%sour %s %s eaten!",
+                        msg_format("%sour %s was eaten!",
                                ((obj->number > 1) ? "One of y" : "Y"),
-                               o_name, (((obj->number == 1) && (have_flag(obj->flags, OF_PLURAL))) ? "were" : "was"));
+                               o_name);
 
                         obj->number--;
                         obj_release(obj, OBJ_RELEASE_QUIET);
@@ -735,37 +731,30 @@ bool make_attack_normal(int m_idx)
                     break; }
 
                 case RBE_LOSE_STR:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_STR)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_INT:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_INT)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_WIS:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_WIS)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_DEX:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_DEX)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_CON:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_CON)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_CHR:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_CHR)) obvious = TRUE;
                     break;
 
                 case RBE_LOSE_ALL:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     if (do_dec_stat(A_STR)) obvious = TRUE;
                     if (do_dec_stat(A_DEX)) obvious = TRUE;
                     if (do_dec_stat(A_CON)) obvious = TRUE;
@@ -798,6 +787,10 @@ bool make_attack_normal(int m_idx)
                         mon_gain_exp(m_ptr, effect_dam);
                     break; }
 
+				case RBE_HALLUCINATE:
+					set_image(effect_dam, FALSE);
+					obvious = TRUE;
+					break;
                 case RBE_DISEASE:
                     effect_dam = reduce_melee_dam_p(effect_dam);
                     blow_dam += take_hit(DAMAGE_ATTACK, effect_dam, ddesc);
@@ -850,7 +843,6 @@ bool make_attack_normal(int m_idx)
                     }
                     break;
                 case RBE_CUT:
-                    if (p_ptr->is_dead || CHECK_MULTISHADOW()) break;
                     set_cut(p_ptr->cut + effect_dam, FALSE);
                     break;
                 default: /* using GF_* ... damage 0 is OK: B:BITE:HURT(4d4):DISENCHANT */
@@ -947,7 +939,7 @@ bool make_attack_normal(int m_idx)
                     dam = mon_damage_mod(m_ptr, dam, FALSE);
                     if (dam > 0)
                     {
-                        msg_format("%^s feels your bloody revenge!", m_name);
+                        msg_format("%^s feels your bloody revenge", m_name);
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_MELEE, &fear,
                             " turns into a pool of blood."))
                         {
@@ -966,7 +958,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:r>burned</color>!", m_name);
+                        msg_format("%^s is <color:r>burned</color>", m_name);
 
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear,
                             " turns into a pile of ash."))
@@ -991,7 +983,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:b>zapped</color>!", m_name);
+                        msg_format("%^s is <color:b>zapped</color>", m_name);
 
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear,
                             " turns into a pile of cinder."))
@@ -1016,7 +1008,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:w>frozen</color>!", m_name);
+                        msg_format("%^s is <color:w>frozen</color>", m_name);
 
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear,
                             " was frozen."))
@@ -1040,7 +1032,7 @@ bool make_attack_normal(int m_idx)
                         int dam = _aura_dam_p(p_ptr->sh_shards + (p_ptr->dustrobe ? 1 : 0));
 
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
-                        msg_format("%^s is <color:u>shredded</color>!", m_name);
+                        msg_format("%^s is <color:u>shredded</color>", m_name);
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear," was torn to pieces."))
                         {
                             blinked = FALSE;
@@ -1117,7 +1109,7 @@ bool make_attack_normal(int m_idx)
                             /* Modify the damage */
                             dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                            msg_format("%^s is injured by holy power!", m_name);
+                            msg_format("%^s is injured by holy power", m_name);
 
                             if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear,
                                 " is destroyed."))
@@ -1143,7 +1135,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is injured by the <color:B>Force</color>.", m_name);
+                        msg_format("%^s is injured by the <color:B>Force</color>", m_name);
 
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear,
                             " is destroyed."))
@@ -1175,11 +1167,11 @@ bool make_attack_normal(int m_idx)
                             {
                                 int dd = o_ptr->dd + p_ptr->weapon_info[hand].to_dd;
                                 int ds = o_ptr->ds + p_ptr->weapon_info[hand].to_ds;
-                                dam = dd * (ds + 1) / 2 + o_ptr->to_d + p_ptr->weapon_info[hand].to_d;
+                                dam = dd * (ds + 1) / 2 + o_ptr->to_h + p_ptr->weapon_info[hand].to_d;
                                 break;
                             }
                         }
-                        slot = equip_find_first(object_is_body_armour);
+                        slot = equip_find_first(object_is_body_armor);
                         if (slot)
                         {
                             object_type *o_ptr = equip_obj(slot);
@@ -1189,7 +1181,7 @@ bool make_attack_normal(int m_idx)
 
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("Enveloped shadows attack %^s.", m_name);
+                        msg_format("Enveloped shadows attack %^s", m_name);
 
                         if (mon_take_hit(m_idx, dam, DAM_TYPE_AURA, &fear, " is destroyed."))
                         {
@@ -1282,7 +1274,6 @@ bool make_attack_normal(int m_idx)
                 }
                 break;
             }
-            check_muscle_sprains(150, "You sprain a muscle dodging the attack!");
         }
 
 

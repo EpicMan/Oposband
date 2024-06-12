@@ -206,20 +206,6 @@ Life Rating  137%       Melee       <color:g>Superb       </color>
 Base HP       40        Archery     <color:r>Bad          </color>
 Experience   250%       Infravision 50'
 </style></indent>
-<topic:Silver Dragon><color:o>Silver Dragon</color>
-Silver Dragons are wyrms of inertia. While they are not quite as strong as most other dragons, they eventually slow monsters with their bite attack. Also, they become more and more resistant to sslowing as they mature.
-
-  <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +4</color>        Disarming   <color:o>Fair         </color>
-Intelligence <color:w> +3</color>        Device      <color:y>Good         </color>
-Wisdom       <color:w> +0</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:R>Poor         </color>
-Constitution <color:w> +3</color>        Searching   <color:o>Fair         </color>
-Charisma     <color:w> +3</color>        Perception  <color:o>Fair         </color>
-Life Rating  110%       Melee       <color:y>Very Good    </color>
-Base HP       40        Archery     <color:r>Bad          </color>
-Experience   250%       Infravision 50'
-</style></indent>
 <topic:Tables><style:heading>Table 1 - Dragon Statistic Bonus Table</style>
 <style:table>
 <color:G>                 </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
@@ -237,7 +223,6 @@ Crystal Drake      +1   -1   -2   +0   +0   +0  100%  +40  275%  130%
 Bronze Dragon      +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 Gold Dragon        +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 Steel Dragon       +8   -6   -6   -3   +7   +3  137%  +40  250%  130%
-Silver Dragon      +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 
 </style>
 <topic:Skills1><style:heading>Table 2 - Dragon Skill Bonus Table I</style>
@@ -257,7 +242,6 @@ Crystal Drake     <color:o>Fair         </color> <color:o>Fair         </color> 
 Bronze Dragon     <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Gold Dragon       <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:R>Poor         </color>
 Steel Dragon      <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>
-Silver Dragon     <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:R>Poor         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Dragon Skill Bonus Table II</style>
@@ -277,9 +261,8 @@ Crystal Drake     <color:o>Fair         </color> <color:o>Fair         </color> 
 Bronze Dragon     <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:r>Bad          </color>   50'
 Gold Dragon       <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:r>Bad          </color>   50'
 Steel Dragon      <color:r>Bad          </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>   50'
-Silver Dragon     <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:r>Bad          </color>   50'
 
 </style>
 
 
-<color:s>Automatically generated for FrogComposband 7.1.salmiak.</color>
+<color:s>Automatically generated for Oposband 0.4.0.</color>

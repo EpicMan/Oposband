@@ -39,16 +39,18 @@ static void _fighter_birth(void)
 { 
     object_type forge;
     
-    object_prep(&forge, lookup_kind(TV_SWORD, SV_RAPIER));
+    object_prep(&forge, lookup_kind(TV_SWORD, SV_CURVED_SWORD));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    py_birth_obj(&forge);
+	
+	object_prep(&forge, lookup_kind(TV_HELM, SV_SKULL_HELM));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SHIELD, SV_SMALL_LEATHER_SHIELD));
     forge.name2 = EGO_SHIELD_ORCISH;
     forge.to_h = 2;
-    forge.to_d = 2;
     forge.to_a = 10;
     forge.pval = 1;
     add_flag(forge.flags, OF_VULN_LITE);
@@ -100,11 +102,16 @@ static void _summon_orcs_spell(int cmd, variant *res)
     }
 }
 
-static power_info _fighter_get_powers[] =
+static power_info _fighter_powers[] =
 {
     { A_STR, { 27, 15, 40, _summon_orcs_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
+
+static int _fighter_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _fighter_powers);
+}
 
 static void _fighter_gain_level(int new_level)
 {
@@ -187,7 +194,7 @@ static void _shaman_birth(void)
     object_prep(&forge, lookup_kind(TV_POLEARM, SV_SPEAR));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_HARD_LEATHER_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_ARMOR));
     py_birth_obj(&forge);
 
     py_birth_light();
@@ -313,7 +320,7 @@ void _confuse_monster_spell(int cmd, variant *res)
     }
 }
 
-static spell_info _shaman_get_spells[] =
+static spell_info _shaman_spells[] =
 {
     { 1, 1, 15, magic_missile_spell},
     { 5, 4, 20, phase_door_spell},
@@ -329,6 +336,11 @@ static spell_info _shaman_get_spells[] =
     { -1, -1, -1, NULL}
 };
 
+static int _shaman_get_spells(spell_info* spells, int max)
+{
+    return get_spells_aux(spells, max, _shaman_spells);
+}
+
 static caster_info * _shaman_caster_info(void)
 {
     static caster_info me = {0};
@@ -336,7 +348,6 @@ static caster_info * _shaman_caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.options = CASTER_USE_HP;
         me.which_stat = A_INT;
         init = TRUE;
     }
@@ -352,6 +363,14 @@ static void _shaman_gain_level(int new_level)
         p_ptr->redraw |= PR_MAP;
     }
 }
+
+/*static void _shaman_character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _shaman_get_spells(spells, MAX_SPELLS);
+
+    py_display_spells(doc, spells, ct);
+} */
 
 static race_t *_shaman_get_race_t(void)
 {
@@ -383,7 +402,6 @@ static race_t *_shaman_get_race_t(void)
         me.gain_level = _shaman_gain_level;
         me.pseudo_class_idx = CLASS_WARRIOR_MAGE;
         me.get_spells = _shaman_get_spells;
-        me.character_dump = py_dump_spells;
         me.subdesc = "Orc shamans and warlocks are more cunning than the average orc and "
                        "have learned rudimentary magic from their black masters. "
                        "They can detect threats, blink out of dangerous situations "

@@ -82,7 +82,7 @@ static void _calc_innate_attacks(void)
 
     calc_innate_blows(&a, _head_count() * 100);
     
-    a.msg = "You bite.";
+    a.msg = "You bite";
     a.name = "Bite";
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
 }
@@ -176,15 +176,15 @@ static power_info _poison_powers[] = {
     {    -1, { -1, -1, -1, NULL}}
 };
 
-static power_info *_get_powers(void) 
+static int _get_powers(spell_info* spells, int max) 
 {
     switch (p_ptr->current_r_idx)
     {
     case MON_NINE_HEADED_HYDRA:
     case MON_ELEVEN_HEADED_HYDRA: 
-        return _fire_powers;
+        return get_powers_aux(spells, max, _fire_powers);
     }
-    return _poison_powers;
+    return get_powers_aux(spells, max, _poison_powers);
 }
 
 /**********************************************************************
@@ -328,7 +328,7 @@ race_t *mon_hydra_get_race(void)
         me.base_hp = 45;
         me.shop_adjust = 130;
 
-        me.get_powers_fn = _get_powers;
+        me.get_powers = _get_powers;
         me.calc_innate_attacks = _calc_innate_attacks;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
@@ -345,13 +345,13 @@ race_t *mon_hydra_get_race(void)
     me.subname = NULL;
     if (!birth_hack && !spoiler_hack)
         me.subname = titles[rank];
-    me.stats[A_STR] = rank - 2;
+    me.stats[A_STR] = rank;
     me.stats[A_INT] = -2;
     me.stats[A_WIS] = -2;
     me.stats[A_DEX] = (rank + 1)/2;
     me.stats[A_CON] = rank;
-    me.stats[A_CHR] =  0;
-    me.life = 99 + 2*rank;
+    me.stats[A_CHR] =  -2;
+    me.life = 100 + 3*rank;
     me.equip_template = mon_get_equip_template();
 
     return &me;

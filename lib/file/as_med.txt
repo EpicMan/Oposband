@@ -71,7 +71,6 @@ N: 6:BIAS_STR
 of the Valkyrie
 of the Watchman
 of Ajax
-of Nestor
 
 N:19:BIAS_RANGER
 N:10:BIAS_CON
@@ -87,7 +86,6 @@ of Angantyr
 of Dernhelm
 of the Shieldmaiden
 of Okeewana
-of Artimpasa
 
 N:*:Default
 'Yay'

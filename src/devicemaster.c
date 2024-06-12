@@ -133,10 +133,7 @@ void _identify_device_spell(int cmd, variant *res)
         var_set_string(res, "Identify a single magical device.");
         break;
     case SPELL_CAST:
-        if (p_ptr->lev >= 25)
-            var_set_bool(res, identify_fully(_is_device));
-        else
-            var_set_bool(res, ident_spell(_is_device));
+        var_set_bool(res, ident_spell(_is_device));
         break;
     default:
         default_spell(cmd, res);
@@ -287,7 +284,7 @@ static bool _transfer_essence(void)
     {
         if (dest_kind->level > src_kind->level) /* Double Check ... should already be excluded! */
         {
-            msg_print("Failed! The essence is too weak to be transferred to this object.");
+            msg_print("Failed! You may only transfer to objects of greater or equal power.");
             return FALSE;
         }
     }
@@ -357,7 +354,7 @@ void _transfer_charges_spell(int cmd, variant *res)
 }
 
 
-static spell_info _get_spells[] = 
+static spell_info _spells[] = 
 {
     /*lvl cst fail spell */
     {  1,  1, 30, _detect_devices_spell},
@@ -367,6 +364,11 @@ static spell_info _get_spells[] =
     { 25,  0,  0, _desperation_spell},
     { -1, -1, -1, NULL}
 };
+
+static int _get_spells(spell_info* spells, int max)
+{    
+    return get_spells_aux(spells, max, _spells);
+}
 
 cptr devicemaster_speciality_name(int psubclass)
 {
@@ -437,9 +439,25 @@ static void _birth(void)
         py_birth_obj(&forge);
         break;
     }
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 static void _character_dump(doc_ptr doc)
@@ -462,7 +480,12 @@ static void _character_dump(doc_ptr doc)
         doc_printf(doc, " * You may use %s even when frightened.\n", desc);
     doc_printf(doc, " * You are resistant to charge draining (Power=%d).\n\n", p_ptr->lev);
 
-    py_dump_spells(doc); 
+    {
+        spell_info spells[MAX_SPELLS];
+        int        ct = _get_spells(spells, MAX_SPELLS);
+
+        py_display_spells(doc, spells, ct);
+    }
 }
 
 static caster_info * _caster_info(void)

@@ -1,10 +1,17 @@
 #include "angband.h"
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_INT, { 25, 1, 90, eat_magic_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 25;
+    spell->cost = 1;
+    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_INT]);
+    spell->fn = eat_magic_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -31,9 +38,26 @@ static void _calc_bonuses(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *yellow_mage_get_class(void)
@@ -70,8 +94,7 @@ class_t *yellow_mage_get_class(void)
         me.exp = 130;
         me.pets = 30;
         me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
-                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG |
-                   CLASS_REGEN_MANA;
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

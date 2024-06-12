@@ -59,13 +59,16 @@ static grouper group_item[] =
     { TV_POLEARM,       NULL },
     { TV_HAFTED,        NULL },
     { TV_SWORD,         NULL },
+    { TV_AXE,           NULL },
+    { TV_STAVES,        NULL },
+    { TV_DAGGER,        NULL },
 
-    { TV_SOFT_ARMOR,    "Armour (Body)" },
+    { TV_SOFT_ARMOR,    "Armor (Body)" },
 
     { TV_HARD_ARMOR,    NULL },
     { TV_DRAG_ARMOR,    NULL },
 
-    { TV_BOOTS,         "Armour (Misc)" },
+    { TV_BOOTS,         "Armor (Misc)" },
 
     { TV_GLOVES,        NULL },
     { TV_HELM,          NULL },
@@ -148,7 +151,6 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
     q_ptr->pval = 0;
     q_ptr->to_a = 0;
     q_ptr->to_h = 0;
-    q_ptr->to_d = 0;
 
 
     /* Level */
@@ -191,13 +193,16 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
+        case TV_AXE:
+        case TV_DAGGER:
+        case TV_STAVES:
         case TV_DIGGING:
         {
             sprintf(dam, "%dd%d", q_ptr->dd, q_ptr->ds);
             break;
         }
 
-        /* Armour */
+        /* Armor */
         case TV_BOOTS:
         case TV_GLOVES:
         case TV_CLOAK:
@@ -252,7 +257,7 @@ static void spoil_obj_desc(cptr fname)
 
 
     /* Header */
-    fprintf(fff, "Spoiler File -- Basic Items (FrogComposband %d.%d.%s)\n\n\n",
+    fprintf(fff, "Spoiler File -- Basic Items (Oposband %d.%d.%d)\n\n\n",
         VER_MAJOR, VER_MINOR, VER_PATCH);
 
     /* More Header */
@@ -363,9 +368,12 @@ static void spoil_obj_desc(cptr fname)
  */
 static grouper group_artifact[] =
 {
-    { TV_SWORD,             "Edged-Weapons" },
+    { TV_SWORD,             "Swords" },
     { TV_POLEARM,           "Polearms" },
     { TV_HAFTED,            "Hafted-Weapons" },
+    { TV_DAGGER,            "Stabbing Weapons" },
+    { TV_AXE,               "Axes" },
+    { TV_STAVES,            "Staves" },
     { TV_DIGGING,           "Diggers" },
     { TV_BOW,               "Bows" },
     { TV_ARROW,             "Ammo" },
@@ -423,7 +431,6 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
     o_ptr->mult = a_ptr->mult;
     o_ptr->to_a = a_ptr->to_a;
     o_ptr->to_h = a_ptr->to_h;
-    o_ptr->to_d = a_ptr->to_d;
     o_ptr->weight = a_ptr->weight;
 
     /* Success */
@@ -577,9 +584,8 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
                     if (object_is_weapon_ammo(&forge))
                     {
                         forge.to_h = MAX(10, forge.to_h);
-                        forge.to_d = MAX(10, forge.to_d);
                     }
-                    if (object_is_armour(&forge))
+                    if (object_is_armor(&forge))
                     {
                         forge.to_a = MAX(10, forge.to_a);
                     }
@@ -711,7 +717,7 @@ static void spoil_artifact_tables(void)
     _spoil_artifact_table_aux(doc, "Rings", object_is_ring);
     _spoil_artifact_table_aux(doc, "Amulets", object_is_amulet);
     _spoil_artifact_table_aux(doc, "Lights", object_is_lite);
-    _spoil_artifact_table_aux(doc, "Body Armor", object_is_body_armour);
+    _spoil_artifact_table_aux(doc, "Body Armor", object_is_body_armor);
     _spoil_artifact_table_aux(doc, "Cloaks", object_is_cloak);
     _spoil_artifact_table_aux(doc, "Helmets", object_is_helmet);
     _spoil_artifact_table_aux(doc, "Gloves", object_is_gloves);
@@ -734,7 +740,7 @@ static void spoil_object_tables(void)
     _spoil_object_table_aux(doc, "Rings", object_is_ring);
     _spoil_object_table_aux(doc, "Amulets", object_is_amulet);
     _spoil_object_table_aux(doc, "Lights", object_is_lite);
-    _spoil_object_table_aux(doc, "Body Armor", object_is_body_armour);
+    _spoil_object_table_aux(doc, "Body Armor", object_is_body_armor);
     _spoil_object_table_aux(doc, "Cloaks", object_is_cloak);
     _spoil_object_table_aux(doc, "Helmets", object_is_helmet);
     _spoil_object_table_aux(doc, "Gloves", object_is_gloves);
@@ -836,7 +842,7 @@ static void spoil_mon_desc(void)
     doc_ptr doc = doc_alloc(80);
 
     doc_change_name(doc, "mon-desc.html");
-    doc_printf(doc, "<color:heading>Monster Tables for FrogComposband Version %d.%d.%s</color>\n\n",
+    doc_printf(doc, "<color:heading>Monster Tables for Oposband Version %d.%d.%d</color>\n\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_insert(doc, "<style:table>");
 
@@ -1098,6 +1104,8 @@ static void _spoil_mon_spell_dam_aux(doc_ptr doc, vec_ptr v)
             color = 'D';
         else if (r->flags3 & RF3_OLYMPIAN)
             color = 'U';
+        else if (r->id > 1132)
+            color = 'B';
         doc_printf(doc, "<color:%c>%-20.20s</color> %3d %5d", color, r_name + r->name, r->level, hp);
         if (r->spells)
         {
@@ -1228,6 +1236,7 @@ static _mon_dam_info_ptr _mon_dam_info_alloc(mon_race_ptr r)
             /* skip non-damaging effects */
             if (effect->effect == RBE_CUT) continue;
             if (effect->effect == RBE_DRAIN_EXP) continue;
+			if (effect->effect == RBE_HALLUCINATE) continue;
             if (effect->effect == GF_TURN_ALL) continue;
             if (effect->effect == GF_STUN) continue;
             if (effect->effect == GF_PARALYSIS) continue;
@@ -1376,6 +1385,8 @@ static void _spoil_mon_melee_dam_aux_aux(doc_ptr doc, vec_ptr v)
             color = 'D';
         else if (info->mon->flags3 & RF3_OLYMPIAN)
             color = 'U';
+        else if (info->mon->id > 1132)
+            color = 'B';
         doc_printf(doc, "<color:%c>%-30.30s</color>", color, r_name + info->mon->name);
         color = (info->mon->flags1 & RF1_FORCE_DEPTH) ? 'r' : 'w';
         doc_printf(doc, " <color:%c>%3d</color> %5d", color, info->mon->level, hp);
@@ -1483,12 +1494,10 @@ static bool _summon_spell_only(mon_race_ptr r)
     return TRUE;
 }
 
-static bool _mon_spell_dam_p(mon_race_ptr r)
+static bool _mon_dam_p(mon_race_ptr r)
 {
     int min = 0, max = 200;
 
-    if (r->flags9 & RF9_DEPRECATED) return FALSE;
-    return mon_race_has_attack_spell(r);
     return _summon_spell_only(r);
     return TRUE;
     return _has_blow(r, _paralysis);
@@ -1510,32 +1519,13 @@ static bool _mon_spell_dam_p(mon_race_ptr r)
     return BOOL(r->flags3 & RF3_UNDEAD);
     return !(r->flags9 & RF9_DEPRECATED);
     return _is_monk(r);
-    return (r->dungeon == DUNGEON_CAMELOT);
-}
-
-static bool _mon_melee_dam_p(mon_race_ptr r)
-{
-    if (r->flags9 & RF9_DEPRECATED) return FALSE;
-    return ((r->flags1 & RF1_NEVER_BLOW) ? FALSE : TRUE);
-}
-
-static bool _mon_dam_p(mon_race_ptr r)
-{
-    if (r->flags9 & RF9_DEPRECATED) return FALSE;
-    return TRUE;
-}
-
-static bool _mon_non_nice_p(mon_race_ptr r)
-{
-    if (r->flags9 & RF9_DEPRECATED) return FALSE;
-    if (r->flags1 & RF1_FORCE_SLEEP) return FALSE;
-    return TRUE;
+    return BOOL(r->flags2 & RF2_CAMELOT);
 }
 
 static void spoil_mon_spell_dam(void)
 {
     doc_ptr doc = doc_alloc(120);
-    vec_ptr v = _mon_table(_mon_spell_dam_p);
+    vec_ptr v = _mon_table(_mon_dam_p); 
 
     doc_change_name(doc, "mon-spells.html");
     doc_insert(doc, "<style:table>");
@@ -1543,7 +1533,7 @@ static void spoil_mon_spell_dam(void)
     _spoil_mon_spell_dam_aux(doc, v);
 
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband Version %d.%d.%s</color>\n\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband Version %d.%d.%d</color>\n\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_display(doc, "Monster Tables", 0);
     doc_free(doc);
@@ -1553,7 +1543,7 @@ static void spoil_mon_spell_dam(void)
 static void spoil_mon_melee_dam(void)
 {
     doc_ptr doc = doc_alloc(120);
-    vec_ptr v = _mon_table(_mon_melee_dam_p);
+    vec_ptr v = _mon_table(_mon_dam_p); 
 
     doc_change_name(doc, "mon-melee.html");
     doc_insert(doc, "<style:table>");
@@ -1561,47 +1551,7 @@ static void spoil_mon_melee_dam(void)
     _spoil_mon_melee_dam_aux(doc, v);
 
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband Version %d.%d.%s</color>\n\n",
-                     VER_MAJOR, VER_MINOR, VER_PATCH);
-    doc_display(doc, "Monster Tables", 0);
-    doc_free(doc);
-    vec_free(v);
-}
-
-static void _spoil_mon_non_nice_aux(doc_ptr doc, vec_ptr v)
-{
-    int i;
-    for (i = 0; i < vec_length(v); i++)
-    {
-        mon_race_ptr mon = vec_get(v, i);
-        char     color = 'w';
-        char     color2 = 'w';
-
-        if (i%25 == 0)
-            doc_printf(doc, "\n<color:G>%-35.35s Lvl Exp </color>\n", "Name");
-
-        if (mon->flags1 & RF1_UNIQUE)
-            color = 'v';
-        if ((mon_race_has_attack_spell(mon)) || (mon_race_has_summon_spell(mon)))
-            color2 = 'U';
-        doc_printf(doc, "<color:%c>%-35.35s</color>", color, r_name + mon->name);
-        doc_printf(doc, " <color:%c>%3d</color> <color:%c>%d</color>", color, mon->level, color2, mon->mexp);
-        doc_newline(doc);
-    }
-}
-
-static void spoil_mon_non_nice(void)
-{
-    doc_ptr doc = doc_alloc(120);
-    vec_ptr v = _mon_table(_mon_non_nice_p);
-
-    doc_change_name(doc, "mon-nasty.html");
-    doc_insert(doc, "<style:table>");
-
-    _spoil_mon_non_nice_aux(doc, v);
-
-    doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband Version %d.%d.%s</color>\n\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband Version %d.%d.%d</color>\n\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_display(doc, "Monster Tables", 0);
     doc_free(doc);
@@ -1643,6 +1593,8 @@ static void _spoil_mon_resist_aux(doc_ptr doc, vec_ptr v)
             color = 'D';
         else if (race->flags3 & RF3_OLYMPIAN)
             color = 'U';
+        else if (race->id > 1132)
+            color = 'B';
         doc_printf(doc, "<color:%c>%-30.30s</color> %3d %5d ", color, r_name + race->name, race->level, hp);
         _display_mon_resist(doc, race, RFR_RES_ACID, RFR_IM_ACID, 0);
         _display_mon_resist(doc, race, RFR_RES_ELEC, RFR_IM_ELEC, 0);
@@ -1678,7 +1630,7 @@ static void spoil_mon_resist(void)
     _spoil_mon_resist_aux(doc, v);
 
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband Version %d.%d.%s</color>\n\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband Version %d.%d.%d</color>\n\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_display(doc, "Monster Tables", 0);
     doc_free(doc);
@@ -1869,9 +1821,9 @@ static void spoil_device_fail()
         doc_newline(doc);
     }
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband %d.%d.%s</color>\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband %d.%d.%d</color>\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
-    doc_display(doc, "Device Fail Rates", 0);
+    doc_display(doc, "Device Faile Rates", 0);
     doc_free(doc);
 }
 static char _effect_color(int which)
@@ -1887,7 +1839,7 @@ static char _effect_color(int which)
 static void _display_device_power(doc_ptr doc, effect_t *effect)
 {
     cptr s = do_effect(effect, SPELL_INFO, 0);
-    int  dd, ds, base, amt;
+    int  dd, ds, base, amt = 0;
 
     if (!s || !strlen(s))
     {
@@ -1905,10 +1857,6 @@ static void _display_device_power(doc_ptr doc, effect_t *effect)
     else if (sscanf(s, "heal %dd%d", &dd, &ds) == 2)
         amt = dd*(ds+1)/2;
     else if (sscanf(s, "heal %d", &base) == 1)
-        amt = base;
-    else if (sscanf(s, "pow %d", &base) == 1)
-        amt = base;
-    else if (sscanf(s, "power %d", &base) == 1)
         amt = base;
     else if (sscanf(s, "Power %d", &base) == 1)
         amt = base;
@@ -1955,9 +1903,9 @@ static void spoil_device_tables()
     _spoil_device_table_aux(doc, rod_effect_table, "Rods");
 
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband %d.%d.%s</color>\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband %d.%d.%d</color>\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
-    doc_display(doc, "Device Damage/Power Tables", 0);
+    doc_display(doc, "Device Fail Rates", 0);
     doc_free(doc);
 }
 /************************************************************************
@@ -2049,7 +1997,7 @@ static void spoil_mon_evol(void)
     doc_ptr doc = doc_alloc(80);
 
     doc_change_name(doc, "mon-evol.html");
-    doc_printf(doc, "<color:heading>Monster Evolution for FrogComposband Version %d.%d.%s</color>\n",
+    doc_printf(doc, "<color:heading>Monster Evolution for Oposband Version %d.%d.%d</color>\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_insert(doc, "<style:table>");
 
@@ -2070,51 +2018,6 @@ static void spoil_mon_evol(void)
 
     doc_insert(doc, "</style>");
     doc_display(doc, "Monster Evolution", 0);
-    doc_free(doc);
-}
-
-/* Monsters sharing symbols */
-
-static void spoil_shared_symbols(void)
-{
-    int     i, j;
-    doc_ptr doc = doc_alloc(80);
-
-    doc_change_name(doc, "mon-ssym.html");
-    doc_insert(doc, "<color:heading>Monsters Sharing Symbols With Other Monsters</color>\n");
-    doc_insert(doc, "<style:table>");
-
-    for (i = 1; i < max_r_idx; i++)
-    {
-        monster_race *r_ptr = &r_info[i];
-        byte _norm = 0, _uniq = 0;
-
-        if ((!r_ptr) || (!r_ptr->name)) continue;
-        if (r_ptr->flags1 & (RF1_ATTR_MULTI | RF1_SHAPECHANGER | RF1_ATTR_CLEAR | RF1_CHAR_CLEAR)) continue;
-
-        for (j = 1; j < max_r_idx; j++) /* Very inefficient but easy to code */
-        {
-            monster_race *r2_ptr = &r_info[j];
-            if (j == i) continue;
-            if ((!r2_ptr) || (!r2_ptr->name)) continue;
-            if (r2_ptr->flags1 & (RF1_ATTR_MULTI | RF1_SHAPECHANGER | RF1_ATTR_CLEAR | RF1_CHAR_CLEAR)) continue;
-            if ((r2_ptr->d_char == r_ptr->d_char) && (r2_ptr->d_attr == r_ptr->d_attr))
-            {
-                if (_mon_is_unique(r2_ptr)) _uniq++;
-                else _norm++;
-            }
-        }
-
-        if ((!_uniq) && (!_norm)) continue;
-
-        doc_printf(doc, "[%d]: <color:B>%s</color> (<color:%c>%c</color>): with ", r_ptr->id, r_name + r_ptr->name, attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
-        if (_norm) doc_printf(doc, "%d non-unique%s%s", _norm, (_norm == 1) ? "" : "s", _uniq ? " and " : "");
-        if (_uniq) doc_printf(doc, "%d unique%s", _uniq, (_uniq == 1) ? "" : "s");
-        doc_newline(doc);
-    }
-
-    doc_insert(doc, "</style>");
-    doc_display(doc, "Monsters Sharing Symbols", 0);
     doc_free(doc);
 }
 
@@ -2230,7 +2133,7 @@ static void spoil_skills()
     vec_free(v);
 
     doc_insert(doc, "</style>");
-    doc_printf(doc, "\n<color:D>Generated for FrogComposband %d.%d.%s</color>\n",
+    doc_printf(doc, "\n<color:D>Generated for Oposband %d.%d.%d</color>\n",
                      VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_display(doc, "Skills", 0);
     doc_free(doc);
@@ -2559,120 +2462,6 @@ static void spoil_option_bits(void)
     doc_free(doc);
 }
 
-static int _lookup_monster(cptr name)
-{
-    char nimi[MAX_NLEN] = "^", nimi2[MAX_NLEN];
-    int i;
-    if (strstr("it", name)) return 0; /* historical - distinguish from the unique It */
-    strcpy(nimi2, name);
-    if (strpos("a ", nimi2) == 1) string_clip(nimi2, 1, 2);
-    else if (strpos("an ", nimi2) == 1) string_clip(nimi2, 1, 3);
-    (void)clip_and_locate(" while helpless", nimi2);
-    i = strpos("(", nimi2);
-    if (i > 0)
-    {
-        nimi2[i - 1] = '\0';
-        while (i > 0)
-        {
-            i--;
-            if (nimi2[i - 1] != ' ') break;
-            nimi2[i - 1] = '\0';
-        }
-    }
-    strcat(nimi, nimi2);
-    strcat(nimi, "$");
-    str_tolower(nimi);
-    return parse_lookup_monster(nimi, 0);
-}
-
-struct _deadly_mon_info_s
-{
-    int id;
-    int count;
-};
-
-typedef struct _deadly_mon_info_s _deadly_mon_info_t, *_deadly_mon_info_ptr;
-
-
-static int _deadly_mon_comp(_deadly_mon_info_ptr left, _deadly_mon_info_ptr right)
-{
-    if (left->count > right->count)
-        return -1;
-    if (left->count < right->count)
-        return 1;
-
-    if (left->id > right->id)
-        return -1;
-    if (left->id < right->id)
-        return 1;
-
-    return 0;
-}
-
-static void spoil_deadliest_mons(bool allow_thrall)
-{
-    doc_ptr doc = doc_alloc(80);
-    vec_ptr v = vec_alloc(NULL);
-    vec_ptr scores = scores_load(NULL);
-    int_map_ptr map = int_map_alloc(NULL);
-    int_map_iter_ptr iter;
-    int i, key, laskuri = 0;
-    _deadly_mon_info_ptr mon_ptr;
-
-    for (i = 0; i < vec_length(scores); i++)
-    {
-        score_ptr score = vec_get(scores, i);
-        if (!score) continue;
-        if (!score->status) continue;
-        if (!score->killer) continue;
-        if (strcmp(score->status, "Dead") != 0) continue;
-        if ((!allow_thrall) && (strpos("thrall", score->version))) continue;
-        key = _lookup_monster(score->killer);
-        if (!key) continue;
-        laskuri++;
-        mon_ptr = int_map_find(map, key);
-        if (!mon_ptr)
-        {
-            mon_ptr = malloc(sizeof(_deadly_mon_info_t));
-            memset(mon_ptr, 0, sizeof(_deadly_mon_info_t));
-            int_map_add(map, key, mon_ptr);
-            mon_ptr->id = key;
-        }
-        mon_ptr->count++;
-    }
-
-    vec_free(scores);
-
-    for (iter = int_map_iter_alloc(map);
-            int_map_iter_is_valid(iter);
-            int_map_iter_next(iter) )
-    {
-        vec_add(v, int_map_iter_current(iter));
-    }
-    int_map_iter_free(iter);
-    vec_sort(v, (vec_cmp_f)_deadly_mon_comp);
-    if (laskuri > 10)
-    {
-        for (i = 0; i < vec_length(v); i++)
-        {
-            monster_race *r_ptr;
-            mon_ptr = vec_get(v, i);
-            if ((!mon_ptr) || (!mon_ptr->id) || (!mon_ptr->count)) continue;
-            r_ptr = &r_info[mon_ptr->id];
-            doc_printf(doc, "  %-44.44s %4d\n", r_name + r_ptr->name, mon_ptr->count);
-        }
-    }
-    else
-    {
-        doc_insert(doc, "Available data insufficient for analysis.");
-    }
-
-    vec_free(v);    
-    int_map_free(map);
-    doc_display(doc, "Deadliest Monsters", 0);
-    doc_free(doc);
-}
-
 /************************************************************************
  * Public
  ************************************************************************/
@@ -2707,12 +2496,7 @@ void do_cmd_spoilers(void)
         prt("(R) Resistance", row++, col);
         prt("(f) Spell Frequency (Anger)", row++, col);
         prt("(F) Spell Frequency (Melee)", row++, col);
-        prt("(%) Shared Symbols", row++, col);
-        prt("(&) Non-Nice Monsters", row++, col);
         row++;
-
-        row = 4;
-        col = 40;
 
         c_prt(TERM_RED, "Class Spoilers", row++, col - 2);
         prt("(s) Spells by Class", row++, col);
@@ -2720,12 +2504,13 @@ void do_cmd_spoilers(void)
         prt("(S) Skills", row++, col);
         row++;
 
+        row = 4;
+        col = 40;
+
         c_prt(TERM_RED, "Miscellaneous", row++, col - 2);
         prt("(1) Option Bits", row++, col);
         prt("(2) Device Fail Rates", row++, col);
         prt("(3) Device Tables", row++, col);
-        prt("(4) Deadliest Monsters", row++, col);
-        prt("(5) Deadliest Monsters (Non-Thrall)", row++, col);
         row++;
 
         /* Prompt */
@@ -2763,12 +2548,6 @@ void do_cmd_spoilers(void)
         case 'e':
             spoil_mon_evol();
             break;
-        case '%':
-            spoil_shared_symbols();
-            break;
-        case '&':
-            spoil_mon_non_nice();
-            break;
         case 'd':
             spoil_mon_spell_dam();
             break;
@@ -2805,12 +2584,6 @@ void do_cmd_spoilers(void)
             break;
         case '3':
             spoil_device_tables();
-            break;
-        case '4':
-            spoil_deadliest_mons(TRUE);
-            break;
-        case '5':
-            spoil_deadliest_mons(FALSE);
             break;
 
         /* Oops */

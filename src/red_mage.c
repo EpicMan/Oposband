@@ -26,11 +26,18 @@ void _double_magic_spell(int cmd, variant *res)
     }
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_NONE, { 48, 20, 0, _double_magic_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 48;
+    spell->cost = 20;
+    spell->fail = 0;
+    spell->fn = _double_magic_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -52,13 +59,25 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    int i;
-    for (i = 0; i < 64; i++)
-        p_ptr->spell_exp[i] = SPELL_EXP_EXPERT;
-
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_HARD_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_ARCANE_BOOK, 0, 1);
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *red_mage_get_class(void)

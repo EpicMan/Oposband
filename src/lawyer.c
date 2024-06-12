@@ -168,16 +168,12 @@ cptr do_law_spell(int spell, int mode)
         break;
 
     case 6:
-        lisa = ((plev >= 45) && (lawyer_aptitude));
         if (name) return "Identify";
-        if (desc) return (lisa ? "Fully identifies an item." : "Identifies an item.");
-
+        if (desc) return "Identifies an item.";
         {
             if (cast)
             {
-                if ((lisa) && (!identify_fully(NULL))) return NULL;
-                else if (lisa) break;
-                else if (!ident_spell(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -234,7 +230,7 @@ cptr do_law_spell(int spell, int mode)
             {
                 if (!get_fire_dir(&dir)) return NULL;
 
-                slow_monster(dir, power);
+                slow_monster(dir);
             }
         }
         break;
@@ -387,9 +383,16 @@ cptr do_law_spell(int spell, int mode)
         break;
 
     case 20:
-        if (name) return "Probe";
-        if (desc) return "Reveals information about nearby monsters.";
-        if (cast) probing();
+        if (name) return "Contempt of Court";
+        if (desc) return "Scare and stun a lawbreaking monster";
+		if (cast)
+		{
+
+			if (!get_fire_dir(&dir)) return NULL;
+
+			fear_monster(dir, 2 * plev);
+			stun_monster(dir, 5 + plev / 5);
+		}
         break;
 
     case 21:
@@ -639,12 +642,29 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_PHASE_DOOR, 3 + randint1(3));
     py_birth_spellbooks();
 
     p_ptr->au += 200;
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 /****************************************************************************

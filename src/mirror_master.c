@@ -423,16 +423,11 @@ static void _mirror_of_wandering_spell(int cmd, variant *res)
         var_set_bool(res, TRUE);
         break;
     case SPELL_ENERGY:
-        if (mut_present(MUT_ASTRAL_GUIDE))
+        if (_on_mirror)
         {
-            var_set_int(res, ((_on_mirror) ? 15 : 33));
+            var_set_int(res, 50);
             break;
         }
-        else
-        {
-            var_set_int(res, ((_on_mirror) ? 50 : 100));
-            break;
-        } 
     default:
         default_spell(cmd, res);
         break;
@@ -514,16 +509,11 @@ static void _mirror_tunnel_spell(int cmd, variant *res)
         break;
     }
     case SPELL_ENERGY:
-        if (mut_present(MUT_ASTRAL_GUIDE))
+        if (_on_mirror)
         {
-            var_set_int(res, ((_on_mirror) ? 15 : 33));
+            var_set_int(res, 50);
             break;
         }
-        else
-        {
-            var_set_int(res, ((_on_mirror) ? 50 : 100));
-            break;
-        } 
     default:
         default_spell(cmd, res);
         break;
@@ -711,16 +701,11 @@ static void _warped_mirror_spell(int cmd, variant *res)
         var_set_bool(res, TRUE);
         break;
     case SPELL_ENERGY:
-        if (mut_present(MUT_ASTRAL_GUIDE))
+        if (_on_mirror)
         {
-            var_set_int(res, ((_on_mirror) ? 15 : 33));
+            var_set_int(res, 50);
             break;
         }
-        else
-        {
-            var_set_int(res, ((_on_mirror) ? 50 : 100));
-            break;
-        } 
     default:
         default_spell(cmd, res);
         break;
@@ -763,23 +748,26 @@ static power_info _powers[] =
     { A_INT,  {30, 0, 50, _mirror_concentration_spell}}, 
     { -1, {-1, -1, -1, NULL}}
 };
-static spell_info *_get_spells(void)
+static int _get_spells(spell_info* spells, int max)
 {
     _on_mirror = is_mirror_grid(&cave[py][px]);
-    return _spells;
+    return get_spells_aux(spells, max, _spells);
 }
 
-static power_info *_get_powers(void)
+static int _get_powers(spell_info* spells, int max)
 {    
     _on_mirror = is_mirror_grid(&cave[py][px]);
-    return _powers;
+    return get_powers_aux(spells, max, _powers);
 }
 
 static void _character_dump(doc_ptr doc)
 {
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
     spellbook_character_dump(doc);
     doc_insert(doc, "<color:r>Realm:</color> <color:B>Mirror Magic</color>\n");
-    py_dump_spells_aux(doc);
+    py_display_spells_aux(doc, spells, ct);
 }
 
 static void _calc_bonuses(void)
@@ -843,9 +831,26 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *mirror_master_get_class(void)
@@ -879,7 +884,7 @@ class_t *mirror_master_get_class(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] = 1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 100;
@@ -893,8 +898,8 @@ class_t *mirror_master_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
-        me.get_spells_fn = _get_spells;
-        me.get_powers_fn = _get_powers;
+        me.get_spells = _get_spells;
+        me.get_powers = _get_powers;
         me.character_dump = _character_dump;
         init = TRUE;
     }

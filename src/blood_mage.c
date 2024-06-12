@@ -33,11 +33,18 @@ static void _blood_rite_spell(int cmd, variant *res)
     }
 }
 
-static power_info _blood_mage_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_INT, { 30, 100, 30, _blood_rite_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 30;
+    spell->cost = 100;
+    spell->fail = calculate_fail_rate(spell->level, 30, p_ptr->stat_ind[A_INT]);
+    spell->fn = _blood_rite_spell;
+
+    return ct;
+}
 
 static void _calc_bonuses(void)
 {
@@ -78,9 +85,26 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *blood_mage_get_class(void)
@@ -124,7 +148,7 @@ class_t *blood_mage_get_class(void)
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/
-        me.get_powers = _blood_mage_powers;
+        me.get_powers = _get_powers;
         me.character_dump = spellbook_character_dump;
         init = TRUE;
     }

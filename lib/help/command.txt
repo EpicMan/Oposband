@@ -19,7 +19,7 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
        4  5  6
        1  2  3</color>
 
-   <color:y>a  Aim a wand</color>                           A  Activate equipment
+   <color:y>a  Activate an item</color>                     A  Activate equipment
    b  Browse magic list                    B  Bash a door
    c  Close a door                         <color:y>C  Character description</color>
    d  Drop an item                         <color:y>D  Disarm a trap</color>
@@ -34,8 +34,8 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    <color:y>m  Cast a spell / use mental power</color>      M  Full dungeon map
    <color:y>n  Repeat last command</color>                  <color:D>N  (unused)</color>
    <color:y>o  Open a door or chest</color>                 <color:y>O  Display object list</color>
-   p  Command your pets                    <color:D>P  (unused)</color>
-   <color:y>q  Quaff a potion</color>                       Q  Quit (commit suicide)
+   p  Command your pets                    <color:y>P  Show previous messages</color>
+   <color:y>q  Quaff a potion</color>                       <color:y>Q  Display quest info</color>
    <color:y>r  Read a scroll</color>                        <color:y>R  Rest for a period</color>
    <color:y>s  Search for traps/doors</color>               S  Toggle search mode
    t  Take off equipment                   T  Dig a tunnel
@@ -60,17 +60,17 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    [  Display monster list                ^M  (special - return)
    ]  Display object list                 <color:D>^N  (unused)</color>
    -  Walk (flip pickup)                  ^O  Display object list
-   _  Edit/activate Mogaminator prefs     ^P  Show previous messages
-   <color:y>+  Alter adjacent grid</color>                 <color:y>^Q  Display quest info</color>
+   _  Edit/activate Mogaminator prefs     <color:D>^P    (unused)</color>
+   <color:y>+  Alter adjacent grid</color>                 ^Q  Quit (game over)
    =  Set options                         ^R  Redraw the screen
    ;  Walk                                ^S  Save and don't quit
    :  Take notes                          ^T  Display game time
    '  Playback recorded command           <color:D>^U  (unused)</color>
    "  Record command                      ^V  Recenter Viewport
    ,  Stay still                          ^W  (special - wizard mode)
-   <color:y><  Go up staircase/Toggle global map  </color> <color:y>^X  Save and quit</color>
    <color:y>.  Run</color>                                 ^Y  (special - wizard mode)
-   <color:y>>  Go down staircase/Enter normal map </color> ^Z  (special - borg command)
+   <color:y>>  Take staircase/Toggle global map   </color> <color:y>^X  Save and quit</color>
+   <  Take staircase (alternate)          ^Z  (unused)
    \  (special - bypass keymap)            <color:D>|  (unused)</color>
    `  Travel to location                   ~  Knowledge menu
    /  Identify symbol                      <color:y>?  Help</color>
@@ -83,7 +83,7 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
        h  .  l
        b  j  n</color>
 
-   <color:y>a  Zap a rod (Activate)</color>                 A  Activate equipment
+   <color:y>a  Activate an item</color>                     A  Activate equipment
    b  (walk - south west)                  B  (run - south west)
    c  Close a door                         <color:y>C  Character description</color>
    d  Drop an item                         <color:y>D  Disarm a trap or chest</color>
@@ -99,7 +99,7 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    n  (walk - south east)                  N  (run - south east)
    <color:y>o  Open a door or chest</color>                 <color:y>O  Use racial/bonus power</color>
    p  Command your pets                    P  Browse magic list (Peruse)
-   <color:y>q  Quaff a potion</color>                       Q  Quit (commit suicide)
+   <color:y>q  Quaff a potion</color>                       <color:y>Q  Display quest info</color>
    <color:y>r  Read a scroll</color>                        <color:y>R  Rest for a period</color>
    s  Search for traps/doors               S  Jam a door (Spike)
    <color:y>t  Fire an arrow etc.</color>                   T  Take off equipment
@@ -125,16 +125,16 @@ Press <color:keypress>?</color> for commands to use in the help interface itself
    <color:y>]  Display object list</color>                 ^N  (tunnel - south east)
    -  Walk (flip pickup)                  <color:D>^O  (unused)</color>
    _  Edit/activate Mogaminator prefs     ^P  Show previous messages
-   <color:y>+  Alter adjacent grid</color>                 <color:y>^Q  Display quest info</color>
+   <color:y>+  Alter adjacent grid</color>                 ^Q  Quit (game over)	
    =  Set options                         ^R  Redraw the screen
    ;  Walk                                ^S  Save and don't quit
    :  Take notes                          ^T  Dig a Tunnel
    '  Playback recorded command           ^U  (tunnel - north east)
    "  Record command                      ^V  Recenter Viewport
    ,  Run                                 ^W  (special - wizard mode)
-   <color:y><  Go up staircase/Toggle global map</color>   <color:y>^X  Save and quit</color>
-   .  Stay still                          ^Y  (tunnel - north west)
-   <color:y>>  Go down staircase/Enter normal map</color>  <color:D>^Z  (unused)</color>
+   <color:y>>  Take staircase/Toggle global map   </color> <color:y>^X  Save and quit</color>
+   <  Take staircase (alternate)          ^Y  (tunnel - north west)
+   .  Stay still                          ^Z  (unused)
    \  (special - bypass keymap)            <color:D>|  (unused)</color>
    `  Travel to location                   ~  Knowledge menu
    /  Identify symbol                      <color:y>?  Help</color>

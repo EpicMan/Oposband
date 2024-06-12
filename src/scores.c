@@ -26,7 +26,7 @@ char *_timestamp(void)
 char *_version(void)
 {
     char buf[32];
-    sprintf(buf, "%d.%d.%s%s", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
+    sprintf(buf, "%d.%d.%d%s", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
     return _str_copy(buf);
 }
 static char *_status(void)
@@ -79,7 +79,7 @@ score_ptr score_current(void)
     score->uid = player_uid;
     score->date = _timestamp();
     score->version = _version();
-    score->score = hof_score();
+    score->score = p_ptr->max_max_exp;  /* XXX */
 
     score->name = _str_copy(player_name);
     score->race = _str_copy(race->name);
@@ -91,14 +91,14 @@ score_ptr score_current(void)
     score->personality = _str_copy(personality->name);
 
     score->gold = p_ptr->au;
-    score->turns = turn_real(game_turn);
+    score->turns = game_turn;
     score->clvl = p_ptr->max_plv;
     score->dlvl = dun_level;
     score->dungeon = _str_copy(map_name());
     score->killer = _killer();
     score->status = _status();
 
-    score->exp = oook_score();
+    score->exp = total_points();
     score->max_depth = _max_depth();
     score->fame = p_ptr->fame;
 
@@ -343,25 +343,6 @@ int scores_next_id(void)
     return next;
 }
 
-bool _score_check2(vec_ptr scores, score_ptr current, bool is_cur)
-{
-    if (!current) return FALSE;
-    if (current->id < 20) return TRUE;
-    if (current->clvl >= 20) return TRUE;
-    if (current->score >= 10000) return TRUE;
-    if (!is_cur) return FALSE; /* purge mode */
-    if ((scores) && (vec_length(scores)))
-    {
-        score_ptr score = vec_get(scores, 0); /* assume this is the top score */
-        if (current->clvl >= score->clvl) return TRUE;
-        if (current->score >= score->score) return TRUE;
-    }
-    if (current->score < 300) return FALSE;
-    if (playtime > ((p_ptr->id < 40) ? 1200 : 1800)) return TRUE;
-    if (playtime < 150) return FALSE;
-    return (current->score >= (current->id * 100));
-}
-
 void scores_update(void)
 {
     int       i;
@@ -369,7 +350,6 @@ void scores_update(void)
     score_ptr current = score_current();
     FILE     *fp;
     char      name[100];
-    bool      make_dump = _score_check2(scores, current, TRUE);
 
     for (i = 0; i < vec_length(scores); i++)
     {
@@ -385,10 +365,6 @@ void scores_update(void)
     scores_save(scores);
     vec_free(scores); /* current is now in scores[] and need not be freed */
 
-    /* Try to limit disk space usage and dump proliferation by only creating
-     * dumps if some effort was put into the character */
-    if (!make_dump) return;
-
     sprintf(name, "dump%d.doc", p_ptr->id);
     fp = _scores_fopen(name, "w");
     if (fp)
@@ -401,31 +377,12 @@ void scores_update(void)
     } 
 }
 
-void _purge_docs(vec_ptr scores)
-{
-    int i;
-    /* Dangerous function. Use responsibly */
-    if (!strpos("sulkimus", ANGBAND_DIR_USER)) return;
-    for (i = 0; i < vec_length(scores); i++)
-    {
-        score_ptr test_me = vec_get(scores, i);
-        if (!test_me) break;
-        if (!_score_check2(scores, test_me, FALSE)) /* purge docs */
-        {
-            char name[100], buf [1024];
-            sprintf(name, "dump%d.doc", test_me->id);
-            path_build(buf, sizeof(buf), ANGBAND_DIR_APEX, name);
-            (void)fd_kill(buf);
-        }
-    }
-}
-
 /************************************************************************
  * User Interface
  ************************************************************************/
 static void _display(doc_ptr doc, vec_ptr scores, int top, int page_size)
 {
-    int i, j;
+    int i, j = 0;
     doc_clear(doc);
     doc_insert(doc, "<style:table>");
     doc_insert(doc, "<tab:32><color:R>High Score Listing</color>\n");
@@ -444,7 +401,7 @@ static void _display(doc_ptr doc, vec_ptr scores, int top, int page_size)
             doc_insert(doc, "<color:B>");
         doc_printf(doc, " <color:y>%c</color>) %-15.15s", I2A(i), score->name);
         doc_printf(doc, " %2d %-12.12s %-13.13s", score->clvl, score->race, score->class_);
-        doc_printf(doc, "%9d %4d", score->score, j + 1);
+        doc_printf(doc, " %8d %4d", score->score, j + 1);
         doc_printf(doc, " %s", score->date);
         if (score_is_winner(score))
             doc_insert(doc, " <color:v>Winner</color>");
@@ -577,9 +534,6 @@ void scores_display(vec_ptr scores)
         case KTRL('N'):
             vec_sort(scores, (vec_cmp_f)score_cmp_name);
             top = 0;
-            break;
-        case KTRL('Y'):
-            _purge_docs(scores);
             break;
         default:
             if (islower(cmd))

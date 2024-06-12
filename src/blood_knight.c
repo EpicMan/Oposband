@@ -373,6 +373,24 @@ static spell_info _spells[] =
     { -1, -1,  -1, NULL}
 }; 
 
+static int _get_spells(spell_info* spells, int max)
+{
+    return get_spells_aux(spells, max, _spells);
+}
+
+static int _get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _powers);
+}
+
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
+    py_display_spells(doc, spells, ct);
+}
+
 static void _calc_bonuses(void)
 {
     p_ptr->regen += 100 + 2*p_ptr->lev;
@@ -495,9 +513,29 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CURE_CRITICAL, rand_range(2, 5));
+
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *blood_knight_get_class(void)
@@ -531,7 +569,7 @@ class_t *blood_knight_get_class(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  0;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -2;
         
         me.base_skills = bs;
         me.extra_skills = xs;
@@ -547,9 +585,9 @@ class_t *blood_knight_get_class(void)
         me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
-        me.get_spells = _spells;
-        me.get_powers = _powers;
-        me.character_dump = py_dump_spells;
+        me.get_spells = _get_spells;
+        me.get_powers = _get_powers;
+        me.character_dump = _character_dump;
         init = TRUE;
     }
 

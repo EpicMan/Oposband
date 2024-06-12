@@ -98,7 +98,6 @@ extern void mon_spell_print(mon_spell_ptr spell, string_ptr s);
 extern void mon_spell_display(mon_spell_ptr spell, string_ptr s); /* helper for mon_display */
 extern void mon_spell_doc(mon_spell_ptr spell, doc_ptr doc);
 extern int  mon_spell_avg_dam(mon_spell_ptr spell, mon_race_ptr race, bool apply_resist);
-extern void mon_spell_dam_range(string_ptr s, mon_spell_ptr spell, mon_race_ptr race, bool apply_resist);
 
 /* A collection of related spells, grouped together for tactical purposes.
  * Each tactical group has a dynamic probability depending on the current
@@ -176,7 +175,6 @@ extern mon_ptr        mon_current(void);
 
 extern bool mon_could_splash(mon_ptr mon, point_t tgt);
 extern bool mon_is_magical(mon_ptr mon);
-extern bool mon_is_superbuff(mon_ptr mon, bool check_hp);
 extern bool mon_race_is_magical(mon_race_ptr race);
 extern bool mon_has_attack_spell(mon_ptr mon);
 extern bool mon_race_has_attack_spell(mon_race_ptr race);
@@ -200,8 +198,6 @@ extern bool mon_race_has_dispel(mon_race_ptr race);
 
 extern bool mon_save_tele_to(mon_ptr mon, cptr name, bool assume_sight);
 
-extern bool hp_mon(mon_ptr mon, int amt, bool is_monspell);
-
 /* Blue-Mage things that need local monspell.c stuff */
 extern void list_spell_info(doc_ptr doc, mon_spell_ptr spell, mon_race_ptr race);
 extern int  blue_mage_spell_fail_rate(mon_spell_ptr spell);
@@ -209,5 +205,8 @@ extern int  blue_mage_spell_order(byte type, s16b effect);
 extern void blue_mage_learn_spell(void);
 extern void blue_mage_learn_spell_aux(byte type, s16b effect, s16b lore, s16b seniority, bool noisy);
 extern void blue_mage_update_parms(vec_ptr spells);
+/* Imitators too */
+extern void imitator_learn_spell(void);
+extern void imitator_learn_spell_aux(byte type, s16b effect, s16b lore, s16b seniority, bool noisy);
 #endif
 

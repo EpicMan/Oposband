@@ -7,7 +7,7 @@
    keep the user up to date as to why their powers don't work. */
 cptr duelist_equip_error(void)
 {
-    int wgt = equip_weight(object_is_armour);
+    int wgt = equip_weight(object_is_armor);
 
     if (wgt > (120 + (p_ptr->lev * 3)))
         return "The weight of your equipment is disrupting your talents.";
@@ -18,7 +18,7 @@ cptr duelist_equip_error(void)
     if (p_ptr->weapon_ct > 1)
         return "Dual wielding is disrupting your talents.";
 
-    if (equip_find_obj(TV_SWORD, SV_POISON_NEEDLE))
+    if (equip_find_obj(TV_DAGGER, SV_POISON_NEEDLE))
         return "The Poison Needle is not an honorable dueling weapon.";
 
     if (p_ptr->anti_magic)
@@ -490,7 +490,7 @@ void strafing_spell(int cmd, variant *res)
 
 #define MAX_DUELIST_SPELLS    9
 
-static spell_info _spells[MAX_DUELIST_SPELLS] =
+static spell_info _spells[MAX_DUELIST_SPELLS] = 
 {
     /*lvl cst fail spell */
     {  1,   0,  0, _mark_target_spell },
@@ -504,17 +504,17 @@ static spell_info _spells[MAX_DUELIST_SPELLS] =
     {-1,  -1,  -1, NULL}
 }; 
 
-static spell_info *_get_spells(void)
+static int _get_spells(spell_info* spells, int max)
 {
     cptr msg = duelist_equip_error();
 
     if (msg)
     {
         msg_print(msg);
-        return NULL;
+        return 0;
     }
-
-    return _spells;
+    
+    return get_spells_aux(spells, MIN(max, MAX_DUELIST_SPELLS), _spells);
 }
 
 static void _calc_bonuses(void)
@@ -590,9 +590,25 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_RAPIER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_THRUSTING_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *duelist_get_class(void)
@@ -640,7 +656,7 @@ class_t *duelist_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
-        me.get_spells_fn = _get_spells;
+        me.get_spells = _get_spells;
         init = TRUE;
     }
 

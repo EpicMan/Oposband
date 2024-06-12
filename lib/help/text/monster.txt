@@ -68,8 +68,8 @@ Monster Symbols
 
 Unlike the race, the species of a monster does not tell you anything 
 about how dangerous a monster is; the almost harmless giant green frog 
-is a reptile/amphibian with the symbol R... but so is a tyrannosaurus. 
-The species does, however, allow some generic assumptions; for example, 
+is a reptile/amphibian with the symbol R... but so is Godzilla. The 
+species does, however, allow some generic assumptions; for example, 
 nearly all dragons and zephyr hounds breathe something or other. You 
 can also assume something with the d or D symbol will take extra damage 
 from a weapon that slays dragons.
@@ -352,16 +352,15 @@ fire-based monsters are red.)
 
 Other similar associations include Blue with lightning/electricity, 
 Black and Slate with acid, Green with poison, Bronze with confusion, 
-Gold with sound and Silver with inertia. Pink monsters often hit to 
-drain strength in melee. Multi-hued monsters flicker in all colours and 
-are typically associated with multiple elements; multi-hued dragons and 
-multi-hued hounds both breathe and resist all of the five common 
-elements (acid, cold, fire, electricity and poison).
+Gold with sound and Silver with inertia. Multi-hued monsters flicker in 
+all colours and are typically associated with multiple elements; 
+multi-hued dragons and multi-hued hounds both breathe and resist all of 
+the five common elements (acid, cold, fire, electricity and poison).
 
 These general rules are not completely airtight - the acid-breathing 
 Water Hounds, for example, are Z instead of the expected Z or Z. (This 
-is to avoid confusion with other hounds; the darkness-breathing Shadow 
-Hounds are Z, and the infamous Gravity Hounds are Z.)
+particular case is actually quite bizarre, in that they used to be Z in 
+older versions of the game.)
 
 Eldritch Horrors
 
@@ -429,9 +428,8 @@ are fun!
   Hostile monsters will attempt to resist capturing, and can only be 
   captured if they are critically injured. Beastmasters are very good 
   at using Capture Balls, and this limitation is relaxed for them. 
-  Level guardians are immune to being captured; uniques and monsters on 
-  town quest levels can only be captured if they are already pets, so 
-  they need to be charmed or otherwise tamed before capture.
+  Quest monsters are immune to being captured, as are uniques who are 
+  not already pets.
   
   Keeping Pets Happy
   
@@ -778,11 +776,6 @@ x is not these mimics' true symbol. Similarly, genociding D would
 affect ancient dragons even if you had changed their visual appearance 
 to something else.
 
-Chameleons are genocided as if they truly belonged to their current, 
-apparent race. Tanuki and Shadowers, on the other hand, are genocided 
-by their underlying species, which for Tanuki is quadrupeds (q) and for 
-Shadowers the species of the race the shadower actually belongs to.
-
 Friendly monsters will always be turned hostile by a failed attempt to 
 genocide them, even if they are uniques and there was no chance the 
 genocide would harm them personally. Genocide can affect pets (it will 
@@ -809,25 +802,12 @@ apply, the color with the highest priority is used):
       U[*********]   Monster is confused
       U[*********]   Monster is stunned
       U[*********]   Monster is afraid
-      U[*********]   Monster is slowed
       U[*--------]   Monster is below 10% health
       U[**-------]   Monster is below 25% health
       U[*****----]   Monster is below 60% health
       U[*********]   Monster is below 100% health
       U[*********]   Monster is at full health
-      U[********-]   Monster is at full health but has reduced max HP
       U[---------]   Monster's status and location are unknown
-
-
-The coloring of the empty slots and surrounding brackets provides some 
-additional information:
-
-      U[*****----]   Monster is current target
-      U[*****----]   Monster is current mount
-
-      U[*****----]   Monster is very powerful (>133.3% normal)
-      U[*****----]   Monster is hasted
-
 
 
 Original   : (??)
@@ -836,6 +816,5 @@ Updated    : Zangband DevTeam
 Updated    : Hengband 1.0.11
 Updated    : PosChengband 4.0.0
 Updated    : FrogComposband 7.1.liquorice
-Updated    : FrogComposband 7.1.salmiak
 
 

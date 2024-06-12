@@ -14,7 +14,7 @@ Fathered by a minor god, you gain no starting powers.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   180%       Infravision 0'
@@ -31,7 +31,7 @@ also resist lightning.
   Wisdom        +2        Save        Good         
   Dexterity     +2        Stealth     Poor         
   Constitution  +2        Searching   Fair         
-  Charisma      +2        Perception  Bad          
+  Charisma      +2        Perception  Poor         
   Life Rating  100%       Melee       Superb       
   Base HP       20        Archery     Good         
   Experience   250%       Infravision 0'
@@ -47,7 +47,7 @@ foes.
   Wisdom        +1        Save        Fair         
   Dexterity     +2        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Excellent    
   Base HP       20        Archery     Good         
   Experience   240%       Infravision 0'
@@ -62,7 +62,7 @@ increased fortitude and have a firm grasp on your life and health.
   Wisdom        +1        Save        Good         
   Dexterity     +1        Stealth     Fair         
   Constitution  +3        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  107%       Melee       Excellent    
   Base HP       20        Archery     Good         
   Experience   240%       Infravision 0'
@@ -82,7 +82,7 @@ mental prowess.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   240%       Infravision 0'
@@ -103,7 +103,7 @@ resistance to magic is suspect as well.
   Wisdom        +1        Save        Poor         
   Dexterity     +1        Stealth     Bad          
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Superb       
   Base HP       20        Archery     Good         
   Experience   240%       Infravision 0'
@@ -122,7 +122,7 @@ with experience.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Good         
   Constitution  +1        Searching   Excellent    
-  Charisma      +1        Perception  Good         
+  Charisma      +1        Perception  Very Good    
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   240%       Infravision 0'
@@ -139,7 +139,7 @@ completely immune to light based attacks. You are seldom blinded.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   230%       Infravision 0'
@@ -159,7 +159,7 @@ with increased range and deadliness.
   Wisdom        +1        Save        Fair         
   Dexterity     +3        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Excellent    
   Experience   230%       Infravision 0'
@@ -178,7 +178,7 @@ equipment will not suffer diminution by corrosion or magical attack.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Superb       
   Base HP       20        Archery     Good         
   Experience   230%       Infravision 0'
@@ -195,7 +195,7 @@ your magical energy, which is even augmented.
   Wisdom        +3        Save        Good         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   220%       Infravision 0'
@@ -212,7 +212,7 @@ resistant to the ravages of time.
   Wisdom        +1        Save        Good         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
+  Charisma      +1        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   220%       Infravision 0'
@@ -230,7 +230,7 @@ slavish devotion, though sometimes this just angers them.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Fair         
-  Charisma      +3        Perception  Bad          
+  Charisma      +3        Perception  Poor         
   Life Rating  100%       Melee       Very Good    
   Base HP       20        Archery     Good         
   Experience   220%       Infravision 0'
@@ -274,19 +274,19 @@ Aphrodite    Fair          Fair          Fair          Poor
 Table 3 - Demigod Skill Bonus Table II
 
              Searching     Perception    Melee         Archery       Infra
-Minor-God    Fair          Bad           Very Good     Good             0'
-Zeus         Fair          Bad           Superb        Good             0'
-Poseidon     Fair          Bad           Excellent     Good             0'
-Hades        Fair          Bad           Excellent     Good             0'
-Athena       Fair          Bad           Very Good     Good             0'
-Ares         Fair          Bad           Superb        Good             0'
-Hermes       Excellent     Good          Very Good     Good             0'
-Apollo       Fair          Bad           Very Good     Good             0'
-Artemis      Fair          Bad           Very Good     Excellent        0'
-Hephaestus   Fair          Bad           Superb        Good             0'
-Hera         Fair          Bad           Very Good     Good             0'
-Demeter      Fair          Bad           Very Good     Good             0'
-Aphrodite    Fair          Bad           Very Good     Good             0'
+Minor-God    Fair          Poor          Very Good     Good             0'
+Zeus         Fair          Poor          Superb        Good             0'
+Poseidon     Fair          Poor          Excellent     Good             0'
+Hades        Fair          Poor          Excellent     Good             0'
+Athena       Fair          Poor          Very Good     Good             0'
+Ares         Fair          Poor          Superb        Good             0'
+Hermes       Excellent     Very Good     Very Good     Good             0'
+Apollo       Fair          Poor          Very Good     Good             0'
+Artemis      Fair          Poor          Very Good     Excellent        0'
+Hephaestus   Fair          Poor          Superb        Good             0'
+Hera         Fair          Poor          Very Good     Good             0'
+Demeter      Fair          Poor          Very Good     Good             0'
+Aphrodite    Fair          Poor          Very Good     Good             0'
 
 
 Table 4 - Demigod Special Powers
@@ -394,56 +394,8 @@ you will choose for your character.
   Protects your mind from hallucination and Eldritch Horrors.
 
 
-Table 5 - Human Weaknesses
-
-Normal humans receive one demigod talent, but they also acquire a 
-special human weakness on reaching level 35. Each weakness corresponds 
-to one of the six basic stats; which weakness a human gets depends on 
-their primary spellcasting stat. Characters with no spell stat are 
-assumed to be warrior-like and receive the Unbalancing Strikes 
-weakness.
-
-  Unbalancing Strikes
-  Strength is your greatest asset; but you now hit with too much power 
-  to control. Every critical hit you score in melee will unbalance you; 
-  you cannot score further criticals in that round, and since you need 
-  extra time to regain your balance, such a round will consume 1.2 
-  turns instead of 1.
-
-  Overactive Imagination
-  Your brain is highly developed - for a human - but perhaps sometimes 
-  you can have too much of a good thing? Your overactive imagination 
-  makes you vulnerable to fear, and reduces your effective character 
-  level by 10 for all fear-related player/monster interactions.
-
-  Attuned to God
-  You are extremely wise, and have spent so much time in meditation 
-  that your mind is now fully attuned to the divine; but as a 
-  consequence, you feel no connection to evil monsters. You cannot 
-  detect any evil monster telepathically, even with spells or equipment 
-  of telepathy.
-
-  Nimbler than Your Body
-  Agility is your strongest point; but there is only so much you can do 
-  in a human body. You sometimes sprain a muscle while hitting 
-  monsters, dodging enemy blows or firing projectiles; this temporarily 
-  reduces your speed by 10.
-
-  Pushed to the Limits
-  Your constitution and endurance are extraordinary; but as with many 
-  highly athletic people, your immune system has trouble keeping up. 
-  You suffer from frequent bouts of unwellness which temporarily 
-  decrease your Constitution and Dexterity.
-
-  Overconfidence
-  Highly charismatic you may be; but getting too caught up in your own 
-  hype results in overconfidence and sloppy work. Lack of sufficient 
-  concentration gives you penalties to melee and shooting accuracy and 
-  to device and spell failure rates, similar to those from the Lazy 
-  personality.
 
 
 
-
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

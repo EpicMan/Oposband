@@ -1,7 +1,6 @@
 N: 1:BIAS_ELEC
 of the Iron Duke
 of Gwindor
-of Caligula
 'Pride of the Goblins'
 'Stormwalker'
 
@@ -23,7 +22,7 @@ N: 4:BIAS_COLD
 of the Cool Cat
 of Mono Island
 of Monomania
-of the Penguins
+of Ursus
 'Snow Lynx'
 'Snow Shoes'
 
@@ -39,10 +38,7 @@ N:12:BIAS_CHAOS
 of Sirrus
 of Achenar
 of the Doom Treader
-of Tindalos
-of Shuffling
 'Big Boots'
-'Mouse Slippers'
 
 N:14:BIAS_NECROMANTIC
 of Witch Wood
@@ -67,7 +63,6 @@ of the Sneak
 'Catwalk'
 'Mercury'
 'Quickstep'
-'Sneaky Sneakers'
 
 N:17:BIAS_MAGE
 N: 7:BIAS_INT
@@ -83,7 +78,6 @@ of Victory
 of Triumph
 of Achilles
 of Slorpik
-of Curbstomping
 'Crusher of Thrones'
 
 N:19:BIAS_RANGER

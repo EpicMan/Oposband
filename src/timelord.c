@@ -548,7 +548,7 @@ static void _rewind_time_spell(int cmd, variant *res)
         if (!get_check("You will irreversibly alter the time line. Are you sure?")) return;
         var_set_bool(res, TRUE);
 
-        if (p_ptr->inside_arena || only_downward() || !dun_level)
+        if (p_ptr->inside_arena || ironman_downward || !dun_level)
         {
             msg_print("Nothing happens.");
             return;
@@ -664,9 +664,6 @@ static void _stasis_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to suspend all monsters in view.");
         break;
-    case SPELL_INFO:
-        var_set_string(res, info_power(spell_power(7 * p_ptr->lev / 3)));
-        break;
     case SPELL_CAST:
         stasis_monsters(spell_power(7 * p_ptr->lev / 3));
         var_set_bool(res, TRUE);
@@ -756,7 +753,7 @@ static void _foresee_spell(int cmd, variant *res)
 /****************************************************************
  * Spell Table and Exports
  ****************************************************************/
-static spell_info _get_spells[] =
+static spell_info _spells[] =
 {
     /*lvl cst fail spell */
     {  1,  2, 30, _bolt_spell},
@@ -778,6 +775,11 @@ static spell_info _get_spells[] =
     { 49,100, 80, _foresee_spell},
     { -1, -1, -1, NULL}
 };
+
+static int _get_spells(spell_info* spells, int max)
+{
+    return get_spells_aux(spells, max, _spells);
+}
 
 static void _calc_bonuses(void)
 {
@@ -840,11 +842,35 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
+    py_display_spells(doc, spells, ct);
+}
+
 static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(4, 7));
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *time_lord_get_class(void)
@@ -892,7 +918,7 @@ class_t *time_lord_get_class(void)
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
-        me.character_dump = py_dump_spells;
+        me.character_dump = _character_dump;
         init = TRUE;
     }
 

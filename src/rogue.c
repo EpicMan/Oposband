@@ -97,8 +97,7 @@ static cptr _rogue_pick_pocket(int power)
             }
         }
 
-        if ((MON_CSLEEP(m_ptr)) && ((r_ptr->flags1 & RF1_UNIQUE) ||
-             mon_save_aux(m_ptr->r_idx, power)))
+        if ((r_ptr->flags1 & RF1_UNIQUE) || mon_save_aux(m_ptr->r_idx, power))
         {
             set_monster_csleep(m_idx, 0);
             if ( allow_ticked_off(r_ptr)
@@ -600,6 +599,7 @@ cptr do_burglary_spell(int spell, int mode)
         if (cast)
         {
             monster_type *m_ptr;
+            monster_race *r_ptr;
             char m_name[80];
 
             if (!target_set(TARGET_KILL)) return NULL;
@@ -611,6 +611,7 @@ cptr do_burglary_spell(int spell, int mode)
             if (cave[target_row][target_col].m_idx == p_ptr->riding) return NULL;
 
             m_ptr = &m_list[cave[target_row][target_col].m_idx];
+            r_ptr = &r_info[m_ptr->r_idx];
             monster_desc(m_name, m_ptr, 0);
             if (mon_save_tele_to(m_ptr, m_name, TRUE)) break;
             msg_format("You command %s to return.", m_name);
@@ -771,12 +772,30 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_TELEPORT, randint1(3));
     py_birth_spellbooks();
 
     p_ptr->au += 200;
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 /****************************************************************************
@@ -818,7 +837,7 @@ class_t *rogue_get_class(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 100;

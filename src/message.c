@@ -421,12 +421,6 @@ char msg_prompt(cptr prompt, char keys[], int options)
     return ch;
 }
 
-bool paranoid_msg_prompt(cptr buf, int options)
-{
-    char c = msg_prompt(buf, "nY", (options | PROMPT_ESCAPE_DEFAULT | PROMPT_CASE_SENSITIVE));
-    return (c == 'Y');
-}
-
 bool msg_command(cptr prompt, char *cmd)
 {
     bool result = FALSE;
@@ -591,7 +585,7 @@ bool msg_input_num(cptr prompt, int *num, int min, int max)
     msg_boundary();
     auto_more_state = AUTO_MORE_PROMPT;
     msg_format("<color:y>%s <color:w>(%d to %d)</color>:</color> ", prompt, min, max);
-    result = askfor_aux(buf, 11, FALSE);
+    result = askfor_aux(buf, 10, FALSE);
     if (result)
     {
         if (isalpha(buf[0]))

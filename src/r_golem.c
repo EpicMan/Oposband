@@ -96,7 +96,7 @@ static void _calc_innate_attacks(void)
             a.effect[1] = GF_STUN;
 
         a.blows = 100;
-        a.msg = "You punch.";
+        a.msg = "You punch";
         a.name = "Fist";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -536,26 +536,23 @@ static power_info _spellwarp_powers[] =
     { A_STR, { 45, 25, 50, _breathe_disintegration_spell} },
     {    -1, { -1, -1, -1, NULL} }
 };
-static power_info *_get_powers(void) 
+static int _get_powers(spell_info* spells, int max) 
 {
-    static power_info spells[MAX_SPELLS];
-    int max = MAX_SPELLS;
-    int ct = get_powers_aux(spells, max, _powers, FALSE);
+    int ct = get_powers_aux(spells, max, _powers);
     switch (p_ptr->current_r_idx)
     {
     case MON_COLOSSUS:
-        ct += get_powers_aux(spells + ct, max - ct, _colossus_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _colossus_powers);
         break;
     case MON_SKY_GOLEM:
-        ct += get_powers_aux(spells + ct, max - ct, _sky_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _sky_powers);
         break;
     case MON_SPELLWARP_AUTOMATON:
-        ct += get_powers_aux(spells + ct, max - ct, _spellwarp_powers, FALSE);
+        ct += get_powers_aux(spells + ct, max - ct, _spellwarp_powers);
         break;
     }
-    spells[ct].spell.fn = NULL;
 
-    return spells;
+    return ct;
 }
 
 static name_desc_t _info[GOLEM_MAX] = {
@@ -595,9 +592,9 @@ race_t *mon_golem_get_race(int psubrace)
         me.birth = _birth;
         me.gain_level = _gain_level;
         me.calc_bonuses = _calc_bonuses;
-        me.get_powers_fn = _get_powers;
+        me.get_powers = _get_powers;
         me.get_flags = _get_flags;
-        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING | RACE_EATS_DEVICES;
+        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
         me.base_hp = 50;
         me.boss_r_idx = MON_DESTROYER;
         me.pseudo_class_idx = CLASS_MAULER;
@@ -613,7 +610,7 @@ race_t *mon_golem_get_race(int psubrace)
     me.stats[A_WIS] = -2 - (rank+1)/2;
     me.stats[A_DEX] = -1 - (rank+1)/2;
     me.stats[A_CON] =  1 + rank;
-    me.stats[A_CHR] =  0 + (rank+1)/2;
+    me.stats[A_CHR] = -2 + (rank+1)/2;
 
     switch (psubrace)
     {

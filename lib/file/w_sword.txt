@@ -114,7 +114,6 @@ N:*:Default
 'Blue Steele'
 'Sharpie'
 'Wolf-Fang'
-'Drowsy Sword'
 of Damocles
 of Orion
 of Osric

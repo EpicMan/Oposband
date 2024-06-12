@@ -12,7 +12,7 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_d = 3;
+    forge.to_h = 3;
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS));
@@ -34,7 +34,7 @@ static void _calc_innate_attacks(void)
         a.effect[0] = GF_OLD_CONF;
         a.blows = 100;
         a.to_h = p_ptr->lev/5;
-        a.msg = "You gaze.";
+        a.msg = "You gaze";
         a.name = "Gaze";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

@@ -69,7 +69,7 @@ average, and your stats suitable for a priest.
   Wisdom        +2        Save        Good         
   Dexterity     -1        Stealth     Poor         
   Constitution  +0        Searching   Excellent    
-  Charisma      +0        Perception  Bad          
+  Charisma      +1        Perception  Bad          
   Life Rating  100%       Melee       Poor         
   Experience   100%       Archery     Poor         
   
@@ -129,7 +129,7 @@ attitude aggravates all monsters.
   Wisdom        +1        Save        Fair         
   Dexterity     +1        Stealth     Fair         
   Constitution  +1        Searching   Excellent    
-  Charisma      +1        Perception  Good         
+  Charisma      +3        Perception  Good         
   Life Rating  100%       Melee       Excellent    
   Experience   100%       Archery     Very Good    
   
@@ -150,19 +150,19 @@ players.
   
 Patient
 A Patient adventurer does everything with great care, but not always 
-with great speed or confident hands. Patient characters are highly 
-resilient, and their slow but measured movements make them relatively 
-stealthy.
+with great expertise. Patient characters have high constitution and 
+resilience but fairly mediocre skills, and get a slight penalty to 
+spell fail rates.
 
   Stats                   Skills
-  Strength      +0        Disarming   Poor         
-  Intelligence  +0        Device      Poor         
-  Wisdom        +2        Save        Good         
+  Strength      -1        Disarming   Bad          
+  Intelligence  -1        Device      Poor         
+  Wisdom        +1        Save        Fair         
   Dexterity     -2        Stealth     Good         
   Constitution  +2        Searching   Fair         
-  Charisma      +0        Perception  Fair         
-  Life Rating  102%       Melee       Poor         
-  Experience   100%       Archery     Fair         
+  Charisma      +0        Perception  Very Bad     
+  Life Rating  102%       Melee       Bad          
+  Experience   100%       Archery     Poor         
   
 Craven
 A Craven person is a coward, preferring to avoid a fight at any cost. 
@@ -225,22 +225,6 @@ smoothly, and the items they most need never seem to drop.
   Life Rating  104%       Melee       Fair         
   Experience   100%       Archery     Fair         
   
-Chaotic
-Chaotic adventurers are servants of the Demon Lords of Chaos, and often 
-receive a reward - or punishment - from their patrons when they gain a 
-level. Their strengths and weaknesses are unpredictable; even their 
-stat bonuses are subject to change.
-
-  Stats                   Skills
-  Strength      +0        Disarming   Fair         
-  Intelligence  +0        Device      Fair         
-  Wisdom        +0        Save        Fair         
-  Dexterity     +0        Stealth     Fair         
-  Constitution  +0        Searching   Fair         
-  Charisma      +0        Perception  Fair         
-  Life Rating   99%       Melee       Fair         
-  Experience   100%       Archery     Fair         
-  
 Mundane
 Mundane adventurers have few talents to speak of, and are incapable of 
 using spells and not very good with magical devices; but their 
@@ -299,7 +283,7 @@ their strengths.
   Wisdom        +1        Save        Fair         
   Dexterity     +2        Stealth     Superb       
   Constitution  -1        Searching   Excellent    
-  Charisma      +1        Perception  Fair         
+  Charisma      -1        Perception  Fair         
   Life Rating   97%       Melee       Fair         
   Experience   100%       Archery     Fair         
   
@@ -349,22 +333,21 @@ Table 1 - Personality Statistic Bonus Table
 Ordinary        +0   +0   +0   +0   +0   +0  100%  100%
 Mighty          +2   -2   -2   +0   +1   +1  102%  100%
 Shrewd          -2   +2   +0   +1   -1   -1   97%  100%
-Pious           +0   -1   +2   -1   +0   +0  100%  100%
+Pious           +0   -1   +2   -1   +0   +1  100%  100%
 Nimble          -1   +1   -1   +2   -1   +0   99%  100%
 Fearless        +1   +0   +0   -1   -1   +1   98%  100%
 Combat          +1   -1   -1   +1   +0   +0  100%  100%
-Sexy            +1   +1   +1   +1   +1   +1  100%  100%
+Sexy            +1   +1   +1   +1   +1   +3  100%  100%
 Lucky           -2   -2   -2   -2   -2   -2   98%  100%
-Patient         +0   +0   +2   -2   +2   +0  102%  100%
+Patient         -1   -1   +1   -2   +2   +0  102%  100%
 Craven          -1   +1   +1   -1   -1   -2   99%  100%
 Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 Lazy            -2   -2   -2   -2   -2   -2   95%  100%
 Unlucky         +2   +2   +2   +2   +2   +2  104%  100%
-Chaotic         +0   +0   +0   +0   +0   +0   99%  100%
 Mundane         -1   -1   -1   -1   -1   -1   97%  100%
 Munchkin        +3   +3   +3   +3   +3   +3  150%   50%
 Fragile         -3   +0   +1   -1   -3   -2   91%  100%
-Sneaky          -3   +1   +1   +2   -1   +1   97%  100%
+Sneaky          -3   +1   +1   +2   -1   -1   97%  100%
 Noble           +0   +0   +0   -2   -1   +2   99%  110%
 Split           +0   +0   +0   +0   +0   +0  100%  100%
 
@@ -381,12 +364,11 @@ Fearless     Bad           Fair          Poor          Fair
 Combat       Poor          Poor          Poor          Fair         
 Sexy         Superb        Very Good     Fair          Fair         
 Lucky        Superb        Excellent     Fair          Excellent    
-Patient      Poor          Poor          Good          Good         
+Patient      Bad           Poor          Fair          Good         
 Craven       Very Good     Very Good     Poor          Superb       
 Hasty        Bad           Bad           Poor          Poor         
 Lazy         Bad           Bad           Poor          Poor         
 Unlucky      Bad           Good          Very Bad      Fair         
-Chaotic      Fair          Fair          Fair          Fair         
 Mundane      Fair          Bad           Excellent     Fair         
 Munchkin     Superb        Amber[10]     Superb        Heroic       
 Fragile      Fair          Fair          Poor          Poor         
@@ -407,12 +389,11 @@ Fearless     Good          Bad           Good          Fair
 Combat       Poor          Good          Good          Good         
 Sexy         Excellent     Good          Excellent     Very Good    
 Lucky        Amber[10]     Heroic        Superb        Excellent    
-Patient      Fair          Fair          Poor          Fair         
+Patient      Fair          Very Bad      Bad           Poor         
 Craven       Fair          Fair          Very Bad      Very Good    
 Hasty        Very Bad      Bad           Poor          Poor         
 Lazy         Very Bad      Bad           Bad           Poor         
 Unlucky      Fair          Excellent     Fair          Fair         
-Chaotic      Fair          Fair          Fair          Fair         
 Mundane      Fair          Fair          Fair          Fair         
 Munchkin     Amber[52]     Amber[52]     Amber[25]     Amber[2]     
 Fragile      Good          Good          Poor          Poor         
@@ -423,5 +404,5 @@ Split        Fair          Fair          Fair          Fair
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

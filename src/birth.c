@@ -75,7 +75,7 @@ void get_max_stats(void)
     /* Acquire the stats */
     for (i = 0; i < 6; i++)
     {
-        j = 18 + 60 + dice[i]*10;
+        j = 24 + dice[i];
 
         /* Save that value */
         p_ptr->stat_max_max[i] = j;
@@ -212,7 +212,6 @@ static void player_wipe(void)
         /* Hack -- Non-unique Nazguls are semi-unique */
         else if (r_ptr->flags7 & RF7_NAZGUL) r_ptr->max_num = MAX_NAZGUL_NUM;
         else if (i == MON_CAMELOT_KNIGHT) r_ptr->max_num = MAX_CAMELOT_KNIGHT_NUM;
-        else if (i == MON_BUSH) r_ptr->max_num = 250;
 
         /* Clear visible kills in this life */
         r_ptr->r_pkills = 0;
@@ -235,19 +234,6 @@ static void player_wipe(void)
     /* Hack -- Well fed player */
     p_ptr->food = PY_FOOD_FULL - 1;
 
-
-    /* Wipe the spells */
-    if (p_ptr->pclass == CLASS_SORCERER)
-    {
-        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0xffffffffL;
-        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0xffffffffL;
-    }
-    else
-    {
-        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0L;
-        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0L;
-    }
-    p_ptr->spell_forgotten1 = p_ptr->spell_forgotten2 = 0L;
     for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
     p_ptr->learned_spells = 0;
     p_ptr->add_spells = 0;
@@ -345,10 +331,6 @@ static void player_wipe(void)
     p_ptr->draconian_power = -1;
 
     p_ptr->duelist_target_idx = 0;
-    target_who = 0;
-    pet_t_m_idx = 0;
-    riding_t_m_idx = 0;
-    p_ptr->health_who = 0;
 
     /* Reset virtues*/
     for (i = 0; i < 8; i++) p_ptr->virtues[i]=0;
@@ -359,7 +341,11 @@ static void player_wipe(void)
  */
 static void init_turn(void)
 {
-    if ( get_race()->flags & RACE_NIGHT_START)
+    if ( p_ptr->prace == RACE_VAMPIRE
+      || p_ptr->prace == RACE_MON_VAMPIRE
+      || p_ptr->prace == RACE_SKELETON
+      || p_ptr->prace == RACE_ZOMBIE
+      || p_ptr->prace == RACE_SPECTRE )
     {
         /* Undead start just after midnight */
         game_turn = (TURNS_PER_TICK*3 * TOWN_DAWN) / 4 + 1;
@@ -371,7 +357,6 @@ static void init_turn(void)
         game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
     }
 
-    image_turn = game_turn;
     dungeon_turn = 1;
     dungeon_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
 }
@@ -399,12 +384,12 @@ void birth_location(void)
 {
     if (no_wilderness)
     {
-        set_dungeon_type(0);
+        dungeon_type = 0;
         p_ptr->recall_dungeon = DUNGEON_ANGBAND;
     }
     else
     {
-        set_dungeon_type(0);
+        dungeon_type = 0;
         p_ptr->recall_dungeon = DUNGEON_WARREN;
     }
 
@@ -413,14 +398,14 @@ void birth_location(void)
         dun_level = 90;
         if (!no_wilderness)
         {
-            set_dungeon_type(DUNGEON_CTH);
+            dungeon_type = DUNGEON_CTH;
             p_ptr->recall_dungeon = DUNGEON_CTH;
             p_ptr->wilderness_y = d_info[dungeon_type].dy;
             p_ptr->wilderness_x = d_info[dungeon_type].dx;
         }
         else
         {
-            set_dungeon_type(DUNGEON_ANGBAND);
+            dungeon_type = DUNGEON_ANGBAND;
         }
         max_dlv[dungeon_type] = 90;
     }

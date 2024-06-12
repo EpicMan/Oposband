@@ -13,11 +13,18 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
         p_ptr->shooter_info.base_shot = 100;
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_WIS, { 15, 20, 90, probing_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 5;
+    spell->cost = 20;
+    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_WIS]);
+    spell->fn = animal_companion_spell;
+
+    return ct;
+}
 
 static caster_info * _caster_info(void)
 {
@@ -40,11 +47,28 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(20, 40));
     py_birth_spellbooks();
+
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_EXPERT;
 }
 
 class_t *ranger_get_class(void)
@@ -73,16 +97,16 @@ class_t *ranger_get_class(void)
                     "highest level spells. Another downside is that rangers, like the "
                     "priestly classes, lack the ability to choose their own spells; "
                     "they will learn whatever the capricious nature gods choose to teach them.\n\n"
-                    "Rangers have a class power, 'Probe Monster', "
-                    "which allows them to assess the strengths and weaknesses of the "
-                    "monsters they meet. The magical powers of a ranger depend on Wisdom.";
+                    "Rangers have a class power, 'Animal Companion', "
+                    "which allows them to summon an animal to assist them."
+                    "The magical powers of a ranger depend on Wisdom.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] =  0;
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 106;

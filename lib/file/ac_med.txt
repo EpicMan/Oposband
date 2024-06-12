@@ -1,7 +1,6 @@
 N: 1:BIAS_ELEC
 of Thanks
 of the Gentle Djinni
-of Umbriel
 'Rubber Coat'
 'Wind Force'
 'Wings of the Storm'
@@ -21,7 +20,6 @@ of the Badlands
 N: 4:BIAS_COLD
 of Halla
 of Lumikeli
-of Ursus
 'Losgol'
 'Snow Angel'
 'Windcheater'
@@ -58,7 +56,7 @@ N:16:BIAS_ROGUE
 N: 9:BIAS_DEX
 of the Assassin
 of the Cloaker
-of the Dragonslayer
+of Sigurd
 'Cover of Darkness'
 'Maple Leaf'
 'Phantom'
@@ -76,7 +74,6 @@ N: 6:BIAS_STR
 of Argon
 of Ilion
 of the Angry Boits
-of Lambo
 'Panther Coat'
 
 N:19:BIAS_RANGER
@@ -86,7 +83,6 @@ of the Nandor
 'Silverback'
 'Wargskin'
 'Life of Leaf'
-'Life Preserver'
 
 N:11:BIAS_CHR
 of Melidere

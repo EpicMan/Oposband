@@ -3,11 +3,15 @@
 /****************************************************************
  * Klackon
  ****************************************************************/
-static power_info _klackon_get_powers[] =
+static power_info _klackon_powers[] =
 {
     { A_DEX, {9, 9, 50, spit_acid_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _klackon_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _klackon_powers);
+}
 static void _klackon_calc_bonuses(void)
 {
     res_add(RES_CONF);
@@ -40,7 +44,7 @@ race_t *klackon_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = 10;
         me.skills.dev = -2;
@@ -69,11 +73,15 @@ race_t *klackon_get_race(void)
 /****************************************************************
  * Kobold
  ****************************************************************/
-static power_info _kobold_get_powers[] =
+static power_info _kobold_powers[] =
 {
     { A_DEX, {12, 8, 50, poison_dart_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _kobold_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _kobold_powers);
+}
 static void _kobold_calc_bonuses(void)
 {
     res_add(RES_POIS);
@@ -129,11 +137,15 @@ race_t *kobold_get_race(void)
 /****************************************************************
  * Kutar
  ****************************************************************/
-static power_info _kutar_get_powers[] =
+static power_info _kutar_powers[] =
 {
     { A_CHR, {20, 15, 70, kutar_expand_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _kutar_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _kutar_powers);
+}
 static void _kutar_calc_bonuses(void)
 {
     res_add(RES_CONF);
@@ -156,14 +168,14 @@ race_t *kutar_get_race(void)
                     "but renders them resistant to being confused. Due to their unearthly "
                     "calmness and serenity, Kutars are extremely stealthy. They learn the "
                     "special ability to expand their body horizontally; this increases "
-                    "their armour class, but renders them vulnerable to curses.";
+                    "their armor class, but renders them vulnerable to curses.";
 
         me.stats[A_STR] =  0;
         me.stats[A_INT] = -1;
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] =  3;
 
         me.skills.dis = -2;
         me.skills.dev = 3;
@@ -192,11 +204,15 @@ race_t *kutar_get_race(void)
 /****************************************************************
  * Mindflayer
  ****************************************************************/
-static power_info _mindflayer_get_powers[] =
+static power_info _mindflayer_powers[] =
 {
     { A_INT, {5, 3, 50, mind_blast_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _mindflayer_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _mindflayer_powers);
+}
 static void _mindflayer_calc_bonuses(void)
 {
     p_ptr->sustain_int = TRUE;
@@ -232,7 +248,7 @@ race_t *mindflayer_get_race(void)
         me.stats[A_WIS] =  4;
         me.stats[A_DEX] =  0;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = 10;
         me.skills.dev = 11;
@@ -262,12 +278,16 @@ race_t *mindflayer_get_race(void)
 /****************************************************************
  * Nibelung
  ****************************************************************/
-static power_info _nibelung_get_powers[] =
+static power_info _nibelung_powers[] =
 {
     { A_WIS, {10, 5, 50, detect_doors_stairs_traps_spell}},
     { A_CHR, {10, 5, 50, detect_treasure_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _nibelung_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _nibelung_powers);
+}
 static void _nibelung_calc_bonuses(void)
 {
     res_add(RES_DISEN);
@@ -324,11 +344,15 @@ race_t *nibelung_get_race(void)
 /****************************************************************
  * Ogre
  ****************************************************************/
-static power_info _ogre_get_powers[] =
+static power_info _ogre_powers[] =
 {
     { A_INT, {25, 35, 70, explosive_rune_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _ogre_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _ogre_powers);
+}
 static void _ogre_calc_bonuses(void)
 {
     p_ptr->sustain_int = TRUE;
@@ -356,7 +380,7 @@ race_t *ogre_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -3;
         me.skills.dev = -3;
@@ -416,7 +440,7 @@ race_t *shadow_fairy_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] = -3;
+        me.stats[A_CHR] =  0;
 
         me.skills.dis =  7;
         me.skills.dev =  6;
@@ -445,11 +469,15 @@ race_t *shadow_fairy_get_race(void)
 /****************************************************************
  * Skeleton
  ****************************************************************/
-static power_info _skeleton_get_powers[] =
+static power_info _skeleton_powers[] =
 {
     { A_WIS, {30, 30, 70, restore_life_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _skeleton_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _skeleton_powers);
+}
 static void _skeleton_calc_bonuses(void)
 {
     res_add(RES_SHARDS);
@@ -493,7 +521,7 @@ race_t *skeleton_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  0;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -5;
         me.skills.dev = 0;
@@ -508,7 +536,7 @@ race_t *skeleton_get_race(void)
         me.base_hp = 21;
         me.exp = 115;
         me.infra = 2;
-        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD | RACE_NIGHT_START | RACE_EATS_DEVICES;
+        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
         me.shop_adjust = 125;
 
         me.birth = _skeleton_birth;
@@ -552,11 +580,15 @@ static void _devour_flesh_spell(int cmd, variant *res)
     }
 }
 
-static power_info _snotling_get_powers[] =
+static power_info _snotling_powers[] =
 {
     { A_CHR, {1, 0, 0, _devour_flesh_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _snotling_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _snotling_powers);
+}
 static void _snotling_calc_bonuses(void)
 {
 }
@@ -618,11 +650,15 @@ race_t *snotling_get_race(void)
 /****************************************************************
  * Spectre
  ****************************************************************/
-static power_info _spectre_get_powers[] =
+static power_info _spectre_powers[] =
 {
     { A_INT, {4, 6, 50, scare_monster_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _spectre_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _spectre_powers);
+}
 static void _spectre_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
@@ -686,7 +722,7 @@ race_t *spectre_get_race(void)
         me.base_hp = 13;
         me.exp = 250;
         me.infra = 5;
-        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD | RACE_NIGHT_START | RACE_EATS_DEVICES;
+        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
         me.shop_adjust = 135;
 
         me.birth = _spectre_birth;
@@ -702,11 +738,15 @@ race_t *spectre_get_race(void)
 /****************************************************************
  * Sprite
  ****************************************************************/
-static power_info _sprite_get_powers[] =
+static power_info _sprite_powers[] =
 {
     { A_INT, {12, 12, 50, sleeping_dust_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _sprite_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _sprite_powers);
+}
 static void _sprite_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
@@ -740,7 +780,7 @@ race_t *sprite_get_race(void)
         me.stats[A_WIS] =  3;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis = 10;
         me.skills.dev =  6;
@@ -769,11 +809,15 @@ race_t *sprite_get_race(void)
 /****************************************************************
  * Tomte
  ****************************************************************/
-static power_info _tomte_get_powers[] =
+static power_info _tomte_powers[] =
 {
-    { A_INT, {1, 0, 20, probing_spell}},
+    { A_INT, {1, 0, 20, detect_monsters_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _tomte_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _tomte_powers);
+}
 
 int tomte_heavy_armor(void)
 {
@@ -828,7 +872,7 @@ race_t *tomte_get_race(void)
         me.desc = "Smaller and of lighter build than regular elves, Tomtes are nimble, intelligent, "
                   "extremely stealthy and at home with magical devices, but their size handicaps them "
                   "in physical combat. They greatly prefer light headwear, and cannot think clearly "
-                  "with a heavy helmet squeezing their brains. Tomtes have the ability to assess "
+                  "with a heavy helmet squeezing their brains. Tomtes have the ability to sense "
                   "monsters and items at a glance (they gain auto-identify at level 40); and being "
                   "accustomed to long winters, they are not much bothered by cold.";
 
@@ -868,6 +912,14 @@ race_t *tomte_get_race(void)
 /****************************************************************
  * Tonberry
  ****************************************************************/
+static void _tonberry_birth(void)
+{
+    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
+
+    py_birth_food();
+    py_birth_light();
+}
 static void _tonberry_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
@@ -929,7 +981,7 @@ race_t *tonberry_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -4;
         me.stats[A_CON] =  5;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = -5;
         me.skills.dev = -3;
@@ -946,9 +998,9 @@ race_t *tonberry_get_race(void)
         me.infra = 2;
         me.shop_adjust = 115;
 
-        me.calc_bonuses = _tonberry_calc_bonuses;
+		me.birth = _tonberry_birth;
+		me.calc_bonuses = _tonberry_calc_bonuses;
         me.get_flags = _tonberry_get_flags;
-        me.boss_r_idx = MON_MASTER_TONBERRY;
         init = TRUE;
     }
 
@@ -958,11 +1010,15 @@ race_t *tonberry_get_race(void)
 /****************************************************************
  * Vampire
  ****************************************************************/
-static power_info _vampire_get_powers[] =
+static power_info _vampire_powers[] =
 {
     { A_CON, {2, 1, 60, vampirism_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _vampire_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _vampire_powers);
+}
 static void _vampire_calc_bonuses(void)
 {
     res_add(RES_DARK);
@@ -1024,7 +1080,7 @@ race_t *vampire_get_race(void)
         me.base_hp = 22;
         me.exp = 200;
         me.infra = 5;
-        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD | RACE_NIGHT_START;
+        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
         me.shop_adjust = 130;
 
         me.birth = _vampire_birth;
@@ -1040,11 +1096,15 @@ race_t *vampire_get_race(void)
 /****************************************************************
  * Wood-Elf
  ****************************************************************/
-static power_info _wood_elf_get_powers[] =
+static power_info _wood_elf_powers[] =
 {
     { A_WIS, {20, 15, 50, nature_awareness_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _wood_elf_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _wood_elf_powers);
+}
 race_t *wood_elf_get_race(void)
 {
     static race_t me = {0};
@@ -1063,7 +1123,7 @@ race_t *wood_elf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] = -1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis = 5;
         me.skills.dev = 4;
@@ -1090,11 +1150,15 @@ race_t *wood_elf_get_race(void)
 /****************************************************************
  * Yeek
  ****************************************************************/
-static power_info _yeek_get_powers[] =
+static power_info _yeek_powers[] =
 {
     { A_WIS, {15, 15, 50, scare_monster_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _yeek_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _yeek_powers);
+}
 static void _yeek_calc_bonuses(void)
 {
     res_add(RES_ACID);
@@ -1154,11 +1218,15 @@ race_t *yeek_get_race(void)
 /****************************************************************
  * Zombie
  ****************************************************************/
-static power_info _zombie_get_powers[] =
+static power_info _zombie_powers[] =
 {
     { A_WIS, {30, 30, 70, restore_life_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
+static int _zombie_get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _zombie_powers);
+}
 static void _zombie_calc_bonuses(void)
 {
     res_add(RES_NETHER);
@@ -1217,7 +1285,7 @@ race_t *zombie_get_race(void)
         me.base_hp = 24;
         me.exp = 180;
         me.infra = 2;
-        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD | RACE_NIGHT_START | RACE_EATS_DEVICES;
+        me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
         me.shop_adjust = 140;
 
         me.birth = _zombie_birth;

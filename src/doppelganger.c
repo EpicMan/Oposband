@@ -53,8 +53,12 @@ void mimic_race(int new_race, const char *msg)
     }
 
     p_ptr->mimic_form = new_race;
-    p_ptr->expfact = calc_exp_factor();
-    check_experience();
+
+    if (!xp_penalty_to_score)
+    {
+        p_ptr->expfact = calc_exp_factor();
+        check_experience();
+    }
 
     if (new_race == RACE_HUMAN || new_race == RACE_DEMIGOD)
     {
@@ -204,7 +208,7 @@ static void _list_forms(int ct)
     int  y = 1;
     int  x = 10;
     int  col_height = _col_height(ct);
-    int  col_width;
+    int  col_width = 0;
 
     Term_erase(x, y, 255);
 
@@ -428,11 +432,16 @@ static void _mimic_spell(int cmd, variant *res)
     }
 }
 
-static power_info _get_powers[] = 
+static power_info _powers[] = 
 {
     {A_DEX, {1, 0, 0, _mimic_spell}},
     {-1, {-1, -1, -1, NULL}}
 };
+
+static int _get_powers(spell_info* spells, int max)
+{
+    return get_powers_aux(spells, max, _powers);
+}
 
 race_t *doppelganger_get_race(void)
 {

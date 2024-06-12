@@ -98,13 +98,13 @@ Animal
   All hydras regenerate extremely rapidly.
   
     Stats                   Skills
-    Strength      +1        Disarming   Good         
+    Strength      +3        Disarming   Good         
     Intelligence  -2        Device      Poor         
     Wisdom        -2        Save        Fair         
     Dexterity     +2        Stealth     Poor         
     Constitution  +3        Searching   Bad          
-    Charisma      +0        Perception  Bad          
-    Life Rating  105%       Melee       Good         
+    Charisma      -2        Perception  Bad          
+    Life Rating  109%       Melee       Good         
     Base HP       45        Archery     Bad          
     Experience   130%       Infravision 50'
     
@@ -139,17 +139,17 @@ Animal
     Experience   200%       Infravision 50'
     
   
-Angel/Demon
-  Angel
-  Angels are heavenly beings on a holy mission. Their wings allow them 
+Archon/Demon
+  Lesser Archon
+  Archons are astral beings on a holy mission. Their wings allow them 
   to fly over chasms and pits. They are rarely fooled by invisibility, 
   and become resistant to the elements as they mature. Their stats are 
   truly awe-inspiring, and their divine magic extremely strong, 
   offering good offense combined with detection, healing, melee 
-  enhancement and utility. Angels are one of the most powerful races, 
+  enhancement and utility. Archons are one of the most powerful races, 
   but they also gain levels extremely slowly.
    
-  Angels have a humanoid body type; they use the same equipment slots 
+  Archons have a humanoid body type; they use the same equipment slots 
   as most normal player races, and have no innate melee attacks. Wisdom 
   is their primary spell stat.
   
@@ -321,8 +321,8 @@ Elemental/Vortex
   process. The number of objects they may use increases with level, and 
   there are no restrictions on the types of equipment they may 'wield' 
   in each slot. While they may equip weapons this way, they cannot 
-  attack with them; instead, vortex melee relies on their innate 
-  ability to engulf nearby monsters in the whirling elements.
+  attack with them; instead, the vortex may engulf nearby monsters with 
+  their elemental essence.
    
   Vortices evolve randomly, though all seem to end up with the 
   evolutionary perfection of the Aether vortex. At level 50 they gain a 
@@ -369,7 +369,7 @@ Golem
     Wisdom        -4        Save        Superb       
     Dexterity     -3        Stealth     Bad          
     Constitution  +4        Searching   Bad          
-    Charisma      +2        Perception  Bad          
+    Charisma      +0        Perception  Bad          
     Life Rating  108%       Melee       Heroic       
     Base HP       50        Archery     Poor         
     Experience   200%       Infravision 50'
@@ -470,7 +470,7 @@ Leprechaun
     Wisdom        +1        Save        Good         
     Dexterity     +7        Stealth     Amber[10]    
     Constitution  -2        Searching   Fair         
-    Charisma      -2        Perception  Poor         
+    Charisma      -3        Perception  Poor         
     Life Rating   80%       Melee       Fair         
     Base HP       15        Archery     Fair         
     Experience   150%       Infravision 50'
@@ -484,15 +484,9 @@ Mimic/Possessor
   Swords have the power to absorb magical essences from the weapons 
   they find, gaining power in the process.
   
-  As a Death-Sword gains levels, it will evolve into stronger and 
-  stronger weapons. More advanced weapons require more essences to 
-  enchant, sometimes causing a temporary loss of abilities; but magical 
-  weapons also become easier to find as you descend deeper into the 
-  pits, and so any lost powers are usually quickly recovered.
-  
     Stats                   Skills
     Strength      +4        Disarming   Good         
-    Intelligence  -5        Device      Poor         
+    Intelligence  -5        Device      Fair         
     Wisdom        -5        Save        Very Good    
     Dexterity     +1        Stealth     Good         
     Constitution  +4        Searching   Poor         
@@ -509,7 +503,7 @@ Mimic/Possessor
   thick layer of grime, has permanently attached an old pair of boots 
   and two plain leather gloves to the original rag, allowing it to walk 
   about and punch enemies. If you think the thing looks ugly now, just 
-  wait until it's found some other protective armour and has had the 
+  wait until it's found some other protective armor and has had the 
   time to take it apart and absorb its magical qualities...
   
     Stats                   Skills
@@ -642,7 +636,7 @@ Orc/Troll/Giant
     Wisdom        -3        Save        Poor         
     Dexterity     -2        Stealth     Bad          
     Constitution  +5        Searching   Poor         
-    Charisma      +1        Perception  Bad          
+    Charisma      -1        Perception  Bad          
     Life Rating  117%       Melee       Heroic       
     Base HP       46        Archery     Fair         
     Experience   200%       Infravision 50'
@@ -699,7 +693,7 @@ Undead
   Liches are born with magical powers, and gain additional powers as 
   they advance; of all the monster races, none can surpass the 
   firepower of an Archlich, but managing to evolve that far can be a 
-  challenge. Intelligence is their primary spell stat.
+  challenge. Intelligence is the primary spell stat.
    
   Liches are humanoid, and so use the standard set of equipment items; 
   but should they forgo the use of a normal weapon, they may touch 
@@ -710,46 +704,12 @@ Undead
     Strength      -3        Disarming   Fair         
     Intelligence  +4        Device      Heroic       
     Wisdom        -4        Save        Good         
-    Dexterity     +2        Stealth     Good         
-    Constitution  -1        Searching   Very Good    
-    Charisma      +1        Perception  Fair         
-    Life Rating   90%       Melee       Bad          
-    Base HP       18        Archery     Bad          
-    Experience   225%       Infravision 50'
-    
-  Mummy
-  Zombies and mummies are among the most feared of all undead races. 
-  Evil curses are a mummy's bread and butter; not only can they hex 
-  their opponents, they can also curse and uncurse their own equipment 
-  at will; and the stronger and more numerous the curses they are 
-  wrapped in, the greater their magical powers. Of course, they will 
-  also have to cope with being cursed...
-  
-  You begin unlife as a humble Zombified human, with few curses or 
-  other abilities at your disposal; but soon you will evolve into a a 
-  Mummified human, and things really start picking up. Mummy evolution 
-  is somewhat random - you might find yourself a strong but stupid 
-  Draugr or a wily but weak Mummified sorcerer - but ultimately, you 
-  will combine strength and magic in the spine-chilling final form of a 
-  Mummy king.
-  
-  Being creatures of tombs and the night, zombies and mummies can 
-  easily see without a light; indeed, carrying a light source saps the 
-  dark energy of their curses. In melee, they prefer to rely on their 
-  innate attacks; equipping a weapon serves only to distract them from 
-  their real fighting skills, and is only a viable offensive option in 
-  the earliest parts of the game.
-  
-    Stats                   Skills
-    Strength      -1        Disarming   Poor         
-    Intelligence  -2        Device      Very Bad     
-    Wisdom        -3        Save        Good         
-    Dexterity     -2        Stealth     Poor         
-    Constitution  +0        Searching   Poor         
-    Charisma      -1        Perception  Bad          
-    Life Rating  100%       Melee       Excellent    
-    Base HP       22        Archery     Good         
-    Experience   135%       Infravision 50'
+    Dexterity     +2        Stealth     Superb       
+    Constitution  -1        Searching   Poor         
+    Charisma      -1        Perception  Fair         
+    Life Rating   98%       Melee       Bad          
+    Base HP       20        Archery     Bad          
+    Experience   275%       Infravision 50'
     
   Vampire
   One of the mightier undead creatures, the Vampire is an awe-inspiring 
@@ -766,7 +726,7 @@ Undead
   course, they gain a vampiric bite at a very early stage, as they must 
   use this power to feed on the living. Killing humans with this power 
   is also a means of perpetuating the vampire species, and many are the 
-  servants of a true prince of darkness! Vampires are rumored to have 
+  servants of true prince of darkness! Vampires are rumored to have 
   limited shapeshifting abilities and a powerful, hypnotic gaze.
   
     Stats                   Skills
@@ -837,27 +797,26 @@ Table 1 - Race Statistic Bonus Table
              STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
 Centipede     +0   -3   -3   +0   +0   -3   90%  +15  100%  120%
 Hound         +3   -3   -5   +4   +3   +1  100%  +22  150%  110%
-Hydra         +1   -2   -2   +2   +3   +0  105%  +45  130%  130%
+Hydra         +3   -2   -2   +2   +3   -2  109%  +45  130%  130%
 Spider        +1   +0   -5   +0   +2   +0  100%  +25  200%  115%
-Angel         +2   +2   +5   +2   +2   +4   99%  +26  325%   90%
+Lesser Archo  +2   +2   +5   +2   +2   +4   99%  +26  325%   90%
 Beholder      -3   +7   +0   +2   +0   +1  100%  +20  200%  140%
 Dragon        +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
 Elemental     +5   -5   -5   -4   +6   +0  120%  +30  170%  120%
 Vortex        +2   -5   -5   +4   +2   +0   95%  +25  125%  120%
-Golem         +4   -4   -4   -3   +4   +2  108%  +50  200%  130%
+Golem         +4   -4   -4   -3   +4   +0  108%  +50  200%  130%
 Jelly         +3   -7   -7   +2   +3   -1   99%  +40  150%  125%
 Quylthulg     -3   -3   -3   -3   -3   +8   95%   +0  150%  120%
-Leprechaun    -6   +1   +1   +7   -2   -2   80%  +15  150%   85%
+Leprechaun    -6   +1   +1   +7   -2   -3   80%  +15  150%   85%
 Death-Sword   +4   -5   -5   +1   +4   +0  100%  +30  150%  110%
 Filthy Rag    -1   -1   -1   -1   -2   -4   98%  +20  110%  120%
 Mimic         +0   +1   -1   +2   +0   -1  108%  +15  250%  110%
 Possessor     -4   +0   -3   +0   -4   -7   60%  +15  250%  110%
 Ring          -3   +4   +1   +0   -1   +3   85%  +10  150%  110%
-Giant         +8   -3   -3   -2   +5   +1  117%  +46  200%  130%
+Giant         +8   -3   -3   -2   +5   -1  117%  +46  200%  130%
 Orc           -1   -4   -5   +0   +0   -5   99%  +30  100%  140%
 Troll         +5   -5   -5   -1   +5   +0  112%  +50  150%  135%
-Lich          -3   +4   -4   +2   -1   +1   90%  +18  225%  135%
-Mummy         -1   -2   -3   -2   +0   -1  100%  +22  135%  120%
+Lich          -3   +4   -4   +2   -1   -1   98%  +20  275%  135%
 Vampire       +4   +1   -3   +2   -2   +4   96%  +20  250%  130%
 Pumpkin       +1   -2   -2   +0   +1   -2  102%  +15  115%  110%
 Xorn          +4   -4   -2   -1   +2   -1  104%  +25  150%  120%
@@ -870,7 +829,7 @@ Centipede    Good          Fair          Fair          Very Good
 Hound        Poor          Bad           Poor          Superb       
 Hydra        Good          Poor          Fair          Poor         
 Spider       Poor          Good          Fair          Excellent    
-Angel        Poor          Excellent     Superb        Fair         
+Lesser Archo Poor          Excellent     Superb        Fair         
 Beholder     Fair          Amber[10]     Superb        Heroic       
 Dragon       Fair          Good          Fair          Poor         
 Elemental    Fair          Bad           Very Good     Very Good    
@@ -879,7 +838,7 @@ Golem        Fair          Bad           Superb        Bad
 Jelly        Good          Bad           Good          Superb       
 Quylthulg    Fair          Heroic        Very Good     Superb       
 Leprechaun   Good          Amber[2]      Good          Amber[10]    
-Death-Sword  Good          Poor          Very Good     Good         
+Death-Sword  Good          Fair          Very Good     Good         
 Filthy Rag   Good          Poor          Very Good     Good         
 Mimic        Poor          Good          Fair          Poor         
 Possessor    Bad           Bad           Poor          Heroic       
@@ -887,8 +846,7 @@ Ring         Fair          Superb        Good          Very Good
 Giant        Fair          Bad           Poor          Bad          
 Orc          Fair          Very Bad      Poor          Poor         
 Troll        Poor          Bad           Poor          Poor         
-Lich         Fair          Heroic        Good          Good         
-Mummy        Poor          Very Bad      Good          Poor         
+Lich         Fair          Heroic        Good          Superb       
 Vampire      Poor          Excellent     Fair          Heroic       
 Pumpkin      Bad           Poor          Good          Poor         
 Xorn         Good          Bad           Poor          Poor         
@@ -901,7 +859,7 @@ Centipede    Bad           Bad           Good          Very Bad        50'
 Hound        Poor          Poor          Very Good     Bad             50'
 Hydra        Bad           Bad           Good          Bad             50'
 Spider       Poor          Poor          Excellent     Bad             50'
-Angel        Poor          Poor          Good          Fair            30'
+Lesser Archo Poor          Poor          Good          Fair            30'
 Beholder     Heroic        Heroic        Fair          Bad             80'
 Dragon       Fair          Fair          Excellent     Bad             50'
 Elemental    Fair          Poor          Heroic        Bad             50'
@@ -918,8 +876,7 @@ Ring         Poor          Poor          Bad           Bad             50'
 Giant        Poor          Bad           Heroic        Fair            50'
 Orc          Poor          Bad           Excellent     Excellent       30'
 Troll        Poor          Bad           Superb        Poor            50'
-Lich         Very Good     Fair          Bad           Bad             50'
-Mummy        Poor          Bad           Excellent     Good            50'
+Lich         Poor          Fair          Bad           Bad             50'
 Vampire      Fair          Fair          Excellent     Poor            50'
 Pumpkin      Poor          Bad           Superb        Poor            20'
 Xorn         Poor          Bad           Very Good     Bad             50'
@@ -927,5 +884,5 @@ Xorn         Poor          Bad           Very Good     Bad             50'
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

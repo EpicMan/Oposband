@@ -490,21 +490,14 @@ static void _identify_spell(int cmd, variant *res)
         var_set_string(res, "Identify");
         break;
     case SPELL_DESC:
-        if (p_ptr->lev < 25)
-            var_set_string(res, "New Treasure!  You examine your new discovery.");
-        else
             var_set_string(res, "New Treasure!  You examine your new discovery and learn its deepest truths.");
         break;
     case SPELL_SPOIL_DESC:
-        var_set_string(res, "Identifies an object. At L25, fully identifies an object.");
+        var_set_string(res, "Identifies an object.");
         break;
     case SPELL_CAST:
         {
-            bool b = TRUE;
-            if (p_ptr->lev < 25)
-                b = ident_spell(NULL);
-            else
-                b = identify_fully(NULL);
+            bool b = ident_spell(NULL);
             var_set_bool(res, b);
         }
         break;
@@ -678,7 +671,7 @@ static void _remove_obstacles_spell(int cmd, variant *res)
  * Spell Table and Exports
  ****************************************************************/
 
-static spell_info _get_spells[] =
+static spell_info _spells[] =
 {
     /*lvl cst fail spell */
     {  1,   3, 10, _extended_whip_spell },
@@ -699,6 +692,12 @@ static spell_info _get_spells[] =
     { 45,  50, 75, _pharaohs_curse_spell }, /* No wizardstaff. No spell skills! So, 3% best possible fail.*/
     { -1,  -1, -1, NULL }
 };
+
+
+static int _get_spells(spell_info* spells, int max)
+{
+    return get_spells_aux(spells, max, _spells);
+}
 
 static bool _is_favored_weapon(object_type *o_ptr)
 {
@@ -770,11 +769,37 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
+    py_display_spells(doc, spells, ct);
+}
+
 static void _birth(void)
 {
     py_birth_obj_aux(TV_HAFTED, SV_WHIP, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, rand_range(5, 10));
+
+    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 void _get_object(obj_ptr obj)
@@ -840,7 +865,7 @@ class_t *archaeologist_get_class(void)
         me.process_player = _process_player;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
-        me.character_dump = py_dump_spells;
+        me.character_dump = _character_dump;
         me.get_object = _get_object;
 
         init = TRUE;

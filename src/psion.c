@@ -44,14 +44,6 @@ static int _spell_stat_idx(void)
 #define _DISRUPTION  11
 #define _DRAIN       12
 
-#define _NO_COST_FAIL() \
-        if (cmd == SPELL_FAIL) \
-        { \
-            var_set_bool(res, TRUE); \
-            break; \
-        }
-
-
 bool psion_weapon_graft(void)
 {
     if (p_ptr->pclass != CLASS_PSION) return FALSE;
@@ -272,7 +264,7 @@ bool psion_process_monster(int m_idx)
         }
         else
         {
-            msg_format("Your ego whip lashes %s!", m_name);
+            msg_format("Your ego whip lashes %s", m_name);
             result = mon_take_hit(m_idx, spell_power(30*m_ptr->ego_whip_pow), DAM_TYPE_SPELL, &fear, NULL);
             m_ptr->ego_whip_ct--;
             if (!projectable(py, px, m_ptr->fy, m_ptr->fx))
@@ -314,7 +306,6 @@ static void _archery_transformation_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("+%d Archery skill", power*20));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_ARCHERY])
@@ -322,7 +313,6 @@ static void _archery_transformation_spell(int power, int cmd, variant *res)
             msg_print("You are already transformed into a shooting machine.");
             return;
         }
-        _NO_COST_FAIL()
         _clear_counter(_COMBAT, "Your combat transformation expires.");    
         msg_print("You transform into a shooting machine!");
         p_ptr->magic_num1[_ARCHERY] = spell_power(power*8 + 20);
@@ -398,7 +388,6 @@ static void _combat_transformation_spell(int power, int cmd, variant *res)
         if (prace_is_(RACE_TONBERRY)) var_set_string(res, format("Blows: +%d.%2.2d", power / 4, (power * 25) % 100));
         else var_set_string(res, format("Blows: +%d.%d", power * 2 / 5, (power * 4) % 10));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_COMBAT])
@@ -406,7 +395,6 @@ static void _combat_transformation_spell(int power, int cmd, variant *res)
             msg_print("You are already transformed into a fighting machine.");
             return;
         }
-        _NO_COST_FAIL()
         _clear_counter(_ARCHERY, "Your archery transformation expires.");    
         msg_print("You transform into a fighting machine!");
         p_ptr->magic_num1[_COMBAT] = spell_power(power*8 + 20);
@@ -570,7 +558,6 @@ static void _graft_weapon_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("(+%2d,+%2d) melee", 6*power, 4*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_WEAPON_GRAFT])
@@ -578,7 +565,6 @@ static void _graft_weapon_spell(int power, int cmd, variant *res)
             msg_print("Your weapon is already grafted!");
             return;
         }
-        _NO_COST_FAIL()
         if (!equip_find_first(object_is_melee_weapon))
         {
             msg_print("You are not wielding a weapon!");
@@ -651,7 +637,6 @@ static void _mental_fortress_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Spell Power: +%d%%", spell_power_aux(100, power) - 100));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_FORTRESS])
@@ -659,7 +644,6 @@ static void _mental_fortress_spell(int power, int cmd, variant *res)
             msg_print("You already have a mental fortress.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You erect a mental fortress.");
         p_ptr->magic_num1[_FORTRESS] = spell_power(power + 3);
         p_ptr->magic_num2[_FORTRESS] = power;
@@ -692,7 +676,6 @@ static void _mindspring_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Recover %d sp/rnd", 16*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_MINDSPRING])
@@ -700,7 +683,6 @@ static void _mindspring_spell(int power, int cmd, variant *res)
             msg_print("Your mindspring is already flowing.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("Your mindspring flows.");
         p_ptr->magic_num1[_MINDSPRING] = spell_power(power*2 + 3);
         p_ptr->magic_num2[_MINDSPRING] = power;
@@ -733,7 +715,6 @@ static void _psionic_backlash_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Revenge: %d%%", 25 + 25*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_BACKLASH])
@@ -741,7 +722,6 @@ static void _psionic_backlash_spell(int power, int cmd, variant *res)
             msg_print("Your psionic revenge is already active.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You contemplate revenge!");
         p_ptr->magic_num1[_BACKLASH] = spell_power(power*5 + 5);
         p_ptr->magic_num2[_BACKLASH] = power;
@@ -774,7 +754,6 @@ static void _psionic_blending_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("+%d stealth", 3*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_BLENDING])
@@ -782,7 +761,6 @@ static void _psionic_blending_spell(int power, int cmd, variant *res)
             msg_print("You are already blending into your surroundings.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You blend into your surroundings.");
         p_ptr->magic_num1[_BLENDING] = spell_power(power*25 + 50);
         p_ptr->magic_num2[_BLENDING] = power;
@@ -815,7 +793,6 @@ static void _psionic_clarity_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Costs: %d%%", 85-7*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_CLARITY])
@@ -823,7 +800,6 @@ static void _psionic_clarity_spell(int power, int cmd, variant *res)
             msg_print("Your mind is already focused.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You focus your mind.");
         p_ptr->magic_num1[_CLARITY] = spell_power(2*power + 5);
         p_ptr->magic_num2[_CLARITY] = power;
@@ -869,7 +845,7 @@ void _psionic_crafting_spell(int power, int cmd, variant *res)
 
         prompt.prompt = "Enchant which item?";
         prompt.error = "You have nothing to enchant.";
-        prompt.filter = object_is_weapon_armour_ammo;
+        prompt.filter = object_is_weapon_armor_ammo;
         prompt.where[0] = INV_PACK;
         prompt.where[1] = INV_EQUIP;
         prompt.where[2] = INV_QUIVER;
@@ -891,9 +867,9 @@ void _psionic_crafting_spell(int power, int cmd, variant *res)
                     okay = TRUE;
                 }
             }
-            else if (object_is_armour(prompt.obj))
+            else if (object_is_armor(prompt.obj))
             {
-                if (brand_armour_aux(prompt.obj))
+                if (brand_armor_aux(prompt.obj))
                 {
                     prompt.obj->discount = 99;
                     okay = TRUE;
@@ -957,7 +933,6 @@ static void _psionic_disruption_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Power: %d", p_ptr->lev + 8*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_DISRUPTION])
@@ -965,7 +940,6 @@ static void _psionic_disruption_spell(int power, int cmd, variant *res)
             msg_print("Your disruption is already active.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You project disrupting thoughts!");
         p_ptr->magic_num1[_DISRUPTION] = spell_power(power*2 + 3);
         p_ptr->magic_num2[_DISRUPTION] = power;
@@ -998,7 +972,6 @@ static void _psionic_drain_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Drain: %d%%", 5*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_DRAIN])
@@ -1006,7 +979,6 @@ static void _psionic_drain_spell(int power, int cmd, variant *res)
             msg_print("Your drain is already active.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You prepare to draw power from surrounding magics.");
         p_ptr->magic_num1[_DRAIN] = spell_power(power*5 + 10);
         p_ptr->magic_num2[_DRAIN] = power;
@@ -1039,7 +1011,6 @@ static void _psionic_foresight_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Avoidance: %d%%", 7 + 12*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_FORESIGHT])
@@ -1047,7 +1018,6 @@ static void _psionic_foresight_spell(int power, int cmd, variant *res)
             msg_print("Your foresight is already active.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You see the future!");
         p_ptr->magic_num1[_FORESIGHT] = spell_power(power*2 + 3);
         p_ptr->magic_num2[_FORESIGHT] = power;
@@ -1075,17 +1045,8 @@ static void _psionic_healing_spell(int power, int cmd, variant *res)
         var_set_string(res, format("Healing %s", _roman_numeral[power]));
         break;
     case SPELL_DESC:
-    {
-        const cptr _descriptions[_MAX_POWER] = {
-            "Cures blindness, stunning and cuts.",
-            "Cures blindness, stunning and cuts.",
-            "Cures blindness, stunning, cuts and hallucination.",
-            "Cures blindness, stunning, cuts and hallucination.",
-            "Cures blindness, stunning, cuts and hallucination. Restores all stats and experience."
-            };
-        var_set_string(res, _descriptions[power-1]);
+        var_set_string(res, "Use your mental powers to repair your body.");
         break;
-    }
     case SPELL_INFO:
         var_set_string(res, info_heal(0, 0, spell_power(79*power - (MAX(32, 5 * power +15)))));
         break;
@@ -1257,7 +1218,6 @@ static void _psionic_shielding_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("AC: +%d", 15*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_SHIELDING])
@@ -1265,7 +1225,6 @@ static void _psionic_shielding_spell(int power, int cmd, variant *res)
             msg_print("You already have a psionic shield.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You create a psionic shield.");
         p_ptr->magic_num1[_SHIELDING] = spell_power(power*8 + 20);
         p_ptr->magic_num2[_SHIELDING] = power;
@@ -1298,7 +1257,6 @@ static void _psionic_speed_spell(int power, int cmd, variant *res)
     case SPELL_INFO:
         var_set_string(res, format("Speed: +%d", 4*power));
         break;
-    case SPELL_FAIL:
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->magic_num1[_SPEED])
@@ -1306,7 +1264,6 @@ static void _psionic_speed_spell(int power, int cmd, variant *res)
             msg_print("You are already fast.");
             return;
         }
-        _NO_COST_FAIL()
         msg_print("You gain psionic speed.");
         p_ptr->magic_num1[_SPEED] = spell_power(power*10 + 20);
         p_ptr->magic_num2[_SPEED] = power;
@@ -1664,8 +1621,8 @@ static _spell_t __spells[] =
         { 69, 100, _psionic_healing4_spell }, /* 430hp */
         {102, 125, _psionic_healing5_spell }},/* 550hp */
         "Psionic Healing is a recovery spell. By focusing your mind, you will be able "
-          "to heal your wounds, cuts and stunning; with sufficient focus, you can cure "
-          "hallucination and even restore your stats."
+          "to heal your wounds, cuts, stunning and poisoning; with "
+          "total focus, you can even restore your stats."
     },
     { "Brain Smash", _PSION_BRAIN_SMASH, 30, {  
         { 10,  60, _brain_smash1_spell },
@@ -1933,16 +1890,17 @@ static void _gain_level(int new_level)
         _study(new_level);
 }
 
-static power_info *_get_powers(void)
+static int _get_powers(spell_info* spells, int max)
 {
-    static power_info psion_powers[2] =
-    {
-        { A_NONE, { 15, 0, 30, clear_mind_spell}},
-        { -1, { -1, -1, -1, NULL}}
-    };
-    psion_powers[0].stat = _spell_stat();
+    int ct = 0;
 
-    return psion_powers;
+    spell_info* spell = &spells[ct++];
+    spell->level = 15;
+    spell->cost = 0;
+    spell->fail = calculate_fail_rate(spell->level, 30, _spell_stat_idx());
+    spell->fn = clear_mind_spell;
+
+    return ct;
 }
 
 static void _choose_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -1973,11 +1931,10 @@ static int _choose_spell(void)
     return i;
 }
 
-static spell_info *_get_spells(void)
+static int _get_spells(spell_info* spells, int max)
 {
     int       i, id, stat, ct = 0;
     _spell_t *base;
-    static spell_info spells[MAX_SPELLS];
 
     /* First Choose which Psionic Spell to use */
     id = _choose_spell();
@@ -1989,6 +1946,7 @@ static spell_info *_get_spells(void)
     /* Then Choose which power level of that spell to use */
     for (i = 0; i < _MAX_POWER; i++)
     {
+        if (ct >= max) break;
         if (base->level <= p_ptr->lev)
         {
             spell_info* current = &spells[ct];
@@ -2015,8 +1973,7 @@ static spell_info *_get_spells(void)
             ct++;
         }
     }
-    spells[ct].fn = NULL;
-    return spells;
+    return ct;
 }
 
 static void _calc_bonuses(void)
@@ -2263,9 +2220,25 @@ static void _player_action(int energy_use)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(5, 10));
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *psion_get_class(void)
@@ -2288,7 +2261,7 @@ class_t *psion_get_class(void)
                     "Psion can learn is very limited: one each at levels 1, 10, 15, 20, 30, 35, 40 and 50.\n\n"
                     "The potency of psionic powers can be scaled up or down as needed, within limits; "
                     "the more mana is spent, the more powerful the effect. All psionic powers require "
-                    "great concentration, leaving the Psion no time for pets. "
+                    "great concentration, leaving the Psion little time for pets. "
                     "Psions do not have one fixed spell stat; they can use either Intelligence, Wisdom "
                     "or Charisma, whichever is the highest. In this respect they are truly unique!";
 
@@ -2312,8 +2285,8 @@ class_t *psion_get_class(void)
         me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
-        me.get_spells_fn = _get_spells;
-        me.get_powers_fn = _get_powers;
+        me.get_spells = _get_spells;
+        me.get_powers = _get_powers;
         me.character_dump = _character_dump;
         me.gain_level = _gain_level;
         me.player_action = _player_action;

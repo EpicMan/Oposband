@@ -57,13 +57,6 @@ spell_info spell;
 #define _MAX_TALENTS 25
 #define _MAX_TALENTS_PER_GROUP 10
 
-static power_info _wonder_powers[2] =
-{
-    { A_INT,  {10, 10, 30, wonder_spell}}, 
-    { -1, {-1, -1, -1, NULL}}
-};
-
-
 static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] = 
 {
     /* CL1: Weak offense */
@@ -148,7 +141,7 @@ static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] =
     },
     /* CL19: Good Utility */
     {
-        { A_INT, "like a Half Titan", {15, 10, 40, probing_spell}},
+        { A_INT, "like a Half Titan", {15, 10, 40, word_of_power_spell}},
         { A_STR, "like a Half Giant", {19, 10, 40, stone_to_mud_spell}},
         { A_CHR, "like a Sorcerer", {19, 20, 50, identify_spell}},
         { A_CHR, "like a Mage", {19, 10, 40, teleport_spell}},
@@ -210,7 +203,7 @@ static talent_t _talents[_MAX_TALENTS][_MAX_TALENTS_PER_GROUP] =
     /* CL33: Good Utility */
     {
         { A_INT, "like an Amberite", {30, 50, 50, shadow_shifting_spell}},
-        { A_INT, "like a Tourist", {25, 20, 30, identify_fully_spell}},
+        /*{ A_INT, "like a Tourist", {25, 20, 30, identify_fully_spell}},*/
         { A_CHR, "like an Earth Elemental", {30, 10, 40, earthquake_spell}},
         { A_CHR, "like a Wizard", {30, 20, 40, teleport_level_spell}},
         { A_WIS, "like a Priest", {30, 30, 50, healing_I_spell}},
@@ -314,7 +307,7 @@ static int _which_stat(int idx)
     return talent->stat;
 }
 
-static int _get_spells_imp(power_info* spells, int max, int start, int stop)
+static int _get_spells_imp(spell_info* spells, int max, int start, int stop)
 {
     int ct = 0, i;
     for (i = start; i <= stop; ++i)
@@ -324,20 +317,22 @@ static int _get_spells_imp(power_info* spells, int max, int start, int stop)
         if (idx >= 0 && idx < _group_size(i))
         {
             talent_t *talent = &_talents[i][idx];
-            power_info *power = &spells[ct++];
-            power->spell.level = talent->spell.level;
-            power->spell.cost = talent->spell.cost;
-            /* We never go through get_spells_aux() or get_powers_aux(), so calculate fail rates right here */ 
-            power->spell.fail = calculate_fail_rate(talent->spell.level, talent->spell.fail, p_ptr->stat_ind[talent->stat]);
-            power->spell.fn = talent->spell.fn;
-            power->stat = talent->stat;
+            spell_info *spell = &spells[ct++];
+            spell->level = talent->spell.level;
+            spell->cost = talent->spell.cost;
+            spell->fail = calculate_fail_rate(
+                talent->spell.level, 
+                talent->spell.fail, 
+                p_ptr->stat_ind[talent->stat]
+            );
+            spell->fn = talent->spell.fn;
         }
     }
     return ct;
 }
 
 /*
- * We now group wild talents. It's hard to pick from a large list of seemingly unsorted
+ * We now group wild talents. Its hard to pick from a large list of seemingly unsorted
  * choices. Also, there is wide variety in monitor sizes and resolutions, so attempting
  * to prompt for more than 15 or so choices at a time is a bad idea anyway.
  */
@@ -373,13 +368,12 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-int wild_talent_get_spells(power_info *spells)
+static int _get_spells(spell_info* spells, int max)
 {
     int idx = -1;
     int ct = 0;
     menu_t menu = { "Use which group of talents?", "Browse which group of talents?", NULL,
                     _spell_menu_fn, _groups, 3, 0};
-    int max = MAX_SPELLS;
     
     /* Mega-hack. Remove Fear is either in group 0 (in which case we get the right
      * group) or not in any group (in which case we avoid a pointless menu) */
@@ -390,7 +384,11 @@ int wild_talent_get_spells(power_info *spells)
     /* Hack: Add innate Wonder attack to Wild Beginnings */
     if (idx == 0)
     {
-        ct += get_powers_aux(spells, max - ct, _wonder_powers, TRUE);
+        spell_info* spell = &spells[ct++];
+        spell->level = 10;
+        spell->cost = 10;
+        spell->fail = calculate_fail_rate(10, 30, p_ptr->stat_ind[A_INT]);
+        spell->fn = wonder_spell;
     }
 
     ct += _get_spells_imp(spells + ct, max - ct, _groups[idx].min_slot, _groups[idx].max_slot);
@@ -548,6 +546,8 @@ static void _calc_bonuses(void)
 {
     samurai_posture_calc_bonuses();
     monk_posture_calc_bonuses();
+    if (equip_find_ego(EGO_WEAPON_WILD))
+        p_ptr->dec_mana = TRUE;
 }
 static void _calc_stats(s16b stats[MAX_STATS])
 {
@@ -563,12 +563,12 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _character_dump(doc_ptr doc)
 {
     int i;
-    power_info spells[MAX_SPELLS];
+    spell_info spells[MAX_SPELLS];
     int ct = _get_spells_imp(spells, MAX_SPELLS, 0, _MAX_TALENTS - 1);
 
     for (i = 0; i < ct; i++)
     {
-        spell_info* current = &spells[i].spell;
+        spell_info* current = &spells[i];
         current->cost += get_spell_cost_extra(current->fn);
         current->fail = MAX(current->fail, get_spell_fail_min(current->fn));
     }
@@ -585,7 +585,7 @@ static void _character_dump(doc_ptr doc)
         doc_printf(doc, "<color:G>%-23.23s Lv Stat Cost Fail Info</color>\n", "");
         for (i = 0; i < ct; ++i)
         {
-            spell_info *spell = &spells[i].spell;
+            spell_info *spell = &spells[i];
 
             (spell->fn)(SPELL_NAME, &name);
             (spell->fn)(SPELL_INFO, &info);
@@ -623,9 +623,27 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *wild_talent_get_class(void)
@@ -672,6 +690,7 @@ class_t *wild_talent_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.calc_stats = _calc_stats;
         me.get_flags = _get_flags;
+        me.get_spells = _get_spells;
         me.caster_info = _caster_info;
         me.gain_level = _gain_level;
         me.character_dump = _character_dump;

@@ -113,5 +113,5 @@ Cyberdemon        Poor          Bad           Heroic        Bad             50'
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

@@ -200,25 +200,52 @@ void create_ammo_spell(int cmd, variant *res)
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 {
     if ( !p_ptr->shooter_info.heavy_shoot
-      && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO )
+      && p_ptr->shooter_info.tval_ammo <= TV_BOLT
+      && p_ptr->shooter_info.tval_ammo >= TV_SHOT )
     {
         p_ptr->shooter_info.breakage -= 10;
     }
 }
 
-static power_info _get_powers[] =
+static int _get_powers(spell_info* spells, int max)
 {
-    { A_NONE, { 1, 0,  0, create_ammo_spell}},
-    { -1, {-1, -1, -1, NULL}}
-};
+    int ct = 0;
+
+    spell_info* spell = &spells[ct++];
+    spell->level = 1;
+    spell->cost = 0;
+    spell->fail = 0;
+    spell->fn = create_ammo_spell;
+
+    return ct;
+}
 
 static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_QUIVER, 0, 1);
     py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(30, 50));
+	
+    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
+
+    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
+    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_MASTER;
+    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
+    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *archer_get_class(void)
@@ -247,7 +274,7 @@ class_t *archer_get_class(void)
         me.stats[A_CHR] =  0;
         me.base_skills = bs;
         me.extra_skills = xs;
-        me.life = 110;
+        me.life = 111;
         me.base_hp = 12;
         me.exp = 110;
         me.pets = 40;

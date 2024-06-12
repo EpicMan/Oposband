@@ -282,23 +282,6 @@ have extremely high hitpoints.
   Base HP       40        Archery     Bad          
   Experience   250%       Infravision 50'
   
-Silver Dragon
-Silver Dragons are wyrms of inertia. While they are not quite as strong 
-as most other dragons, they eventually slow monsters with their bite 
-attack. Also, they become more and more resistant to sslowing as they 
-mature.
-
-  Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +3        Device      Good         
-  Wisdom        +0        Save        Good         
-  Dexterity     +2        Stealth     Poor         
-  Constitution  +3        Searching   Fair         
-  Charisma      +3        Perception  Fair         
-  Life Rating  110%       Melee       Very Good    
-  Base HP       40        Archery     Bad          
-  Experience   250%       Infravision 50'
-  
 Table 1 - Dragon Statistic Bonus Table
 
                   STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
@@ -316,7 +299,6 @@ Crystal Drake      +1   -1   -2   +0   +0   +0  100%  +40  275%  130%
 Bronze Dragon      +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 Gold Dragon        +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 Steel Dragon       +8   -6   -6   -3   +7   +3  137%  +40  250%  130%
-Silver Dragon      +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 
 
 Table 2 - Dragon Skill Bonus Table I
@@ -336,7 +318,6 @@ Crystal Drake     Fair          Fair          Very Good     Poor
 Bronze Dragon     Fair          Good          Good          Fair         
 Gold Dragon       Fair          Good          Good          Poor         
 Steel Dragon      Fair          Bad           Superb        Bad          
-Silver Dragon     Fair          Good          Good          Poor         
 
 
 Table 3 - Dragon Skill Bonus Table II
@@ -356,10 +337,9 @@ Crystal Drake     Fair          Fair          Excellent     Bad             50'
 Bronze Dragon     Fair          Fair          Good          Bad             50'
 Gold Dragon       Fair          Fair          Very Good     Bad             50'
 Steel Dragon      Bad           Bad           Superb        Bad             50'
-Silver Dragon     Fair          Fair          Very Good     Bad             50'
 
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.4.0.
 

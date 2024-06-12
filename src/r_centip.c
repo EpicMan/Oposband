@@ -34,7 +34,6 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.to_h = 3;
-    forge.to_d = 2;
     forge.pval = 1;
     add_flag(forge.flags, OF_DEX);
     py_birth_obj(&forge);
@@ -120,7 +119,7 @@ static void _calc_innate_attacks(void)
         a.weight = 70;
         a.effect[0] = GF_MISSILE;
         a.blows = 100;
-        a.msg = "You bite.";
+        a.msg = "You bite";
         a.name = "Bite";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -139,7 +138,7 @@ static void _calc_innate_attacks(void)
         if (r >= 5)
             a.effect[1] = GF_POIS;
         a.blows = 100;
-        a.msg = "You sting.";
+        a.msg = "You sting";
         a.name = "Sting";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -158,7 +157,7 @@ static void _calc_innate_attacks(void)
         a.weight = 70;
         a.effect[0] = GF_MISSILE;
         calc_innate_blows(&a, 100 + 50*r);
-        a.msg = "You crawl.";
+        a.msg = "You crawl";
         a.name = "Crawl";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
