@@ -466,24 +466,12 @@ void monk_posture_spell(int cmd, variant *res)
     }
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_powers[] =
 {
-    int ct = 0;
-
-    spell_info* spell = &spells[ct++];
-    spell->level = 25;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = monk_posture_spell;
-
-    spell = &spells[ct++];
-    spell->level = 30;
-    spell->cost = 30;
-    spell->fail = calculate_fail_rate(spell->level, 80, p_ptr->stat_ind[A_STR]);
-    spell->fn = monk_double_attack_spell;
-
-    return ct;
-}
+    { A_NONE, { 25, 0, 0, monk_posture_spell}},
+    { A_STR, { 30, 30, 80, monk_double_attack_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static void _ac_bonus_imp(int slot)
 {
@@ -496,21 +484,21 @@ static void _ac_bonus_imp(int slot)
             p_ptr->dis_to_a += p_ptr->monk_lvl*3/2;
             break;
         case EQUIP_SLOT_CLOAK:
-            if (p_ptr->lev > 15)
+            if (p_ptr->monk_lvl > 15)
             {
                 p_ptr->to_a += (p_ptr->monk_lvl - 13)/3;
                 p_ptr->dis_to_a += (p_ptr->monk_lvl - 13)/3;
             }
             break;
         case EQUIP_SLOT_WEAPON_SHIELD: /* Oops: was INVEN_LARM only and "/3" ... */
-            if (p_ptr->lev > 10)
+            if (p_ptr->monk_lvl > 13)
             {
                 p_ptr->to_a += (p_ptr->monk_lvl - 8)/6;
                 p_ptr->dis_to_a += (p_ptr->monk_lvl - 8)/6;
             }
             break;
         case EQUIP_SLOT_HELMET:
-            if (p_ptr->lev >= 5)
+            if (p_ptr->monk_lvl >= 5)
             {
                 p_ptr->to_a += (p_ptr->monk_lvl - 2)/3;
                 p_ptr->dis_to_a += (p_ptr->monk_lvl - 2)/3;
@@ -720,25 +708,8 @@ bool skills_obj_is_icky_weapon(object_type *o_ptr)
 static void _birth(void)
 {
     py_birth_obj_aux(TV_POTION, SV_POTION_HEROISM, randint1(5));
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_EXPERT;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_BEGINNER;
 }
 
 class_t *monk_get_class(void)
@@ -763,14 +734,13 @@ class_t *monk_get_class(void)
                     "for having empty armor slots likewise increase.\n\n"
                     "The various sects of monks are devoted to different areas of "
                     "magic; they select one realm from Life, Nature, Craft, Trump and Death. "
-                    "Monks will eventually learn all prayers in the discipline of their "
-                    "choice. Wisdom determines their spellcasting ability.\n\n"
+                    "Wisdom determines their spellcasting ability.\n\n"
                     "Monks have two class powers, 'Assume a Posture' and "
                     "'Double Attack'; they can choose different postures for "
                     "different situations, and use powerful combinations of attacks for "
                     "the finishing blow.";
 
-        me.stats[A_STR] =  2;
+        me.stats[A_STR] =  1;
         me.stats[A_INT] = -1;
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  3;

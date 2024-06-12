@@ -178,7 +178,7 @@ can feel fear. Frightened monsters will try to run away from you, and
 (like you) can miss turns in cases of extreme fear. Frightened monsters 
 remain capable of casting spells. Frightened monsters are indicated by 
 the violet coloring of their health bars (e.g. f[*********]). Fear has 
-the lowest priority of any health bar color.
+the second-lowest priority of any health bar color.
 
 
 Blindness
@@ -220,8 +220,10 @@ Potions of Vigor cure both types of slowness (as well as stunning), but
 have no other use and are therefore generally only carried when slowing 
 attacks are specifically expected.
 
-Most monsters can be slowed, but uniques are immune. Slowness is not 
-indicated by a monster's health bar.
+Most monsters can be slowed, but uniques are immune. Slowed monsters 
+are indicated by the dark gray coloring of their health bars (e.g. 
+f[*********]). Slowness has the lowest priority of any health bar 
+color.
 
 Temporary haste is the opposite of slowness: a bonus of +10 to speed. 
 Potions of Speed do not cure slowness, but cancel out its effect by 

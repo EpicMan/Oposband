@@ -34,33 +34,41 @@ static void _birth(void)
  **********************************************************************/
 static bool _weapon_is_small(int tval, int sval)
 {
-    if (tval == TV_DAGGER)
-        return TRUE;
     if (tval == TV_SWORD)
     {
         switch (sval)
         {
+        case SV_BROKEN_DAGGER:
         case SV_BROKEN_SWORD:
+        case SV_DAGGER:
+        case SV_MAIN_GAUCHE:
+        case SV_TANTO:
+        case SV_RAPIER:
+        case SV_SMALL_SWORD:
+        case SV_BASILLARD:
         case SV_SHORT_SWORD:
+        case SV_SABRE:
+        case SV_DOKUBARI:
+        case SV_HAYABUSA:
+        case SV_DRAGON_FANG:
             return TRUE;
         }
     }
-    if (tval == TV_AXE && sval == SV_HATCHET)
-        return TRUE;
     if (tval == TV_POLEARM)
     {
         switch (sval)
         {
-        case SV_FISHING_POLE:
+        case SV_HATCHET:
+        case SV_SICKLE:
+        case SV_TSURIZAO:
             return TRUE;
         }
     }
-    if (tval == TV_HAFTED && sval == SV_WHIP)
-        return TRUE;
-    if (tval == TV_STAVES)
+    if (tval == TV_HAFTED)
     {
         switch (sval)
         {
+        case SV_WHIP:
         case SV_NUNCHAKU:
         case SV_JO_STAFF:
         case SV_THREE_PIECE_ROD:
@@ -84,19 +92,12 @@ static bool _weapon_is_giant(int tval, int sval)
     {
         switch (sval)
         {
-        case SV_EXECUTIONERS_SWORD:
-        case SV_GREATSWORD:
+        case SV_GREAT_SCIMITAR:
+        case SV_FLAMBERGE:
         case SV_TWO_HANDED_SWORD:
-        case SV_BUSTER_SWORD:
-            return TRUE;
-        }
-    }
-    if (tval == TV_AXE)
-    {
-        switch (sval)
-        {
-        case SV_GREAT_AXE:
-        case SV_LOCHABER_AXE:
+        case SV_NO_DACHI:
+        case SV_EXECUTIONERS_SWORD:
+        case SV_ZWEIHANDER:
             return TRUE;
         }
     }
@@ -105,7 +106,9 @@ static bool _weapon_is_giant(int tval, int sval)
         switch (sval)
         {
         case SV_LANCE:
+        case SV_GREAT_AXE:
         case SV_TRIFURCATE_SPEAR:
+        case SV_LOCHABER_AXE:
         case SV_HEAVY_LANCE:
         case SV_SCYTHE_OF_SLICING:
         case SV_DEATH_SCYTHE:
@@ -116,8 +119,8 @@ static bool _weapon_is_giant(int tval, int sval)
     {
         switch (sval)
         {
-        case SV_WAR_HAMMER:
-        case SV_MORNING_STAR:
+        case SV_TWO_HANDED_FLAIL:
+        case SV_GREAT_HAMMER:
         case SV_MACE_OF_DISRUPTION:
         case SV_GROND:
             return TRUE;
@@ -259,7 +262,7 @@ static void _monster_toss_imp(_monster_toss_info *info)
     chance *= 2;
 
     monster_desc(m_name, m_ptr, 0);
-    msg_format("You toss %s", m_name);
+    msg_format("You toss %s.", m_name);
 
     cave[m_ptr->fy][m_ptr->fx].m_idx = 0;
     lite_spot(m_ptr->fy, m_ptr->fx);
@@ -327,10 +330,10 @@ static void _monster_toss_imp(_monster_toss_info *info)
                 critical_t crit;
 
                 if (!visible)
-                    msg_format("%^s finds a mark", m_name);
+                    msg_format("%^s finds a mark.", m_name);
                 else
                 {
-                    msg_format("%^s hits %s", m_name, m_name2);
+                    msg_format("%^s hits %s.", m_name, m_name2);
                     if (visible)
                     {
                         if (!p_ptr->image) mon_track(m_ptr2);
@@ -480,7 +483,7 @@ void monster_toss_spell(int cmd, variant *res)
  *                 20             30            40
  * Hru: Hill Giant -> Stone Giant -> Rock Giant -> Hru
  ******************************************************************************/
-static power_info _hru_powers[] = {
+static power_info _hru_get_powers[] = {
     { A_STR, {  5,  0, 50, throw_boulder_spell} },
     { A_STR, {  7,  0,  0, monster_toss_spell} },
     { A_STR, { 30,  5, 25, stone_to_mud_spell} },
@@ -488,9 +491,6 @@ static power_info _hru_powers[] = {
     { A_STR, { 40, 15, 50, stone_skin_spell} },
     {    -1, { -1, -1, -1, NULL}}
 };
-static int _hru_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _hru_powers);
-}
 
 static void _hru_calc_bonuses(void) {
     p_ptr->sustain_str = TRUE;
@@ -572,7 +572,7 @@ static race_t *_hru_get_race_t(void)
     me.stats[A_WIS] = -5;
     me.stats[A_DEX] = -3;
     me.stats[A_CON] =  4 + rank;
-    me.stats[A_CHR] = -2 + rank/2;
+    me.stats[A_CHR] =  0 + rank/2;
     me.life = 110 + 5*rank;
     me.boss_r_idx = MON_ATLAS;
 
@@ -616,7 +616,7 @@ static void _breathe_plasma_spell(int cmd, variant *res)
         break;
     }
 }
-static power_info _fire_powers[] = {
+static power_info _fire_get_powers[] = {
     { A_STR, {  5,  0, 50, throw_boulder_spell} },
     { A_STR, {  7,  0,  0, monster_toss_spell} },
     { A_STR, { 30,  5, 25, fire_bolt_spell} },
@@ -626,9 +626,6 @@ static power_info _fire_powers[] = {
     { A_CON, { 42, 10, 70, _breathe_plasma_spell} },
     {    -1, { -1, -1, -1, NULL}}
 };
-static int _fire_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _fire_powers);
-}
 static void _fire_calc_bonuses(void) {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 30)
@@ -713,7 +710,7 @@ static race_t *_fire_get_race_t(void)
     me.stats[A_WIS] = -3;
     me.stats[A_DEX] = -2;
     me.stats[A_CON] =  3 + rank;
-    me.stats[A_CHR] = -2 + rank/2;
+    me.stats[A_CHR] =  0 + rank/2;
     me.life = 107 + 5*rank;
     me.boss_r_idx = MON_SURTUR;
 
@@ -751,7 +748,7 @@ static void _ice_storm_spell(int cmd, variant *res)
         break;
     }
 }
-static power_info _frost_powers[] = {
+static power_info _frost_get_powers[] = {
     { A_STR, {  5,  0, 50, throw_boulder_spell} },
     { A_STR, {  7,  0,  0, monster_toss_spell} },
     { A_STR, { 30,  3, 25, frost_bolt_spell} },
@@ -760,9 +757,6 @@ static power_info _frost_powers[] = {
     { A_STR, { 40, 40, 60, _ice_storm_spell} },
     {    -1, { -1, -1, -1, NULL}}
 };
-static int _frost_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _frost_powers);
-}
 static void _frost_calc_bonuses(void) {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 30)
@@ -847,7 +841,7 @@ static race_t *_frost_get_race_t(void)
     me.stats[A_WIS] = -3;
     me.stats[A_DEX] = -2;
     me.stats[A_CON] =  3 + rank;
-    me.stats[A_CHR] = -2 + rank/2;
+    me.stats[A_CHR] =  0 + rank/2;
     me.life = 107 + 5*rank;
     me.boss_r_idx = MON_YMIR;
 
@@ -918,7 +912,7 @@ static void _lightning_storm_spell(int cmd, variant *res)
         break;
     }
 }
-static power_info _storm_powers[] = {
+static power_info _storm_get_powers[] = {
     { A_STR, {  5,  0, 50, throw_boulder_spell} },
     { A_STR, {  7,  0,  0, monster_toss_spell} },
     { A_STR, { 30,  3, 25, lightning_bolt_spell} },
@@ -929,9 +923,6 @@ static power_info _storm_powers[] = {
     { A_CON, { 45, 10, 70, _breathe_storm_spell} },
     {    -1, { -1, -1, -1, NULL} }
 };
-static int _storm_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _storm_powers);
-}
 static void _storm_calc_bonuses(void) {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 30)
@@ -1024,7 +1015,7 @@ static race_t *_storm_get_race_t(void)
     me.stats[A_WIS] = -3;
     me.stats[A_DEX] = -2;
     me.stats[A_CON] =  3 + (rank + 1)/2;
-    me.stats[A_CHR] = -2 + rank/2;
+    me.stats[A_CHR] =  0 + rank/2;
     me.life = 105 + 3*rank;
     me.boss_r_idx = MON_TYPHOEUS;
 
@@ -1035,7 +1026,7 @@ static race_t *_storm_get_race_t(void)
  *                   20             30              40
  * Titan: Hill Giant -> Stone Giant -> Lesser Titan -> Greater Titan
  ******************************************************************************/
-static power_info _titan_powers[] = {
+static power_info _titan_get_powers[] = {
     { A_STR, {  5,   0, 50, throw_boulder_spell} },
     { A_STR, {  7,   0,  0, monster_toss_spell} },
     { A_CHR, { 30,  30, 25, summon_monsters_spell} },
@@ -1044,9 +1035,6 @@ static power_info _titan_powers[] = {
     { A_CON, { 45, 100, 95, healing_I_spell} }, /* N.B. Casting costs are paid with hp! */
     {    -1, { -1,  -1, -1, NULL}}
 };
-static int _titan_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _titan_powers);
-}
 static void _titan_calc_bonuses(void) {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 30)
@@ -1123,7 +1111,7 @@ static race_t *_titan_get_race_t(void)
     me.stats[A_WIS] =  0 + rank;
     me.stats[A_DEX] = -2;
     me.stats[A_CON] =  3 + rank;
-    me.stats[A_CHR] =  1 + rank;
+    me.stats[A_CHR] =  3 + rank;
     me.life = 102 + 5*rank;
     me.boss_r_idx = MON_KRONOS;
 

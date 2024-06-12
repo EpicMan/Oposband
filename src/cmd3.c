@@ -551,6 +551,7 @@ void do_cmd_query_symbol(void)
         monster_race *r_ptr = &r_info[i];
 
         /* Nothing to recall */
+		if (!(easy_lore || p_ptr->wizard) && !r_ptr->r_sights) continue;
         if (r_ptr->flagsx & RFX_SUPPRESS) continue;
 
         /* Require non-unique monsters if needed */
@@ -1219,6 +1220,13 @@ static void _mon_display_probe(doc_ptr doc, int m_idx)
     else
         doc_printf(doc, "Align: <color:w>%13.13s</color>\n", "Neutral");
 
+    if (m_ptr->mpower != 1000)
+    {
+        doc_printf(doc, "Power: <color:%c>%6d</color>/<color:G>%6d</color>\n",
+            (m_ptr->mpower < 1000) ? 'y' : 'b', m_ptr->mpower, 1000
+        );
+    }
+
     if (r_ptr->next_r_idx)
     {
         doc_printf(doc, "Exp  : <color:%c>%6d</color>/<color:G>%6d</color>\n",
@@ -1485,13 +1493,13 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
         /* Navigate the List */
         case '7': case SKEY_TOP:
             top = 0;
-            pos = 0;
+            pos = 1;
             redraw = TRUE;
             handled = TRUE;
             break;
         case '1': case SKEY_BOTTOM:
             top = MAX(0, ct_types - page_size);
-            pos = 0;
+            pos = (top == 0) ? 1 : 0;
             redraw = TRUE;
             handled = TRUE;
             break;
@@ -1500,7 +1508,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             if (top < 0)
             {
                 top = 0;
-                pos = 0;
+                pos = 1;
             }
             redraw = TRUE;
             handled = TRUE;
@@ -1517,7 +1525,15 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             break;
         case '2': case SKEY_DOWN:
             if (top + pos < ct_types - 1)
+            {
                 pos++;
+            }
+            else
+            {
+                pos = 1;
+                top = 0;
+                redraw = TRUE;
+            }
 
             if (pos == page_size)
             {
@@ -1530,10 +1546,14 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
         case '8': case SKEY_UP:
             if (pos > 0)
                 pos--;
-
-            if (pos == 0 && top > 0)
+            if (pos == 0)
             {
-                top--;
+                if (top > 0) top--;
+                else
+                {
+                    top = MAX(0, ct_types - page_size);
+                    pos = MIN(page_size - 1, (ct_types - 1) - top);
+                }
                 redraw = TRUE;
             }
             handled = TRUE;
@@ -1615,16 +1635,13 @@ void do_cmd_list_monsters(int mode)
     _mon_list_ptr list = _create_monster_list(mode);
     rect_t        display_rect = ui_menu_rect();
 
-    if (display_rect.cx > 50)
-        display_rect.cx = 50;
+    if (display_rect.cx > monster_list_width)
+        display_rect.cx = monster_list_width;
 
     if (list->ct_total)
         _list_monsters_aux(list, display_rect, mode);
     else
-        if (p_ptr->blind)
-            msg_print("You can't hear any monsters.");
-        else
-            msg_print("You see no visible monsters.");
+        msg_print("You see no visible monsters.");
 
     _mon_list_free(list);
 }
@@ -1637,7 +1654,7 @@ void _fix_monster_list_aux(void)
 
     Term_get_size(&display_rect.cx, &display_rect.cy);
 
-    if (list->ct_total)
+    if ((list->ct_total) && (display_rect.cx >= (use_bigtile ? 3 : 2)/* Hugo broke the game */))
         ct = _draw_monster_list(list, 0, display_rect, MON_LIST_NORMAL);
 
     for (i = ct; i < display_rect.cy; i++)
@@ -1969,7 +1986,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             Term_queue_bigchar(rect.x + 1, rect.y + i, a, c, 0, 0);
             c_put_str(attr, format(obj_fmt, o_name), rect.y + i, rect.x + 3);
             if (p_ptr->wizard)
-                c_put_str(TERM_WHITE, format("%6d %6d ", info_ptr->score, obj_value_real(o_ptr)), rect.y + i, rect.x + 3 + cx_obj + 1);
+                c_put_str(TERM_WHITE, format("%6d %6d ", info_ptr->score, obj_value_real(o_ptr)), rect.y + i, rect.x + cx_obj + 1);
             else
                 c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_obj + 1);
         }
@@ -1982,9 +1999,18 @@ void do_cmd_list_objects(void)
     _obj_list_ptr list = _create_obj_list();
     rect_t        display_rect = ui_menu_rect();
     bool          stairs_on = list_stairs;
+    bool          disable_toggling = FALSE;
 
-    if (display_rect.cx > 50)
-        display_rect.cx = 50;
+    if (display_rect.cx > object_list_width)
+        display_rect.cx = object_list_width;
+
+    if (((list->ct_total + list->ct_feature) < 1) && (!stairs_on))
+    {
+        list_stairs = TRUE;
+        disable_toggling = TRUE; /* Otherwise we can switch stairs back off for an empty list... */
+        _obj_list_free(list);
+        list = _create_obj_list();
+    }
 
     if (list->ct_total + list->ct_feature)
     {
@@ -2040,6 +2066,7 @@ void do_cmd_list_objects(void)
                 break;
             case 'S':
             {
+                if (disable_toggling) break;
                 list_stairs = !list_stairs;
                 _obj_list_free(list);
                 list = _create_obj_list();
@@ -2063,7 +2090,7 @@ void do_cmd_list_objects(void)
                     if (info_ptr->idx && info_ptr->group != _GROUP_FEATURE)
                     {
                         object_type *o_ptr = &o_list[info_ptr->idx];
-                        if (object_is_weapon_armor_ammo(o_ptr) || object_is_known(o_ptr))
+                        if (object_is_weapon_armour_ammo(o_ptr) || object_is_known(o_ptr))
                         {
                             obj_display(o_ptr);
                             screen_load();
@@ -2126,7 +2153,15 @@ void do_cmd_list_objects(void)
             case SKEY_DOWN:
             case '2':
                 if (top + pos < ct_types - 1)
+                {
                     pos++;
+                }
+                else
+                {
+                    pos = 0;
+                    top = 0;
+                    redraw = TRUE;
+                }
 
                 if (pos == page_size)
                 {
@@ -2139,10 +2174,14 @@ void do_cmd_list_objects(void)
             case '8':
                 if (pos > 0)
                     pos--;
-
-                if (pos == 0 && top > 0)
+                if (pos == 0)
                 {
-                    top--;
+                    if (top > 0) top--;
+                    else
+                    {
+                        top = MAX(0, ct_types - page_size);
+                        pos = MIN(page_size - 1, (ct_types - 1) - top);
+                    }
                     redraw = TRUE;
                 }
                 break;
@@ -2216,8 +2255,6 @@ void do_cmd_list_objects(void)
         }
         screen_load();
     }
-    else if (p_ptr->blind)
-        msg_print("You feel no objects.");
     else
         msg_print("You see no objects.");
 
@@ -2233,7 +2270,7 @@ void _fix_object_list_aux(void)
 
     Term_get_size(&display_rect.cx, &display_rect.cy);
 
-    if (list->ct_total + list->ct_feature)
+    if ((list->ct_total + list->ct_feature) && (display_rect.cx >= (use_bigtile ? 3 : 2)))
         ct = _draw_obj_list(list, 0, display_rect);
 
     for (i = ct; i < display_rect.cy; i++)

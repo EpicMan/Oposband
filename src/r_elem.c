@@ -199,7 +199,7 @@ static void _earth_birth(void)
     
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 6;
+    forge.to_d = 6;
     forge.pval = 3;
     add_flag(forge.flags, OF_STR);
     py_birth_obj(&forge);
@@ -353,7 +353,7 @@ static void _wall_of_earth_spell(int cmd, variant *res)
     }
 }
 
-static power_info _earth_powers[] = 
+static power_info _earth_get_powers[] = 
 {
     { A_STR, {  1,  1, 35, eat_rock_spell}},
     { A_STR, {  7,  5, 35, _shard_bolt_spell}},
@@ -366,11 +366,6 @@ static power_info _earth_powers[] =
     { A_DEX, { 42, 75, 70, _earthen_portal_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-
-static int _earth_get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _earth_powers);
-}
 
 static void _earth_calc_bonuses(void) 
 {
@@ -603,7 +598,7 @@ static void _sky_gate_spell(int cmd, variant *res)
     }
 }
 
-static power_info _air_powers[] = 
+static power_info _air_get_powers[] = 
 {
     { A_STR, {  2,  3, 25, lightning_bolt_spell}},
     { A_DEX, {  5,  3, 25, phase_door_spell}},
@@ -617,11 +612,6 @@ static power_info _air_powers[] =
     { A_DEX, { 42, 40, 60, _sky_gate_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-
-static int _air_get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _air_powers);
-}
 
 static void _air_calc_bonuses(void) 
 {
@@ -764,7 +754,7 @@ void water_mana_action(byte check_hurt_mode, int mana)
     p_ptr->redraw |= (PR_MANA); 
     if ((mana > 0) && ((uuskieppi) || (one_in_(5))) && (randint0(2178) < MIN(76, ((water_flow_rate() * 9 / 5) - 83))))
     {
-        slot_t slot = equip_find_first(object_is_body_armor);
+        slot_t slot = equip_find_first(object_is_body_armour);
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
@@ -773,7 +763,7 @@ void water_mana_action(byte check_hurt_mode, int mana)
             object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
             o_ptr->marked |= OM_SLIPPING;
             msg_format("You flow too fast! Your %s is caught in the flow and slips off!", o_name);
-            if ((object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT)) && (personality_is_(PERS_SEXY)))
+            if ((object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI)) && (personality_is_(PERS_SEXY)))
             {
                 msg_print("You roar!");
                 p_ptr->csp = 1000;
@@ -801,7 +791,7 @@ static void _water_birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 5;
+    forge.to_d = 5;
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_POLEARM, SV_TRIDENT));
@@ -826,10 +816,10 @@ static void _water_gain_level(int new_level)
 
 static bool _adjust_armor_aux(void)
 {
-    slot_t slot = equip_find_first(object_is_body_armor);
+    slot_t slot = equip_find_first(object_is_body_armour);
     if (!slot)
     {
-        msg_print("You're not even attempting to wear body armor.");
+        msg_print("You're not even attempting to wear body armour.");
         return FALSE;
     }
     else
@@ -838,7 +828,7 @@ static bool _adjust_armor_aux(void)
 //        char o_name[MAX_NLEN];
         if (!(o_ptr->marked & OM_SLIPPING))
         {
-            msg_print("Your armor does not need adjusting.");
+            msg_print("Your armour does not need adjusting.");
             return FALSE;
         }
         o_ptr->marked &= ~OM_SLIPPING;
@@ -857,10 +847,10 @@ static void _adjust_armor_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Adjust Armor");
+        var_set_string(res, "Adjust Armour");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Flow back into a slipping body armor, at the cost of two turns.");
+        var_set_string(res, "Flow back into a slipping body armour, at the cost of two turns.");
         break;
     case SPELL_CAST:
         var_set_bool(res, _adjust_armor_aux());
@@ -982,7 +972,7 @@ static void _water_healing_spell(int cmd, variant *res)
     }
 }
 
-static power_info _water_powers[] = 
+static power_info _water_get_powers[] = 
 {
     { A_DEX, {  1,  0,  0, _adjust_armor_spell}},
     { A_DEX, {  5,  5,  0, _acid_strike_spell}},
@@ -994,11 +984,6 @@ static power_info _water_powers[] =
     { A_DEX, { 42, 50, 75, _water_gate_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-
-static int _water_get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _water_powers);
-}
 
 static void _water_calc_bonuses(void) 
 {
@@ -1037,7 +1022,7 @@ static void _water_damage(obj_ptr obj)
     char o_name[MAX_NLEN];
     int  chance = 15;
 
-    if (!object_is_armor(obj)) return;
+    if (!object_is_armour(obj)) return;
     if (randint0(1452) >= chance) return;
     if (obj->ac + obj->to_a <= 0) return;
 
@@ -1084,7 +1069,8 @@ static caster_info * _water_caster_info(void)
 
 static void _water_load_player(savefile_ptr file)
 {
-    _toistot = savefile_read_byte(file);
+    if (savefile_is_older_than(file, 7, 0, 9, 3)) _toistot = 0;
+    else _toistot = savefile_read_byte(file);
 }
 
 static void _water_save_player(savefile_ptr file)
@@ -1313,7 +1299,7 @@ static void _fire_healing_spell(int cmd, variant *res)
     }
 }
 
-static power_info _fire_powers[] = 
+static power_info _fire_get_powers[] = 
 {
     { A_STR, {  2,  3, 25, _fire_whip_spell}},
     { A_STR, {  7,  5, 35, fire_bolt_spell}},
@@ -1328,11 +1314,6 @@ static power_info _fire_powers[] =
     { A_DEX, { 42, 50, 60, _fire_door_spell}},
     {    -1, { -1, -1, -1, NULL} }
 };
-
-static int _fire_get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _fire_powers);
-}
 
 static void _fire_calc_bonuses(void) 
 {
@@ -1489,6 +1470,7 @@ race_t *mon_elemental_get_race(int psubrace)
     result->name = "Elemental";
     result->desc = _desc;
     result->flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
+    if (psubrace == ELEMENTAL_AIR) result->flags |= RACE_EATS_DEVICES;
     result->base_hp = 30;
     result->pseudo_class_idx = CLASS_WARRIOR;
     result->shop_adjust = 120;

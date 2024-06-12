@@ -72,7 +72,7 @@ static void _load(savefile_ptr file)
             _effects[j] += n;
     }
     ini_statup_list();
-    dungeon_statup_load(file);
+    if (!savefile_is_older_than(file, 7,1,0,1)) dungeon_statup_load(file);
 }
 
 static void _save(savefile_ptr file)
@@ -684,7 +684,10 @@ static void _judge_spell(int cmd, variant *res)
         var_set_string(res, "Identifies a piece of jewelry.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, ident_spell(object_is_jewelry));
+        if (p_ptr->lev >= 35)
+            var_set_bool(res, identify_fully(object_is_jewelry));
+        else
+            var_set_bool(res, ident_spell(object_is_jewelry));
         break;
     default:
         default_spell(cmd, res);
@@ -752,7 +755,7 @@ static void _charm_spell(int cmd, variant *res)
     }
 }
 
-static power_info _powers[] = 
+static power_info _get_powers[] =
 {
     { A_INT, {  1,  0,  0, _absorb_spell } },
     { A_CHR, {  1,  0,  0, _glitter_spell } },
@@ -761,11 +764,6 @@ static power_info _powers[] =
     { A_CHR, { 15, 10, 50, _charm_spell } },
     {    -1, { -1, -1, -1, NULL}}
 };
-
-static int _get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _powers);
-}
 
 /**********************************************************************
  * Spells
@@ -941,9 +939,9 @@ static _group_t _groups[] = {
         { EFFECT_LITE_MAP_AREA,       20,  10, 50 },
         { EFFECT_ENLIGHTENMENT,       20,  10, 50 },
         { EFFECT_DETECT_ALL,          25,  15, 60 },
-        /*{ EFFECT_PROBING,             27,  20, 60 },*/
+        { EFFECT_PROBING,             27,  20, 60 },
         { EFFECT_SELF_KNOWLEDGE,      30,  23, 65 },
-        /*{ EFFECT_IDENTIFY_FULL,       33,  25, 65 },*/
+        { EFFECT_IDENTIFY_FULL,       33,  25, 65 },
         { EFFECT_LIST_UNIQUES,        40,  50, 75 },
         { EFFECT_LIST_ARTIFACTS,      42,  50, 75 }, 
         { EFFECT_CLAIRVOYANCE,        45,  50, 70 },
@@ -1496,6 +1494,10 @@ static void _calc_bonuses(void)
         p_ptr->regen += 100;
     if (_essences[OF_REFLECT] >= 7)
         p_ptr->reflect = TRUE;
+/* OF_REGEN_MANA essences are not currently needed since mana regen
+ * remains binary and Rings get it from their Mage pseudo-class
+ *  if (_essences[OF_REGEN_MANA] >= 4)
+ *      p_ptr->mana_regen = TRUE; */
 
     if (_essences[OF_AURA_FIRE] >= 7)
         p_ptr->sh_fire++;
@@ -1612,7 +1614,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (_essences[OF_AURA_COLD] >= 7)
         add_flag(flgs, OF_AURA_COLD);
     if (_essences[OF_AURA_SHARDS] >= 7)
-        p_ptr->sh_shards++;
+        add_flag(flgs, OF_AURA_SHARDS);
 
     if (_essences[OF_IM_ACID] >= 2)
         add_flag(flgs, OF_IM_ACID);
@@ -1859,7 +1861,7 @@ race_t *mon_ring_get_race(void)
         me.save_player = _save;
         me.destroy_object = _absorb_object;
 
-        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
+        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING | RACE_EATS_DEVICES;
         me.pseudo_class_idx = CLASS_MAGE;
         me.boss_r_idx = MON_ONE_RING;
 

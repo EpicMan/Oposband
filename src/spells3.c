@@ -620,7 +620,7 @@ void teleport_away_followable(int m_idx)
     {
         bool follow = FALSE;
 
-        if (mut_present(MUT_TELEPORT) || (p_ptr->pclass == CLASS_IMITATOR)) follow = TRUE;
+        if (mut_present(MUT_TELEPORT)) follow = TRUE;
         else if (p_ptr->pclass == CLASS_DUELIST
               && p_ptr->duelist_target_idx == m_idx
               && p_ptr->lev >= 30 )
@@ -655,7 +655,7 @@ void teleport_away_followable(int m_idx)
                     }
                     teleport_player_to(m_ptr->fy, m_ptr->fx, 0L);
                 }
-                p_ptr->energy_need += ENERGY_NEED();
+                p_ptr->energy_need += PY_ENERGY_NEED();
             }
         }
     }
@@ -728,14 +728,14 @@ void teleport_level(int m_idx)
     }
 
     /* Down only */
-    if ((ironman_downward && (m_idx <= 0) && (!quests_get_current())) || (dun_level <= d_info[dungeon_type].mindepth))
+    if (((only_downward()) && (m_idx <= 0) && (!quests_get_current())) || (dun_level <= d_info[dungeon_type].mindepth))
     {
         if (see_m) msg_format("%^s sink%s through the floor.", m_name, (m_idx <= 0) ? "" : "s");
         if (m_idx <= 0) /* To player */
         {
             if (!dun_level)
             {
-                dungeon_type = p_ptr->recall_dungeon;
+                set_dungeon_type(p_ptr->recall_dungeon);
                 p_ptr->oldpy = py;
                 p_ptr->oldpx = px;
             }
@@ -748,7 +748,7 @@ void teleport_level(int m_idx)
                 if (coffee_break)
                 {
                     dun_level = coffeebreak_recall_level(TRUE);
-                    dungeon_type = DUNGEON_ANGBAND; /* paranoia */
+                    set_dungeon_type(DUNGEON_ANGBAND); /* paranoia */
                 }
                 prepare_change_floor_mode(CFM_RAND_PLACE);
             }
@@ -834,7 +834,7 @@ void teleport_level(int m_idx)
 int choose_dungeon(cptr note, int y, int x)
 {
     int select_dungeon;
-    int i, num = 0;
+    int i, paikka, num = 0, sivu = Term->hgt - y;
     s16b *dun;
 
     /* Hack -- No need to choose dungeon in some case */
@@ -853,17 +853,30 @@ int choose_dungeon(cptr note, int y, int x)
     C_MAKE(dun, max_d_idx, s16b);
 
     screen_save();
+    if (sivu < 5)
+    {
+        y = 1; /* paranoia */
+        sivu = Term->hgt - y;
+    }
     for(i = 1; i < max_d_idx; i++)
     {
         char buf[80];
         bool seiha = dungeon_conquered(i);
+        int xx = x, yy = y + num;
 
         if (!d_info[i].maxdepth) continue;
         if (d_info[i].flags1 & DF1_RANDOM) continue;
+        if (d_info[i].flags1 & DF1_SUPPRESSED) continue;
         if (!max_dlv[i]) continue;
 
-        sprintf(buf," %c) %c%-16s : Max level %d ", 'a'+num, seiha ? '!' : ' ', d_name + d_info[i].name, max_dlv[i]);
-        put_str(buf, y + num, x);
+        sprintf(buf," %c) %c%-16s : Max level %d ", multicase[num], seiha ? '!' : ' ', d_name + d_info[i].name, max_dlv[i]);
+        if (num >= sivu)
+        {
+            yy = y + (num % sivu);
+            xx += 37 * (num / sivu);
+            xx = MIN(xx, Term->wid - 20);
+        }
+        put_str(buf, yy, xx);
         dun[num++] = i;
     }
 
@@ -872,10 +885,11 @@ int choose_dungeon(cptr note, int y, int x)
         put_str(" No dungeon is available.", y, x);
     }
 
-    prt(format("Which dungeon do you %s?: ", note), 0, 0);
+    prt(format("%^s which dungeon?: ", note), 0, 0);
     while(1)
     {
         i = inkey();
+        paikka = chrpos(i, multicase);
         if ((i == ESCAPE) || !num)
         {
             /* Free the "dun" array */
@@ -884,9 +898,9 @@ int choose_dungeon(cptr note, int y, int x)
             screen_load();
             return 0;
         }
-        if (i >= 'a' && i <('a'+num))
+        else if ((paikka) && (paikka <= num))
         {
-            select_dungeon = dun[i-'a'];
+            select_dungeon = dun[paikka - 1];
             break;
         }
         else bell();
@@ -929,7 +943,7 @@ bool recall_player(int turns, bool varmista)
         if (!dun_level)
         {
             int select_dungeon;
-            select_dungeon = choose_dungeon("recall", 1, 1);
+            select_dungeon = choose_dungeon("recall to", 1, 1);
             if (!select_dungeon) return FALSE;
             p_ptr->recall_dungeon = select_dungeon;
         }
@@ -945,7 +959,7 @@ bool recall_player(int turns, bool varmista)
         p_ptr->word_recall = 0;
         cmsg_print(TERM_L_BLUE, "A tension leaves the air around you...");
 
-        p_ptr->leaving_method = LEAVING_UNKOWN;
+        p_ptr->leaving_method = LEAVING_UNKNOWN;
         p_ptr->redraw |= (PR_STATUS);
     }
     return TRUE;
@@ -967,7 +981,7 @@ bool reset_recall(void)
     select_dungeon = choose_dungeon("reset", 1, 1);
 
     /* Ironman option */
-    if (ironman_downward)
+    if (only_downward())
     {
         msg_print("Nothing happens.");
 
@@ -1016,16 +1030,16 @@ bool reset_recall(void)
  */
 bool apply_disenchant(int mode)
 {
-    int slot = equip_random_slot(object_is_weapon_armor_ammo);
+    int slot = equip_random_slot(object_is_weapon_armour_ammo);
 
     if (slot)
     {
         object_type     *o_ptr = equip_obj(slot);
         char            o_name[MAX_NLEN];
         u32b            flgs[OF_ARRAY_SIZE];
-        int to_h, to_a, pval;
+        int to_h, to_d, to_a, pval;
 
-        if (o_ptr->to_h <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
+        if (o_ptr->to_h <= 0 && o_ptr->to_d <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
             return FALSE;
 
         if (p_ptr->prace == RACE_MON_ARMOR) /* Eat life rating instead */
@@ -1057,12 +1071,17 @@ bool apply_disenchant(int mode)
 
         /* Memorize old value */
         to_h = o_ptr->to_h;
+        to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
         pval = o_ptr->pval;
 
         /* Disenchant tohit */
         if (o_ptr->to_h > 0) o_ptr->to_h--;
         if ((o_ptr->to_h > 5) && (randint0(100) < 20)) o_ptr->to_h--;
+
+        /* Disenchant todam */
+        if (o_ptr->to_d > 0) o_ptr->to_d--;
+        if ((o_ptr->to_d > 5) && (randint0(100) < 20)) o_ptr->to_d--;
 
         /* Disenchant toac */
         if (o_ptr->to_a > 0) o_ptr->to_a--;
@@ -1072,12 +1091,13 @@ bool apply_disenchant(int mode)
         /* Unless called from wild_magic() */
         if ((o_ptr->pval > 1) && one_in_(13) && !(mode & 0x01)) o_ptr->pval--;
 
-        if ((to_h != o_ptr->to_h) || (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
+        if ((to_h != o_ptr->to_h) || (to_d != o_ptr->to_d) ||
+            (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
         {
             msg_format("Your %s was disenchanted!", o_name);
             virtue_add(VIRTUE_HARMONY, 1);
             virtue_add(VIRTUE_ENCHANTMENT, -2);
-            if (o_ptr->insured) cornucopia_item_disenchanted(o_ptr, to_a, to_h, pval);
+            if (o_ptr->insured) cornucopia_item_disenchanted(o_ptr, to_a, to_h, to_d, pval);
 
             p_ptr->update |= (PU_BONUS);
             p_ptr->window |= (PW_EQUIP);
@@ -1129,7 +1149,7 @@ void mutate_player(void)
 
     /* Pick a pair of stats. Sustains give players a chance to protect
      * key stats in the early game (e.g. mages are forced to hyper focus
-     * stat boosts on Int and swapping 23 with 12 might as well just
+     * stat boosts on Int and swapping 18/50 with 12 might as well just
      * kill the player). Nexus is common around DL30 while stat potions
      * are not.*/
     sustains[A_STR] = p_ptr->sustain_str;
@@ -1191,18 +1211,18 @@ static void _nexus_pick_dungeon(void)
         which = rand_range(2, max_d_idx);
         d_ptr = &d_info[which];
         if (!d_ptr->name) continue;
-        if (d_ptr->flags1 & (DF1_RANDOM | DF1_WINNER)) continue;
+        if (d_ptr->flags1 & (DF1_RANDOM | DF1_SUPPRESSED | DF1_WINNER)) continue;
         if (which == dungeon_type) continue;
         if (d_ptr->mindepth > max_lvl) continue;
         lvl = rand_range(d_ptr->mindepth, MIN(d_ptr->maxdepth, max_lvl));
         break;
     }
-    dungeon_type = which;
+    set_dungeon_type(which);
     dun_level = lvl;
 }
 static void _nexus_travel(void)
 {
-    if (no_nexus_warp) return; /* paranoia */
+    if (no_chris) return; /* paranoia */
     if (!py_on_surface() && !py_in_dungeon())
     {
         msg_print("There is no effect.");
@@ -1271,7 +1291,7 @@ void apply_nexus(monster_type *m_ptr)
                 msg_print("Your body starts to scramble...");
                 wild_talent_scramble();
             }
-            else if (no_wilderness || no_nexus_warp || ironman_downward || quest_id_current())
+            else if (no_wilderness || no_chris || only_downward() || quest_id_current())
             {
                 if (!no_scrambling) msg_print("Your body starts to scramble...");
                 mutate_player();
@@ -1330,7 +1350,7 @@ static bool _can_brand_weapon(obj_ptr obj)
 {
     if (!object_is_melee_weapon(obj)) return FALSE;
     if (!object_is_nameless(obj)) return FALSE;
-    if (object_is_(obj, TV_DAGGER, SV_POISON_NEEDLE)) return FALSE;
+    if (object_is_(obj, TV_SWORD, SV_POISON_NEEDLE)) return FALSE;
     if (object_is_(obj, TV_SWORD, SV_RUNESWORD)) return FALSE;
     /* Hengband: if (object_is_(obj, TV_SWORD, SV_DIAMOND_EDGE)) return FALSE;*/
     if (have_flag(obj->flags, OF_NO_REMOVE)) return FALSE;
@@ -1416,7 +1436,7 @@ bool brand_weapon_aux(object_type *o_ptr)
     apply_magic(o_ptr, p_ptr->lev, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
-bool brand_armor_aux(object_type *o_ptr)
+bool brand_armour_aux(object_type *o_ptr)
 {
     if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         return FALSE;
@@ -1746,7 +1766,7 @@ void fetch(int dir, int wgt, bool require_los)
 void alter_reality(void)
 {
     /* Ironman option */
-    if (p_ptr->inside_arena || ironman_downward)
+    if (p_ptr->inside_arena || only_downward())
     {
         msg_print("Nothing happens.");
         return;
@@ -1767,7 +1787,7 @@ void alter_reality(void)
         p_ptr->alter_reality = 0;
         msg_print("The view around you got back...");
 
-        p_ptr->leaving_method = LEAVING_UNKOWN;
+        p_ptr->leaving_method = LEAVING_UNKNOWN;
         p_ptr->redraw |= (PR_STATUS);
     }
     return;
@@ -1944,9 +1964,10 @@ static int remove_curse_aux(int all)
         {
             o_ptr->curse_flags &= (OFC_CURSED | OFC_HEAVY_CURSE | OFC_PERMA_CURSE);
             o_ptr->known_curse_flags &= (OFC_CURSED | OFC_HEAVY_CURSE | OFC_PERMA_CURSE);
+            p_ptr->update |= PU_BONUS;
+            p_ptr->redraw |= PR_EFFECTS;
             continue;
         }
-
         o_ptr->curse_flags = 0;
         o_ptr->known_curse_flags = 0; /* Forget lore in preparation for next cursing */
         o_ptr->ident  |= IDENT_SENSE;
@@ -2181,6 +2202,33 @@ bool enchant(object_type *o_ptr, int n, int eflag)
             }
         }
 
+        /* Enchant to damage */
+        if (eflag & ENCH_TODAM)
+        {
+            int idx = o_ptr->to_d;
+            if (eflag & ENCH_PSI_HACK)
+            {
+                idx -= 2*(psion_enchant_power() - 1);
+            }
+
+            if (idx < 0) chance = 0;
+            else if (idx > 15) chance = 1000;
+            else chance = enchant_table[idx];
+
+            if ((eflag & ENCH_MINOR_HACK) && idx >= minor_limit)
+                chance = 1000;
+
+            if (force || ((randint1(1000) > chance) && (!a || (randint0(100) < 50))))
+            {
+                o_ptr->to_d++;
+                res = TRUE;
+
+                /* only when you get it above -1 -CFT */
+                if (o_ptr->to_d >= 0)
+                    break_curse(o_ptr);
+            }
+        }
+
         /* Enchant to armor class */
         if (eflag & ENCH_TOAC)
         {
@@ -2220,10 +2268,10 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 
 /*
  * Enchant an item (in the inventory or on the floor)
- * Note that "num_ac" requires armor, else weapon
+ * Note that "num_ac" requires armour, else weapon
  * Returns TRUE if attempted, FALSE if cancelled
  */
-bool enchant_spell(int num_hit, int num_ac)
+bool enchant_spell(int num_hit, int num_dam, int num_ac)
 {
     obj_prompt_t prompt = {0};
     bool         okay = FALSE;
@@ -2231,7 +2279,7 @@ bool enchant_spell(int num_hit, int num_ac)
 
     prompt.prompt = "Enchant which item?";
     prompt.error = "You have nothing to enchant.";
-    prompt.filter = num_ac ? object_allow_enchant_armor : object_allow_enchant_weapon;
+    prompt.filter = num_ac ? object_allow_enchant_armour : object_allow_enchant_weapon;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -2250,6 +2298,7 @@ bool enchant_spell(int num_hit, int num_ac)
 
 
     if (enchant(prompt.obj, num_hit, ENCH_TOHIT)) okay = TRUE;
+    if (enchant(prompt.obj, num_dam, ENCH_TODAM)) okay = TRUE;
     if (enchant(prompt.obj, num_ac, ENCH_TOAC)) okay = TRUE;
 
     if (!okay)
@@ -2268,12 +2317,12 @@ bool enchant_spell(int num_hit, int num_ac)
 
 
 /*
- * Check if an object is nameless weapon or armor
+ * Check if an object is nameless weapon or armour
  */
-bool item_tester_hook_nameless_weapon_armor(object_type *o_ptr)
+bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr)
 {
-    if ( !object_is_weapon_armor_ammo(o_ptr)
-      && !(o_ptr->tval == TV_LITE && o_ptr->sval == SV_LITE_FEANOR)
+    if ( !object_is_weapon_armour_ammo(o_ptr)
+      && !(o_ptr->tval == TV_LITE && o_ptr->sval >= SV_LITE_FEANOR)
       && !(o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) /* Testing ... */
       && !(prace_is_(RACE_SNOTLING) && object_is_mushroom(o_ptr)) )
     {
@@ -2285,8 +2334,8 @@ bool item_tester_hook_nameless_weapon_armor(object_type *o_ptr)
         return FALSE;
 
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD) return FALSE;
-	if (o_ptr->tval == TV_DAGGER && o_ptr->sval == SV_POISON_NEEDLE) return FALSE;
-    
+    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) return FALSE;
+
     return TRUE;
 }
 
@@ -2298,7 +2347,7 @@ bool artifact_scroll(void)
 
     prompt.prompt = "Enchant which item?";
     prompt.error = "You have nothing to enchant.";
-    prompt.filter = item_tester_hook_nameless_weapon_armor;
+    prompt.filter = item_tester_hook_nameless_weapon_armour;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -2367,7 +2416,6 @@ bool artifact_scroll(void)
         /* Message */
         msg_print("The enchantment failed.");
 
-        if (one_in_(3)) virtue_add(VIRTUE_ENCHANTMENT, -1);
         return (FALSE);
     }
     else
@@ -2399,12 +2447,18 @@ bool identify_item(object_type *o_ptr)
             virtue_add(VIRTUE_KNOWLEDGE, 1);
     }
 
-	obj_identify_fully(o_ptr);
-	if ( p_ptr->prace == RACE_MON_POSSESSOR
-	  && o_ptr->tval == TV_CORPSE
-	  && o_ptr->sval == SV_CORPSE )
-		(void)lore_do_probe(o_ptr->pval);
-
+    if (easy_id)
+    {
+        obj_identify_fully(o_ptr);
+        if ( p_ptr->prace == RACE_MON_POSSESSOR
+          && o_ptr->tval == TV_CORPSE
+          && o_ptr->sval == SV_CORPSE )
+            (void)lore_do_probe(o_ptr->pval);
+    }
+    else
+    {
+        obj_identify(o_ptr);
+    }
     if ((!o_ptr) || (!o_ptr->k_idx)) return old_known;
     stats_on_identify(o_ptr);
     o_ptr->marked |= OM_TOUCHED;
@@ -2472,7 +2526,7 @@ bool mundane_spell(bool only_equip)
     prompt.prompt = "Use which item?";
     prompt.error = "You have nothing you can use.";
     if (only_equip)
-        prompt.filter = object_is_weapon_armor_ammo;
+        prompt.filter = object_is_weapon_armour_ammo;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -2534,6 +2588,7 @@ bool mundane_spell(bool only_equip)
             cornucopia_mark_destroyed(cornucopia_item_policy(prompt.obj), prompt.obj->number);
             prompt.obj->insured = 0;
         }
+        obj_identify(prompt.obj);
     }
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_EQUIP;
@@ -2905,6 +2960,15 @@ bool bless_weapon(void)
 
         if ((prompt.obj->to_h > 5) && (randint0(100) < 33)) prompt.obj->to_h--;
 
+        /* Disenchant todam */
+        if (prompt.obj->to_d > 0)
+        {
+            prompt.obj->to_d--;
+            dis_happened = TRUE;
+        }
+
+        if ((prompt.obj->to_d > 5) && (randint0(100) < 33)) prompt.obj->to_d--;
+
         /* Disenchant toac */
         if (prompt.obj->to_a > 0)
         {
@@ -3020,19 +3084,9 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
         case SV_POTION_DEC_DEX:
         case SV_POTION_DEC_CON:
         case SV_POTION_DEC_CHR:
+        case SV_POTION_WATER:   /* perhaps a 'water' attack? */
         case SV_POTION_APPLE_JUICE:
             return TRUE;
-
-		case SV_POTION_WATER:   /* Holy water harms undead */
-			if (p_ptr->pclass == CLASS_PRIEST)
-			{
-				dt = GF_DISP_UNDEAD;
-				dam = damroll(25, 25);
-				angry = TRUE;
-				break;
-			}
-			else
-				return TRUE;
 
         case SV_POTION_SIGHT:
         case SV_POTION_CURE_POISON:
@@ -3057,13 +3111,16 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
         case SV_POTION_ENLIGHTENMENT:
         case SV_POTION_STAR_ENLIGHTENMENT:
         case SV_POTION_SELF_KNOWLEDGE:
-        case SV_POTION_EXPERIENCE:
         case SV_POTION_RESISTANCE:
         case SV_POTION_INVULNERABILITY:
         case SV_POTION_NEW_LIFE:
 		case SV_POTION_CURING:
             /* All of the above potions have no effect when shattered */
             return FALSE;
+        case SV_POTION_EXPERIENCE:
+            dt = GF_GAIN_EXP;
+            dam = 50000;
+            break;
         case SV_POTION_SLOWNESS:
             dt = GF_OLD_SLOW;
             dam = 5;
@@ -3080,6 +3137,7 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
             break;
         case SV_POTION_CONFUSION: /* Booze */
             dt = GF_OLD_CONF;
+            dam = damroll(4, 7);
             angry = TRUE;
             break;
         case SV_POTION_SLEEP:
@@ -3091,6 +3149,11 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
             dt = GF_SHARDS;
             dam = damroll(25, 25);
             angry = TRUE;
+            break;
+        case SV_POTION_LIQUID_LOGRUS:
+            dt = (one_in_(5) ? GF_OLD_HEAL : GF_CHAOS);
+            dam = damroll(11, 77);
+            angry = (dt != GF_OLD_HEAL);
             break;
         case SV_POTION_DEATH:
             dt = GF_DEATH_RAY;    /* !! */
@@ -3148,11 +3211,26 @@ bool potion_smash_effect(int who, int y, int x, int k_idx)
     return angry;
 }
 
+
+/*
+ * Returns experience of a spell
+ */
+s16b experience_of_spell(int spell, int use_realm)
+{
+    if (p_ptr->pclass == CLASS_SORCERER) return SPELL_EXP_MASTER;
+    else if (p_ptr->pclass == CLASS_RED_MAGE) return SPELL_EXP_SKILLED;
+    else if (use_realm == p_ptr->realm1) return p_ptr->spell_exp[spell];
+    else if (use_realm == p_ptr->realm2) return p_ptr->spell_exp[spell + 32];
+    else return 0;
+}
+
+
 /*
  * Modify mana consumption rate using spell exp and p_ptr->dec_mana
  */
 int mod_need_mana(int need_mana, int spell, int realm)
 {
+#define MANA_CONST   2400
 #define MANA_DIV        4
 #define DEC_MANA_DIV    3
 
@@ -3164,8 +3242,13 @@ int mod_need_mana(int need_mana, int spell, int realm)
     /* Realm magic */
     if ((realm > REALM_NONE) && (realm <= MAX_REALM))
     {
+        /*
+         * need_mana defaults if spell exp equals SPELL_EXP_EXPERT and !p_ptr->dec_mana.
+         * MANA_CONST is used to calculate need_mana effected from spell proficiency.
+         */
+        need_mana = need_mana * (MANA_CONST + SPELL_EXP_EXPERT - experience_of_spell(spell, realm)) + (MANA_CONST - 1);
         need_mana *= dec_mana ? DEC_MANA_DIV : MANA_DIV;
-        need_mana /= MANA_DIV;
+        need_mana /= MANA_CONST * MANA_DIV;
         if (need_mana < 1) need_mana = 1;
     }
 
@@ -3177,6 +3260,7 @@ int mod_need_mana(int need_mana, int spell, int realm)
 
 #undef DEC_MANA_DIV
 #undef MANA_DIV
+#undef MANA_CONST
 
     if (p_ptr->tim_blood_rite)
         need_mana *= 2;
@@ -3187,11 +3271,12 @@ int mod_need_mana(int need_mana, int spell, int realm)
 
 /*
  * Modify spell fail rate
- * Using p_ptr->to_m_chance, p_ptr->dec_mana, p_ptr->easy_spell and p_ptr->heavy_spell
+ * Using p_ptr->to_m_chance, p_ptr->easy_spell and p_ptr->heavy_spell
+ * No longer using p_ptr->dec_mana
  */
 int mod_spell_chance_1(int chance, int realm)
 {
-    bool dec_mana = p_ptr->dec_mana;
+    bool dec_mana = FALSE;
 
     if (realm && realm == p_ptr->easy_realm1)
         dec_mana = TRUE;
@@ -3206,9 +3291,8 @@ int mod_spell_chance_1(int chance, int realm)
         if (p_ptr->cumber_armor) chance += 100 * p_ptr->cumber_armor_amt / 600;
     }
 
-    if (dec_mana && p_ptr->easy_spell) chance -= 4;
-    else if (p_ptr->easy_spell) chance -= 3;
-    else if (dec_mana) chance -= 2;
+    if (p_ptr->easy_spell) chance -= 4;
+    if (dec_mana) chance -= 2;
 
     if (mut_present(MUT_ARCANE_MASTERY))
         chance -= 3;
@@ -3221,17 +3305,14 @@ int mod_spell_chance_1(int chance, int realm)
 
 /*
  * Modify spell fail rate (as "suffix" process)
- * Using p_ptr->dec_mana, p_ptr->easy_spell and p_ptr->heavy_spell
+ * Using p_ptr->easy_spell and p_ptr->heavy_spell
  * Note: variable "chance" cannot be negative.
  */
 int mod_spell_chance_2(int chance, int realm)
 {
-    bool dec_mana = p_ptr->dec_mana;
+    int min = (mut_present(MUT_HUMAN_CHR)) ? 1 : 0;
+    if ((realm) && (realm == p_ptr->easy_realm1)) chance--;
 
-    if (realm && realm == p_ptr->easy_realm1)
-        dec_mana = TRUE;
-
-    if (dec_mana) chance--;
     if (p_ptr->heavy_spell) chance += 5;
     if (p_ptr->pclass == CLASS_BLOOD_MAGE)
     {
@@ -3239,7 +3320,7 @@ int mod_spell_chance_2(int chance, int realm)
         if (p_ptr->cumber_armor) chance += 5;
     }
 
-    return MAX(chance, 0);
+    return MAX(chance, min);
 }
 
 
@@ -3344,6 +3425,14 @@ s16b spell_chance(int spell, int use_realm)
     /* Always a 5 percent chance of working */
     if (chance > 95) chance = 95;
 
+    if ((use_realm == p_ptr->realm1) || (use_realm == p_ptr->realm2)
+        || (p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
+    {
+        s16b exp = experience_of_spell(spell, use_realm);
+        if (exp >= SPELL_EXP_EXPERT) chance--;
+        if (exp >= SPELL_EXP_MASTER) chance--;
+    }
+
     /* Return the chance */
     return mod_spell_chance_2(chance, use_realm);
 }
@@ -3375,13 +3464,29 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm, bool br
     /* Spell is illegal */
     if (lawyer_hack(s_ptr, LAWYER_HACK_LEVEL) > p_ptr->lev) return (FALSE);
 
+    /* Spell is forgotten */
+    if ((use_realm == p_ptr->realm2) ?
+        (p_ptr->spell_forgotten2 & (1L << spell)) :
+        (p_ptr->spell_forgotten1 & (1L << spell)))
+    {
+        /* Never okay */
+        return (FALSE);
+    }
+
     if (p_ptr->pclass == CLASS_SORCERER) return (TRUE);
     if (p_ptr->pclass == CLASS_RED_MAGE) return (TRUE);
 
-	if (p_ptr->realm1 != use_realm && p_ptr->realm2 != use_realm) return (FALSE);
-
     /* Spell is learned */
-	return TRUE;
+    if ((use_realm == p_ptr->realm2) ?
+        (p_ptr->spell_learned2 & (1L << spell)) :
+        (p_ptr->spell_learned1 & (1L << spell)))
+    {
+        /* Always true */
+        return (!study_pray);
+    }
+
+    /* Okay to study, not to cast */
+    return (!learned);
 }
 
 
@@ -3397,6 +3502,7 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
     char            out_val[160];
     byte            line_attr;
     int             need_mana;
+    char            ryakuji[15];
     char            buf[256];
     bool            max = FALSE;
     caster_info    *caster_ptr = get_caster_info();
@@ -3412,9 +3518,9 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
     else
     {
         if (caster_ptr && ((caster_ptr->options & CASTER_USE_HP) || ((p_ptr->pclass == CLASS_NINJA_LAWYER) && (use_realm != REALM_LAW))))
-            strcpy(buf,"Lvl  HP Fail Desc");
+            strcpy(buf,"Profic Lvl  HP Fail Desc");
         else
-            strcpy(buf,"Lvl  SP Fail Desc");
+            strcpy(buf,"Profic Lvl  SP Fail Desc");
     }
 
     Term_erase(display.x, display.y, display.cx);
@@ -3449,17 +3555,23 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
             need_mana = s_ptr->smana;
         else
         {
+            s16b exp = experience_of_spell(spell, use_realm);
+
             /* Extract mana consumption rate */
             need_mana = mod_need_mana(lawyer_hack(s_ptr, LAWYER_HACK_MANA), spell, use_realm);
 
             if ((increment == 64) || (vaikeustaso >= 99)) exp_level = EXP_LEVEL_UNSKILLED;
-            else exp_level = EXP_LEVEL_EXPERT;
+            else exp_level = spell_exp_level(exp);
 
             max = FALSE;
             if (!increment && (exp_level == EXP_LEVEL_MASTER)) max = TRUE;
             else if ((increment == 32) && (exp_level >= EXP_LEVEL_EXPERT)) max = TRUE;
             else if (vaikeustaso >= 99) max = TRUE;
             else if ((p_ptr->pclass == CLASS_RED_MAGE) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
+
+            strncpy(ryakuji, exp_level_str[exp_level], 4);
+            ryakuji[3] = ']';
+            ryakuji[4] = '\0';
         }
 
         if (use_menu && target_spell)
@@ -3511,21 +3623,30 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
 
             line_attr = TERM_L_BLUE;
         }
-        else
-		{
-			if (vaikeustaso > p_ptr->max_plv)
-			{
-				comment = "unknown";
+        else if ((use_realm == p_ptr->realm1) ?
+            ((p_ptr->spell_forgotten1 & (1L << spell))) :
+            ((p_ptr->spell_forgotten2 & (1L << spell))))
+        {
+            comment = "forgotten";
 
-				line_attr = TERM_L_BLUE;
-			}
-			else if (vaikeustaso > p_ptr->lev)
-			{
-				comment = "forgotten";
+            line_attr = TERM_YELLOW;
+        }
+        else if (!((use_realm == p_ptr->realm1) ?
+            (p_ptr->spell_learned1 & (1L << spell)) :
+            (p_ptr->spell_learned2 & (1L << spell))))
+        {
+            comment = "unknown";
 
-				line_attr = TERM_YELLOW;
-			}
-		}
+            line_attr = TERM_L_BLUE;
+        }
+        else if (!((use_realm == p_ptr->realm1) ?
+            (p_ptr->spell_worked1 & (1L << spell)) :
+            (p_ptr->spell_worked2 & (1L << spell))))
+        {
+            comment = "untried";
+
+            line_attr = TERM_L_GREEN;
+        }
 
         /* Dump the spell --(-- */
         if (use_realm == REALM_HISSATSU)
@@ -3536,9 +3657,9 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
         }
         else
         {
-            strcat(out_val, format("%-22s%c %3d %3d %3d%% %s",
+            strcat(out_val, format("%-25s%c%-4s %3d %3d %3d%% %s",
                 do_spell(use_realm, spell, SPELL_NAME),
-                (max ? '!' : ' '), 
+                (max ? '!' : ' '), ryakuji,
                 vaikeustaso, need_mana, spell_chance(spell, use_realm), comment));
         }
         c_put_str(line_attr, out_val, display.y + i + 1, display.x);
@@ -3569,11 +3690,8 @@ bool hates_acid(object_type *o_ptr)
         case TV_BOLT:
         case TV_BOW:
         case TV_SWORD:
-        case TV_DAGGER:
         case TV_HAFTED:
-        case TV_STAVES:
         case TV_POLEARM:
-        case TV_AXE:
         case TV_HELM:
         case TV_CROWN:
         case TV_SHIELD:
@@ -3646,9 +3764,7 @@ bool hates_fire(object_type *o_ptr)
         case TV_ARROW:
         case TV_BOW:
         case TV_HAFTED:
-        case TV_STAVES:
         case TV_POLEARM:
-        case TV_AXE:
         case TV_BOOTS:
         case TV_GLOVES:
         case TV_CLOAK:
@@ -3876,7 +3992,7 @@ void inven_damage(int who, inven_func typ, int p1, int which)
  */
 int minus_ac(void)
 {
-    int slot = equip_random_slot(object_is_armor);
+    int slot = equip_random_slot(object_is_armour);
 
     if (slot)
     {
@@ -3917,9 +4033,9 @@ bool rustproof(void)
     obj_prompt_t prompt = {0};
     char         o_name[MAX_NLEN];
 
-    prompt.prompt = "Rustproof which piece of armor?";
+    prompt.prompt = "Rustproof which piece of armour?";
     prompt.error = "You have nothing to rustproof.";
-    prompt.filter = object_is_armor;
+    prompt.filter = object_is_armour;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_FLOOR;
@@ -3955,7 +4071,7 @@ bool rustproof(void)
 
 void blast_object(object_type *o_ptr)
 {
-    bool is_armor = object_is_armor(o_ptr);
+    bool is_armor = object_is_armour(o_ptr);
     bool is_weapon = object_is_weapon(o_ptr);
     int i;
 
@@ -3967,6 +4083,7 @@ void blast_object(object_type *o_ptr)
     o_ptr->name3 = 0;
     o_ptr->to_a = MIN(o_ptr->to_a, 0);
     o_ptr->to_h = MIN(o_ptr->to_h, 0);
+    o_ptr->to_d = MIN(o_ptr->to_d, 0);
     o_ptr->ac = 0;
     o_ptr->dd = 0;
     o_ptr->ds = 0;
@@ -3977,10 +4094,12 @@ void blast_object(object_type *o_ptr)
     if (is_weapon)
     {
         o_ptr->to_h -= randint1(5) + randint1(5);
+        o_ptr->to_d -= randint1(5) + randint1(5);
     }
 
     if (o_ptr->to_a < -66) o_ptr->to_a = -66;
     if (o_ptr->to_h < -66) o_ptr->to_h = -66;
+    if (o_ptr->to_d < -66) o_ptr->to_d = -66;
 
     for (i = 0; i < OF_ARRAY_SIZE; i++)
         o_ptr->flags[i] = 0;
@@ -4019,6 +4138,7 @@ bool curse_armor(int slot)
         virtue_add(VIRTUE_ENCHANTMENT, -5);
         blast_object(o_ptr);
         o_ptr->curse_flags |= OFC_CURSED;
+        if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
     }
 
     return TRUE;
@@ -4051,6 +4171,7 @@ bool curse_weapon(bool force, int slot)
         virtue_add(VIRTUE_ENCHANTMENT, -5);
         blast_object(o_ptr);
         o_ptr->curse_flags |= OFC_CURSED;
+        if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
     }
     return TRUE;
 }
@@ -4144,7 +4265,7 @@ bool dimension_door_aux(int x, int y, int rng)
     int    plev = p_ptr->lev;
 
     if (!mut_present(MUT_ASTRAL_GUIDE))
-        p_ptr->energy_need += (s16b)((s32b)(60 - plev) * ENERGY_NEED() / 100L);
+        p_ptr->energy_need += (s16b)((s32b)(60 - plev) * PY_ENERGY_NEED() / 100L);
 
     if (p_ptr->wizard)
     {
@@ -4156,7 +4277,7 @@ bool dimension_door_aux(int x, int y, int rng)
            || !randint0(plev / 10 + 10) )
     {
         if (!mut_present(MUT_ASTRAL_GUIDE))
-            p_ptr->energy_need += (s16b)((s32b)(60 - plev) * ENERGY_NEED() / 100L);
+            p_ptr->energy_need += (s16b)((s32b)(60 - plev) * PY_ENERGY_NEED() / 100L);
         teleport_player((plev + 2) * 2, TELEPORT_PASSIVE);
         return FALSE;
     }
@@ -4378,7 +4499,7 @@ bool summon_kin_player(int level, int y, int x, u32b mode)
     if (warlock_is_(WARLOCK_GIANTS))
         summon_kin_type = 'P';
 
-    if (p_ptr->current_r_idx)
+    if ((p_ptr->current_r_idx) && (p_ptr->pclass != CLASS_BLUE_MAGE))
         summon_kin_type = r_info[p_ptr->current_r_idx].d_char;
 
     return summon_specific(SUMMON_WHO_PLAYER, y, x, level, SUMMON_KIN, mode);

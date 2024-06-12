@@ -181,6 +181,8 @@ static bool _absorb(object_type *o_ptr)
         result = TRUE;
     if (_add_essence(_ESSENCE_TO_HIT, o_ptr->to_h*mult/div))
         result = TRUE;
+    if (_add_essence(_ESSENCE_TO_DAM, o_ptr->to_d*mult/div))
+        result = TRUE;
 
     if (result)
     {
@@ -435,7 +437,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 static void _calc_bonuses(void) 
 {
     int i;
-    int to_a = py_prorata_level(150);
+    int to_a = py_prorata_level(135);
 
     to_a += _calc_amount(_essences[_ESSENCE_AC], 2, 10);
     if (p_ptr->current_r_idx == MON_DEATH_SCYTHE)
@@ -443,8 +445,6 @@ static void _calc_bonuses(void)
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;
 
-    p_ptr->pspeed += 1;
-    
     p_ptr->levitation = TRUE;
     p_ptr->no_cut = TRUE;
     res_add(RES_BLIND);
@@ -584,6 +584,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_POIS);
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_LEVITATION);
+    if (p_ptr->lev >= 45) add_flag(flgs, OF_AURA_REVENGE);
 
     for (i = 0; i < 6; i++) /* Assume in order */
     {
@@ -780,7 +781,10 @@ static void _judge_spell(int cmd, variant *res)
         var_set_string(res, "Identifies a weapon.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, ident_spell(object_is_melee_weapon));
+        if (p_ptr->lev >= 35)
+            var_set_bool(res, identify_fully(object_is_melee_weapon));
+        else
+            var_set_bool(res, ident_spell(object_is_melee_weapon));
         break;
     default:
         default_spell(cmd, res);
@@ -788,7 +792,7 @@ static void _judge_spell(int cmd, variant *res)
     }
 }
 
-static power_info _powers[] = 
+static power_info _get_powers[] =
 {
     { A_STR, {  1,  0,  0, _absorb_spell } },
     { A_STR, {  5,  1, 30, _detect_spell } },
@@ -796,11 +800,6 @@ static power_info _powers[] =
     /*{ A_STR, { 25, 30, 60, _animate_spell } },*/
     {    -1, { -1, -1, -1, NULL}}
 };
-
-static int _get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _powers);
-}
 
 /**********************************************************************
  * Birth and Evolution
@@ -818,7 +817,8 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_BROKEN_SWORD));
     add_flag(forge.flags, OF_NO_REMOVE);
-    forge.to_h =  3;
+    forge.to_h =  1;
+    forge.to_d =  3;
     py_birth_obj(&forge);
 
     py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
@@ -834,7 +834,8 @@ static void _upgrade_weapon(int tval, int sval)
     object_type *o_ptr = _weapon();
 
     object_prep(o_ptr, lookup_kind(tval, sval));
-    o_ptr->to_h = p_ptr->lev / 3;
+    o_ptr->to_h = p_ptr->lev / 5;
+    o_ptr->to_d = p_ptr->lev / 3;
 
     add_flag(o_ptr->flags, OF_NO_REMOVE);
     obj_identify_fully(o_ptr);
@@ -857,7 +858,7 @@ static void _gain_level(int new_level)
     {
         p_ptr->current_r_idx = MON_POLEAXE_OF_ANIMATED_ATTACK;
         equip_on_change_race();
-        _upgrade_weapon(TV_AXE, SV_BATTLE_AXE);
+        _upgrade_weapon(TV_POLEARM, SV_BATTLE_AXE);
         msg_print("You have evolved into a Poleaxe of Animated Attack.");
         p_ptr->redraw |= PR_MAP;
     }
@@ -887,10 +888,15 @@ static void _gain_level(int new_level)
             o_ptr->dd++;
             msg_print("You grow sharper!");
         }
+        else if (one_in_(2) || (new_level % 7) == 0)
+        {
+            o_ptr->to_d++;
+            msg_print("You grow more deadly!");
+        }
         else
         {
             o_ptr->to_h++;
-            msg_print("You grow deadlier!");
+            msg_print("You grow more accurate!");
         }
     }
 }
@@ -973,7 +979,7 @@ static void _character_dump(doc_ptr doc)
             blows ? format("+%d.%2.2d", blows / 100, blows % 100) : ""
         );
     }
-    _dump_bonus_flag(doc, _ESSENCE_XTRA_DICE, _rank_decay(64), 1, "Slaying");
+    _dump_bonus_flag(doc, _ESSENCE_XTRA_DICE, _rank_decay(64), 1, "Extra Dice");
     _dump_bonus_flag(doc, OF_LIFE, 7, 1, "Life");
     _dump_bonus_flag(doc, OF_SEARCH, 2, 1, "Searching");
     _dump_bonus_flag(doc, OF_INFRA, 2, 1, "Infravision");
@@ -1044,7 +1050,7 @@ race_t *mon_sword_get_race(void)
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
     skills_t bs = { 25,  24,  40,   4,  14,   5,  56,  20};
-    skills_t xs = { 12,  10,  12,   0,   0,   0,  20,   7};
+    skills_t xs = { 12,   8,  12,   0,   0,   0,  20,   7};
 
         me.skills = bs;
         me.extra_skills = xs;
@@ -1054,7 +1060,12 @@ race_t *mon_sword_get_race(void)
                     "they are unable to use equipment the way other players can; instead, "
                     "they simply are a weapon of their current form. But never fear: Death "
                     "Swords have the power to absorb magical essences from the weapons they "
-                    "find, gaining power in the process.";
+                    "find, gaining power in the process.\n\n"
+                    "As a Death-Sword gains levels, it will evolve into stronger and stronger weapons. "
+                    "More advanced weapons require more essences to enchant, sometimes causing a "
+                    "temporary loss of abilities; but magical weapons also become easier to "
+                    "find as you descend deeper into the pits, and so any lost powers are usually "
+                    "quickly recovered.";
 
         me.infra = 3;
         me.exp = 150;
@@ -1074,7 +1085,7 @@ race_t *mon_sword_get_race(void)
         me.save_player = _save;
         me.destroy_object = _absorb_object;
 
-        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
+        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING | RACE_EATS_DEVICES;
         me.pseudo_class_idx = CLASS_WARRIOR;
 
         init = TRUE;

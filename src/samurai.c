@@ -8,6 +8,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
+    bool browse = (mode == SPELL_ON_BROWSE) ? TRUE : FALSE;
 
     int dir;
     int plev = p_ptr->lev;
@@ -17,6 +18,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 0:
         if (name) return "Tobi-Izuna";
         if (desc) return "Attacks a two squares distant monster.";
+        if (browse) return NULL;
         if (cast)
         {
             project_length = 2;
@@ -29,6 +31,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 1:
         if (name) return "3-Way Attack";
         if (desc) return "Attacks in 3 directions in one time.";
+        if (browse) return NULL;
         if (cast)
         {
             int cdir;
@@ -68,6 +71,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 2:
         if (name) return "Boomerang";
         if (desc) return "Throws current weapon. And it'll return to your hand unless failed.";
+        if (browse) return NULL;
         if (cast)
         {
             py_throw_t context = {0};
@@ -80,6 +84,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 3:
         if (name) return "Burning Strike";
         if (desc) return "Attacks a monster with more damage unless it has resistance to fire.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_FIRE);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -103,13 +112,15 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 4:
         if (name) return "Detect Ferocity";
         if (desc) return "Detects all monsters except mindless in your vicinity.";
+        if (browse) return NULL;
         if (cast)
             detect_monsters_mind(DETECT_RAD_DEFAULT);
         break;
 
     case 5:
         if (name) return "Strike to Stun";
-        if (desc) return "Attempts to stun a monster in the adjacent.";
+        if (desc) return "Attempts to stun an adjacent monster.";
+        if (browse) return NULL;
         if (cast)
         {
             int y, x;
@@ -132,7 +143,8 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 6:
         if (name) return "Counter";
-        if (desc) return "Prepares to counterattack. When attack by a monster, strikes back using SP each time.";
+        if (desc) return "Prepares to counterattack, using SP to retaliate against any monster strikes on the following turn.";
+        if (browse) return NULL;
         if (cast)
         {
             if (p_ptr->riding)
@@ -148,6 +160,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 7:
         if (name) return "Harainuke";
         if (desc) return "Attacks monster with your weapons normally, then move through counter side of the monster.";
+        if (browse) return NULL;
         if (cast)
         {
             int y, x;
@@ -188,6 +201,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 8:
         if (name) return "Serpent's Tongue";
         if (desc) return "Attacks a monster with more damage unless it has resistance to poison.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_POISON);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -211,6 +229,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 9:
         if (name) return "Zammaken";
         if (desc) return "Attacks an evil unliving monster with great damage. No effect to other monsters.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_ZANMA);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -233,7 +256,8 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 10:
         if (name) return "Wind Blast";
-        if (desc) return "Attacks an adjacent monster, and blow it away.";
+        if (desc) return "Attacks an adjacent monster, and blows it away.";
+        if (browse) return NULL;
         if (cast)
         {
             int y, x;
@@ -298,16 +322,29 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 11:
         if (name) return "Judge";
-        if (desc) return "Identifies a weapon or armor.";
+        if (desc) return "Identifies a weapon or armor. Or *identifies* these at level 45.";
+        if (browse) return NULL;
         if (cast)
         {
-			if (!ident_spell(object_is_weapon_armor_ammo)) return NULL;
+            if (plev > 44)
+            {
+                if (!identify_fully(object_is_weapon_armour_ammo)) return NULL;
+            }
+            else
+            {
+                if (!ident_spell(object_is_weapon_armour_ammo)) return NULL;
+            }
         }
         break;
 
     case 12:
         if (name) return "Rock Smash";
-        if (desc) return "Breaks rock. Or greatly damage a monster made by rocks.";
+        if (desc) return "Breaks rock, or greatly damages a monster made of rock.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_HAGAN);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -330,7 +367,12 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 13:
         if (name) return "Midare-Setsugekka";
-        if (desc) return "Attacks a monster with increased number of attacks and more damage unless it has resistance to cold.";
+        if (desc) return "Attacks a monster with an increased number of attacks, and more damage unless it has resistance to cold.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_COLD);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -354,6 +396,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 14:
         if (name) return "Spot Aiming";
         if (desc) return "Attempts to kill a monster instantly. If failed cause only 1HP of damage.";
+        if (browse) return NULL;
         if (cast)
         {
             int y, x;
@@ -377,6 +420,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 15:
         if (name) return "Majingiri";
         if (desc) return "Attempts to attack with critical hit. But this attack is easy to evade for a monster.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_MAJIN);
+            return NULL;
+        }
     
         if (cast)
         {
@@ -401,6 +449,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 16:
         if (name) return "Desperate Attack";
         if (desc) return "Attacks with all of your power. But all damages you take will be doubled for one turn.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_SUTEMI);
+            return NULL;
+        }
     
         if (cast)
         {
@@ -426,7 +479,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 17:
         if (name) return "Lightning Eagle";
         if (desc) return "Attacks a monster with more damage unless it has resistance to electricity.";
-    
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_ELEC);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -450,6 +507,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 18:
         if (name) return "Rush Attack";
         if (desc) return "Steps close to a monster and attacks at a time.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -459,7 +517,12 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 19:
         if (name) return "Bloody Maelstrom";
-        if (desc) return "Attacks all adjacent monsters with power corresponding to your cut status. Then increases your cut status. No effect to unliving monsters.";
+        if (desc) return "Cuts you severely, then attacks all adjacent monsters with power corresponding to your cut status. No effect to unliving monsters.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_SEKIRYUKA);
+            return NULL;
+        }
     
         if (cast)
         {
@@ -501,6 +564,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 20:
         if (name) return "Earthquake Blow";
         if (desc) return "Shakes dungeon structure, and results in random swapping of floors and walls.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -522,6 +586,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 21:
         if (name) return "Crack";
         if (desc) return "Fires a beam of shock wave.";
+        if (browse) return NULL;
         if (cast)
         {
             int total_damage = 0, hand;
@@ -540,7 +605,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 if (!o_ptr) continue;
 
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
-                damage = o_ptr->to_h * 100;
+                damage = o_ptr->to_d * 100;
                 
                 obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, OF_VORPAL2))
@@ -564,6 +629,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 22:
         if (name) return "War Cry";
         if (desc) return "Damages all monsters in sight with sound. Aggravate nearby monsters.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -576,6 +642,11 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 23:
         if (name) return "Musou-Sandan";
         if (desc) return "Attacks with powerful 3 strikes.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_3DAN);
+            return NULL;
+        }
     
         if (cast)
         {
@@ -604,7 +675,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                     return NULL;
                 }
     
-                if (d_info[dungeon_type].flags1 & DF1_NO_MELEE)
+                if ((d_info[dungeon_type].flags1 & DF1_NO_MELEE) || (no_melee_challenge))
                 {
                     return "";
                 }
@@ -658,6 +729,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 24:
         if (name) return "Vampire's Fang";
         if (desc) return "Attacks with vampiric strikes which absorbs HP from a monster and gives them to you. No effect to unliving monsters.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -682,6 +754,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 25:
         if (name) return "Moon Dazzling";
         if (desc) return "Attempts to stun, confuse and sleep all waking monsters.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -695,6 +768,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 26:
         if (name) return "Hundred Slaughter";
         if (desc) return "Performs a series of rush attacks. The series continues while killing each monster in a time and SP remains.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -732,6 +806,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 27:
         if (name) return "Dragonic Flash";
         if (desc) return "Runs toward given location while attacking all monsters on the path.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -759,7 +834,8 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 28:
         if (name) return "Twin Slash";
-        if (desc) return "double attacks at a time.";
+        if (desc) return "Double attacks at a time.";
+        if (browse) return NULL;
     
         if (cast)
         {
@@ -781,7 +857,7 @@ cptr do_hissatsu_spell(int spell, int mode)
             }
             else
             {
-                msg_print("You don't see any monster in this direction");
+                msg_print("You don't see any monster in this direction.");
                 return NULL;
             }
         }
@@ -790,6 +866,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 29:
         if (name) return "Kofuku-Zettousei";
         if (desc) return "Performs a powerful attack which even effect nearby monsters.";
+        if (browse) return NULL;
         if (cast)
         {
             int total_damage = 0, hand;
@@ -801,9 +878,9 @@ cptr do_hissatsu_spell(int spell, int mode)
             y = py + ddy[dir];
             x = px + ddx[dir];
 
-            if (d_info[dungeon_type].flags1 & DF1_NO_MELEE)
+            if ((d_info[dungeon_type].flags1 & DF1_NO_MELEE) || (no_melee_challenge))
             {
-                msg_print("Something prevent you from attacking.");
+                msg_print("Something prevents you from attacking.");
                 return "";
             }
             msg_print("You swing your weapon downward.");
@@ -819,7 +896,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 if (!o_ptr) continue;
 
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
-                damage = o_ptr->to_h * 100;
+                damage = o_ptr->to_d * 100;
                 
                 obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, OF_VORPAL2))
@@ -843,8 +920,12 @@ cptr do_hissatsu_spell(int spell, int mode)
 
     case 30:
         if (name) return "Keiun-Kininken";
-        if (desc) return "Attacks a monster with extremely powerful damage. But you also takes some damages. Hurts a undead monster greatly.";
-    
+        if (desc) return "Attacks a monster with extremely powerful strikes, but also causes you to suffer 100+d100 damage. Greatly hurts undead monsters.";
+        if (browse)
+        {
+            display_weapon_info_aux(HISSATSU_UNDEAD);
+            return NULL;
+        }
         if (cast)
         {
             int y, x;
@@ -869,6 +950,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     case 31:
         if (name) return "Harakiri";
         if (desc) return "'Busido is found in death'";
+        if (browse) return NULL;
 
         if (cast)
         {
@@ -1003,12 +1085,30 @@ void samurai_posture_get_flags(u32b flgs[OF_ARRAY_SIZE])
     }
 }
 
+static void _kata_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+    switch (cmd)
+    {
+    case MENU_TEXT:
+        var_set_string(res, which ? format("Form of %s", kata_shurui[which - 1].desc) : "No Form");
+        break;
+    case MENU_COLOR:
+        var_set_int(res, (kata_shurui[which - 1].min_level > p_ptr->lev) ? TERM_L_DARK : TERM_WHITE);
+        break;
+    case MENU_HELP:
+        var_set_string(res, which ? kata_shurui[which - 1].info : "");
+        break;
+    default:
+        default_menu(cmd, which, cookie, res);
+    }
+}
+
 static bool _choose_kata(void)
 {
-    char choice;
     int new_kata = 0;
-    int i;
-    char buf[80];
+    int idx;
+    menu_t menu = { "Choose which form", "Browse which form", NULL,
+                    _kata_menu_fn, NULL, MAX_KATA + 1, 0 };
 
     if (p_ptr->confused)
     {
@@ -1017,7 +1117,7 @@ static bool _choose_kata(void)
     }
     if (p_ptr->stun)
     {
-        msg_print("You are not clear headed");
+        msg_print("You are not clear-headed.");
         return FALSE;
     }
     if (p_ptr->afraid)
@@ -1026,62 +1126,18 @@ static bool _choose_kata(void)
         return FALSE;
     }
 
-    screen_save();
-
-    prt(" a) No Form", 2, 20);
-
-    for (i = 0; i < MAX_KATA; i++)
+    idx = menu_choose(&menu);
+    if (idx < 0) return FALSE;
+    if (idx == 0)
     {
-        if (p_ptr->lev >= kata_shurui[i].min_level)
-        {
-            sprintf(buf," %c) Form of %-12s  %s",I2A(i+1), kata_shurui[i].desc, kata_shurui[i].info);
-            prt(buf, 3+i, 20);
-        }
+        if (p_ptr->action == ACTION_KATA)
+            set_action(ACTION_NONE);
+        else
+            msg_print("You are not assuming a posture.");
+        return TRUE;
     }
-
-    prt("", 1, 0);
-    prt("        Choose Form: ", 1, 14);
-
-    for(;;)
-    {
-        choice = inkey();
-
-        if (choice == ESCAPE)
-        {
-            screen_load();
-            return FALSE;
-        }
-        else if ((choice == 'a') || (choice == 'A'))
-        {
-            if (p_ptr->action == ACTION_KATA)
-                set_action(ACTION_NONE);
-            else
-                msg_print("You are not assuming posture.");
-
-            screen_load();
-            return TRUE;
-        }
-        else if ((choice == 'b') || (choice == 'B'))
-        {
-            new_kata = 0;
-            break;
-        }
-        else if (((choice == 'c') || (choice == 'C')) && (p_ptr->lev > 29))
-        {
-            new_kata = 1;
-            break;
-        }
-        else if (((choice == 'd') || (choice == 'D')) && (p_ptr->lev > 34))
-        {
-            new_kata = 2;
-            break;
-        }
-        else if (((choice == 'e') || (choice == 'E')) && (p_ptr->lev > 39))
-        {
-            new_kata = 3;
-            break;
-        }
-    }
+    else if ((idx <= MAX_KATA) && (p_ptr->lev >= kata_shurui[idx - 1].min_level)) new_kata = idx - 1;
+    else return FALSE;
     set_action(ACTION_KATA);
 
     if (p_ptr->special_defense & (KATA_IAI << new_kata))
@@ -1098,7 +1154,6 @@ static bool _choose_kata(void)
     }
     p_ptr->redraw |= (PR_STATE);
     p_ptr->redraw |= (PR_STATUS);
-    screen_load();
     return TRUE;
 }
 
@@ -1125,7 +1180,7 @@ void cast_concentration(void)
     }
 
     p_ptr->redraw |= (PR_MANA);
-}
+ }
 
 void samurai_concentration_spell(int cmd, variant *res)
 {
@@ -1208,24 +1263,12 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
         add_flag(flgs, OF_RES_FEAR);
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_powers[] =
 {
-    int ct = 0;
-
-    spell_info* spell = &spells[ct++];
-    spell->level = 1;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = samurai_concentration_spell;
-
-    spell = &spells[ct++];
-    spell->level = 25;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = samurai_posture_spell;
-
-    return ct;
-}
+    { A_NONE, { 1, 0, 0, samurai_concentration_spell}},
+    { A_NONE, { 25, 0, 0, samurai_posture_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static caster_info * _caster_info(void)
 {
@@ -1247,29 +1290,8 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_KATANA, 1);
-    py_birth_obj_aux(TV_HARD_ARMOR, SV_USED_SAMURAI_ARMOR, 1);
+    py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_MASTER;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *samurai_get_class(void)

@@ -749,10 +749,10 @@ static int _max_level[51] = {
     20, 21, 22, 23, 24, /* CL20 */
     25, 26, 27, 28, 29,
     30, 31, 32, 33, 34, /* CL30 */
-    35, 36, 37, 38, 39,
-    40, 41, 42, 43, 45, /* CL40 */
-    47, 50, 55, 60, 65,
-    70, 75, 80, 90, 100 /* CL50 */
+    35, 36, 38, 40, 42,
+    44, 46, 48, 50, 52, /* CL40 */
+    55, 58, 62, 66, 70,
+    75, 80, 85, 90, 100 /* CL50 */
 };
 int mimic_max_lvl(void)
 {
@@ -864,12 +864,12 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 3;
+    forge.to_d = 3;
     py_birth_obj(&forge);
 
     py_birth_food();
@@ -1006,26 +1006,31 @@ static void _mimic_spell(int cmd, variant *res)
     }
 }
 
-static void _add_power(spell_info* spell, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
+static void _add_power(power_info* power, int lvl, int cost, int fail, ang_spell fn)
 {
-    spell->level = lvl;
-    spell->cost = cost;
-    spell->fail = calculate_fail_rate(lvl, fail, stat_idx);
-    spell->fn = fn;
+    power->spell.level = lvl;
+    power->spell.cost = cost;
+    power->spell.fn = fn;
+    power->spell.fail = fail;
+    power->stat = A_DEX;
 }
 
-static int _get_powers(spell_info* spells, int max)
+static power_info *_get_powers(void)
 {
+    static power_info spells[MAX_SPELLS];
     int ct = 0;
+    int max = MAX_SPELLS;
 
     if (ct < max)
-        _add_power(&spells[ct++], 1, 0, 0, _mimic_spell, p_ptr->stat_ind[A_DEX]);
+        _add_power(&spells[ct++], 1, 0, 0, _mimic_spell);
 
     ct += possessor_get_powers(spells + ct, max - ct);
 
     if (p_ptr->current_r_idx != MON_MIMIC)
-        _add_power(&spells[ct++], 1, 0, 0, _browse_spell, p_ptr->stat_ind[A_DEX]);
-    return ct;
+        _add_power(&spells[ct++], 1, 0, 0, _browse_spell);
+
+    spells[ct].spell.fn = NULL;
+    return spells;
 }
 
 void _character_dump(doc_ptr doc)
@@ -1079,7 +1084,7 @@ race_t *mon_mimic_get_race(void)
 
         me.birth = _birth;
 
-        me.get_powers = _get_powers;
+        me.get_powers_fn = _get_powers;
 
         me.calc_bonuses = possessor_calc_bonuses;
         me.get_flags = possessor_get_flags;

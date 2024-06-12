@@ -81,7 +81,7 @@ static void _calc_innate_attacks(void)
 
         calc_innate_blows(&a, 300);
 
-        a.msg = "You pilfer";
+        a.msg = "You pilfer.";
         a.name = "Greedy Hands";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -181,7 +181,7 @@ void _fanaticism_spell(int cmd, variant *res)
     }
 }
 
-static spell_info _spells[] =
+static spell_info _get_spells[] =
 { /* Lvl    Au  Fail */
     {  1,    5,   20, phase_door_spell},
     {  1,   10,   20, detect_treasure_spell},
@@ -198,11 +198,6 @@ static spell_info _spells[] =
     { 45, 1500,   60, _fanaticism_spell},
     { -1,   -1,   -1, NULL}
 };
-
-static int _get_spells(spell_info* spells, int max)
-{
-    return get_spells_aux(spells, max, _spells);
-}
 
 static caster_info * _caster_info(void)
 {
@@ -464,7 +459,7 @@ race_t *mon_leprechaun_get_race(void)
     me.stats[A_WIS] = 1;
     me.stats[A_DEX] = 3 + 2*rank;
     me.stats[A_CON] = -2;
-    me.stats[A_CHR] = -3;
+    me.stats[A_CHR] = -2;
 
     return &me;
 }

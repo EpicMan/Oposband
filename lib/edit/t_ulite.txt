@@ -144,7 +144,7 @@ B:2:N:Arena:Hideshi:Human
 #B:9:A:0:RULES:0:0:a:9:0
 B:2:A:0:Enter in arena:0:0:e:10:0
 B:2:A:1:Look at poster:0:0:p:8:0
-B:2:A:2:Palace of heros:0:0:s:11:0
+#B:2:A:2:Palace of heros:0:0:s:11:0
 
 B:3:N:Library:Astinus:Human?
 B:3:A:0:Research item:1500:1500:a:1:0
@@ -208,9 +208,9 @@ B:9:M:*:None
 B:9:M:Life:Owner
 
 B:10:N:Thieves' Guild:Lardbottom:Hobbit
-B:10:A:1:Rest for the Night:0:100:r:17:0
-B:10:A:2:Identify Possessions:100:600:i:26:0
-B:10:A:3:Request Quest:0:0:q:6:0
+B:10:A:1:Rest for the night:0:100:r:17:0
+B:10:A:2:Identify possessions:100:600:i:26:0
+B:10:A:3:Request quest:0:0:q:6:0
 B:10:C:*:None
 B:10:C:Rogue:Owner
 

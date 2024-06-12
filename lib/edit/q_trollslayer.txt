@@ -1,11 +1,17 @@
-?:[EQU $QUEST56 Taken InProgress]
+?:[AND [EQU $QUEST56 Taken InProgress] [EQU $DUNGEON3 Active] ]
 D:If you want our respect you need to prove yourself. Go to
 D:the orc caves and kill ten Ologs to show us you aren't a
 D:wimp.
 ?:1
 
+?:[AND [EQU $QUEST56 Taken InProgress] [EQU $DUNGEON3 Suppressed] ]
+D:If you want our respect you need to prove yourself. Go to
+D:the troll caves and kill ten Ologs to show us you aren't a
+D:wimp.
+?:1
+
 ?:[EQU $QUEST56 Completed]
-D:Good start. Our armorers have made you a trophy.
+D:Good start. Our armourers have made you a trophy.
 ?:1
 
 ?:[EQU $QUEST56 Failed]
@@ -24,6 +30,6 @@ R:OBJ(^ring$):EGO(combat)
 R:OBJ(metal shod boots)
 
 ?:[EQU $RACE Filthy-Rag]
-R:OBJ(steel plate armor):EGO(olog-hai)
+R:OBJ(partial plate armour):EGO(olog-hai)
 
 # vim: filetype=q :

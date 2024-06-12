@@ -19,6 +19,11 @@ AC: Armor Class; a measure of how hard you are to hit, or of how hard a
 monster is to hit; also directly reduces the damage you take from some 
 types of melee attacks.
 
+aggravation: 1) An object flag, awakens and offends all nearby 
+monsters; also, a removable curse with the same effect. 2) A scroll and 
+shriek effect; awakens nearby monsters, makes them charming-immune, and 
+temporarily hastes all monsters in line of sight.
+
 ambush: A random situation that forces you to leave the global map. 
 Ambushes often surround you with a large number of hostile monsters.
 
@@ -59,6 +64,15 @@ electricity; occasionally used in an extended sense to include poison.
 beam: An effect that affects all squares and monsters in its path, does 
 not stop at the first monster it hits, and cannot be reflected. Compare 
 bolt, ball.
+
+berserk strength: Also berserk rage, super-heroism; a mixed-blessing 
+effect. Gives +30 max-HP, a melee to-hit bonus (usually +24 to-hit), 
+level-dependent melee damage bonuses (up to +13 to-dam at CL 50), and 
+complete immunity to fear; but also reduces all non-melee skills, gives 
+a small AC penalty, prevents the player from casting book spells, and 
+blocks most other spell-like abilities. Permanent for Berserkers and 
+bear-formed Beornings, otherwise temporary. Most magical healing or 
+curing effects remove Berserk Strength. Compare heroism.
 
 blessed: 1) An item attribute; makes the item somewhat resistant to 
 being cursed, and allows priests to use it with no penalties if it is a 
@@ -128,13 +142,16 @@ selected.
 confusion: 1) A status effect, affects both players and monsters. See 
 [b]. 2) An element, causes the status effect if not resisted.
 
+critical hit: An exceptionally damaging hit; multiplies the damage dice 
+of the weapon or projectile.
+
 curse: 1) Item curse; a negative, usually removable object attribute 
 that prevents you from unequipping that object while it remains cursed. 
 2) A monster or player-monster spell attack, particularly one that 
-offers a saving throw and deals non-elemental damage; one of Cause 
-Light Wounds, Cause Serious Wounds, Cause Critical Wounds, Cause Mortal 
-Wounds or Hand of Doom. 3) One of a number of special effects with 
-similarity to item curses, such as the Amberite blood curse.
+offers a saving throw, deals non-elemental damage and may cause item 
+curses; one of Wounding Curse, Evil Curse, Mighty Curse, Death Curse or 
+Hand of Doom. 3) One of a number of special effects with similarity to 
+item curses, such as the Amberite blood curse.
 
 dazed: Stunned; afflicted with the Stun status effect.
 
@@ -291,6 +308,11 @@ similar, optional bar for the player. See [g].
 heavy curse: An item curse that cannot be removed with normal Remove 
 Curse, but can be removed with a Scroll of *Remove Curse*.
 
+heroism: A positive effect, gives +10 max-HP, +12 to-hit (both melee 
+and ranged), and one level of resistance to fear. Usually temporary, 
+but can be permanently gained by player-monsters by killing their 
+racial boss.
+
 high resist: A resistance to an element other than the base elements 
 and poison.
 
@@ -299,6 +321,13 @@ vast majority of monsters encountered will be hostile.
 
 HP: Hit points. A character or monster whose hit points drop below 0 
 will die.
+
+icky floor: An area with the specific quality of not being a valid 
+teleport destination, irrespective of terrain features, traps or 
+occupying monsters. An icky tile also prevents any objects on it from 
+being fetched with telekinesis. Teleporting into a vault is usually 
+impossible due to the area inside being icky, although earthquakes or 
+other terrain-modifying effects may result in the ickiness being lost.
 
 icky wield: Equipping an item unsuitable for the class, giving 
 class-dependent penalties while the icky item remains equipped.
@@ -366,21 +395,21 @@ sometimes dungeon bosses.
 
 levitation: The ability to float. Levitation gives access to dark pits 
 and mountainous areas of the wilderness, allows you to avoid some 
-traps, eliminates movement speed penalties in wooded areas, and reduces 
-damage from standing in or over dangerous terrain. See [i].
+traps, eliminates movement speed penalties in wooded and snowy areas, 
+and reduces damage from standing in or over dangerous terrain. See [i].
 
 life points: A measure of your attachment to life, displayed on a range 
 of 0% to 99% if depleted. Losing life points reduces effective maximum 
 HP; if life points drop below 0, the character will transform into an 
 undead race, or die outright if this is not possible. See [j].
 
-life rating: 1) Random life rating; a measure, ranging from 87% to 
-117%, of how lucky you got with random hit-point gain rolls in your 
-current life; life rating as revealed by Self Knowledge. See [k]. 2) 
-Life rating multiplier; a fixed non-random HP multiplier based on your 
-race, class or personality, not directly related to the random life 
-rating. 3) +Life and -Life; item attributes that modify a 
-constitution-based HP multiplier.
+life rating: 1) Random life rating; a measure, ranging from 0 to 76, of 
+how lucky you got with random hit-point gain rolls in your current 
+life; life rating as revealed by Self Knowledge. See [k]. 2) Life 
+multiplier; a fixed non-random HP multiplier based on your race, class 
+or personality, not directly related to the random life rating. 3) 
++Life and -Life; item attributes that modify a constitution-based HP 
+multiplier.
 
 lightning: A synonym for the element electricity.
 
@@ -445,6 +474,13 @@ does not have a Weaponsmith essence on it.
 nexus: An element, seldom deadly but often highly annoying due to its 
 side effects.
 
+nice: A monster status; nice monsters will not use breath or spell 
+attacks, and damage from exceptionally powerful melee hits is reduced. 
+Nice monsters also never resist destruction. Nearly all high-level 
+monsters are initially nice when summoned; the main exceptions are the 
+Olympian gods and playing in Nightmare Mode. Niceness stops when the 
+player has had a chance to react to the monster's presence.
+
 non-ego: An item that is neither ego nor an artifact; a nameless item. 
 "Reforging, Crafting and Artifact Creation only work on non-ego items."
 
@@ -460,6 +496,12 @@ overworld map: See global map.
 
 pack: 1) The player's backpack; the inventory. 2) A group of similar 
 monsters acting together.
+
+parent monster: A monster's parent is either the monster who summoned 
+it, or the monster whose escort it belongs to. Not all monsters have a 
+parent. Monsters with living parents feel some loyalty to the parent, 
+and therefore make poor pets and unreliable mounts. Pets summoned by 
+other pets often leave the level if their parent dies or disappears.
 
 permanent curse: An item curse that can only be removed with Mundanity. 
 Other curses on an item with a permanent curse may still be removable.
@@ -590,6 +632,9 @@ level and the surface. Differs from stairs in that most shafts skip a
 depth; downstairs on DL 8 will always lead to DL 9, while a shaft down 
 will lead to DL 10 unless there is a quest on level 9.
 
+sharpness: A weapon attribute; allows the weapon to score vorpal 
+criticals. See [n].
+
 shop: Also store; a building where thematic objects can be bought and 
 sold. Compare building.
 
@@ -601,12 +646,12 @@ unpredictable effects.
 skill: 1) One of the eight primary skills your character has; Melee, 
 Archery, Saving Throw, Stealth, Perception, Searching, Disarming or 
 Device Skill; in an extended sense, any similar improvable attribute 
-like Digging or Infravision. See [n]. 2) Your level of mastery with a 
-particular weapon or spell; proficiency. See [o]. 3) Anything a 
+like Digging or Infravision. See [o]. 2) Your level of mastery with a 
+particular weapon or spell; proficiency. See [p]. 3) Anything a 
 Skillmaster is or can be proficient in.
 
 slay: A multiplier to the damage dice of a weapon, applied only against 
-monsters of a particular type. Compare brand. See [p].
+monsters of a particular type. Compare brand. See [q].
 
 SP: Spell points; mana.
 
@@ -623,7 +668,7 @@ but not necessarily for racial or mutation powers.
 
 stat: One of the six basic statistics your character has; Strength 
 (STR), Intelligence (INT), Wisdom (WIS), Dexterity (DEX), Constitution 
-(CON) or Charisma (CHR). See [q].
+(CON) or Charisma (CHR). See [r].
 
 stat base: The value of a stat before race, class, personality, 
 equipment and mutation bonuses are accounted for.
@@ -646,7 +691,7 @@ status bar: See health bar.
 
 status effect: A temporary condition, especially a negative one such as 
 confusion, blindness, poisoning, stunning or hallucination. Both the 
-player and monsters can be affected by status effects. See [r].
+player and monsters can be affected by status effects. See [s].
 
 subwindow: A window other than the main (Term-0) game window, used by 
 some players for convenient display of monster and object lists, 
@@ -720,6 +765,8 @@ vault: A special area of a dungeon level, characterized by the presence
 of permanent walls and a high concentration of both dangerous monsters 
 and exceptional loot. In an extended sense, any special dungeon room 
 with many out-of-depth monsters.
+
+vorpal weapon: A weapon with the Sharpness attribute. See sharpness.
 
 vulnerability: An attribute that causes you to take more damage from an 
 element, and makes your items more likely to be damaged or destroyed by 
@@ -877,8 +924,9 @@ Narya as a swap in case I find balrog uniques."
 tag: To very briefly visit a dungeon for the sole purpose of 
 establishing a recall point there.
 
-telefail: Failure to use a Scroll of Teleportation, Staff of Teleport 
-or some other means of teleport self. A common cause of player death.
+telefail: A failed attempt to use a Scroll of Teleportation, Staff of 
+Teleport or some other means of teleport self. A common cause of player 
+death.
 
 TO: Teleport Other. "TO the summons and easily kill Glaurung."
 
@@ -900,5 +948,6 @@ worst thing due to Keepers of Secrets being the worst.
 
 
 Original   : FrogComposband 7.1.liquorice
+Updated    : FrogComposband 7.1.salmiak
 
 

@@ -115,15 +115,17 @@ static void _barbaric_resistance_spell(int cmd, variant *res)
     case SPELL_CAST:
     {
         int base = 10;
+        int dur;
 
         if (p_ptr->shero)
             base = 20;
 
-        set_oppose_acid(randint1(base) + base, FALSE);
-        set_oppose_elec(randint1(base) + base, FALSE);
-        set_oppose_fire(randint1(base) + base, FALSE);
-        set_oppose_cold(randint1(base) + base, FALSE);
-        set_oppose_pois(randint1(base) + base, FALSE);
+        dur = randint1(base) + base;
+        set_oppose_acid(dur, FALSE);
+        set_oppose_elec(dur, FALSE);
+        set_oppose_fire(dur, FALSE);
+        set_oppose_cold(dur, FALSE);
+        set_oppose_pois(dur, FALSE);
 
         var_set_bool(res, TRUE);
         break;
@@ -270,6 +272,7 @@ static void _focus_rage_spell(int cmd, variant *res)
     {
         int hp = 10 + p_ptr->lev/2;
         take_hit(DAMAGE_NOESCAPE, hp, "Rage");
+        var_set_bool(res, TRUE);
         break;
     }
     case SPELL_CAST:
@@ -343,6 +346,7 @@ static void _greater_focus_rage_spell(int cmd, variant *res)
         if (p_ptr->shero)
             hp = 2 * p_ptr->lev;
         take_hit(DAMAGE_NOESCAPE, hp, "Rage");
+        var_set_bool(res, TRUE);
         break;
     }
     case SPELL_CAST:
@@ -447,6 +451,7 @@ static void _rage_strike_spell(int cmd, variant *res)
         break;
     case SPELL_FAIL:
         sp_player(-p_ptr->csp);
+        var_set_bool(res, TRUE);
         break;
     case SPELL_CAST:
     {
@@ -911,12 +916,12 @@ static void _whirlwind_attack_spell(int cmd, variant *res)
    does not require the book (cf The Samurai).
    Rage is a class specific realm.
 */
-/*#define _SPELLS_PER_BOOK 8
+#define _SPELLS_PER_BOOK 8
 
 typedef struct {
     cptr name;
     spell_info spells[_SPELLS_PER_BOOK];
-} book_t;*/
+} book_t;
 
 static book_t _books[4] = {
     { "Anger Management",
@@ -969,7 +974,7 @@ static int _spell_index(int book, int spell)
 static bool _is_spell_known(int book, int spell)
 {
     int idx = _spell_index(book, spell);
-    if (p_ptr->rage_spells_learned & (1L << idx)) return TRUE;
+    if (p_ptr->spell_learned1 & (1L << idx)) return TRUE;
     return FALSE;
 }
 
@@ -978,7 +983,7 @@ static void _learn_spell(int book, int spell)
     int idx = _spell_index(book, spell);
     int i;
 
-    p_ptr->rage_spells_learned |= (1L << idx);
+    p_ptr->spell_learned1 |= (1L << idx);
 
     /* Find the next open entry in "p_ptr->spell_order[]" */
     for (i = 0; i < 64; i++)
@@ -998,53 +1003,61 @@ static void _learn_spell(int book, int spell)
 
 static bool _gain_spell(int book)
 {
-    spell_info spells[_SPELLS_PER_BOOK];
+    power_info spells[_SPELLS_PER_BOOK];
     int        indices[_SPELLS_PER_BOOK];
     int        which;
-    int        ct = 0, i;
+    int        ct = 0, lct = 0, i;
 
     /* Build a list of learnable spells. Spells can only be
-       learned once (no spell skills) and we only display spells
-       if the user is of high enough level. This is rather
-       different than how the system normally behaves, but why spoil
-       the nature of future higher level spells to the player?
-    */
+       learned once (no spell skills) */
     for (i = 0; i < _SPELLS_PER_BOOK; i++)
     {
         spell_info *src = &_books[book].spells[i];
 
-        if (!_is_spell_known(book, i) && src->level <= p_ptr->lev)
+        if (!_is_spell_known(book, i))
         {
-            spell_info *dest = &spells[ct];
+            power_info *dest = &spells[ct];
 
-            dest->level = src->level;
-            dest->cost = src->cost;
-            dest->fail = calculate_fail_rate(
+            dest->spell.level = src->level;
+            dest->spell.cost = src->cost;
+            dest->spell.fail = calculate_fail_rate(
                 src->level,
                 src->fail,
                 p_ptr->stat_ind[A_STR]
             );
-            dest->fn = src->fn;
+            dest->spell.fn = src->fn;
+            dest->stat = A_STR;
             indices[ct] = i;
 
             ct++;
+            if (src->level <= p_ptr->lev) lct++;
         }
     }
 
-    if (ct == 0)
+    if (lct == 0)
     {
-        msg_print("You may not learn any spells in that book.");
+        if (ct) msg_print("You may not learn any techniques from that book right now.");
+        else msg_print("You have already learned all techniques described in that book.");
         return FALSE;
-    }
+    }    
 
-    which = choose_spell(spells, ct, "Learn", "rage", 1000, FALSE);
-    if (which >= 0 && which < ct)
+    while (1)
     {
-        _learn_spell(book, indices[which]);
-        return TRUE;
+        which = choose_spell(spells, ct, "Learn", "rage", 1000, FALSE);
+        if ((which >= 0) && (which < ct))
+        {
+            if (spells[which].spell.level > p_ptr->lev)
+            {
+            }
+            else
+            {
+                _learn_spell(book, indices[which]);
+                return TRUE;
+            }
+        }
+        else return FALSE;
     }
 
-    return FALSE;
 }
 
 static bool _is_rage_book(obj_ptr obj) { return obj->tval == TV_RAGE_BOOK; }
@@ -1152,12 +1165,13 @@ static void _calc_bonuses(void)
     }
 }
 
-static int _get_spells_imp(spell_info* spells, int max, int book, bool total_skip)
+static int _get_spells_imp(spell_info* spells, int book, bool total_skip)
 {
-    int ct = 0, skip = 0, i;
+    int ct = 0, skip = 0, max = MAX_SPELLS, i;
     for (i = 0; i < _SPELLS_PER_BOOK; i++)
     {
-        spell_info *src, *dest;
+        spell_info *src;
+        spell_info *dest;
 
         if (ct >= max) break;
         src = &_books[book].spells[i];
@@ -1191,23 +1205,25 @@ static void _book_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-static int _get_spells(spell_info* spells, int max)
+static spell_info *_get_spells(void)
 {
     int idx = -1;
     int ct = 0;
     menu_t menu = { "Use which group?", NULL, NULL,
                     _book_menu_fn, _books, 4, 0 };
+    static spell_info spells[10];
 
     idx = menu_choose(&menu);
-    if (idx < 0) return 0;
+    if (idx < 0) return NULL;
 
-    ct = _get_spells_imp(spells, max, idx, FALSE);
+    ct = _get_spells_imp(spells, idx, FALSE);
     if (ct == 0)
     {
         msg_print("You don't know any of those techniques yet!");
-        return 0;
+        return NULL;
     }
-    return 8;
+    spells[8].fn = NULL;
+    return spells;
 }
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
@@ -1217,41 +1233,27 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 
 static void _character_dump(doc_ptr doc)
 {
+    power_info powers[MAX_SPELLS];
     spell_info spells[MAX_SPELLS];
     int        ct = 0, i;
 
     for (i = 0; i < 4; i++)
-        ct += _get_spells_imp(spells + ct, MAX_SPELLS - ct, i, TRUE);
+        ct += _get_spells_imp(spells + ct, i, TRUE);
 
-    py_display_spells(doc, spells, ct);
+    if (!ct) return;
+    spells[ct].fn = NULL;
+
+    ct = get_spells_aux(powers, MAX_SPELLS, spells, TRUE);
+
+    py_display_spells(doc, powers, ct);
 }
 
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_LONG_SWORD, 1);
-    py_birth_obj_aux(TV_SOFT_ARMOR, SV_CLOTH_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = WEAPON_EXP_SKILLED;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_SKILLED;
 }
 
 class_t *rage_mage_get_class(void)
@@ -1286,7 +1288,7 @@ class_t *rage_mage_get_class(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] =  1;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 106;
@@ -1297,7 +1299,7 @@ class_t *rage_mage_get_class(void)
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
-        me.get_spells = _get_spells;
+        me.get_spells_fn = _get_spells;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         me.player_action = _player_action;

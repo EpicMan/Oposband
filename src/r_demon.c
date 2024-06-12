@@ -53,16 +53,17 @@ static void _khorne_birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 6;
+    forge.to_d = 6;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_BLADE_OF_CHAOS));
     forge.name2 = EGO_WEAPON_SHARPNESS;
     forge.pval = 1;
     forge.to_h = 0;
+    forge.to_d = 0;
     forge.ds = 6;
     forge.weight = 220;
     add_flag(forge.flags, OF_VORPAL);
@@ -89,7 +90,7 @@ static void _khorne_calc_innate_attacks(void)
 
             a.weight = 100;
             calc_innate_blows(&a, 200);
-            a.msg = "You claw";
+            a.msg = "You claw.";
             a.name = "Claw";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -106,7 +107,7 @@ static void _khorne_calc_innate_attacks(void)
             a.weight = 200;
 
             calc_innate_blows(&a, 300);
-            a.msg = "You bite";
+            a.msg = "You bite.";
             a.name = "Bite";
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         }
@@ -127,7 +128,7 @@ static void _khorne_calc_innate_attacks(void)
 
             a.weight = 200;
             calc_innate_blows(&a, 400);
-            a.msg = "You crush";
+            a.msg = "You crush.";
             a.name = "Claw";
 
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -144,7 +145,7 @@ static void _khorne_calc_innate_attacks(void)
             a.weight = 500;
 
             calc_innate_blows(&a, 200);
-            a.msg = "You butt";
+            a.msg = "You butt.";
             a.name = "Head";
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         }
@@ -287,6 +288,7 @@ static void _khorne_gain_level(int new_level)
         forge.ds = 1;
         forge.weight = 500;
         forge.to_h = 15;
+        forge.to_d = 15;
 
         /* Poor man's py_birth_obj() - we can't call the actual py_birth_obj()
          * because we need a different origin, which we cannot specify later */
@@ -363,7 +365,7 @@ static race_t *_khorne_get_race_t(void)
  *                 10        20       30              40
  * Marilith: Manes -> Quasit -> Bodak -> Death Quasit -> Marilith
  ******************************************************************************/
-static spell_info _marilith_spells[] = {
+static spell_info _marilith_get_spells[] = {
     { 10,  3, 30, phase_door_spell},
     { 12,  5, 35, scare_spell},
     { 15,  7, 35, teleport_spell},
@@ -378,9 +380,6 @@ static spell_info _marilith_spells[] = {
                                          this spell in the town the way other characters may */
     { -1, -1, -1, NULL}
 };
-static int _marilith_get_spells(spell_info* spells, int max) {
-    return get_spells_aux(spells, max, _marilith_spells);
-}
 
 static void _marilith_birth(void) {
     object_type    forge;
@@ -390,14 +389,15 @@ static void _marilith_birth(void) {
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 3;
+    forge.to_d = 3;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_BROAD_SWORD));
-    forge.to_h = 2;
+    forge.to_h = 1;
+    forge.to_d = 2;
     py_birth_obj(&forge);
 
     _demon_birth();
@@ -416,7 +416,7 @@ static void _marilith_calc_innate_attacks(void) {
         a.effect[0] = GF_MISSILE;
         a.blows = 100;
 
-        a.msg = "You sting";
+        a.msg = "You sting.";
         a.name = "Tail";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
@@ -622,7 +622,7 @@ static race_t *_marilith_get_race_t(void)
  *                       40
  * Balrog: Lesser Balrog -> Greater Balrog
  ******************************************************************************/
-static spell_info _balrog_spells[] = {
+static spell_info _balrog_get_spells[] = {
     {  2,  1, 20, detect_unlife_spell},
     {  3,  2, 25, evil_bless_spell},
     {  4,  5, 30, resist_fire_spell},
@@ -643,9 +643,6 @@ static spell_info _balrog_spells[] = {
     { 45, 80, 85, hellfire_spell},
     { -1, -1, -1, NULL}
 };
-static int _balrog_get_spells(spell_info* spells, int max) {
-    return get_spells_aux(spells, max, _balrog_spells);
-}
 static void _balrog_birth(void)
 {
     object_type    forge;
@@ -654,10 +651,10 @@ static void _balrog_birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 5;
+    forge.to_d = 5;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
@@ -666,6 +663,7 @@ static void _balrog_birth(void)
     forge.dd = 2;
     forge.ds = 6;
     forge.to_h = 5;
+    forge.to_d = 5;
     py_birth_obj(&forge);
 
     _demon_birth();
@@ -818,13 +816,10 @@ void _cyber_rocket_spell(int cmd, variant *res)
     }
 }
 
-static power_info _cyber_powers[] = {
+static power_info _cyber_get_powers[] = {
     { A_CON, {  1,  2, 30, _cyber_rocket_spell} },
     {    -1, { -1, -1, -1, NULL}}
 };
-static int _cyber_get_powers(spell_info* spells, int max) {
-    return get_powers_aux(spells, max, _cyber_powers);
-}
 
 static void _cyber_birth(void)
 {
@@ -834,13 +829,13 @@ static void _cyber_birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
-    forge.to_h = 10;
+    forge.to_d = 10;
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_MUMAK_HIDE_ARMOR));
+    object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
 
-    object_prep(&forge, lookup_kind(TV_HAFTED, SV_MORNING_STAR));
+    object_prep(&forge, lookup_kind(TV_HAFTED, SV_GREAT_HAMMER));
     py_birth_obj(&forge);
 
     _demon_birth();

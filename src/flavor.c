@@ -17,8 +17,6 @@
  */
 static bool object_easy_know(int i)
 {
-    if (no_id) return TRUE;
-
     object_kind *k_ptr = &k_info[i];
 
     /* Analyze the "tval" */
@@ -296,7 +294,7 @@ void flavor_init(void)
         if (!k_ptr->name) continue;
 
         /* No flavor yields aware */
-        if (!k_ptr->flavor || no_id) k_ptr->aware = TRUE;
+        if (!k_ptr->flavor) k_ptr->aware = TRUE;
 
         /* Check for "easily known" */
         k_ptr->easy_know = object_easy_know(i);
@@ -459,16 +457,17 @@ static flag_insc_table flag_insc_plus[] =
 
 static flag_insc_table flag_insc_minus[] =
 {
+    { "At", OF_DEC_BLOWS, -1 },
+    { "Sp", OF_DEC_SPEED, -1 },
     { "St", OF_DEC_STR, -1 },
     { "In", OF_DEC_INT, -1 },
     { "Wi", OF_DEC_WIS, -1 },
     { "Dx", OF_DEC_DEX, -1 },
     { "Cn", OF_DEC_CON, -1 },
     { "Ch", OF_DEC_CHR, -1 },
-    { "Sl", OF_DEC_STEALTH, -1 },
-    { "Sp", OF_DEC_SPEED, -1 },
-    { "Lf", OF_DEC_LIFE, -1 },
     { "Md", OF_DEC_MAGIC_MASTERY, -1 },
+    { "Sl", OF_DEC_STEALTH, -1 },
+    { "Lf", OF_DEC_LIFE, -1 },
     { NULL, 0, -1 }
 };
 
@@ -512,9 +511,9 @@ static flag_insc_table flag_insc_vulnerability[] =
     { "Po", OF_VULN_POIS, -1 },
     { "Li", OF_VULN_LITE, -1 },
     { "Dk", OF_VULN_DARK, -1 },
+    { "Cf", OF_VULN_CONF, -1 },
     { "Nt", OF_VULN_NETHER, -1 },
     { "Nx", OF_VULN_NEXUS, -1 },
-    { "Cf", OF_VULN_CONF, -1 },
     { "So", OF_VULN_SOUND, -1 },
     { "Sh", OF_VULN_SHARDS, -1 },
     { "Ca", OF_VULN_CHAOS, -1 },
@@ -535,6 +534,7 @@ static flag_insc_table flag_insc_misc[] =
     { "Hl", OF_HOLD_LIFE, -1 },
     { "Sd", OF_SLOW_DIGEST, -1 },
     { "Rg", OF_REGEN, -1 },
+    { "Rm", OF_REGEN_MANA, -1 },
     { "Lv", OF_LEVITATION, -1 },
     { "Nv", OF_NIGHT_VISION, -1 },
     { "Lu", OF_LITE, -1 },
@@ -547,7 +547,6 @@ static flag_insc_table flag_insc_misc[] =
     { "Ty", OF_TY_CURSE, -1 },
     { "Ds", OF_DARKNESS, -1 },
     { "Wm", OF_WEAPONMASTERY, -1 },
-    { "Ps", OF_LORE1, -1 },
     { "Id", OF_LORE2, -1 },
     { NULL, 0, -1 }
 };
@@ -573,6 +572,7 @@ static flag_insc_table flag_insc_brand[] =
     { "F", OF_BRAND_FIRE, -1 },
     { "Co", OF_BRAND_COLD, -1 },
     { "P", OF_BRAND_POIS, -1 },
+    { "Dk", OF_BRAND_DARK, -1 },
     { "Ca", OF_BRAND_CHAOS, -1 },
     { "V", OF_BRAND_VAMP, -1 },
     { "Q", OF_IMPACT, -1 },
@@ -580,7 +580,6 @@ static flag_insc_table flag_insc_brand[] =
     { "S", OF_VORPAL, -1 },
     { "S", OF_VORPAL2, -1 },
     { "M", OF_BRAND_MANA, -1 },
-    { "Dk", OF_BRAND_DARK, -1 },
     { NULL, 0, -1 }
 };
 
@@ -873,7 +872,9 @@ static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
     /* Is there more to learn about this object? Perhaps, but don't leak quality info! */
     if ( obj_is_identified(o_ptr)
       && (object_is_wearable(o_ptr) || object_is_ammo(o_ptr))
-      && (object_is_artifact(o_ptr) || object_is_ego(o_ptr))
+      && ((object_is_artifact(o_ptr)) || (object_is_ego(o_ptr)) ||
+          ((mark_dragon) && ((object_is_dragon_armor(o_ptr)) ||
+           (object_is_(o_ptr, TV_SWORD, SV_DRAGON_FANG)))))
       && !obj_is_identified_fully(o_ptr)
       && !(o_ptr->ident & IDENT_STORE) )
     {
@@ -948,8 +949,8 @@ static void get_inscription(char *buff, object_type *o_ptr)
 
 char attr_to_attr_char(byte a)
 {
-    char hack[17] = "dwsorgbuDWvyRGBU";
-    char c = hack[a&0x0F];
+    //char hack[30] = "dwsorgbuDWvyRGBULPiptSmMTOVcn";
+    char c = (color_char[a & COLOR_MASK]);
     return c;
 }
 
@@ -1019,12 +1020,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     int             power;
 
     bool            aware = FALSE;
-    bool            known = no_id;
+    bool            known = FALSE;
     bool            flavor = TRUE;
     bool            device = FALSE;
 
     bool            show_weapon = FALSE;
-    bool            show_armor = FALSE;
+    bool            show_armour = FALSE;
 
     cptr            s, s0;
     char            *t;
@@ -1043,7 +1044,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     object_kind    *k_ptr = &k_info[o_ptr->k_idx];
     object_kind    *flavor_k_ptr = &k_info[k_ptr->flavor];
 
-    int             number = (mode & OD_SINGULAR) ? 1 : o_ptr->number;
+    int             number;
+
+    mode |= (od_xtra_context);
+    number = (mode & OD_SINGULAR) ? 1 : o_ptr->number;
 
     /* Extract some flags */
     obj_flags(o_ptr, flgs); /* TR_FULL_NAME and TR_SHOW_MODS should never really be hidden ... */
@@ -1213,9 +1217,6 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
-        case TV_DAGGER:
-        case TV_STAVES:
-        case TV_AXE:
         case TV_DIGGING:
         {
             show_weapon = TRUE;
@@ -1224,7 +1225,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
         case TV_BOW:
         {
-            if (o_ptr->sval != SV_HARP && o_ptr->sval != SV_CRIMSON && o_ptr->sval != SV_RAILGUN)
+            if (!obj_is_fake_bow(o_ptr))
                 show_weapon = TRUE;
 
             break;
@@ -1232,7 +1233,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         case TV_QUIVER:
             break;
 
-        /* Armor */
+        /* Armour */
         case TV_BOOTS:
         case TV_GLOVES:
         case TV_CLOAK:
@@ -1251,7 +1252,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
                 else            basenm = "& # Hand~";
             }
             else
-                show_armor = TRUE;
+                show_armour = TRUE;
             break;
         }
 
@@ -1270,7 +1271,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
         case TV_AMULET:
         case TV_RING:
-            if (o_ptr->to_h)
+            if (o_ptr->to_h || o_ptr->to_d)
                 show_weapon = TRUE;
             break;
 
@@ -1549,7 +1550,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
                  ((o_ptr->tval == TV_CORPSE) &&
                   (r_info[o_ptr->pval].flags1 & RF1_UNIQUE)))
         {
-            t = object_desc_str(t, "The ");
+            if (o_ptr->name1 != ART_MOM) t = object_desc_str(t, "The ");
         }
 
         /* A single one */
@@ -1605,7 +1606,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         /* Hack -- The only one of its kind */
         else if (known && object_is_artifact(o_ptr))
         {
-            t = object_desc_str(t, "The ");
+            if (o_ptr->name1 != ART_MOM) t = object_desc_str(t, "The ");
         }
 
         /* Hack -- single items get no prefix */
@@ -1860,10 +1861,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (have_flag(flgs, OF_SHOW_MODS)) show_weapon = TRUE;
 
     /* Display the item like a weapon */
-    if (o_ptr->to_h != 0) show_weapon = TRUE;
-    
-    /* Display the item like armor */
-    if (o_ptr->ac) show_armor = TRUE;
+    if (o_ptr->to_h && o_ptr->to_d) show_weapon = TRUE;
+    else if (o_ptr->to_h > 0) show_weapon = TRUE;
+    else if (o_ptr->to_d < 0) show_weapon = TRUE;
+
+    /* Display the item like armour */
+    if (o_ptr->ac) show_armour = TRUE;
 
 
     /* Dump base weapon info */
@@ -1876,28 +1879,14 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
-    case TV_DAGGER:
-    case TV_AXE:
-    case TV_STAVES:
     case TV_DIGGING:
-		show_weapon = FALSE;
         if (known)
         {
-			char plus[6];
-			if (o_ptr->to_h >= 0)
-			{
-				sprintf(plus, ",+%d", o_ptr->to_h);
-			}
-			else
-			{
-				sprintf(plus, ",%d", o_ptr->to_h);
-			}
-
             int hand = equip_which_hand(o_ptr);
             int dd = o_ptr->dd;
             int ds = o_ptr->ds;
 
-            if (p_ptr->big_shot && o_ptr->tval == p_ptr->shooter_info.tval_ammo)
+            if (p_ptr->big_shot && object_is_suitable_ammo(o_ptr))
                 ds += 2;
 
             if (hand >= 0 && hand < MAX_HANDS && !(mode & OD_THROWING))
@@ -1912,7 +1901,6 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             t = object_desc_num(t, dd);
             t = object_desc_chr(t, 'd');
             t = object_desc_num(t, ds);
-			t = object_desc_str(t, plus);
             t = object_desc_chr(t, p2);
         }
         /* All done */
@@ -1933,11 +1921,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     case TV_BOW:
     {
         char tmp[10];
-		char plus[4];
-		show_weapon = FALSE;
-        if (o_ptr->sval == SV_HARP) break;
-        if (o_ptr->sval == SV_CRIMSON) break;
-        if (o_ptr->sval == SV_RAILGUN) break;
+
+        if (obj_is_fake_bow(o_ptr)) break;
         if (!known) break;
 
         /* Mega-Hack -- Extract the "base power" */
@@ -1947,19 +1932,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         if (equip_is_worn(o_ptr))
             power += p_ptr->shooter_info.to_mult;
 
-		if (o_ptr->to_h >= 0)
-		{
-			sprintf(plus, "+%d", o_ptr->to_h);
-		}
-		else
-		{
-			sprintf(plus, "%d", o_ptr->to_h);
-		}
-
         if (power % 100)
-            sprintf(tmp, "x%d.%2.2d,%s", power / 100, power % 100, plus);
+            sprintf(tmp, "x%d.%2.2d", power / 100, power % 100);
         else
-            sprintf(tmp, "x%d,%s", power / 100, plus);
+            sprintf(tmp, "x%d", power / 100);
 
         /* Append a special "damage" string */
         t = object_desc_chr(t, ' ');
@@ -1980,21 +1956,38 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if (mode & OD_NAME_AND_DICE) goto object_desc_done;
 
-	/* Don't show pluses for these items */
-	if (o_ptr->tval == TV_BOW && (o_ptr->sval == SV_HARP || o_ptr->sval == SV_CRIMSON || o_ptr->sval == SV_RAILGUN))
-	{
-		show_weapon = FALSE;
-	}
-
     /* Add the weapon bonuses */
     if (known)
     {
+        if (obj_is_fake_bow(o_ptr))
+        {
+        }
         /* Show the tohit/todam on request */
-        if (show_weapon)
+        else if (show_weapon)
         {
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);
             t = object_desc_int(t, o_ptr->to_h);
+            t = object_desc_chr(t, ',');
+            t = object_desc_int(t, o_ptr->to_d);
+            t = object_desc_chr(t, p2);
+        }
+
+        /* Show the tohit if needed */
+        else if (o_ptr->to_h)
+        {
+            t = object_desc_chr(t, ' ');
+            t = object_desc_chr(t, p1);
+            t = object_desc_int(t, o_ptr->to_h);
+            t = object_desc_chr(t, p2);
+        }
+
+        /* Show the todam if needed */
+        else if (o_ptr->to_d)
+        {
+            t = object_desc_chr(t, ' ');
+            t = object_desc_chr(t, p1);
+            t = object_desc_int(t, o_ptr->to_d);
             t = object_desc_chr(t, p2);
         }
     }
@@ -2023,12 +2016,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (known)
     {
         /* Show the armor class info */
-        if (show_armor)
+        if (show_armour)
         {
             int ac = o_ptr->ac;
             int to_a = o_ptr->to_a;
 
-            if (prace_is_(RACE_CENTAUR) && object_is_body_armor(o_ptr))
+            if (prace_is_(RACE_CENTAUR) && object_is_body_armour(o_ptr))
             {
                 ac -= ac / 3;
                 if (to_a > 0)
@@ -2054,7 +2047,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     }
 
     /* Hack -- always show base armor
-    else if (show_armor)
+    else if (show_armour)
     {
         t = object_desc_chr(t, ' ');
         t = object_desc_chr(t, b1);
@@ -2181,7 +2174,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (known)
     {
         /* Hack -- Process Lanterns/Torches */
-        if ((o_ptr->tval == TV_LITE) && (!(o_ptr->name1 || o_ptr->art_name || (o_ptr->sval == SV_LITE_FEANOR))))
+        if ((object_needs_fuel(o_ptr)) && (!(o_ptr->name1 || o_ptr->art_name)))
         {
             /* Hack -- Turns of light for normal lites */
             t = object_desc_str(t, " (with ");
@@ -2349,8 +2342,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     else if ((p_ptr->munchkin_pseudo_id) && ((obj_can_sense1(o_ptr)) || (obj_can_sense2(o_ptr))) &&
              (!(o_ptr->ident & IDENT_SENSE)) && (!object_is_known(o_ptr)))
     {
-        o_ptr->ident |= IDENT_SENSE;
-        o_ptr->feeling = value_check_aux1(o_ptr);
+        o_ptr->feeling = value_check_aux1(o_ptr, TRUE);
+        if (!(o_ptr->ident & IDENT_KNOWN)) o_ptr->ident |= IDENT_SENSE; 
         if (o_ptr->feeling) strcpy(fake_insc_buf, game_inscriptions[o_ptr->feeling]);
     }
 
@@ -2387,6 +2380,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     else if (!aware && object_is_tried(o_ptr))
     {
         strcpy(fake_insc_buf, "tried");
+    }
+    else if ((shops_mark_unseen) && (aware) && (!object_is_aware(o_ptr)) && (object_is_flavor(o_ptr)) && (o_ptr->loc.where == INV_SHOP))
+    {
+        strcpy(fake_insc_buf, "unseen");
     }
 
     /* Note the discount, if any */
@@ -2437,7 +2434,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
 object_desc_done:
     if (mode & OD_COLOR_CODED)
-        sprintf(buf, "<color:%c>%s</color>", tval_to_attr_char(o_ptr->tval), tmp_val);
+    {
+        char attr = ((mode & OD_BLACK_CURSES) && (object_is_cursed(o_ptr))) ? 'D' : tval_to_attr_char(o_ptr->tval);
+        sprintf(buf, "<color:%c>%s</color>", attr, tmp_val);
+    }
     else
         my_strcpy(buf, tmp_val, MAX_NLEN);
 }

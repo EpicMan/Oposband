@@ -16,7 +16,7 @@
 #include <assert.h>
 
 /* hack as in leave_store in store.c */
-bool leave_bldg = FALSE;
+static bool leave_bldg = FALSE;
 static bool paivita = FALSE;
 static bool paivitys_no_inkey_hack = FALSE;
 
@@ -259,7 +259,7 @@ static void arena_comm(int cmd)
                     msg_print("You enter the arena briefly and bask in your glory.");
                 }
             }
-            else if (p_ptr->riding && p_ptr->pclass != CLASS_BEASTMASTER && p_ptr->pclass != CLASS_CAVALRY && p_ptr->prace != RACE_MON_RING)
+            else if (p_ptr->riding && p_ptr->pclass != CLASS_BEASTMASTER && p_ptr->pclass != CLASS_CAVALRY && p_ptr->prace != RACE_MON_RING && !warlock_is_(WARLOCK_DRAGONS))
             {
                 msg_print("You don't have permission to enter with pet.");
             }
@@ -1820,7 +1820,7 @@ static bool _is_wanted_corpse(obj_ptr obj)
 }
 static bool _is_wanted_captureball(obj_ptr obj)
 {
-    if (obj->tval == TV_CAPTURE && _is_wanted_monster(obj->pval))
+    if (obj->tval == TV_CAPTURE && obj->pval > 0 && _is_wanted_monster(obj->pval))
         return TRUE;
     return FALSE;
 }
@@ -2146,6 +2146,40 @@ static bool inn_comm(int cmd)
         case BACT_FOOD: /* Buy food & drink */
             if ((prace_is_(RACE_BALROG)) || (prace_is_(RACE_MON_DEMON)))
                 msg_print("The barkeep offers you some very fresh meat, which you gratefully wolf down.");
+            else if (!mortal_food_check())
+            {
+                if (prace_is_(RACE_SKELETON))
+                {
+                    msg_print("The barkeep brings you a Staff of Nothing.");
+                }
+                else if (one_in_(3)) msg_print("You receive little nutrition from the food of mortals, so you wolf down an enormous pile of it to satisfy your hunger, leaving the pale-looking barkeep regretting his 'All You Can Eat' offer.");
+                else
+                {
+                    int _race = ((p_ptr->mimic_form != MIMIC_NONE) ? p_ptr->mimic_form : p_ptr->prace);
+                    switch (_race)
+                    {
+                        case RACE_VAMPIRE:
+                        case RACE_MON_VAMPIRE:
+                            msg_print("You suck some blood from what we will describe as a lump of fresh meat.");
+                            break;
+                        case RACE_ENT:
+                            msg_print("The barkeep offers you some water, which you gratefully accept.");
+                            break;
+                        case RACE_ANDROID:
+                            msg_print("Blessed oil! The nectar of the gods!");
+                            break;
+                        case RACE_MON_JELLY:
+                            msg_print("The barkeep leaves a bowl of gruel on the table, but you eat it anyway.");
+                            break;
+                        default:
+                            if (!one_in_(27))
+                                msg_print("You sit down at the bar, expecting a funny message, but the barkeep just brings you a Staff of Nothing.");
+                            else
+                                msg_print("The barkeep offers you a well-charged Staff of Speed, which you happily suck until it is drained of all energy. (Pity you can't take it home with you!)");
+                            break;
+                    }
+                }
+            }
             else msg_print("The barkeep gives you some gruel and a beer.");
 
             (void)set_food(PY_FOOD_MAX - 1);
@@ -2450,6 +2484,7 @@ const _gamble_shop_t _gamble_shop_potions[] = {
     { TV_POTION, SV_POTION_STONE_SKIN, 1},
     { TV_POTION, SV_POTION_INVULNERABILITY, 1},
     { TV_POTION, SV_POTION_AUGMENTATION, 1},
+    { TV_POTION, SV_POTION_LIQUID_LOGRUS, 1},
     { TV_POTION, SV_POTION_HEROISM, 50},
     { TV_POTION, SV_POTION_BOLDNESS, 50},
     { TV_POTION, SV_POTION_CURE_LIGHT, 50},
@@ -2509,6 +2544,9 @@ static int _gamble_shop_roll(const _gamble_shop_t *choices)
         const _gamble_shop_t *entry = choices + i;
         if (!entry->prob)
             break;
+        if ((coffee_break == SPEED_INSTA_COFFEE) && (entry->tval == TV_POTION) &&
+            ((entry->sval == SV_POTION_HEALING) || (entry->sval == SV_POTION_STAR_HEALING) ||
+             (entry->sval == SV_POTION_LIFE))) continue;
         tot += entry->prob;
     }
 
@@ -2519,6 +2557,9 @@ static int _gamble_shop_roll(const _gamble_shop_t *choices)
         const _gamble_shop_t *entry = choices + i;
         if (!entry->prob)
             break;
+        if ((coffee_break == SPEED_INSTA_COFFEE) && (entry->tval == TV_POTION) &&
+            ((entry->sval == SV_POTION_HEALING) || (entry->sval == SV_POTION_STAR_HEALING) ||
+             (entry->sval == SV_POTION_LIFE))) continue;
 
         roll -= entry->prob;
         if (roll <= 0)
@@ -2643,7 +2684,7 @@ static bool _gamble_shop_artifact(void)
     {
         k_idx = get_obj_num(lvl);
         object_prep(&forge, k_idx);
-        if (!object_is_weapon(&forge) && !object_is_armor(&forge))
+        if (!object_is_weapon(&forge) && !object_is_armour(&forge))
             continue;
         apply_magic(&forge, lvl, AM_GOOD | AM_GREAT | AM_SPECIAL);
         if (!forge.art_name)
@@ -2682,7 +2723,7 @@ static obj_ptr _get_reforge_dest(int max_power)
     sprintf(buf, "Reforge which object (Max Power = %d)? ", max_power);
     prompt.prompt = buf;
     prompt.error = "You have nothing to reforge.";
-    prompt.filter = item_tester_hook_nameless_weapon_armor;
+    prompt.filter = item_tester_hook_nameless_weapon_armour;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.flags = INV_SHOW_VALUE;
@@ -2832,7 +2873,7 @@ static bool _reforge_artifact(void)
     }
 
     /* Items like Vilya count for the full 90K when reforged into e.g.
-     * the armor slot, so the reforge should also cost accordingly */
+     * the armour slot, so the reforge should also cost accordingly */
     if (dest_max_power < value / 2)
     {
         int dest_weight = get_dest_weight(dest);
@@ -2965,7 +3006,7 @@ static bool _reforge_artifact(void)
             adjustment -= MAX(0L, (32000L + MAX(0, arvo / 2 - 3500) - min_power)) / 100 * arvo / 12000 * (MIN(4800, MAX(100, min_power - arvo - 2000))) / 12000;
         }
 
-        if (object_is_body_armor(dest))
+        if (object_is_body_armour(dest))
         {
             int nval = MAX(0, 9000L - ABS(14000L - arvo)) * 4 / 3;
             adjustment -= MAX(0, nval - ABS(min_power - 32000L)) / 220;
@@ -3037,7 +3078,7 @@ static bool _reforge_artifact(void)
             arvio += arvio / 100;
             arvio += (arvio / 200) * (arvio / 200) / 100;
         }
-        else if (object_is_(dest, TV_BOW, SV_HARP))
+        else if (obj_is_harp(dest))
         {
             arvio += (arvio / 200) * (arvio / 200) / 100;
         }
@@ -3142,7 +3183,7 @@ static bool _reforge_artifact(void)
 
     msg_print("After several hours, you are presented your new artifact...");
     extract_day_hour_min(&prev_day, &prev_hour, &prev_min);
-    game_turn += rand_range(5000, 15000);
+    game_turn += rand_range(9075, 9196);
     prevent_turn_overflow();
     extract_day_hour_min(&new_day, &prev_hour, &prev_min);
     if (new_day != prev_day)
@@ -3220,7 +3261,7 @@ static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
         {
             var_set_int(res, TERM_L_DARK);
             break;
-        }
+        } /* Fall through */
     default:
         default_menu(cmd, which, cookie, res);
     }
@@ -3288,6 +3329,7 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
             choices[i].amt = i+1;
 
             if (to_hit && copy.to_h < maxenchant) {copy.to_h++; ok = TRUE; v = MAX(v, copy.to_h);}
+            if (to_dam && copy.to_d < maxenchant) {copy.to_d++; ok = TRUE; v = MAX(v, copy.to_d);}
             if (to_ac && copy.to_a < maxenchant) {copy.to_a++; ok = TRUE; v = MAX(v, copy.to_a);}
 
             if (v > 10)
@@ -3373,6 +3415,16 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
         }
     }
 
+    /* Enchant to damage */
+    for (i = 0; i < to_dam; i++)
+    {
+        if (prompt.obj->to_d < maxenchant)
+        {
+            if (enchant(prompt.obj, 1, (ENCH_TODAM | ENCH_FORCE)))
+                okay = TRUE;
+        }
+    }
+
     /* Enchant to AC */
     for (i = 0; i < to_ac; i++)
     {
@@ -3401,36 +3453,6 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
     }
 }
 
-/* Get to Thalos easier */
-static bool thalos_ferry(void)
-{
-	int x, y;
-
-	screen_save();
-	clear_bldg(4, 10);
-	for (y = 0; y < max_wild_y; y++)
-	{
-		for (x = 0; x < max_wild_x; x++)
-		{
-			if (wilderness[y][x].town == TOWN_THALOS)
-			{
-				p_ptr->wilderness_y = y;
-				p_ptr->wilderness_x = x;
-
-				p_ptr->wilderness_dx = 0;
-				p_ptr->wilderness_dy = 0;
-			}
-		}
-	}
-
-	p_ptr->leaving = TRUE;
-	leave_bldg = TRUE;
-	p_ptr->teleport_town = TRUE;
-	screen_load();
-	msg_print("You ride the ferry all the way to Thalos");
-	return TRUE;
-}
-
 bool tele_town(void)
 {
     int i, x, y;
@@ -3457,6 +3479,7 @@ bool tele_town(void)
         char buf[80];
 
         if (i == p_ptr->town_num) continue;
+        if ((num) && (easy_thalos) && (i == TOWN_THALOS)) town_on_visit(i); /* Make people not hate me */
         if (!town_visited(i) && !p_ptr->wizard) continue;
 
         sprintf(buf,"%c) %-20s", I2A(i-1), town_name(i));
@@ -3869,7 +3892,6 @@ static void _sell_photo(void)
  */
 static void bldg_process_command(building_type *bldg, int i)
 {
-    leave_bldg = FALSE;
     int bact = bldg->actions[i];
     int bcost;
     bool paid = FALSE;
@@ -3910,7 +3932,7 @@ static void bldg_process_command(building_type *bldg, int i)
         /* Do nothing */
         break;
     case BACT_RESEARCH_ITEM:
-        paid = ident_spell(NULL);
+        paid = identify_fully(NULL);
         break;
     case BACT_TOWN_HISTORY:
         town_history();
@@ -3944,8 +3966,8 @@ static void bldg_process_command(building_type *bldg, int i)
     case BACT_FOOD:
         paid = inn_comm(bact);
         break;
-    case BACT_THALOS_FERRY:
-        paid = thalos_ferry();
+    case BACT_RESEARCH_MONSTER:
+        paid = research_mon();
         break;
     case BACT_COMPARE_WEAPONS:
     /*    paid = compare_weapons(); */
@@ -3954,7 +3976,7 @@ static void bldg_process_command(building_type *bldg, int i)
         enchant_item(object_allow_enchant_melee_weapon, bcost, 1, 1, 0, is_guild);
         break;
     case BACT_ENCHANT_ARMOR:
-        enchant_item(object_allow_enchant_armor, bcost, 0, 0, 1, is_guild);
+        enchant_item(object_allow_enchant_armour, bcost, 0, 0, 1, is_guild);
         break;
     case BACT_RECHARGE:
         msg_print("My apologies, but that service is no longer available!");
@@ -3973,7 +3995,7 @@ static void bldg_process_command(building_type *bldg, int i)
         paid = ident_spell(NULL);
         break;
     case BACT_LEARN:
-        msg_print("You don't have to learn spells!");
+        do_cmd_study();
         break;
     case BACT_HEALING: /* needs work */
         hp_player(200);
@@ -3986,11 +4008,7 @@ static void bldg_process_command(building_type *bldg, int i)
         if (p_ptr->riding)
         {
             monster_type *m_ptr = &m_list[p_ptr->riding];
-            int           amt = 500;
-
-            if (m_ptr->hp < 30000) m_ptr->hp += amt;
-            if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
-            p_ptr->redraw |= PR_HEALTH_BARS;
+            (void)hp_mon(m_ptr, 500, FALSE);
         }
 
         paid = TRUE;
@@ -4020,7 +4038,7 @@ static void bldg_process_command(building_type *bldg, int i)
         int max_depth;
 
         clear_bldg(4, 20);
-        select_dungeon = choose_dungeon("teleport", 4, 0);
+        select_dungeon = choose_dungeon("teleport to", 4, 0);
         show_building(bldg);
         if (!select_dungeon) return;
 
@@ -4099,7 +4117,7 @@ static void bldg_process_command(building_type *bldg, int i)
         paid = _gamble_shop_device(TV_ROD);
         break;
     case BACT_GAMBLE_SHOP_ARMOR:
-        paid = _gamble_shop_object(object_is_armor);
+        paid = _gamble_shop_object(object_is_armour);
         break;
     case BACT_GAMBLE_SHOP_WEAPON:
         paid = _gamble_shop_object(object_is_weapon);
@@ -4172,10 +4190,7 @@ void do_cmd_quest(void)
 
     if (!cave_have_flag_bold(py, px, FF_QUEST_ENTER))
     {
-        if (p_ptr->blind)
-            msg_print("You feel no entrance here.");
-        else
-            msg_print("You see no quest level here.");
+        msg_print("You see no quest level here.");
         return;
     }
     else
@@ -4189,10 +4204,13 @@ void do_cmd_quest(void)
             ((danger > 33) && (danger < 46) && (p_ptr->lev < (danger / 2) + 11)) ||
             ((danger > 45) && (p_ptr->lev < (danger * 4 / 5) - 3) && (p_ptr->lev < 46)))
         {
-            msg_format("\n<color:R>WARNING:</color> This is a level <color:o>%d</color> quest.\n", danger);
+            char buf[255];
+
             sound(SOUND_WARN);
+            strcpy(buf, format("\n<color:R>WARNING:</color> This is a level <color:o>%d</color> quest. Really enter? <color:y>[Y/n]</color>\n", danger));
+            if (!paranoid_msg_prompt(buf, PROMPT_FORCE_CHOICE)) return;
         }
-        if (!get_check("Do you enter? ")) return;
+        else if (!get_check("Do you enter? ")) return;
 
         /* Player enters a new quest XXX */
         p_ptr->oldpy = py;
@@ -4218,10 +4236,7 @@ void do_cmd_bldg(void)
 
     if (!cave_have_flag_bold(py, px, FF_BLDG))
     {
-        if (p_ptr->blind)
-            msg_print("You feel no entrance here.");
-        else
-            msg_print("You see no building here.");
+        msg_print("You see no building here.");
 
         return;
     }

@@ -94,7 +94,7 @@ void place_random_stairs(int y, int x)
         up_stairs = FALSE;
 
     /* Ironman */
-    if (ironman_downward)
+    if (only_downward())
         up_stairs = FALSE;
 
     /* Bottom */
@@ -660,7 +660,12 @@ bool build_tunnel(int row1, int col1, int row2, int col2)
                     if (is_outer_bold(y, x))
                     {
                         /* Change the wall to a "solid" wall */
-                        place_solid_noperm_bold(y, x);
+                        if ((atlantis_hack) && (cave_have_flag_bold(y, x, FF_WALL)))
+                        {
+                            cave[y][x].info &= ~(CAVE_MASK);
+                            add_cave_info(y, x, CAVE_SOLID);
+                        }
+                        else place_solid_noperm_bold(y, x);
                     }
                 }
             }
@@ -802,7 +807,12 @@ static bool set_tunnel(int *x, int *y, bool affectwall)
                 if (is_outer_bold(j, i))
                 {
                     /* Change the wall to a "solid" wall */
-                    place_solid_noperm_bold(j, i);
+                    if ((atlantis_hack) && (cave_have_flag_bold(j, i, FF_WALL)))
+                    {
+                        cave[j][i].info &= ~(CAVE_MASK);
+                        add_cave_info(j, i, CAVE_SOLID);
+                    }
+                    else place_solid_noperm_bold(j, i);
                 }
             }
         }

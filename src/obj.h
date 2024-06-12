@@ -66,7 +66,6 @@ extern bool obj_is_readable_book(obj_ptr obj);
 extern bool obj_is_rod(obj_ptr obj);
 extern bool obj_is_staff(obj_ptr obj);
 extern bool obj_is_wand(obj_ptr obj);
-extern bool obj_is_usable(obj_ptr obj);
 
 extern bool obj_is_shooter(obj_ptr obj);
 extern bool obj_is_bow(obj_ptr obj);
@@ -74,6 +73,7 @@ extern bool obj_is_sling(obj_ptr obj);
 extern bool obj_is_crossbow(obj_ptr obj);
 extern bool obj_is_harp(obj_ptr obj);
 extern bool obj_is_gun(obj_ptr obj);
+extern bool obj_is_fake_bow(obj_ptr obj);
 
 extern bool obj_is_known(obj_ptr obj);
 extern bool obj_is_unknown(obj_ptr obj);

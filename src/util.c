@@ -298,7 +298,11 @@ static errr path_temp(char *buf, int max)
     if (!s) return (-1);
 
     /* Format to length */
+#ifndef WIN32
     (void)strnfmt(buf, max, "%s", s);
+#else
+    (void)strnfmt(buf, max, ".%s", s);
+#endif
 
     /* Success */
     return (0);
@@ -768,7 +772,7 @@ errr fd_copy(cptr file, cptr what)
             has occurred if this isn't equal to the number requested." */
         if (write_num != read_num)
         {
-            rc = ERROR_UNKOWN_FAILURE;
+            rc = ERROR_UNKNOWN_FAILURE;
             break;
         }
     }
@@ -2685,8 +2689,6 @@ void clear_from(int row)
  * ESCAPE clears the buffer and the window and returns FALSE.
  * RETURN accepts the current buffer contents and returns TRUE.
  *
- * N.B. len is not the length of buf, but the length of input.
- * buf s/b char[len+1] ... at least!
  */
 bool askfor_aux(char *buf, int len, bool numpad_cursor)
 {
@@ -2703,14 +2705,17 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
     /* Locate the cursor position */
     Term_locate(&x, &y);
 
+    /* Leave room for end marker */
+    if (len > 1) len--;
+
     /* Paranoia -- check len */
     if (len < 1) len = 1;
 
     /* Paranoia -- check column */
-    if ((x < 0) || (x >= 80)) x = 0;
+    if ((x < 0) || (x >= Term->wid - 2)) x = 0;
 
     /* Restrict the length */
-    if (x + len > 80) len = 80 - x;
+    if (x + len > Term->wid - 2) len = Term->wid - 2 - x;
 
     /* Paranoia -- Clip the default entry */
     buf[len] = '\0';
@@ -2891,9 +2896,6 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
  * Get some string input at the cursor location.
  *
  * Allow to use numpad keys as cursor keys.
- *
- * N.B. len is not the length of buf, but the length of input.
- * buf s/b char[len+1] ... at least!
  */
 bool askfor(char *buf, int len)
 {
@@ -3171,7 +3173,7 @@ s16b get_quantity_aux(cptr prompt, int max, int default_amt)
      * Ask for a quantity
      * Don't allow to use numpad as cursor key.
      */
-    res = askfor_aux(buf, 6, FALSE);
+    res = askfor_aux(buf, 7, FALSE);
 
     /* Clear prompt */
     prt("", 0, 0);
@@ -3377,7 +3379,7 @@ menu_naiyou menu_info[10][10] =
         {"Dump screen dump(()", ')', TRUE},
         {"Load screen dump())", '(', TRUE},
         {"Version info(V)", 'V', TRUE},
-        {"Quit(Q)", 'Q', TRUE},
+        {"Commit suicide(Q)", 'Q', TRUE},
         {"", 0, FALSE}
     },
 };

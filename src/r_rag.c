@@ -42,7 +42,7 @@ static void _load(savefile_ptr file)
                 _essences[k][j] += n;
         }
     }
-//    if ((p_ptr->personality == PERS_SEXY) && (equip_obj(equip_find_first(object_is_body_armor)).sval == SV_ABUNAI_MIZUGI)) _sup_triggered = TRUE;
+//    if ((p_ptr->personality == PERS_SEXY) && (equip_obj(equip_find_first(object_is_body_armour)).sval == SV_ABUNAI_MIZUGI)) _sup_triggered = TRUE;
 }
 
 static void _save(savefile_ptr file)
@@ -196,6 +196,8 @@ static bool _absorb(object_type *o_ptr)
     if (_add_essence(target_slot, _ESSENCE_AC, (o_ptr->to_a - MAX(0, k_ptr->to_a))*mult/div))
         result = TRUE;
     if (_add_essence(target_slot, _ESSENCE_TO_HIT, (o_ptr->to_h - MAX(0, k_ptr->to_h))*mult/div))
+        result = TRUE;
+    if (_add_essence(target_slot, _ESSENCE_TO_DAM, (o_ptr->to_d - MAX(0, k_ptr->to_d))*mult/div))
         result = TRUE;
 
     if (result)
@@ -620,12 +622,12 @@ void armor_calc_obj_bonuses(object_type *o_ptr, bool get_flags)
     if (slot != _GLOVE_SLOT)
     {
         p_ptr->to_h_m += o_ptr->to_h;
-        p_ptr->to_d_m += o_ptr->to_h;
+        p_ptr->to_d_m += o_ptr->to_d;
 
         p_ptr->weapon_info[0].to_h += o_ptr->to_h;
-        p_ptr->weapon_info[0].to_d += o_ptr->to_h;
+        p_ptr->weapon_info[0].to_d += o_ptr->to_d;
         p_ptr->weapon_info[0].dis_to_h += o_ptr->to_h;
-        p_ptr->weapon_info[0].dis_to_d += o_ptr->to_h;
+        p_ptr->weapon_info[0].dis_to_d += o_ptr->to_d;
     }
 }
 
@@ -635,7 +637,7 @@ static void _update_object(int slot)
     object_type *o_ptr;
     switch (slot)
     {
-        case _RAG_SLOT: e_slot = equip_find_first(object_is_body_armor); break;
+        case _RAG_SLOT: e_slot = equip_find_first(object_is_body_armour); break;
         case _GLOVE_SLOT: e_slot = equip_find_first(object_is_gloves); break;
         case _BOOT_SLOT: e_slot = equip_find_first(object_is_boots); break;
         default: break;
@@ -651,13 +653,14 @@ static void _update_object(int slot)
     add_flag(o_ptr->flags, OF_NO_REMOVE);
     add_flag(o_ptr->flags, OF_NO_ENCHANT);
     add_flag(o_ptr->flags, OF_IGNORE_ACID);
-    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_SWIMSUIT))
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI))
         add_flag(o_ptr->flags, OF_AGGRAVATE);
 
     /* Calculate new essences */
     o_ptr->to_a = rag_effect_pval(o_ptr, slot, _ESSENCE_AC, FALSE);
     if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_FILTHY_RAG)) o_ptr->to_a--; /* -1 base to-AC */
     o_ptr->to_h = rag_effect_pval(o_ptr, slot, _ESSENCE_TO_HIT, FALSE);
+    o_ptr->to_d = rag_effect_pval(o_ptr, slot, _ESSENCE_TO_DAM, FALSE);
 
     if (slot == _GLOVE_SLOT)
     {
@@ -683,8 +686,8 @@ static void _update_object(int slot)
 static void _calc_bonuses(void) 
 {
     p_ptr->no_cut = TRUE;
-    p_ptr->to_a += p_ptr->lev / 2 + 5;
-    p_ptr->dis_to_a += p_ptr->lev / 2 + 5;
+    p_ptr->to_a += p_ptr->lev + 5;
+    p_ptr->dis_to_a += p_ptr->lev + 5;
     if (p_ptr->lev > 30) p_ptr->pspeed += (p_ptr->lev - 28) / 3;
     res_add_amt(RES_BLIND, 2);
     res_add_amt(RES_POIS, 2);
@@ -716,7 +719,7 @@ static void _absorb_spell(int cmd, variant *res)
         var_set_string(res, "Absorb Powers");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Destroys a single set of gloves, boots or body armor, absorbing the essence of its power.");
+        var_set_string(res, "Destroys a single set of gloves, boots or body armour, absorbing the essence of its power.");
         break;
     case SPELL_CAST:
     {
@@ -751,10 +754,10 @@ static void _detect_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Detect Armor");
+        var_set_string(res, "Detect Armour");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Locate nearby gloves, boots and body armor.");
+        var_set_string(res, "Locate nearby gloves, boots and body armour.");
         break;
     case SPELL_CAST:
     {
@@ -799,13 +802,16 @@ static void _judge_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Identify Armor");
+        var_set_string(res, "Identify Armour");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Identifies gloves, boots or body armor.");
+        var_set_string(res, "Identifies gloves, boots or body armour.");
         break;
     case SPELL_CAST:
-		var_set_bool(res, ident_spell(_object_is_rag_usable));
+        if (p_ptr->lev >= 35)
+            var_set_bool(res, identify_fully(_object_is_rag_usable));
+        else
+            var_set_bool(res, ident_spell(_object_is_rag_usable));
         break;
     default:
         default_spell(cmd, res);
@@ -813,18 +819,13 @@ static void _judge_spell(int cmd, variant *res)
     }
 }
 
-static power_info _powers[] = 
+static power_info _get_powers[] =
 {
     { A_STR, {  1,  0,  0, _absorb_spell } },
     { A_STR, {  5,  1, 30, _detect_spell } },
     { A_STR, { 10, 10, 50, _judge_spell } },
     {    -1, { -1, -1, -1, NULL}}
 };
-
-static int _get_powers(spell_info* spells, int max) 
-{
-    return get_powers_aux(spells, max, _powers);
-}
 
 /**********************************************************************
  * Birth and Evolution
@@ -861,14 +862,6 @@ static void _birth(void)
     py_birth_obj(&forge);
 
     py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
-
-    for (i = 0; i < MAX_PROFICIENCIES; i++)
-    {
-        if (i == PROF_INNATE_ATTACKS)
-            p_ptr->proficiency_cap[i] = WEAPON_EXP_BEGINNER;
-        else
-            p_ptr->proficiency_cap[i] = WEAPON_EXP_UNSKILLED;
-    }
 }
 
 static void _gain_level(int new_level) 
@@ -878,11 +871,11 @@ static void _gain_level(int new_level)
     if (new_level < 40) return;
     else
     {
-        object_type *o_ptr = equip_obj(equip_find_first(object_is_body_armor));
+        object_type *o_ptr = equip_obj(equip_find_first(object_is_body_armour));
         msg_print("You have evolved into a Sexy Swimsuit.");
         p_ptr->current_r_idx = MON_SEXY_SWIMSUIT;
-        o_ptr->k_idx = lookup_kind(TV_SOFT_ARMOR, SV_SWIMSUIT);
-        o_ptr->sval = SV_SWIMSUIT;
+        o_ptr->k_idx = lookup_kind(TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI);
+        o_ptr->sval = SV_ABUNAI_MIZUGI;
         o_ptr->weight = 2;
         o_ptr->ac = 0;
         o_ptr->to_a += 1;
@@ -1037,7 +1030,7 @@ race_t *mon_armor_get_race(void)
                     "permanently attached an old pair of boots and two plain leather gloves "
                     "to the original rag, allowing it to walk about and punch enemies. If "
                     "you think the thing looks ugly now, just wait until it's found some "
-                    "other protective armor and has had the time to take it apart and "
+                    "other protective armour and has had the time to take it apart and "
                     "absorb its magical qualities...";
 
         me.infra = 2;
@@ -1057,7 +1050,7 @@ race_t *mon_armor_get_race(void)
         me.save_player = _save;
         me.destroy_object = _absorb_object;
 
-        me.flags = RACE_IS_MONSTER;
+        me.flags = RACE_IS_MONSTER | RACE_EATS_DEVICES;
         me.pseudo_class_idx = CLASS_RUNE_KNIGHT;
 
         init = TRUE;

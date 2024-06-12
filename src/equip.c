@@ -61,9 +61,9 @@ static bool _object_is_combat_ring(obj_ptr obj)
     if (!obj) return FALSE;
     if (obj->tval != TV_RING) return FALSE;
     obj_flags_known(obj, flags);
-    if ((obj->name2 == EGO_RING_ARCHERY) || (obj->name2 == EGO_RING_WIZARDRY)) return FALSE;
+    if ((obj->name2 == EGO_RING_ARCHERY) || (obj->name2 == EGO_RING_WIZARDRY) || (obj->name1 == ART_ULLUR)) return FALSE;
     else if (have_flag(flags, OF_WEAPONMASTERY)) return TRUE;
-    else if ((object_is_known(obj)) && (obj->to_h)) return TRUE;
+    else if ((object_is_known(obj)) && ((obj->to_h > 0) || (obj->to_d > 0))) return TRUE;
     else if (have_flag(flags, OF_BRAND_FIRE)) return TRUE;
     else if (have_flag(flags, OF_BRAND_ELEC)) return TRUE;
     else if (have_flag(flags, OF_BRAND_COLD)) return TRUE;
@@ -78,7 +78,6 @@ static bool _object_is_weapon(obj_ptr obj)
     switch (obj->tval)
     {
     case TV_DIGGING: case TV_HAFTED: case TV_POLEARM: case TV_SWORD:
-    case TV_DAGGER: case TV_AXE: case TV_STAVES:
         return TRUE;
     }
     return FALSE;
@@ -86,7 +85,13 @@ static bool _object_is_weapon(obj_ptr obj)
 
 static bool _object_is_weapon_or_shield(obj_ptr obj)
 {
-    return _object_is_weapon(obj) || obj->tval == TV_SHIELD || obj->tval == TV_CARD || obj->tval == TV_CAPTURE;
+    switch (obj->tval)
+    {
+    case TV_DIGGING: case TV_HAFTED: case TV_POLEARM: case TV_SWORD:
+    case TV_SHIELD:  case TV_CARD: case TV_CAPTURE:
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static bool _object_is_capture_ball(obj_ptr obj)
@@ -592,10 +597,17 @@ static bool _wield_confirm(obj_ptr obj, slot_t slot)
         return FALSE;
     }
 
-    if (old_obj && object_is_cursed(old_obj))
+    if (old_obj && object_is_cursed(old_obj) && !mummy_can_remove(old_obj))
     {
         object_desc(o_name, old_obj, OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED);
         msg_format("The %s you are wearing appears to be cursed.", o_name);
+        return FALSE;
+    }
+
+    /* Secondary psion verify */
+    if (old_obj && psion_weapon_graft() && object_is_melee_weapon(old_obj))
+    {
+        msg_print("Failed! Your weapon is currently grafted to your arm!");
         return FALSE;
     }
 
@@ -630,12 +642,14 @@ static bool _wield_confirm(obj_ptr obj, slot_t slot)
     }
     if ( obj->name1 == ART_STONEMASK
       && object_is_known(obj)
+      && !player_obviously_poly_immune(FALSE)
       && p_ptr->prace != RACE_VAMPIRE
       && p_ptr->prace != RACE_ANDROID
       && p_ptr->prace != RACE_WEREWOLF
       && !(get_race()->flags & RACE_IS_MONSTER)
       && !(get_race()->flags & RACE_NO_POLY)
-      && p_ptr->pclass != CLASS_BLOOD_KNIGHT)
+      && p_ptr->pclass != CLASS_BLOOD_KNIGHT
+      && !comp_mode)
     {
         char dummy[MAX_NLEN+80];
         object_desc(o_name, obj, OD_OMIT_PREFIX | OD_NAME_ONLY);
@@ -816,7 +830,9 @@ static obj_ptr _unwield_get_obj(void)
     prompt.where[1] = INV_QUIVER;
     if (get_race()->bonus_pack) prompt.where[2] = INV_SPECIAL1;
 
+    if (black_curses) od_xtra_context = OD_BLACK_CURSES;
     obj_prompt(&prompt);
+    od_xtra_context = 0;
     return prompt.obj;
 }
 
@@ -831,6 +847,14 @@ bool _unwield_verify(obj_ptr obj)
     }
     if (object_is_cursed(obj) && obj->loc.where == INV_EQUIP)
     {
+        if ((p_ptr->prace == RACE_MON_MUMMY) && (mummy_can_remove(obj)))
+        {
+            msg_print("You confidently remove the cursed equipment.");
+            p_ptr->update |= PU_BONUS;
+            p_ptr->window |= PW_EQUIP;
+            p_ptr->redraw |= PR_EFFECTS;
+            return TRUE;
+        }
         if ((obj->curse_flags & OFC_PERMA_CURSE) || ((p_ptr->pclass != CLASS_BERSERKER) && (!beorning_is_(BEORNING_FORM_BEAR))))
         {
             msg_print("Hmmm, it seems to be cursed.");
@@ -890,6 +914,10 @@ void _unwield(obj_ptr obj, bool drop)
         char name[MAX_NLEN];
         object_desc(name, obj, OD_COLOR_CODED);
         if (obj->loc.where == INV_EQUIP) msg_format("You are no longer wearing %s.", name);
+        if (object_is_cursed(obj))
+        {
+            p_ptr->redraw |= PR_EFFECTS;
+        }
         if (drop)
         {
             obj_drop(obj, obj->number);
@@ -1021,14 +1049,13 @@ static int _sign(int n)
     return 0;
 }
 
-static void _weapon_bonus(slot_t slot, int to_h, int to_d)
+static void _weapon_bonus(slot_t slot, int to_h, int to_d, bool known)
 {
     int hand = _template->slots[slot].hand;
     int arm = hand / 2;
     int rhand = arm*2;
     int lhand = arm*2 + 1;
     int other_hand = (hand == rhand) ? lhand : rhand;
-    bool known = TRUE;
 
     if (!p_ptr->weapon_ct) return;
 
@@ -1097,6 +1124,8 @@ void equip_xtra_might(int pval)
     }
 }
 
+static int _low_device_hack = 0;
+
 void object_calc_bonuses(obj_ptr obj, slot_t slot)
 {
     u32b    flgs[OF_ARRAY_SIZE];
@@ -1136,8 +1165,6 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
 
     if (have_flag(flgs, OF_LORE2))
         p_ptr->auto_id = TRUE;
-    else if (have_flag(flgs, OF_LORE1))
-        p_ptr->auto_pseudo_id = TRUE;
 
     if (obj->name2 == EGO_GLOVES_GIANT)
     {
@@ -1332,6 +1359,7 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
 
     if (have_flag(flgs, OF_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
     if (have_flag(flgs, OF_REGEN))       p_ptr->regen += 100;
+    if (have_flag(flgs, OF_REGEN_MANA))  p_ptr->mana_regen = TRUE;
     if (have_flag(flgs, OF_TELEPATHY))   p_ptr->telepathy = TRUE;
     if (have_flag(flgs, OF_ESP_ANIMAL))  p_ptr->esp_animal = TRUE;
     if (have_flag(flgs, OF_ESP_UNDEAD))  p_ptr->esp_undead = TRUE;
@@ -1424,6 +1452,20 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
             p_ptr->to_m_chance += 3;
     }
 
+    if (obj->curse_flags & OFC_LOW_DEVICE)
+    {
+        if (obj->curse_flags & OFC_HEAVY_CURSE)
+        {
+            p_ptr->skills.dev -= (10 - _low_device_hack);
+            _low_device_hack = 10;
+        }
+        else if (!_low_device_hack)
+        {
+            p_ptr->skills.dev -= 5;
+            _low_device_hack = 5;
+        }
+    }
+
     if (obj->tval == TV_CAPTURE) return;
 
     /* Modify the base armor class */
@@ -1479,14 +1521,14 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
     if (_object_is_bow(obj)) return;
 
     /* Hack -- Sniper gloves apply to missiles only */
-    if (obj->name2 == EGO_GLOVES_SNIPER || obj->name2 == EGO_RING_ARCHERY)
+    if (obj->name2 == EGO_GLOVES_SNIPER || obj->name2 == EGO_RING_ARCHERY || obj->name1 == ART_ULLUR)
     {
         p_ptr->shooter_info.to_h += obj->to_h;
-        p_ptr->shooter_info.to_d += obj->to_h;
+        p_ptr->shooter_info.to_d += obj->to_d;
         if (object_is_known(obj))
         {
             p_ptr->shooter_info.dis_to_h += obj->to_h;
-            p_ptr->shooter_info.dis_to_d += obj->to_h;
+            p_ptr->shooter_info.dis_to_d += obj->to_d;
         }
         return;
     }
@@ -1495,7 +1537,7 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
       || obj->name2 == EGO_AMULET_MAGI
       || obj->name2 == EGO_CROWN_MAGI )
     {
-        p_ptr->to_d_spell += obj->to_h;
+        p_ptr->to_d_spell += obj->to_d;
         return;
     }
 
@@ -1522,29 +1564,27 @@ void object_calc_bonuses(obj_ptr obj, slot_t slot)
            && obj->name1 != ART_HAMMERHAND )
     {
         p_ptr->shooter_info.to_h += obj->to_h;
-        p_ptr->shooter_info.to_d += obj->to_h;
+        p_ptr->shooter_info.to_d += obj->to_d;
         if (object_is_known(obj))
         {
             p_ptr->shooter_info.dis_to_h += obj->to_h;
-            p_ptr->shooter_info.dis_to_d += obj->to_h;
+            p_ptr->shooter_info.dis_to_d += obj->to_d;
         }
     }
 
     bonus_to_h = obj->to_h;
-    bonus_to_d = obj->to_h;
+    bonus_to_d = obj->to_d;
 
     if (player_is_ninja)
     {
-        if (obj->to_h > 0) {
-			bonus_to_h = (obj->to_h+1)/2;
-			bonus_to_d = (obj->to_h+1)/2;
-		}
+        if (obj->to_h > 0) bonus_to_h = (obj->to_h+1)/2;
+        if (obj->to_d > 0) bonus_to_d = (obj->to_d+1)/2;
     }
 
     p_ptr->to_h_m += bonus_to_h;
     p_ptr->to_d_m += bonus_to_d;
 
-    _weapon_bonus(slot, bonus_to_h, bonus_to_d);
+    _weapon_bonus(slot, bonus_to_h, bonus_to_d, object_is_known(obj));
     if (have_flag(flgs, OF_WEAPONMASTERY))
     {
         _weaponmastery(slot, obj->pval);
@@ -1629,11 +1669,6 @@ void equip_calc_bonuses(void)
         {
             p_ptr->riding_ryoute = FALSE;
         }
-		/* Symbiosis doesn't require a free hand */
-		else if (p_ptr->prace == RACE_ICKY_THING && r_info[m_list[p_ptr->riding].r_idx].flags1 & (RF1_NEVER_MOVE))
-		{
-			p_ptr->riding_ryoute = FALSE;
-		}
         else if (!(p_ptr->pet_extra_flags & PF_RYOUTE))
         {
             for (i = MAX_HANDS - 1; i >= 0; i--)
@@ -1711,6 +1746,8 @@ void equip_calc_bonuses(void)
         if (p_ptr->weapon_info[i].wield_how != WIELD_NONE)
             p_ptr->weapon_ct++;
     }
+
+    _low_device_hack = 0;
 
     /* Scan equipment for bonuses. */
     for (slot = 1; slot <= _template->max; slot++)
@@ -1987,14 +2024,14 @@ void _ring_finger_swap_aux(object_type *o_ptr, slot_t f1, slot_t f2)
     p = (_accept[_template->slots[f2].type]);
     if (!p(o_ptr)) return;
     t_ptr = equip_obj(f1);
-    if ((t_ptr) && (t_ptr->tval) && (object_is_cursed(t_ptr)))
+    if ((t_ptr) && (t_ptr->tval) && (object_is_cursed(t_ptr)) && (!mummy_can_remove(t_ptr)))
     {
         msg_print("A dark curse prevents you from switching ring fingers!");
         t_ptr->ident |= IDENT_SENSE;
         return;
     }
     t_ptr = equip_obj(f2);
-    if ((t_ptr) && (t_ptr->tval) && (object_is_cursed(t_ptr)))
+    if ((t_ptr) && (t_ptr->tval) && (object_is_cursed(t_ptr)) && (!mummy_can_remove(t_ptr)))
     {
         msg_print("A dark curse prevents you from switching ring fingers!");
         t_ptr->ident |= IDENT_SENSE;

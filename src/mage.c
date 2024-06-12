@@ -1,28 +1,10 @@
 #include "angband.h"
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_powers[] =
 {
-    int ct = 0;
-
-    /* Eat magic */
-    spell_info* spell = &spells[ct++];
-    spell->level = 25;
-    spell->cost = 1;
-    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_INT]);
-    spell->fn = eat_magic_spell;
-
-    /* Change second magic realm, but only once since there is no more learning limits */
-    if (!p_ptr->old_realm)
-    {
-        spell_info* spell2 = &spells[ct++];
-        spell2->level = 1;
-        spell2->cost = 1;
-        spell2->fail = 0;
-        spell2->fn = change_realm_power;
-    }
-	
-    return ct;
-}
+    { A_INT, { 25, 1, 90, eat_magic_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static caster_info * _caster_info(void)
 {
@@ -43,26 +25,9 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_DAGGER, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
     py_birth_spellbooks();
-
-    p_ptr->proficiency[PROF_DAGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency[PROF_SLING] = WEAPON_EXP_BEGINNER;
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_SKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_BEGINNER;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *mage_get_class(void)
@@ -91,7 +56,7 @@ class_t *mage_get_class(void)
         me.stats[A_WIS] =  0;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -2;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 95;
@@ -99,7 +64,8 @@ class_t *mage_get_class(void)
         me.exp = 130;
         me.pets = 30;
         me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
-                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG |
+                   CLASS_REGEN_MANA;
         
         me.birth = _birth;
         me.caster_info = _caster_info;

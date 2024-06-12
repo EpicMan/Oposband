@@ -1,17 +1,10 @@
 #include "angband.h"
 
-static int _get_powers(spell_info* spells, int max)
+static power_info _get_powers[] =
 {
-    int ct = 0;
-
-    spell_info* spell = &spells[ct++];
-    spell->level = 25;
-    spell->cost = 1;
-    spell->fail = calculate_fail_rate(spell->level, 90, p_ptr->stat_ind[A_CHR]);
-    spell->fn = eat_magic_spell;
-
-    return ct;
-}
+    { A_CHR, { 25, 1, 90, eat_magic_spell}},
+    { -1, {-1, -1, -1, NULL}}
+};
 
 static void _calc_bonuses(void)
 {
@@ -22,13 +15,13 @@ static void _calc_bonuses(void)
 static bool _sorcerer_weapon_is_icky(object_type *o_ptr)
 {
     if (!object_is_weapon(o_ptr)) return FALSE;
-    if (object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
+    if (object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF) || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER)) return FALSE;
     return TRUE;
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
-    if ( object_is_(o_ptr, TV_STAVES, SV_WIZSTAFF)
+    if ( object_is_(o_ptr, TV_HAFTED, SV_WIZSTAFF)
       || object_is_(o_ptr, TV_HAFTED, SV_NAMAKE_HAMMER) )
     {
         info_ptr->to_h -= 30;
@@ -53,7 +46,7 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.which_stat = A_INT;
+        me.which_stat = A_CHR;
         me.encumbrance.max_wgt = 40;
         me.encumbrance.weapon_pct = 100;
         me.encumbrance.enc_wgt = 900;
@@ -66,8 +59,10 @@ static caster_info * _caster_info(void)
 static void _birth(void)
 {
     int i;
+    for (i = 0; i < 64; i++)
+        p_ptr->spell_exp[i] = SPELL_EXP_MASTER;
 
-    py_birth_obj_aux(TV_STAVES, SV_WIZSTAFF, 1);
+    py_birth_obj_aux(TV_HAFTED, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
 
@@ -76,20 +71,6 @@ static void _birth(void)
         if (i == TV_NECROMANCY_BOOK) continue;
         py_birth_obj_aux(i, 0, 1);
     }
-
-    p_ptr->proficiency_cap[PROF_DIGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BLUNT] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_POLEARM] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SWORD] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_STAVE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_AXE] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DAGGER] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_BOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_CROSSBOW] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_SLING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_MARTIAL_ARTS] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_DUAL_WIELDING] = WEAPON_EXP_UNSKILLED;
-    p_ptr->proficiency_cap[PROF_RIDING] = RIDING_EXP_UNSKILLED;
 }
 
 class_t *sorcerer_get_class(void)
@@ -113,11 +94,11 @@ class_t *sorcerer_get_class(void)
                     "their spell stat.";
 
         me.stats[A_STR] = -5;
-        me.stats[A_INT] =  6;
+        me.stats[A_INT] =  0;
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  0;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] =  6;
         me.base_skills = bs;
         me.extra_skills = xs;
         me.life = 65;
@@ -125,7 +106,8 @@ class_t *sorcerer_get_class(void)
         me.exp = 160;
         me.pets = 25;
         me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
-                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG |
+                   CLASS_REGEN_MANA;
         
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

@@ -151,7 +151,7 @@ void shoot_arrow_spell(int cmd, variant *res)
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
-            var_set_string(res, info_damage(o_ptr->dd, o_ptr->ds, o_ptr->to_h));
+            var_set_string(res, info_damage(o_ptr->dd, o_ptr->ds, o_ptr->to_d));
         }
         else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC)
         {
@@ -186,7 +186,7 @@ void shoot_arrow_spell(int cmd, variant *res)
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
-            dam = damroll(o_ptr->dd, o_ptr->ds)+ o_ptr->to_h;
+            dam = damroll(o_ptr->dd, o_ptr->ds)+ o_ptr->to_d;
             if (dam < 1) dam = 1;
         }
         else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC)
@@ -271,6 +271,9 @@ void sleep_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempt to sleep one or more monsters.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_power(p_ptr->lev * 2));
+        break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->lev < 30)
@@ -299,13 +302,16 @@ void slow_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempt to slow one or more monsters.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_power(p_ptr->lev * 2));
+        break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
         if (p_ptr->lev < 30)
         {
             int dir = 0;
             if (!get_fire_dir(&dir)) return;
-            slow_monster(dir);
+            slow_monster(dir, p_ptr->lev * 2);
         }
         else
             slow_monsters(p_ptr->lev * 2);
@@ -722,6 +728,9 @@ void summon_amberites_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon Amberites for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int l = p_ptr->lev + randint1(p_ptr->lev);
@@ -744,10 +753,13 @@ void summon_angel_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Summon Archon");
+        var_set_string(res, "Summon Angel");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attempts to summon a single archon for assistance.");
+        var_set_string(res, "Attempts to summon a single angel for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
         break;
     case SPELL_CAST:
     {
@@ -756,7 +768,7 @@ void summon_angel_spell(int cmd, variant *res)
 
         ct += summon_specific(-1, py, px, l, SUMMON_ANGEL, PM_FORCE_PET);
         if (!ct)
-            msg_print("No archon heeds your call.");
+            msg_print("No angel arrives.");
 
         var_set_bool(res, TRUE);
         break;
@@ -777,6 +789,9 @@ void summon_ants_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Summon ants for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int num = randint1(p_ptr->lev/10);
@@ -796,33 +811,6 @@ void summon_ants_spell(int cmd, variant *res)
         default_spell(cmd, res);
         break;
     }
-}
-
-void animal_companion_spell(int cmd, variant* res)
-{
-	switch (cmd)
-	{
-	case SPELL_NAME:
-		var_set_string(res, "Call Animal Companion");
-		break;
-	case SPELL_DESC:
-		var_set_string(res, "Summons an animal for assitance.");
-		break;
-	case SPELL_CAST:
-	{
-		int ct = 0;
-		int l = p_ptr->lev + randint1(p_ptr->lev);
-
-		ct = summon_specific(-1, py, px, l, SUMMON_ANIMAL, PM_FORCE_PET);
-		if (!ct)
-			msg_print("No animals heed your call.");
-		var_set_bool(res, TRUE);
-		break;
-	}
-	default:
-		default_spell(cmd, res);
-		break;
-	}
 }
 
 void summon_cyberdemon_spell(int cmd, variant *res)
@@ -863,6 +851,9 @@ void summon_demon_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon a single demon for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(spell_power(p_ptr->lev*2/3), spell_power(p_ptr->lev/2)));
+        break;
     case SPELL_CAST:
     {
         bool pet = !one_in_(3);
@@ -900,6 +891,9 @@ void summon_demon_II_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon a single demon for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int ct = 0;
@@ -930,6 +924,9 @@ void summon_dragon_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon a single dragon for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev * 2 / 3));
+        break;
     case SPELL_CAST:
     {
         int ct = 0;
@@ -958,6 +955,9 @@ void summon_greater_demon_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Summons greater demon. You need to sacrifice a corpse of a human ('p','h' or 't') and the more powerful the corpse, the more powerful the demon you will conjure.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, format("lvl %d+sac", p_ptr->lev * 2 / 3));
+        break;
     case SPELL_CAST:
         var_set_bool(res, cast_summon_greater_demon());
         break;
@@ -976,6 +976,9 @@ void summon_hi_dragon_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Summon one or more ancient dragons for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev * 2 / 3));
         break;
     case SPELL_CAST:
     {
@@ -1011,6 +1014,9 @@ void summon_hi_undead_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon greater undead for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int num = randint1(p_ptr->lev/10);
@@ -1041,6 +1047,9 @@ void summon_hounds_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Summon hounds for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
         break;
     case SPELL_CAST:
     {
@@ -1073,6 +1082,9 @@ void summon_hydras_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Summon hydras for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int num = randint1(p_ptr->lev/10);
@@ -1103,6 +1115,9 @@ void summon_kin_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Summon related monsters for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, 0));
         break;
     case SPELL_CAST:
         if (!summon_kin_player(p_ptr->lev, py, px, PM_FORCE_PET | PM_ALLOW_GROUP))
@@ -1147,6 +1162,9 @@ void summon_monster_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Summon a monster for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int l = p_ptr->lev + randint1(p_ptr->lev);
@@ -1171,6 +1189,9 @@ void summon_monsters_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Summon monsters for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
         break;
     case SPELL_CAST:
     {
@@ -1202,6 +1223,9 @@ void summon_spiders_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Summon spiders for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
         break;
     case SPELL_CAST:
     {
@@ -1308,6 +1332,9 @@ void summon_undead_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon undead for assistance.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
+        break;
     case SPELL_CAST:
     {
         int num = randint1(p_ptr->lev/10);
@@ -1338,6 +1365,9 @@ void summon_uniques_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         var_set_string(res, "Attempts to summon unique monsters for assistance.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_level(p_ptr->lev, p_ptr->lev));
         break;
     case SPELL_CAST:
     {
