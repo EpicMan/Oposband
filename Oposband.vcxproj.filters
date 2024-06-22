@@ -781,6 +781,9 @@
     <ClCompile Include="src\races_mf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\elementalist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\angband.ico">

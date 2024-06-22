@@ -2323,6 +2323,16 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     warrior_artifact_bias = 30;
                 }
                 break;
+            case CLASS_ELEMENTALIST:
+                if (randint0(2))
+                {
+                    artifact_bias = BIAS_INT;
+                }
+                else
+                {
+                    artifact_bias = BIAS_MAGE;
+                }
+                break;
             default:
                 artifact_bias = BIAS_WARRIOR;
                 break;

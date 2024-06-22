@@ -132,6 +132,7 @@ enum {
     GF_ANIM_DEAD,
     GF_DEATH_RAY,
     GF_GENOCIDE,
+    GF_E_ANNIHILATE,
 
     /* Object Effects */
     GF_IDENTIFY,

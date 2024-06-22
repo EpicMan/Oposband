@@ -129,6 +129,7 @@ static gf_info_t _gf_tbl[GF_COUNT] = {
     { GF_ANIM_DEAD, "Raise Dead", TERM_L_DARK, RES_INVALID, "ANIM_DEAD", GFF_STATUS },
     { GF_DEATH_RAY, "Death Ray", TERM_L_DARK, RES_INVALID, "DEATH_RAY", GFF_STATUS },
     { GF_GENOCIDE, "Genocide", TERM_L_DARK, RES_INVALID, "GENOCIDE", GFF_STATUS },
+    { GF_E_ANNIHILATE, "Annihilation", TERM_L_RED, RES_INVALID, "E_ANNIHILATE", GFF_ATTACK },
 
     /* Object Effects */
     { GF_IDENTIFY, "Identify", TERM_L_BLUE, RES_INVALID, "IDENTIFY", GFF_UTILITY },
@@ -4247,6 +4248,59 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
             virtue_add(VIRTUE_VITALITY, -1);
             return TRUE;
         }
+        skipped = TRUE;
+        break;
+    case GF_E_ANNIHILATE:
+        if (p_ptr->pclass != CLASS_ELEMENTALIST) return; /* How did we get here? */
+
+        if (seen) obvious = TRUE;
+
+        bool_hack resisted = FALSE;
+
+        /* If the monster resists the elementalist's element, this doesn't work */
+        switch (p_ptr->psubclass)
+        {
+        case ELEMENT_FIRE:
+            if (race->flagsr & RFR_RES_FIRE) resisted = TRUE;
+            break;
+        case ELEMENT_ICE:
+            if (race->flagsr & RFR_RES_COLD) resisted = TRUE;
+            break;
+        case ELEMENT_SKY:
+            if (race->flagsr & RFR_RES_ELEC) resisted = TRUE;
+            break;
+        case ELEMENT_SEA:
+            if (race->flagsr & RFR_RES_ACID || race->flagsr & RFR_RES_WATE) resisted = TRUE;
+            break;
+        case ELEMENT_DARKNESS:
+            if (race->flagsr & RFR_RES_DARK) resisted = TRUE;
+            break;
+        case ELEMENT_CHAOS:
+            if (race->flagsr & RFR_RES_CHAO) resisted = TRUE;
+            break;
+        case ELEMENT_EARTH:
+            if (race->flagsr & RFR_RES_SHAR || race->r_flags3 & RF3_HURT_ROCK) resisted = TRUE;
+            break;
+        case ELEMENT_DEATH:
+            if (race->flagsr & RFR_RES_POIS) resisted = TRUE;
+            break;
+        }
+
+        if (resisted)
+        {
+            msg_format("%^s resists your element!", m_name);
+            return TRUE;
+        }
+
+        _BABBLE_HACK()
+            if (genocide_aux(mon->id, dam, !who, (race->level + 1) / 2, "Annihilation"))
+            {
+                if (seen_msg)
+                {
+                    msg_format("%^s dissolves!", m_name);
+                }
+                return TRUE;
+            }
         skipped = TRUE;
         break;
     case GF_PHOTO:

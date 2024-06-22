@@ -223,6 +223,7 @@
     <ClCompile Include="src\dungeon.c" />
     <ClCompile Include="src\effects.c" />
     <ClCompile Include="src\ego.c" />
+    <ClCompile Include="src\elementalist.c" />
     <ClCompile Include="src\equip.c" />
     <ClCompile Include="src\fear.c" />
     <ClCompile Include="src\files.c" />

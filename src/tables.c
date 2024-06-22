@@ -2651,6 +2651,18 @@ cptr chaos_patrons[MAX_PATRON] =
     "Troika"
 };
 
+cptr elementalist_realms[MAX_ELEMENT] =
+{
+    "Fire",
+    "Ice",
+    "Sky",
+    "Sea",
+    "Darkness",
+    "Chaos",
+    "Earth",
+    "Death"
+};
+
 cptr lv_size_options[SMALL_LVL_MAX + 1] =
 {
     "Normal",

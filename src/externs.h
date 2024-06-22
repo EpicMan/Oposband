@@ -99,6 +99,7 @@ extern cptr empty_lv_description[EMPTY_MAX];
 extern cptr window_flag_desc[32];
 extern option_type option_info[];
 extern cptr chaos_patrons[MAX_PATRON];
+extern cptr elementalist_realms[MAX_ELEMENT];
 extern cptr lv_size_options[SMALL_LVL_MAX + 1];
 extern martial_arts ma_blows[MAX_MA];
 extern cptr game_inscriptions[];
@@ -2893,6 +2894,9 @@ extern void     weaponsmith_object_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_
 extern class_t *weaponsmith_get_class(void);
 
 extern class_t *yellow_mage_get_class(void);
+
+/* elementalist.c */
+extern class_t* elementalist_get_class(int psubclass);
 
 /* necromancer.c */
 extern bool     repose_of_the_dead;

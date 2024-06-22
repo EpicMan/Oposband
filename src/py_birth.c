@@ -35,6 +35,7 @@ extern int py_birth(void);
                     static int _devicemaster_ui(void);
                     static int _gray_mage_ui(void);
                     static int _patron_ui(void);
+                    static int _elementalist_ui(void);
         static int _realm1_ui(void);
             static int _realm2_ui(void);
         /* Monster Mode */
@@ -1364,7 +1365,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
                     CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, -1} },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
-    { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
+    { "Mind", {CLASS_ELEMENTALIST, CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
     { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_LAWYER, CLASS_POLITICIAN,
                 CLASS_RAGE_MAGE, CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
@@ -1538,6 +1539,8 @@ static int _subclass_ui(void)
             rc = _gray_mage_ui();
         else if (p_ptr->pclass == CLASS_DISCIPLE)
             rc = _patron_ui();
+        else if (p_ptr->pclass == CLASS_ELEMENTALIST)
+            rc = _elementalist_ui();
         else
         {
             p_ptr->psubclass = 0;
@@ -1735,6 +1738,48 @@ static int _gray_mage_ui(void)
             if (cmd == '*') i = randint0(GRAY_MAGE_MAX);
             else i = A2I(cmd);
             if (0 <= i && i < GRAY_MAGE_MAX)
+            {
+                p_ptr->psubclass = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _elementalist_ui(void)
+{
+    assert(p_ptr->pclass == CLASS_ELEMENTALIST);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose a realm</color>\n");
+        for (i = 0; i < MAX_ELEMENT; i++)
+        {
+            class_t* class_ptr = get_class_aux(p_ptr->pclass, i);
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                p_ptr->psubclass == i ? 'B' : 'w',
+                class_ptr->subname
+            );
+        }
+        doc_insert(_doc, "  <color:y>*</color>) Random\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
+        else if (cmd == '?') doc_display_help("Classes.txt", "Elementalist");
+        else if (cmd == '!') doc_display_help("start.txt", NULL);
+        else
+        {
+            if (cmd == '*') i = randint0(MAX_ELEMENT);
+            else i = A2I(cmd);
+            if (0 <= i && i < MAX_ELEMENT)
             {
                 p_ptr->psubclass = i;
                 return UI_OK;
@@ -2703,6 +2748,7 @@ static void _stats_init(void)
         case CLASS_RANGER:
         case CLASS_PALADIN:
         case CLASS_MINDCRAFTER:
+        case CLASS_ELEMENTALIST:
         case CLASS_FORCETRAINER:
         case CLASS_TIME_LORD:
         case CLASS_ARCHAEOLOGIST:

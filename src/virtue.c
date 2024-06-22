@@ -330,6 +330,9 @@ void virtue_init(void)
         p_ptr->vir_types[i++] = VIRTUE_PATIENCE;
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         break;
+    case CLASS_ELEMENTALIST:
+        p_ptr->vir_types[i++] = VIRTUE_NATURE;
+        break;
     };
 
     /* Get one virtue based on race */

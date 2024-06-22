@@ -705,7 +705,7 @@ P:5:1d1:10:12:20
 F:DEX | HIDE_TYPE |
 F:FREE_ACT | RES_ACID | SHOW_MODS | XTRA_POWER
 E:ARROW:30:50:150
-E:Your caestus grow magical spikes...
+E:Your cesti grow magical spikes...
 D:The hand-sheathing of Fingolfin, warrior-king of Elves and Men, who gave
 D:Morgoth seven mighty wounds and pain that will last forever.
 

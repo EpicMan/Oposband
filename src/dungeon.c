@@ -3881,7 +3881,8 @@ static void _dispatch_command(int old_now_turn)
                      p_ptr->pclass == CLASS_MAULER ||
                      p_ptr->pclass == CLASS_MYSTIC ||
                      p_ptr->pclass == CLASS_SNIPER ||
-                     p_ptr->pclass == CLASS_TIME_LORD )
+                     p_ptr->pclass == CLASS_TIME_LORD ||
+                     p_ptr->pclass == CLASS_ELEMENTALIST)
             {
                 /* This is the preferred entry point ... I'm still working on
                    coverting everything else */
@@ -3937,6 +3938,8 @@ static void _dispatch_command(int old_now_turn)
                 cptr which_power = "magic";
                 if (p_ptr->pclass == CLASS_MINDCRAFTER || p_ptr->pclass == CLASS_PSION)
                     which_power = "psionic powers";
+                else if (p_ptr->pclass == CLASS_ELEMENTALIST)
+                    which_power = "elemental powers";
                 else if (p_ptr->pclass == CLASS_SAMURAI)
                     which_power = "hissatsu";
                 else if (p_ptr->pclass == CLASS_LAWYER || p_ptr->pclass == CLASS_NINJA_LAWYER)
@@ -3998,7 +4001,8 @@ static void _dispatch_command(int old_now_turn)
                             p_ptr->pclass == CLASS_PSION ||
                             p_ptr->pclass == CLASS_SNIPER ||
                             p_ptr->pclass == CLASS_DISCIPLE ||
-                            p_ptr->pclass == CLASS_TIME_LORD )
+                            p_ptr->pclass == CLASS_TIME_LORD ||
+                            p_ptr->pclass == CLASS_ELEMENTALIST)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on converting everything else */

@@ -129,6 +129,20 @@
 #define DISCIPLE_YEQREZH    18
 #define DISCIPLE_TROIKA     19
 
+/* Number of elements available (for elementalists) */
+#define ELEMENT_FIRE        0
+#define ELEMENT_ICE         1
+#define ELEMENT_SKY         2
+#define ELEMENT_SEA         3
+#define ELEMENT_DARKNESS    4
+#define ELEMENT_CHAOS       5
+#define ELEMENT_EARTH       6
+#define ELEMENT_DEATH       7
+
+#define RANDOM_ELEMENT      9
+#define MIN_ELEMENT         0
+#define MAX_ELEMENT         8
+
 /* Number of entries in the sanity-blast descriptions */
 #define MAX_SAN_HORROR 20
 #define MAX_SAN_FUNNY 22
@@ -865,7 +879,8 @@ enum _mimic_types {
 #define CLASS_ALCHEMIST         50
 #define CLASS_POLITICIAN        51
 #define CLASS_DISCIPLE          52
-#define MAX_CLASS               53
+#define CLASS_ELEMENTALIST      53
+#define MAX_CLASS               54
 
 /*
 #define CLASS_LOGRUS_MASTER     47

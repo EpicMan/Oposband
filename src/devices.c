@@ -63,7 +63,8 @@ bool class_uses_spell_scrolls(int mika)
       mika == CLASS_POLITICIAN ||
       mika == CLASS_ALCHEMIST ||
       mika == CLASS_DISCIPLE ||
-      mika == CLASS_SKILLMASTER )
+      mika == CLASS_SKILLMASTER ||
+      mika == CLASS_ELEMENTALIST )
         return FALSE;
     return TRUE;
 }
