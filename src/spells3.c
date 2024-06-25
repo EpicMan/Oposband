@@ -1149,7 +1149,7 @@ void mutate_player(void)
 
     /* Pick a pair of stats. Sustains give players a chance to protect
      * key stats in the early game (e.g. mages are forced to hyper focus
-     * stat boosts on Int and swapping 18/50 with 12 might as well just
+     * stat boosts on Int and swapping 23 with 12 might as well just
      * kill the player). Nexus is common around DL30 while stat potions
      * are not.*/
     sustains[A_STR] = p_ptr->sustain_str;

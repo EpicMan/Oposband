@@ -83,8 +83,7 @@ void self_knowledge(void)
     {
         char stat_desc[80];
 
-        if (decimal_stats) sprintf(stat_desc, "%s %d", stat_names[v_nr], (p_ptr->stat_max_max[v_nr]-18)/10+18);
-        else sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
+        sprintf(stat_desc, "%s %d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]);
 
         strcpy(s_string[v_nr], stat_desc);
 

@@ -733,7 +733,7 @@ static errr _parse_help(char *line, int options)
         if (zz[0][0] == 'V')
         {
             char buf[30];
-            strcpy(buf, format("%d.%d.%s.%d", VER_MAJOR, VER_MINOR, VER_PATCH, VER_EXTRA));
+            strcpy(buf, format("%d.%d.%d.%d", VER_MAJOR, VER_MINOR, VER_PATCH, VER_EXTRA));
             if (!streq(buf, zz[1])) return PARSE_ERROR_GENERIC;
         }
         return 0;
@@ -753,7 +753,7 @@ static errr init_help_files(void)
         tiedosto = my_fopen(buf, "w");
         if (!tiedosto) return -1;
         fprintf(tiedosto, "### Version marker for automatic help file updates ###\n");
-        fprintf(tiedosto, "V:%d.%d.%s.%d\n", VER_MAJOR, VER_MINOR, VER_PATCH, VER_EXTRA);
+        fprintf(tiedosto, "V:%d.%d.%d.%d\n", VER_MAJOR, VER_MINOR, VER_PATCH, VER_EXTRA);
         my_fclose(tiedosto);
     }
     return 0;
@@ -1072,7 +1072,7 @@ static errr init_other(void)
     /*** Pre-allocate space for the "format()" buffer ***/
 
     /* Hack -- Just call the "format()" function */
-    (void)format("%s (%s).", "FrogComposband", "Hack Whack");
+    (void)format("%s (%s).", "Oposband", "Hack Whack");
 
 
     /* Success */

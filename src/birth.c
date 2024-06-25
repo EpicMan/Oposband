@@ -75,7 +75,7 @@ void get_max_stats(void)
     /* Acquire the stats */
     for (i = 0; i < 6; i++)
     {
-        j = 18 + 60 + dice[i]*10;
+        j = 18 + 6 + dice[i];
 
         /* Save that value */
         p_ptr->stat_max_max[i] = j;

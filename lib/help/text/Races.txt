@@ -1112,5 +1112,5 @@ Yeek         Excellent     Excellent     Poor          Fair            20'
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.5.0.
 

@@ -547,16 +547,16 @@ Magic
   the dungeon, being unable to use any weapon but a Wizardstaff.
    
   Sorcerers have a class power - 'Eat Magic' - which absorbs mana from 
-  wands, staves or rods. Unlike other mages, they rely on Charisma as 
+  wands, staves or rods. Like other mages, they rely on Intelligence as 
   their spell stat.
   
     Stats                   Skills
     Strength      -5        Disarming   Fair         
-    Intelligence  +0        Device      Amber[2]     
+    Intelligence  +6        Device      Amber[2]     
     Wisdom        -2        Save        Heroic       
     Dexterity     +2        Stealth     Poor         
     Constitution  +0        Searching   Poor         
-    Charisma      +6        Perception  Poor         
+    Charisma      +0        Perception  Poor         
     Life Rating   65%       Melee       Very Bad     
     Base HP        0        Archery     Very Bad     
     Experience   160%
@@ -1375,7 +1375,7 @@ Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
 Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
-Sorcerer       -5   +0   -2   +2   +0   +6   65%   +0  160%
+Sorcerer       -5   +6   -2   +2   +0   +0   65%   +0  160%
 Yellow-Mage    -4   +3   +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0   +2   -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%
@@ -1522,5 +1522,5 @@ Wild-Talent   Fair          Poor          Good          Excellent
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.5.0.
 

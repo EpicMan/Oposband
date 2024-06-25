@@ -1699,7 +1699,7 @@ bool load_player(void)
         /* Extract version */
         z_major = vvv[0];
         z_minor = vvv[1];
-        strcpy(z_patch, versio_nimi(vvv[2], z_minor));
+        z_patch = vvv[2];
         sf_extra = vvv[3];
 
 
@@ -1750,10 +1750,9 @@ bool load_player(void)
         /* Give a conversion warning */
         if ((VER_MAJOR != z_major) ||
             (VER_MINOR != z_minor) ||
-            (!streq(VER_PATCH, z_patch)))
+            (VER_PATCH != z_patch))
         {
-            msg_format("Converted a %d.%d.%s savefile.",
-                (z_major > 9) ? z_major-10 : z_major , z_minor, z_patch);
+            msg_format("Converted a %d.%d.%d savefile.", z_major , z_minor, z_patch);
             msg_print(NULL);
         }
 
@@ -1816,8 +1815,7 @@ bool load_player(void)
 
 
     /* Message */
-    msg_format("Error (%s) reading %d.%d.%s savefile.",
-           what, (z_major>9) ? z_major - 10 : z_major, z_minor, z_patch);
+    msg_format("Error (%s) reading %d.%d.%d savefile.", z_major, z_minor, z_patch);
     msg_print(NULL);
 
     /* Oops */

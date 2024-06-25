@@ -119,7 +119,7 @@ extern byte sf_extra;
 extern u32b sf_system;
 extern byte z_major;
 extern byte z_minor;
-extern char z_patch[16];
+extern byte z_patch;
 extern u32b sf_when;
 extern u16b sf_lives;
 extern u16b sf_saves;
@@ -336,7 +336,7 @@ extern bool show_power; /* Display device powers in inventory */
 extern bool show_rogue_keys; /* Display roguelike keys if possible */
 extern bool show_energy_cost;
 extern bool show_damage_range; /* Show damages as ranges in monster info */
-extern bool decimal_stats;
+extern bool angband_stats;
 extern bool percentage_life; /* Show life rating as a percentage */
 extern bool black_curses; /* Show cursed items as black in unwielding menu */
 extern bool obj_list_width;
@@ -721,6 +721,7 @@ extern bool use_menu;
 #define ALP_DISP_MES 0x01
 #define ALP_CHECK_NUMERALS 0x02
 #define ALP_NEW_GAME 0x04
+extern bool_hack simple_item_check(object_type *o_ptr);
 extern void autopick_load_pref(byte mode);
 extern errr process_autopick_file_command(char *buf);
 #define AUTOPICK_COLOR_CODED 0x01
@@ -2460,6 +2461,7 @@ extern race_t *ent_get_race(void);
 extern race_t *gnome_get_race(void);
 extern race_t *golem_get_race(void);
 extern race_t *half_giant_get_race(void);
+extern race_t *half_ogre_get_race(void);
 extern race_t *half_orc_get_race(void);
 extern race_t *half_titan_get_race(void);
 extern race_t *half_troll_get_race(void);

@@ -5460,42 +5460,19 @@ bool set_food(int v)
  */
 bool inc_stat(int stat)
 {
-    int value, gain;
+    int value;
 
     /* Then augment the current/max stat */
     value = p_ptr->stat_cur[stat];
 
-    /* Cannot go above 18/100 */
+    /* Cannot go above peak */
     if (value < p_ptr->stat_max_max[stat])
     {
         /* Gain one (sometimes two) points */
-        if (value < 18)
-        {
-            int chance = ((value == 17) ? 58 : (mut_present(MUT_BAD_LUCK)) ? 80 : (p_ptr->good_luck) ? 70 : 75);
-            gain = ((randint0(100) < chance) ? 1 : 2);
-            value += gain;
-        }
-        else if (value < (p_ptr->stat_max_max[stat]-2))
-        {                                                  /* v--- Scale all calcs by 10 */
-            int delta = (p_ptr->stat_max_max[stat] - value) * 10;
-            int pct = rand_range(200, 350);                /* Note: Old spread was about 14% to 40% */
-            int max_value = p_ptr->stat_max_max[stat] - 1; /* e.g. 18/99 if max is 18/100 */
-            int gain;
+		value += ((randint0(100) < 75) ? 1 : 2);
 
-            gain = delta * pct / 1000;
-            gain = (gain + 5) / 10; /* round back to an integer */
-            if (gain < 2)
-                gain = 2;
-
-            value += gain;
-            if (value > max_value)
-                value = max_value;
-        }
-        /* Gain one point at a time */
-        else
-        {
-            value++;
-        }
+		if (value >  p_ptr->stat_max_max[stat])
+			value = p_ptr->stat_max_max[stat];
 
         /* Save the new value */
         p_ptr->stat_cur[stat] = value;
@@ -5546,38 +5523,10 @@ bool dec_stat(int stat, int amount, int permanent)
     /* Damage "current" value */
     if (cur > 3)
     {
-        /* Handle "low" values */
-        if (cur <= 18)
-        {
-            if (amount > 90) cur--;
-            if (amount > 50) cur--;
-            if (amount > 20) cur--;
-            cur--;
-        }
-
-        /* Handle "high" values */
-        else
-        {
-            /* Hack -- Decrement by a random amount between one-quarter */
-            /* and one-half of the stat bonus times the percentage, with a */
-            /* minimum damage of half the percentage. -CWS */
-            loss = (((cur-18) / 2 + 1) / 2 + 1);
-
-            /* Paranoia */
-            if (loss < 1) loss = 1;
-
-            /* Randomize the loss */
-            loss = ((randint1(loss) + loss) * amount) / 100;
-
-            /* Maximal loss */
-            if (loss < amount/2) loss = amount/2;
-
-            /* Lose some points */
-            cur = cur - loss;
-
-            /* Hack -- Only reduce stat to 17 sometimes */
-            if (cur < 18) cur = (amount <= 20) ? 18 : 17;
-        }
+        if (amount > 90) cur--;
+        if (amount > 50) cur--;
+        if (amount > 20) cur--;
+        cur--;
 
         /* Prevent illegal values */
         if (cur < 3) cur = 3;
@@ -5593,31 +5542,10 @@ bool dec_stat(int stat, int amount, int permanent)
         if (stat == A_WIS || stat == A_INT)
             virtue_add(VIRTUE_ENLIGHTENMENT, -2);
 
-        /* Handle "low" values */
-        if (max <= 18)
-        {
-            if (amount > 90) max--;
-            if (amount > 50) max--;
-            if (amount > 20) max--;
-            max--;
-        }
-
-        /* Handle "high" values */
-        else
-        {
-            /* Hack -- Decrement by a random amount between one-quarter */
-            /* and one-half of the stat bonus times the percentage, with a */
-            /* minimum damage of half the percentage. -CWS */
-            loss = (((max-18) / 2 + 1) / 2 + 1);
-            loss = ((randint1(loss) + loss) * amount) / 100;
-            if (loss < amount/2) loss = amount/2;
-
-            /* Lose some points */
-            max = max - loss;
-
-            /* Hack -- Only reduce stat to 17 sometimes */
-            if (max < 18) max = (amount <= 20) ? 18 : 17;
-        }
+        if (amount > 90) max--;
+        if (amount > 50) max--;
+        if (amount > 20) max--;
+        max--;
 
         /* Hack -- keep it clean */
         if (same || (max < cur)) max = cur;

@@ -1363,7 +1363,7 @@ S:MULTIPLY
 D:It is a very vicious rodent.
 
 N:87:Goblin
-G:h:L
+G:o:L
 I:110:6d5:20:35:30:60
 W:5:1:40:15:30:118
 B:HIT:HURT(1d9)
@@ -1371,7 +1371,7 @@ B:HIT:EAT_GOLD
 F:MALE |
 F:FRIENDS(3d3) | DROP_60 | DROP_SKELETON | DROP_CORPSE |
 F:OPEN_DOOR | BASH_DOOR | WILD_GRASS | RES_DARK |
-F:EVIL | HURT_LITE
+F:EVIL | HURT_LITE | ORC
 P:Copy:Snotling:Tourist
 S:1_IN_25 | SHOOT(1d4)
 O:DROP_WARRIOR
@@ -9358,8 +9358,8 @@ D:"It had the appearance of a butterfly, but a butterfly with
 D:wings so huge they blotted out the sun... it had a man's body,
 D:covered with hairs or feathers hued like a peacock's..."
 
-N:579:Time ghost
-G:G:S
+N:579:Time elemental
+G:E:S
 I:125:30d15:90:70:10:150
 W:37:5:999:1210:0:0
 B:TOUCH:TIME(3d4):SLOW(50%)

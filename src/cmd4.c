@@ -1472,7 +1472,7 @@ void do_cmd_options(void)
         Term_clear();
 
         /* Why are we here */
-        prt("FrogComposband Options", 1, 0);
+        prt("Oposband Options", 1, 0);
 
         while(1)
         {
@@ -3471,10 +3471,10 @@ void do_cmd_version(void)
     cptr xtra = "";
     if (VER_MINOR == 0)
     {
-/*        if (VER_PATCH == 0) xtra = " (Alpha)"; */
-        if (VER_MAJOR != 7) xtra = " (Beta)";
+        if (VER_PATCH == 0) xtra = " (Alpha)";
+		else xtra = " (Beta)";
     }
-    msg_format("You are playing <color:B>FrogComposband</color> <color:r>%d.%d.%s%s</color>.",
+    msg_format("You are playing <color:B>Oposband</color> <color:r>%d.%d.%d%s</color>.",
         VER_MAJOR, VER_MINOR, VER_PATCH, xtra);
     if (1)
     {
@@ -7287,9 +7287,12 @@ static void do_cmd_knowledge_stat(void)
     {
         if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[i] == p_ptr->stat_max_max[i])
         {
-            if (decimal_stats)
-                doc_printf(doc, "%s <color:G>%d</color>\n", stat_names[i], (p_ptr->stat_max_max[i]-18)/10+18);
-            else doc_printf(doc, "%s <color:G>18/%d</color>\n", stat_names[i], p_ptr->stat_max_max[i]-18);
+            if (angband_stats)
+            {
+                doc_printf(doc, "%s <color:G>18/%d%d</color>\n", stat_names[i], (p_ptr->stat_max_max[i] - 18) * 10, 0);
+            }
+            else
+                doc_printf(doc, "%s <color:G>%d</color>\n", stat_names[i], p_ptr->stat_max_max[i]);
         }
         else
             doc_printf(doc, "%s <color:y>\?\?\?</color>\n", stat_names[i]);

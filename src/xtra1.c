@@ -205,7 +205,7 @@ static int calc_adj_dex_ta(void)
  */
 void cnv_stat(int val, char *out_val)
 {
-    if (decimal_stats)
+    if (angband_stats)
     {
         if (val < 18)
         {
@@ -214,40 +214,25 @@ void cnv_stat(int val, char *out_val)
         }
         else
         {
-            int bonus = (val - 18);
+            int bonus = (val - 18) * 10;
 
-            if (bonus >= 220)
+            if (val >= 40)
             {
-                sprintf(out_val, "  %4s", "****");
+                sprintf(out_val, "  %6s", "18/***");
                 return;
             }
-            else
+            else if (val >= 28)
             {
-                sprintf(out_val, "  %2d.%01d", (bonus / 10) + 18, (bonus % 10));
+                sprintf(out_val, "18/%2d0", bonus);
                 return;
             }
+			else
+			{
+				sprintf(out_val, " 18/%d0", bonus);
+                return;
+			}
         }
     }
-    /* Above 18 */
-    if (val > 18)
-    {
-        int bonus = (val - 18);
-
-        if (bonus >= 220)
-        {
-            sprintf(out_val, "18/%3s", "***");
-        }
-        else if (bonus >= 100)
-        {
-            sprintf(out_val, "18/%03d", bonus);
-        }
-        else
-        {
-            sprintf(out_val, " 18/%02d", bonus);
-        }
-    }
-
-    /* From 3 to 18 */
     else
     {
         sprintf(out_val, "    %2d", val);
@@ -267,38 +252,8 @@ void cnv_stat(int val, char *out_val)
  */
 s16b modify_stat_value(int value, int amount)
 {
-    int    i;
-
-    /* Reward */
-    if (amount > 0)
-    {
-        /* Apply each point */
-        for (i = 0; i < amount; i++)
-        {
-            /* One point at a time */
-            if (value < 18) value++;
-
-            /* Ten "points" at a time */
-            else value += 10;
-        }
-    }
-
-    /* Penalty */
-    else if (amount < 0)
-    {
-        /* Apply each point */
-        for (i = 0; i < (0 - amount); i++)
-        {
-            /* Ten points at a time */
-            if (value >= 18+10) value -= 10;
-
-            /* Hack -- prevent weirdness */
-            else if (value > 18) value = 18;
-
-            /* One point at a time */
-            else if (value > 3) value--;
-        }
-    }
+	value += amount;
+	if (value < 3) value = 3;
 
     /* Return new value */
     return (value);
@@ -3501,6 +3456,7 @@ static int _calc_xtra_hp_aux(int amt)
     case CLASS_SORCERER:
     case CLASS_YELLOW_MAGE:
     case CLASS_GRAY_MAGE:
+	case CLASS_ELEMENTALIST:
         w1 = 0; w2 = 0; w3 = 1;
         break;
 
@@ -4533,9 +4489,10 @@ void calc_bonuses(void)
         use = modify_stat_value(p_ptr->stat_cur[i], p_ptr->stat_add[i]);
         if (i == A_CHR && mut_present(MUT_ILL_NORM))
         {
-            /* 10 to 18/90 charisma, guaranteed, based on level */
-            if (use < 8 + 2 * p_ptr->lev)
-                use = 8 + 2 * p_ptr->lev;
+            /* 10 to 27 charisma, guaranteed, based on level */
+			int chr_illusion = 10 + p_ptr->lev / 5 + p_ptr->lev / 10 + p_ptr->lev / 25;
+            if (use < chr_illusion)
+                use = chr_illusion;
         }
         if (p_ptr->stat_use[i] != use)
         {
@@ -4543,14 +4500,9 @@ void calc_bonuses(void)
             p_ptr->redraw |= (PR_STATS);
         }
 
-        /* Values: 3, 4, ..., 17 */
-        if (use <= 18) ind = (use - 3);
-
-        /* Ranges: 18/00-18/09, ..., 18/210-18/219 */
-        else if (use <= 18+219) ind = (15 + (use - 18) / 10);
-
-        /* Range: 18/220+ */
-        else ind = (37);
+        /* Stat index modifier */
+        ind = (use - 3);
+		if (ind > 37) ind = 37;
 
         if (p_ptr->stat_ind[i] != ind)
         {

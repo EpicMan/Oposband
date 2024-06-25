@@ -927,5 +927,5 @@ Xorn         Poor          Bad           Very Good     Bad             50'
 
 
 
-Automatically generated for FrogComposband 7.1.salmiak.
+Automatically generated for Oposband 0.5.0.
 

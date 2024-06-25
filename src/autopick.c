@@ -216,6 +216,18 @@ static bool _inscribe_pack_hack = FALSE;
 #define ADD_FLG_NOUN(FLG) (ADD_FLG(FLG), prev_flg = FLG)
 #define IS_FLG(FLG) (entry->flag[FLG / 32] & (1L << (FLG % 32)))
 
+/* Always fully know basic items */
+bool_hack simple_item_check(object_type *o_ptr)
+{
+	/* Only for weapons, armor, lites and ammo */
+	if (o_ptr->tval >= TV_SHOT && o_ptr->tval <= TV_LITE)
+	{
+		identify_item(o_ptr);
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 /*
  * A function to create new entry

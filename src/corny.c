@@ -1611,11 +1611,6 @@ void cornucopia_save(savefile_ptr file)
 void cornucopia_load(savefile_ptr file)
 {
     int i, old_policies;
-    if (savefile_is_older_than(file, 7,0,9,4))
-    {
-        cornucopia_init();
-        return;
-    }
     _deposit = savefile_read_u32b(file);
     _received = savefile_read_u32b(file);
     _paid = savefile_read_u32b(file);

@@ -744,7 +744,7 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
     {
-        string_ptr s = string_alloc_format("%d.%d.%s", VER_MAJOR, VER_MINOR, VER_PATCH);
+        string_ptr s = string_alloc_format("%d.%d.%d", VER_MAJOR, VER_MINOR, VER_PATCH);
         if (coffee_break == SPEED_COFFEE) string_append_s(s, "<color:U> (Coffee)</color>");
         if (coffee_break == SPEED_INSTA_COFFEE) string_append_s(s, "<color:U> (Instant Coffee)</color>");
         if (thrall_mode) string_append_s(s, "<color:R> (Thrall)</color>");
@@ -1819,7 +1819,7 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
                     }
                 }
                 strcat(nuname, ".html");
-                sprintf(prompt, "Please note that the FrogComposband Ladder at angband.oook.cz only accepts HTML dumps.\n<color:y>Save dump as</color> <color:R>%s</color><color:y>? [y/n]</color>", nuname);
+                sprintf(prompt, "Please note that the Oposband Ladder at angband.oook.cz only accepts HTML dumps.\n<color:y>Save dump as</color> <color:R>%s</color><color:y>? [y/n]</color>", nuname);
                 if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
                 {
                     strcpy(buf, nuname);

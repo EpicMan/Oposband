@@ -583,4 +583,4 @@ Xorn         <color:R>Poor         </color> <color:r>Bad          </color> <colo
 </style>
 
 
-<color:s>Automatically generated for FrogComposband 7.1.salmiak.</color>
+<color:s>Automatically generated for Oposband 0.5.0.</color>

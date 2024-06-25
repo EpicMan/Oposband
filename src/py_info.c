@@ -2709,7 +2709,7 @@ static void _add_html_header(doc_ptr doc)
     string_append_s(header, "<head>\n");
     string_append_s(header, " <meta name='filetype' value='character dump'>\n");
     string_printf(header,  " <meta name='variant' value='%s'>\n", VERSION_NAME);
-    string_printf(header,  " <meta name='variant_version' value='%d.%d.%s%s'>\n", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
+    string_printf(header,  " <meta name='variant_version' value='%d.%d.%d%s'>\n", VER_MAJOR, VER_MINOR, VER_PATCH, version_modifier());
     string_printf(header,  " <meta name=\"character_name\" value=\"%s\">\n", player_name);
     string_printf(header,  " <meta name='race' value='%s'>\n", get_true_race()->name);
     string_printf(header,  " <meta name='class' value='%s'>\n", get_class()->name);
@@ -2744,7 +2744,7 @@ void py_display_character_sheet(doc_ptr doc)
 {
     _add_html_header(doc);
 
-    doc_insert(doc, "<style:wide>  [FrogComposband <$:version> Character Dump]\n");
+    doc_insert(doc, "<style:wide>  [Oposband <$:version> Character Dump]\n");
     if (p_ptr->total_winner)
         doc_insert(doc, "              <color:B>***WINNER***</color>\n");
     else if (p_ptr->is_dead)

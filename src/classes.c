@@ -218,7 +218,7 @@ class_t *result = NULL;
         break;
     case CLASS_YELLOW_MAGE:
         result = yellow_mage_get_class();
-        break;
+		break;
     case CLASS_ELEMENTALIST:
         result = elementalist_get_class(psubclass);
     }

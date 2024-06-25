@@ -57,7 +57,7 @@ byte sf_extra;        /* Savefile's encoding key */
 
 byte z_major;           /* Savefile version for Hengband */
 byte z_minor;
-char z_patch[16];
+byte z_patch;
 
 /*
  * Savefile information
@@ -303,7 +303,7 @@ bool auto_sticky_labels; /* Automatically make power labels sticky */
 bool show_power; /* Display device powers in inventory */
 bool show_rogue_keys; /* Display roguelike keys if possible */
 bool show_damage_range; /* Show non-melee damages as ranges in monster info */
-bool decimal_stats; /* Decimalized stat display */
+bool angband_stats; /* Decimalized stat display */
 bool percentage_life; /* Show life rating as a percentage */
 bool black_curses; /* Show cursed items as black in unwielding menu */
 bool obj_list_width;
@@ -602,7 +602,7 @@ term *angband_term[8];
  */
 char angband_term_name[8][16] =
 {
-    "FrogComposband",
+    "Oposband",
     "Term-1",
     "Term-2",
     "Term-3",
