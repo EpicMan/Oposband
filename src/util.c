@@ -298,7 +298,7 @@ static errr path_temp(char *buf, int max)
     if (!s) return (-1);
 
     /* Format to length */
-#ifndef WIN32
+#ifndef WIN32XXX
     (void)strnfmt(buf, max, "%s", s);
 #else
     (void)strnfmt(buf, max, ".%s", s);
