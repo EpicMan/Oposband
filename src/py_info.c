@@ -2211,7 +2211,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_PHASE_DOOR);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_IDENTIFY);
-    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
+    /* _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY); */
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
     if (class_uses_spell_scrolls(p_ptr->pclass))

@@ -155,7 +155,8 @@ static int _adj_pseudo_id(int num)
 
     result = result * (625 - virtue_current(VIRTUE_KNOWLEDGE)) / 625;
 
-    /* Hack: Pseudo-id becomes instantaneous at CL35 */
+    /* Hack: Pseudo-id is instantaneous */
+    /* WAS Hack: Pseudo-id becomes instantaneous at CL35 */
     if (lev >= 35) return 0;
     for (;;)
     {
@@ -190,7 +191,7 @@ static void sense_inventory1(void)
 		int flags = _get_pseudo_id_flags();
 		if (flags & CLASS_SENSE1_STRONG)
 			strong = TRUE;
-		else if (!(flags & CLASS_SENSE1_WEAK))
+		/*else if (!(flags & CLASS_SENSE1_WEAK))
             return;
 		if (flags & CLASS_SENSE1_FAST)
 			{
@@ -206,7 +207,7 @@ static void sense_inventory1(void)
 			{
 			if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
 				return;
-			}
+			}*/
 		if (virtue_current(VIRTUE_KNOWLEDGE) >= 100)
 			strong = TRUE;
     }

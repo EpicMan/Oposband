@@ -1646,7 +1646,7 @@ void do_cmd_debug(void)
 
     /* View item info */
     case 'f':
-        identify_fully(NULL);
+        ident_spell(NULL);
         break;
 
     /* Create desired feature */
@@ -1705,7 +1705,7 @@ void do_cmd_debug(void)
 
     /* Identify */
     case 'i':
-        (void)identify_fully(NULL);
+        (void)ident_spell(NULL);
         break;
 
     case 'I':

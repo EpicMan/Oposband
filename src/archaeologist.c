@@ -496,15 +496,12 @@ static void _identify_spell(int cmd, variant *res)
             var_set_string(res, "New Treasure!  You examine your new discovery and learn its deepest truths.");
         break;
     case SPELL_SPOIL_DESC:
-        var_set_string(res, "Identifies an object. At L25, fully identifies an object.");
+        var_set_string(res, "Identifies an object.");
         break;
     case SPELL_CAST:
         {
             bool b = TRUE;
-            if (p_ptr->lev < 25)
-                b = ident_spell(NULL);
-            else
-                b = identify_fully(NULL);
+            b = ident_spell(NULL);
             var_set_bool(res, b);
         }
         break;

@@ -108,10 +108,10 @@ void identify_fully_spell(int cmd, variant *res)
         var_set_string(res, "Identify True");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Completely identifies a single object.");
+        var_set_string(res, "Identifies a single object.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, identify_fully(NULL));
+        var_set_bool(res, ident_spell(NULL));
         break;
     default:
         default_spell(cmd, res);

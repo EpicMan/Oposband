@@ -684,10 +684,7 @@ static void _judge_spell(int cmd, variant *res)
         var_set_string(res, "Identifies a piece of jewelry.");
         break;
     case SPELL_CAST:
-        if (p_ptr->lev >= 35)
-            var_set_bool(res, identify_fully(object_is_jewelry));
-        else
-            var_set_bool(res, ident_spell(object_is_jewelry));
+        var_set_bool(res, ident_spell(object_is_jewelry));
         break;
     default:
         default_spell(cmd, res);

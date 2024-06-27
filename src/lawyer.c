@@ -170,8 +170,7 @@ cptr do_law_spell(int spell, int mode)
     case 6:
         lisa = ((plev >= 45) && (lawyer_aptitude));
         if (name) return "Identify";
-        if (desc) return (lisa ? "Fully identifies an item." : "Identifies an item.");
-
+        if (desc) return "Identifies an item.";
         {
             if (cast)
             {

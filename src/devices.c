@@ -1458,14 +1458,14 @@ static cptr _do_scroll(int sval, int mode)
             if (!_do_identify()) return NULL;
         }
         break;
-    case SV_SCROLL_STAR_IDENTIFY:
+    /*case SV_SCROLL_STAR_IDENTIFY:
         if (desc) return "It reveals all information about an item when you read it.";
         if (cast)
         {
             device_noticed = TRUE;
             if (!identify_fully(NULL)) return NULL;
         }
-        break;
+        break;*/
     case SV_SCROLL_REMOVE_CURSE:
         if (desc) return "It removes normal curses from equipped items when you read it.";
         if (cast)
@@ -3864,7 +3864,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             if (!_do_identify()) return NULL;
         }
         break;
-    case EFFECT_IDENTIFY_FULL:
+/*    case EFFECT_IDENTIFY_FULL:
         if (name) return "*Identify*";
         if (desc) return "It reveals all information about an item.";
         if (value) return format("%d", 5000);
@@ -3873,7 +3873,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             device_noticed = TRUE;
             if (!identify_fully(NULL)) return NULL;
         }
-        break;
+        break;*/
     case EFFECT_PROBING:
         if (name) return "Probing";
         if (desc) return "It probes all visible monsters' alignment, HP, AC, speed, current experience and true character.";

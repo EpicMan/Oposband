@@ -660,7 +660,7 @@ void pack_choose_ai(int m_idx)
             else
                 pack_ptr->ai = AI_SEEK;
         }
-        else if (r_ptr->flags3 & RF3_ANIMAL)
+        else if (!(r_ptr->flags3 & RF3_ANIMAL))
         {
             switch(randint1(10))
             {

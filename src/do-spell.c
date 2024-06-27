@@ -1490,12 +1490,12 @@ static cptr do_life_spell(int spell, int mode)
 
     case 30:
         if (name) return "Holy Vision";
-        if (desc) return "Fully identifies an item.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (!identify_fully(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -1815,12 +1815,12 @@ static cptr do_sorcery_spell(int spell, int mode)
 
     case 15:
         if (name) return "Identify True";
-        if (desc) return "*Identifies* an item.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (!identify_fully(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -2472,12 +2472,12 @@ static cptr do_nature_spell(int spell, int mode)
 
     case 20:
         if (name) return "Stone Tell";
-        if (desc) return "*Identifies* an item.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (!identify_fully(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -3991,19 +3991,12 @@ static cptr do_death_spell(int spell, int mode)
 
     case 26:
         if (name) return "Esoteria";
-        if (desc) return "Identifies an item. Or *identifies* an item at higher level.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (randint1(50) > spell_power(plev))
-                {
-                    if (!ident_spell(NULL)) return NULL;
-                }
-                else
-                {
-                    if (!identify_fully(NULL)) return NULL;
-                }
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -4610,12 +4603,12 @@ static cptr do_trump_spell(int spell, int mode)
 
     case 25:
         if (name) return "Trump Lore";
-        if (desc) return "*Identifies* an item.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (!identify_fully(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
@@ -5797,12 +5790,12 @@ static cptr do_craft_spell(int spell, int mode)
 
     case 26:
         if (name) return "Knowledge True";
-        if (desc) return "*Identifies* an item.";
+        if (desc) return "Identifies an item.";
 
         {
             if (cast)
             {
-                if (!identify_fully(NULL)) return NULL;
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;

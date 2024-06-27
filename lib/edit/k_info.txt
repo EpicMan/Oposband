@@ -2400,13 +2400,13 @@ A:1/1
 F:TOWN
 M:90:2d6
 
-N:*:*Identify*:triapp trolpet
-G:?:w
-I:70:13:0
-W:30:0:0:5:1500
-A:30/1:50/1
-F:TOWN
-M:100:1d5
+#N:*:*Identify*:triapp trolpet
+#G:?:w
+#I:70:13:0
+#W:30:0:0:5:1500
+#A:30/1:50/1
+#F:TOWN
+#M:100:1d5
 
 N:*:Remove Curse:byti sne
 G:?:w

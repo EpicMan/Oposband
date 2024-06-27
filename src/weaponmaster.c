@@ -280,10 +280,7 @@ static void _judge_spell(int cmd, variant *res)
         var_set_string(res, "Identifies a favored item.");
         break;
     case SPELL_CAST:
-        if (p_ptr->lev >= 45)
-            var_set_bool(res, identify_fully(_can_judge));
-        else
-            var_set_bool(res, ident_spell(_can_judge));
+        var_set_bool(res, ident_spell(_can_judge));
         break;
         break;
     default:
