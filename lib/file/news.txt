@@ -1,15 +1,15 @@
-<color:y>FrogComposband <$:version><color:*>
+<color:y>Oposband <$:version><color:*>
 
 <style:screenshot>LEVEL <color:G>    47<color:*> ..<color:U>#########<color:*>.....<color:U>#########<color:*>.......<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>######<color:*><color:o>########<color:*><color:G>##########<color:*>
 EXP <color:G>    128k<color:*> ..<color:U>#########<color:*>.....<color:U>####1####<color:*>......<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>.....<color:*><color:G>######<color:*><color:o>##<color:*><color:v>><color:*><color:o>###<color:*><color:G>###########<color:*>
 AU  <color:G>    629k<color:*> ..<color:U>####<color:*><color:s>2<color:*><color:U>####<color:*>....................<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>......<color:*><color:G>######<color:*><color:u>.<color:*>.<color:u>.<color:*><color:G>#####<color:*>........<color:*>
 <color:W>|<color:*><color:U>)<color:*><color:s>}<color:*><color:g>==<color:*><color:y>"<color:*><color:R>*<color:*><color:s>[<color:*><color:g>(<color:*><color:s>]<color:*><color:W>]]<color:*> ...........................................................<color:G>#######<color:*>
-STR : <color:G>18/***<color:*> ...............................<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>......<color:*><color:G>######################<color:*>
-INT : <color:G> 18/65<color:*> ..................<color:y>T<color:*>............<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>.....<color:*><color:G>#######################<color:*>
+STR : <color:G>    40<color:*> ...............................<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>......<color:*><color:G>######################<color:*>
+INT : <color:G>    24<color:*> ..................<color:y>T<color:*>............<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>.....<color:*><color:G>#######################<color:*>
 WIS : <color:G>    12<color:*> ................................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>#########################<color:*>
-DEX : <color:G>18/183<color:*> ...............<color:U>#####+######<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
-CON : <color:G>18/187<color:*> ...<color:U>####<color:*><color:r>6<color:*><color:U>####<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
-CHR : <color:G>18/117<color:*> ...<color:U>#########<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
+DEX : <color:G>    36<color:*> ...............<color:U>#####+######<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
+CON : <color:G>    36<color:*> ...<color:U>####<color:*><color:r>6<color:*><color:U>####<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
+CHR : <color:G>    29<color:*> ...<color:U>#########<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
 AC     <color:G>  229<color:*> ...<color:U>#########<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
 HP <color:G> 964<color:*>/<color:G> 964<color:*> ...<color:U>#########<color:*>....................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
              ...<color:U>#########<color:*>....................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>##########################<color:*>
