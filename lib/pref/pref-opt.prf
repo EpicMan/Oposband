@@ -15,7 +15,7 @@ X:rogue_like_commands
 X:always_pickup
 X:quick_messages
 X:command_menu
-X:use_old_target
+Y:use_old_target
 X:auto_target
 Y:always_repeat
 X:confirm_destroy
@@ -23,8 +23,8 @@ Y:confirm_wear
 X:target_pet
 Y:easy_open
 Y:easy_disarm
-X:auto_get_ammo
-X:auto_get_objects
+Y:auto_get_ammo
+Y:auto_get_objects
 Y:numpad_as_cursorkey
 X:use_pack_slots
 

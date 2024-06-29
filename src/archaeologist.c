@@ -490,10 +490,7 @@ static void _identify_spell(int cmd, variant *res)
         var_set_string(res, "Identify");
         break;
     case SPELL_DESC:
-        if (p_ptr->lev < 25)
-            var_set_string(res, "New Treasure!  You examine your new discovery.");
-        else
-            var_set_string(res, "New Treasure!  You examine your new discovery and learn its deepest truths.");
+        var_set_string(res, "New Treasure!  You examine your new discovery and learn its deepest truths.");
         break;
     case SPELL_SPOIL_DESC:
         var_set_string(res, "Identifies an object.");
@@ -679,10 +676,10 @@ static spell_info _get_spells[] =
 {
     /*lvl cst fail spell */
     {  1,   3, 10, _extended_whip_spell },
-    {  2,   3, 20, detect_traps_spell },
-    {  3,   5, 20, light_area_spell },
-    {  5,   5, 30, _first_aid_spell },
-    { 10,  10, 40, _identify_spell },
+    {  2,  10, 40, _identify_spell },
+    {  3,   3, 20, detect_traps_spell },
+    {  5,   5, 20, light_area_spell },
+    { 10,   5, 30, _first_aid_spell },
     { 12,  10, 30, _remove_obstacles_spell },
     { 13,  20, 30, _double_crack_spell },
     { 15,  15, 30, _magic_blueprint_spell },

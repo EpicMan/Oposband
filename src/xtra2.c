@@ -265,11 +265,6 @@ void check_experience(void)
 
             p_ptr->max_plv = p_ptr->lev;
 
-            /* Oposband: FUll heal / recharge */
-            /* Why? It encourages players to play dangerous when close to level up, hoping for a heal/SP fill before they die. More fun than resting to full after the fight. */
-            hp_player(p_ptr->mhp * 2); /* x2 so halving from einhir/blood knight/blood mage won't prevent it */
-            sp_player(p_ptr->msp);
-
             sound(SOUND_LEVEL);
             cmsg_format(TERM_L_GREEN, "Welcome to level %d.", p_ptr->lev);
 
