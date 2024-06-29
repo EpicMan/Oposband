@@ -230,7 +230,12 @@ static void _build_general2(doc_ptr doc)
                         p_ptr->csp > (p_ptr->msp * mana_warn) / 10 ? 'y' : 'r',
                     string_buffer(s));
 
-    doc_printf(doc, "<tab:9>AC   : <color:G>%9d</color>\n", p_ptr->dis_ac + p_ptr->dis_to_a);
+    int ac = p_ptr->dis_ac + p_ptr->dis_to_a;
+    int ac_percentage = 100 - ac_melee_pct(ac);
+    if (ac_percentage >= 10)
+        doc_printf(doc, "<tab:9>AC   : %3d <color:G>(%2d%c)</color>\n", ac, ac_percentage, '%');
+    else
+        doc_printf(doc, "<tab:9>AC   : %3d  <color:G>(%d%c)</color>\n", ac, ac_percentage, '%');
 
     /* Dump speed ... What a monster! */
     {
