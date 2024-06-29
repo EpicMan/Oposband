@@ -816,7 +816,6 @@ static void wr_extra(savefile_ptr file)
     savefile_write_byte(file, p_ptr->knowledge);
     savefile_write_byte(file, p_ptr->autopick_autoregister);
     savefile_write_byte(file, p_ptr->action);
-    savefile_write_byte(file, preserve_mode);
     savefile_write_byte(file, p_ptr->wait_report_score);
     savefile_write_u32b(file, seed_flavor);
     savefile_write_u32b(file, seed_town);

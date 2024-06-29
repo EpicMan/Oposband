@@ -2530,8 +2530,6 @@ static void _build_options(doc_ptr doc)
     if (thrall_mode)
         doc_printf(doc, " Thrall Mode:        On\n");
 
-    doc_printf(doc, " Preserve Mode:      %s\n", preserve_mode ? "On" : "Off");
-
     if (small_level_type <= SMALL_LVL_MAX)
          doc_printf(doc, " Level Size:         %s\n", lv_size_options[small_level_type]);
 

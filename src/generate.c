@@ -645,23 +645,8 @@ static void try_door(int y, int x)
  */
 static void set_bound_perm_wall(cave_type *c_ptr)
 {
-    if (bound_walls_perm)
-    {
-        /* Clear boundary mimic */
-        c_ptr->mimic = 0;
-    }
-    else
-    {
-        feature_type *f_ptr = &f_info[c_ptr->feat];
-
-        /* Hack -- Decline boundary walls with known treasure  */
-        if ((have_flag(f_ptr->flags, FF_HAS_GOLD) || have_flag(f_ptr->flags, FF_HAS_ITEM)) &&
-            !have_flag(f_ptr->flags, FF_SECRET))
-            c_ptr->feat = feat_state(c_ptr->feat, FF_ENSECRET);
-
-        /* Set boundary mimic */
-        c_ptr->mimic = c_ptr->feat;
-    }
+    /* Clear boundary mimic */
+    c_ptr->mimic = 0;
 
     /* Add "solid" perma-wall */
     place_solid_perm_grid(c_ptr);

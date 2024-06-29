@@ -349,9 +349,7 @@ extern byte monster_list_width;
 extern bool stack_force_notes;    /* Merge inscriptions when stacking */
 extern bool stack_force_costs;    /* Merge discounts when stacking */
 extern bool expand_list;    /* Expand the power of the list commands */
-extern bool bound_walls_perm;    /* Boundary walls become 'permanent wall' */
 extern bool delay_autopick;  /* Always use delayed autopick */
-extern bool last_words;    /* Leave last words when your character dies */
 
 #ifdef WORLD_SCORE
 extern bool send_score;    /* Send score dump to the world score server */
@@ -394,20 +392,15 @@ extern bool easy_id;        /* Easy Identify */
 extern bool easy_lore;      /* Easy Monster Lore */
 extern bool empty_lore;     /* Always start with empty item lore */
 extern bool easy_damage;    /* Peek into damage and monster health */
-extern bool allow_spoilers;
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
 extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
-extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
 extern bool no_wilderness;  /* Play without a normal wilderness */
 extern bool ironman_shops;    /* Stores are permanently closed (*) */
 extern bool ironman_downward;    /* Disable recall and use of up stairs (*) */
 extern bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) */
 extern byte generate_empty;
 extern bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
-extern bool preserve_mode;    /* Preserve artifacts (*) */
-extern bool allow_friendly_monster; /* Allow monsters friendly to player */
 extern bool allow_hostile_monster; /* Allow monsters hostile to each other */
-extern bool allow_pets; /* Allow pets: Note, this makes some classes unplayable. */
 extern bool quest_unique; /* Random quests for unique monsters only */
 extern bool random_artifacts;
 extern byte random_artifact_pct;
@@ -424,7 +417,7 @@ extern bool easy_thalos;
 extern bool never_forget;
 extern bool no_chris;
 extern bool no_scrambling;
-extern bool comp_mode;
+extern bool comp_mode; /*Todo: Make a town service to restore original race for some high price*/
 extern bool reduce_uniques;
 extern byte reduce_uniques_pct;
 extern bool always_small_levels;

@@ -3703,7 +3703,7 @@ static void _smart_remove(mon_spell_cast_ptr cast)
     mon_spells_ptr spells = cast->race->spells;
     u32b           flags = cast->mon->smart;
 
-    if (smart_cheat) flags = 0xFFFFFFFF;
+    if (ironman_nightmare) flags = 0xFFFFFFFF;
     _smart_remove_aux(spells->groups[MST_BREATH], flags);
     _smart_remove_aux(spells->groups[MST_BALL], flags);
     if (_have_smart_flag(flags, SM_REFLECTION) && p_ptr->reflect)
@@ -3796,7 +3796,7 @@ static void _ai_direct(mon_spell_cast_ptr cast)
         return;
 
     /* Apply monster knowledge of player's strengths and weaknesses */
-    if (smart_cheat || smart_learn)
+    if (ironman_nightmare || smart_learn)
         _smart_remove(cast);
 
     _ai_wounded(cast);
@@ -4009,7 +4009,7 @@ static void _ai_indirect(mon_spell_cast_ptr cast)
         cast->dest = new_dest;
         cast->flags |= MSC_SPLASH;
 
-        if (!stupid && (smart_cheat || smart_learn))
+        if (!stupid && (ironman_nightmare || smart_learn))
             _smart_remove(cast);
         _ai_wounded(cast);
 

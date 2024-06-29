@@ -6502,36 +6502,27 @@ int take_hit(int damage_type, int damage, cptr hit_from)
             p_ptr->last_message = NULL;
 
             /* Hack -- Note death */
-            if (!last_words)
+            if (winning_seppuku)
             {
-                msg_print(android ? "You are broken." : "You die.");
-                msg_print(NULL);
+                get_rnd_line("seppuku.txt", 0, death_message);
             }
             else
             {
-                if (winning_seppuku)
-                {
-                    get_rnd_line("seppuku.txt", 0, death_message);
-                }
-                else
-                {
-                    get_rnd_line("death.txt", 0, death_message);
-                }
-
-                do
-                {
-                    while (!get_string("Last word: ", death_message, 1024)) ;
-                }
-                while (winning_seppuku && !get_check_strict("Are you sure? ", CHECK_NO_HISTORY));
-
-                if (death_message[0] == '\0')
-                {
-                    strcpy(death_message, android ? "You are broken." : "You die.");
-                }
-                else p_ptr->last_message = z_string_make(death_message);
-                
-                msg_print(death_message);
+                get_rnd_line("death.txt", 0, death_message);
             }
+
+            do
+            {
+                while (!get_string("Last word: ", death_message, 1024));
+            } while (winning_seppuku && !get_check_strict("Are you sure? ", CHECK_NO_HISTORY));
+
+            if (death_message[0] == '\0')
+            {
+                strcpy(death_message, android ? "You are broken." : "You die.");
+            }
+            else p_ptr->last_message = z_string_make(death_message);
+
+            msg_print(death_message);
         }
 
         /* Dead */

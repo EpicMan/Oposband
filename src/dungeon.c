@@ -2887,12 +2887,11 @@ static byte get_dungeon_feeling(void)
             if ((!p_ptr->munchkin_pseudo_id) || (o_ptr->marked & OM_TOUCHED)) continue;
         }
 
-        /* Experimental Hack: Force Special Feelings for artifacts no matter what. */
+        /* Force Special Feelings for artifacts no matter what. */
         if (object_is_artifact(o_ptr))
             return 1;
 
-        if ( object_is_artifact(o_ptr)
-          || object_is_ego(o_ptr)
+        if (object_is_ego(o_ptr)
           || o_ptr->tval == TV_DRAG_ARMOR
           || object_is_dragon_armor(o_ptr) )
         {
@@ -2902,9 +2901,6 @@ static byte get_dungeon_feeling(void)
             if (cost > 10000L) delta += 10 * base;
             if (cost > 50000L) delta += 10 * base;
             if (cost > 100000L) delta += 10 * base;
-
-            if (!preserve_mode && object_is_artifact(o_ptr))
-                return 1;
         }
 
         /* Out-of-depth objects */
@@ -3564,8 +3560,7 @@ static void _dispatch_command(int old_now_turn)
 #ifdef ALLOW_SPOILERS
 		case KTRL('Z'):
 			/*  v~~~ ^Z(d|D) is useful info for game design ... */
-			if (0 || allow_spoilers)
-				do_cmd_spoilers();
+			do_cmd_spoilers();
 			break;
 #endif /* ALLOW_SPOILERS */
 		

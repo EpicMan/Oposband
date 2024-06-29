@@ -70,8 +70,6 @@ Y:always_dump_origins
 Y:stack_force_notes
 Y:stack_force_costs
 Y:expand_list
-Y:bound_walls_perm
-Y:last_words
 
 ##### Disturbance #####
 
@@ -97,15 +95,12 @@ Y:alert_trap_detect
 
 X:easy_id
 Y:easy_lore
-X:allow_spoilers
 X:smart_learn
-X:smart_cheat
 X:no_wilderness
 X:ironman_shops
 X:ironman_downward
 X:ironman_empty_levels
 X:ironman_nightmare
-Y:preserve_mode
 
 ##### Easy Object Auto-Destroyer #####
 

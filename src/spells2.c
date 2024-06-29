@@ -2480,7 +2480,6 @@ bool destroy_area(int y1, int x1, int r, int power)
             }
 
             /* During generation, destroyed artifacts are "preserved" */
-            if (preserve_mode || in_generate)
             {
                 s16b this_o_idx, next_o_idx = 0;
 

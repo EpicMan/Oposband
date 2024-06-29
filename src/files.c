@@ -2834,7 +2834,7 @@ void do_cmd_suicide(void)
     p_ptr->last_message = NULL;
 
     /* Hack -- Note *winning* message */
-    if (p_ptr->total_winner && last_words)
+    if (p_ptr->total_winner)
     {
         char buf[1024] = "";
 
@@ -2942,8 +2942,6 @@ s32b score_mult(void)
     if (power_tele) mult -= 500;
     if ((p_ptr->pclass == CLASS_BERSERKER) && ((p_ptr->prace == RACE_SPECTRE) || (p_ptr->start_race == RACE_SPECTRE) || (p_ptr->old_race1 & (1L << RACE_SPECTRE))))
         mult -= 2000;
-    if (!preserve_mode) mult += 500;
-    if (smart_cheat) mult += 500;
     if (ironman_shops) mult += 500;
     if (generate_empty == EMPTY_ALWAYS) mult += 500;
     if (no_artifacts) mult += 1500;

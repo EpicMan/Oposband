@@ -454,20 +454,16 @@ void wipe_o_list(void)
         /* Skip dead objects */
         if (!o_ptr->k_idx) continue;
 
-        /* Mega-Hack -- preserve artifacts */
-        if (!character_dungeon || preserve_mode)
+        /* Hack -- Preserve unknown artifacts */
+        if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
         {
-            /* Hack -- Preserve unknown artifacts */
-            if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
-            {
-                /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name1].generated = FALSE;
-            }
-            if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
-            {
-                /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name3].generated = FALSE;
-            }
+            /* Mega-Hack -- Preserve the artifact */
+            a_info[o_ptr->name1].generated = FALSE;
+        }
+        if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
+        {
+            /* Mega-Hack -- Preserve the artifact */
+            a_info[o_ptr->name3].generated = FALSE;
         }
 
         /* Monster */
@@ -4285,20 +4281,17 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
             if (p_ptr->wizard) msg_print("(no floor space)");
 
             /* Mega-Hack -- preserve artifacts */
-            if (preserve_mode)
+            /* Hack -- Preserve unknown artifacts */
+            if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
             {
-                /* Hack -- Preserve unknown artifacts */
-                if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
-                {
-                    /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name1].generated = FALSE;
-                }
+                /* Mega-Hack -- Preserve the artifact */
+                a_info[j_ptr->name1].generated = FALSE;
+            }
 
-                if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
-                {
-                    /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name3].generated = FALSE;
-                }
+            if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
+            {
+                /* Mega-Hack -- Preserve the artifact */
+                a_info[j_ptr->name3].generated = FALSE;
             }
 
             /* Failure */

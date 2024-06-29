@@ -3079,7 +3079,6 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
         int voima, taso = race->level, mon_difficulty = 0;
         bool is_friend = is_friendly(mon);
         if ((type == GF_CHARM) && (is_pet(mon))) return (obvious);
-        if (!allow_pets) return TRUE;
 
         if (seen) obvious = TRUE;
 
@@ -3154,7 +3153,6 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
     case GF_CONTROL_DEMON:
     case GF_CONTROL_ANIMAL:
         if (is_pet(mon)) return (obvious);
-        if (!allow_pets) return TRUE;
 
         if (seen) obvious = TRUE;
 
@@ -3214,7 +3212,6 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
         dam = 0;
         break;
     case GF_CONTROL_PACT_MONSTER:
-        if (!allow_pets) return TRUE;
         if (warlock_is_pact_monster(race) && !is_pet(mon))
         {
             if (seen) obvious = TRUE;
@@ -3252,7 +3249,6 @@ bool gf_affect_m(int who, mon_ptr mon, int type, int dam, int flags)
         break;
     case GF_CONTROL_LIVING:
         if (is_pet(mon)) return (obvious);
-        if (!allow_pets) return TRUE;
         if (seen) obvious = TRUE;
 
         dam += (adj_chr_chm[p_ptr->stat_ind[A_CHR]]);
