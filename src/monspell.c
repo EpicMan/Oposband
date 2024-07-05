@@ -4562,7 +4562,7 @@ int _adjust_dam_weird_stuff(int tulos, mon_spell_ptr spell, bool apply_resist)
     if (!apply_resist) return tulos;
     if (((spell->id.effect == GF_POIS) || (spell->id.effect == GF_NUKE)))
         tulos = tulos * 7 / 4; /* Poison adjustment */
-    if ((spell->id.effect == GF_ACID) && (equip_find_first(object_is_armour))) tulos /= 2;
+    if ((spell->id.effect == GF_ACID) && (equip_find_first(object_is_armor))) tulos /= 2;
     return tulos;
 }
 void mon_spell_dam_range(string_ptr s, mon_spell_ptr spell, mon_race_ptr race, bool apply_resist)

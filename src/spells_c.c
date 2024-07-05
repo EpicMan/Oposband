@@ -312,7 +312,7 @@ void crafting_spell(int cmd, variant *res)
 
         prompt.prompt = "Enchant which item?";
         prompt.error = "You have nothing to enchant.";
-        prompt.filter = object_is_weapon_armour_ammo;
+        prompt.filter = object_is_weapon_armor_ammo;
         prompt.where[0] = INV_PACK;
         prompt.where[1] = INV_EQUIP;
         prompt.where[2] = INV_QUIVER;
@@ -374,9 +374,9 @@ void crafting_spell(int cmd, variant *res)
                     okay = TRUE;
                 }
             }
-            else if (object_is_armour(prompt.obj) && prompt.obj->number == 1)
+            else if (object_is_armor(prompt.obj) && prompt.obj->number == 1)
             {
-                if (brand_armour_aux(prompt.obj))
+                if (brand_armor_aux(prompt.obj))
                 {
                     prompt.obj->discount = 99;
                     okay = TRUE;

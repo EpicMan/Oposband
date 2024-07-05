@@ -142,6 +142,10 @@ int exp_requirement(int level)
 {
     bool android = (p_ptr->prace == RACE_ANDROID ? TRUE : FALSE);
     int base = (android ? _player_exp_a : _player_exp)[level-1];
+
+    int div = p_ptr->expfact;
+    if (xp_penalty_to_score) div = 180; /*Average normal XP multiplier is 190, monster race is 180, give non-monsters a bit of a break.*/
+
     if (base % 100 == 0)
         return base / 100 * p_ptr->expfact;
     else
@@ -275,8 +279,7 @@ void check_experience(void)
                 (class_ptr->gain_level)(p_ptr->lev);
             }
 
-            if (mut_present(MUT_CHAOS_GIFT))
-                chaos_warrior_reward();
+            if (worships_chaos()) chaos_choose_effect(PATRON_LEVEL_UP);
 
             if (p_ptr->personality == PERS_SPLIT)
                 split_shuffle(0);
@@ -797,7 +800,7 @@ static bool _kind_is_utility(int k_idx)
             return TRUE;
         case SV_SCROLL_IDENTIFY:
         case SV_SCROLL_STAR_IDENTIFY:
-			return easy_id ? FALSE : TRUE;
+			return FALSE;
         }
         break;
 
@@ -3089,14 +3092,6 @@ bool mon_take_hit(int m_idx, int dam, int type, bool *fear, cptr note)
             if (!get_rnd_line("mondeath.txt", m_ptr->r_idx, line_got))
 
                 msg_format("%^s %s", m_name, line_got);
-
-#ifdef WORLD_SCORE
-            if (m_ptr->r_idx == MON_SERPENT)
-            {
-                /* Make screen dump */
-                screen_dump = make_screen_dump();
-            }
-#endif
         }
         else if (m_ptr->r_idx == MON_R_MACHINE)
         {

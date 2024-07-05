@@ -1732,7 +1732,7 @@ s32b realm_choices1[MAX_CLASS] =
     (CH_LIFE | CH_SORCERY | CH_NATURE |
      CH_CHAOS | CH_DEATH | CH_TRUMP |
      CH_ARCANE | CH_ENCHANT | CH_DAEMON |
-     CH_CRUSADE | CH_HEX | CH_ARMAGEDDON | CH_LAW),  /* High-Mage */
+     CH_CRUSADE | CH_ARMAGEDDON | CH_LAW),  /* High-Mage */
     (CH_ARCANE),                            /* Tourist */
     (CH_NONE),                              /* Imitator */
     (CH_TRUMP),                             /* Beastmaster */
@@ -1782,6 +1782,8 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+    CH_HEX,                 /* Hexblade */
+    (CH_CHAOS | CH_DAEMON), /* Chaos-Mage*/
 	CH_NONE,                /* Elementalist */
 };
 
@@ -1857,6 +1859,11 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Alchemist */
     CH_NONE,                /* Politician */
     CH_NONE,                /* Disciple */
+    CH_NONE,                 /* Hexblade */
+    (CH_SORCERY | CH_NATURE |
+     CH_CHAOS | CH_DEATH | CH_TRUMP |
+     CH_ARCANE | CH_ENCHANT | CH_DAEMON |
+     CH_ARMAGEDDON),		/* Chaos-Mage*/
 	CH_NONE,				/* Elementalist */
 };
 
@@ -2322,6 +2329,8 @@ option_type option_info[] =
     { &allow_debug_opts,            FALSE, OPT_PAGE_GAMEPLAY, 6, 11,
     "allow_debug_opts",             "Allow use of debug/cheat options" },
 #endif
+	{ &unified_use,					FALSE, OPT_PAGE_GAMEPLAY, 0, 19,
+	"unified_use_command",			"Use 'a' for using any item type" },
 
     /*** Disturbance ***/
 
@@ -2422,6 +2431,8 @@ option_type option_info[] =
 
 	{ &empty_lore,			FALSE, OPT_PAGE_BIRTH, 1, 16,
 	"empty_lore",			"Always forget item lore between games" },
+	{ &xp_penalty_to_score,			FALSE, OPT_PAGE_BIRTH, 1, 14,
+	"xp_penalty_to_score",			"Exp multiplier affect score instead (*)" },
 
     { &smart_learn,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
     "smart_learn",                  "Monsters learn from their mistakes (*)" },
@@ -2497,8 +2508,8 @@ option_type option_info[] =
     { &even_proportions,            FALSE, OPT_PAGE_BIRTH, 4, 16,
     "even_proportions",             "Sometimes reshape very flat \"pipe\" levels" },
 
-    { &no_chris,			FALSE, OPT_PAGE_BIRTH, 6, 12,
-    "no_chris",				"Nexus attacks never teleport to another dungeon" },
+    { &no_nexus_warp,			FALSE, OPT_PAGE_BIRTH, 6, 12,
+    "no_nexus_warp",				"Nexus attacks never teleport to another dungeon" },
 
     { &no_scrambling,			FALSE, OPT_PAGE_BIRTH, 6, 15,
     "no_scrambling",			"Disallow stat scrambling from monster attacks" },
@@ -2536,7 +2547,7 @@ option_type option_info[] =
     "leave_worth",                  "Auto-destroyer leaves known worthy items" },
 
     { &leave_equip,                 FALSE, OPT_PAGE_AUTODESTROY, 7, 3,
-    "leave_equip",                  "Auto-destroyer leaves weapons and armour" },
+    "leave_equip",                  "Auto-destroyer leaves weapons and armor" },
 
     { &leave_chest,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 7,
     "leave_chest",                  "Auto-destroyer leaves closed chests" },

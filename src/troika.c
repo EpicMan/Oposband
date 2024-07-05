@@ -597,7 +597,7 @@ static void _troika_event(int effect)
         }
         case REW_CURSE_AR:
         {
-            int slot = equip_random_slot(object_is_armour);
+            int slot = equip_random_slot(object_is_armor);
             if (slot)
             {
                 msg_format("The voice of %s booms out:",
@@ -636,7 +636,7 @@ static void _troika_event(int effect)
                     }
                     else
                     {
-                        int slot = equip_random_slot(object_is_armour);
+                        int slot = equip_random_slot(object_is_armor);
                         if (slot)
                             curse_armor(slot);
                         else
@@ -668,7 +668,7 @@ static void _troika_event(int effect)
             }
             if (one_in_(2))
             {
-                int slot = equip_random_slot(object_is_armour);
+                int slot = equip_random_slot(object_is_armor);
                 if (slot)
                     curse_armor(slot);
             }

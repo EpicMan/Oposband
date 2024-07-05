@@ -329,9 +329,9 @@ bool object_is_ammo(object_type *o_ptr)
 
 
 /*
- * Check if an object is armour
+ * Check if an object is armor
  */
-bool object_is_armour(object_type *o_ptr)
+bool object_is_armor(object_type *o_ptr)
 {
     if (TV_ARMOR_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_ARMOR_END) return TRUE;
 
@@ -344,7 +344,7 @@ bool object_is_shield(object_type *o_ptr)
     return FALSE;
 }
 
-bool object_is_body_armour(object_type *o_ptr)
+bool object_is_body_armor(object_type *o_ptr)
 {
     switch (o_ptr->tval)
     {
@@ -359,14 +359,14 @@ bool object_is_body_armour(object_type *o_ptr)
 
 
 /*
- * Check if an object is weapon, armour or ammo
+ * Check if an object is weapon, armor or ammo
  */
 bool enchantment_hack = FALSE;
-bool object_is_weapon_armour_ammo(object_type *o_ptr)
+bool object_is_weapon_armor_ammo(object_type *o_ptr)
 {
     if (enchantment_hack && o_ptr->name1 == ART_HEPHAESTUS) return FALSE;
 
-    if (object_is_weapon_ammo(o_ptr) || object_is_armour(o_ptr)) return TRUE;
+    if (object_is_weapon_ammo(o_ptr) || object_is_armor(o_ptr)) return TRUE;
 
     return FALSE;
 }
@@ -395,7 +395,7 @@ bool object_is_jewelry(object_type *o_ptr)
 }
 
 /*
- * Wearable including all weapon, all armour, bow, light source, amulet, and ring
+ * Wearable including all weapon, all armor, bow, light source, amulet, and ring
  */
 bool object_is_wearable(object_type *o_ptr)
 {
@@ -454,9 +454,9 @@ bool object_allow_enchant_melee_weapon(object_type *o_ptr)
 /*
  * Check if an object is melee weapon and allows enchantment
  */
-bool object_allow_enchant_armour(object_type *o_ptr)
+bool object_allow_enchant_armor(object_type *o_ptr)
 {
-    if (object_is_armour(o_ptr) && !object_is_unenchantable(o_ptr)) return TRUE;
+    if (object_is_armor(o_ptr) && !object_is_unenchantable(o_ptr)) return TRUE;
 
     return FALSE;
 }
@@ -467,7 +467,7 @@ bool object_allow_enchant_armour(object_type *o_ptr)
  */
 bool object_is_smith(object_type *o_ptr)
 {
-    if (object_is_weapon_armour_ammo(o_ptr) && o_ptr->xtra3) return TRUE;
+    if (object_is_weapon_armor_ammo(o_ptr) && o_ptr->xtra3) return TRUE;
 
     return FALSE;
 }

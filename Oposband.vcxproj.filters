@@ -784,6 +784,15 @@
     <ClCompile Include="src\elementalist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\chaos_mage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\chaos_patron.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hexblade.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\angband.ico">

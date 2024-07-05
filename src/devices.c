@@ -1333,10 +1333,10 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_CURSE_ARMOR:
-        if (desc) return "It makes your current armour (Blasted) when you read it.";
+        if (desc) return "It makes your current armor (Blasted) when you read it.";
         if (cast)
         {
-            int slot = equip_random_slot(object_is_armour);
+            int slot = equip_random_slot(object_is_armor);
             if (slot && curse_armor(slot)) device_noticed = TRUE;
         }
         break;
@@ -1487,7 +1487,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_ENCHANT_ARMOR:
-        if (desc) return "It increases an armour's to-AC when you read it.";
+        if (desc) return "It increases an armor's to-AC when you read it.";
         if (cast)
         {
             if (!enchant_spell(0, 0, 1)) return NULL;
@@ -1511,7 +1511,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_STAR_ENCHANT_ARMOR:
-        if (desc) return "It increases an armour's to-ac powerfully when you read it.";
+        if (desc) return "It increases an armor's to-ac powerfully when you read it.";
         if (cast)
         {
             if (!enchant_spell(0, 0, randint1(3) + 3)) return NULL;
@@ -1795,7 +1795,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_ARTIFACT:
-        if (desc) return "It creates an artifact from a nameless weapon or armour when you read it. Gives better results on deeper levels. Don't be greedy - you will get only one artifact.";
+        if (desc) return "It creates an artifact from a nameless weapon or armor when you read it. Gives better results on deeper levels. Don't be greedy - you will get only one artifact.";
         if (cast)
         {
             device_noticed = TRUE;
@@ -2820,7 +2820,6 @@ static void _device_pick_effect(object_type *o_ptr, device_effect_info_ptr table
         if ((mode & AM_GOOD) && !(entry->flags & _DROP_GOOD)) continue;
         if ((mode & AM_GREAT) && !(entry->flags & _DROP_GREAT)) continue;
         if ((mode & AM_STOCK_TOWN) && !(entry->flags & _STOCK_TOWN)) continue;
-		if (easy_id && entry->type == EFFECT_IDENTIFY_FULL) continue;
 		if (easy_lore && entry->type == EFFECT_PROBING) continue;
 
         entry->prob = 64 / rarity;

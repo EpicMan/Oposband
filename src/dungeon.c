@@ -184,36 +184,8 @@ static void sense_inventory1(void)
 
     if (p_ptr->confused) return;
 
-	if (easy_id)
-        strong = TRUE;
-	else
-    {
-		int flags = _get_pseudo_id_flags();
-		if (flags & CLASS_SENSE1_STRONG)
-			strong = TRUE;
-		/*else if (!(flags & CLASS_SENSE1_WEAK))
-            return;
-		if (flags & CLASS_SENSE1_FAST)
-			{
-			if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE1_MED)
-			{
-			if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE1_SLOW)
-			{
-			if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
-				return;
-			}*/
-		if (virtue_current(VIRTUE_KNOWLEDGE) >= 100)
-			strong = TRUE;
-    }
-
     /*** Sense everything ***/
-    _sense_strong = strong;
+    _sense_strong = TRUE;
     pack_for_each_that(_sense_obj, obj_can_sense1);
     equip_for_each_that(_sense_obj, obj_can_sense1);
     quiver_for_each_that(_sense_obj, obj_can_sense1);
@@ -227,41 +199,9 @@ static void sense_inventory2(void)
 //    int  flags = _get_pseudo_id_flags();
 
     if (p_ptr->confused) return;
-	if (easy_id)
-	{
-        strong = TRUE;
-    }
-    else
-    {
-		int flags = _get_pseudo_id_flags();
-		if (flags & CLASS_SENSE2_STRONG)
-			strong = TRUE;
-		else if (!(flags & CLASS_SENSE2_WEAK))
-        return;
-		if (flags & CLASS_SENSE2_FAST)
-			{
-			if (0 != randint0(_adj_pseudo_id(9000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE2_MED)
-			{
-			if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40)))
-				return;
-			}
-		else if (flags & CLASS_SENSE2_SLOW)
-			{
-			if (0 != randint0(_adj_pseudo_id(80000) / (plev * plev + 40)))
-				return;
-			}
-		else /* Super duper slow */
-			{
-			if (0 != randint0(_adj_pseudo_id(240000) / (plev + 5)))
-				return;
-			}
-    }
-
+	
     /*** Sense everything ***/
-    _sense_strong = strong;
+    _sense_strong = TRUE;
     pack_for_each_that(_sense_obj, obj_can_sense2);
     equip_for_each_that(_sense_obj, obj_can_sense2);
 }

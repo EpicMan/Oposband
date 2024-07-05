@@ -350,11 +350,7 @@ extern bool stack_force_notes;    /* Merge inscriptions when stacking */
 extern bool stack_force_costs;    /* Merge discounts when stacking */
 extern bool expand_list;    /* Expand the power of the list commands */
 extern bool delay_autopick;  /* Always use delayed autopick */
-
-#ifdef WORLD_SCORE
-extern bool send_score;    /* Send score dump to the world score server */
-#endif
-
+extern bool unified_use;	/* Use a single 'a' command to use any item */
 extern bool allow_debug_opts;    /* Allow use of debug/cheat options */
 
 
@@ -388,11 +384,12 @@ extern bool alert_poison;       /* Alert on poisoning */
 /*** Birth Options ***/
 
 extern byte coffee_break;   /* Coffeebreak mode */
-extern bool easy_id;        /* Easy Identify */
+extern bool easy_id;        /* All items / flavors IDed on walkover */
 extern bool easy_lore;      /* Easy Monster Lore */
 extern bool empty_lore;     /* Always start with empty item lore */
 extern bool easy_damage;    /* Peek into damage and monster health */
 extern bool power_tele;     /* Use old-style, non-fuzzy telepathy */
+extern bool xp_penalty_to_score;    /* XP modifiers used to modify score instead. (*) */
 extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
 extern bool no_wilderness;  /* Play without a normal wilderness */
 extern bool ironman_shops;    /* Stores are permanently closed (*) */
@@ -415,7 +412,7 @@ extern bool no_selling;
 extern bool enable_virtues;
 extern bool easy_thalos;
 extern bool never_forget;
-extern bool no_chris;
+extern bool no_nexus_warp;
 extern bool no_scrambling;
 extern bool comp_mode; /*Todo: Make a town service to restore original race for some high price*/
 extern bool reduce_uniques;
@@ -438,7 +435,7 @@ extern bool destroy_debug;
 extern bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 extern bool destroy_identify;    /* Apply auto-destroy as identify an item */
 extern bool leave_worth;    /* Auto-destroyer leaves known worthy items */
-extern bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
+extern bool leave_equip;    /* Auto-destroyer leaves weapons and armor */
 extern bool leave_chest;    /* Auto-destroyer leaves closed chests */
 extern bool leave_wanted;    /* Auto-destroyer leaves wanted corpses */
 extern bool leave_corpse;    /* Auto-destroyer leaves corpses and skeletons */
@@ -579,7 +576,7 @@ extern monster_hook_type get_mon_num_hook;
 extern monster_hook_type get_mon_num2_hook;
 extern bool (*get_obj_num_hook)(int k_idx);
 extern int  obj_drop_theme;
-extern bool monk_armour_aux;
+extern bool monk_armor_aux;
 extern bool monk_notify_aux;
 extern wilderness_type **wilderness;
 extern u32b wilderness_seed;
@@ -942,6 +939,7 @@ extern void do_cmd_aim_wand(void);
 extern void do_cmd_use_staff(void);
 extern void do_cmd_zap_rod(void);
 extern void do_cmd_activate(void);
+extern void do_cmd_unified_use(void);
 extern void do_cmd_rerate_aux(void);
 extern int  life_rating(void);
 extern cptr life_rating_desc(bool use_attr);
@@ -1523,7 +1521,6 @@ extern bool save_player(void);
 extern bool load_player(void);
 extern void remove_loc(void);
 extern bool save_floor(saved_floor_type *sf_ptr, u32b mode);
-extern byte versio_sovitus(void);
 
 /* spells1.c */
 extern bool allow_ticked_off(monster_race *r_ptr);
@@ -1674,7 +1671,7 @@ extern void apply_nexus(monster_type *m_ptr);
 extern void phlogiston(void);
 extern bool brand_weapon(int brand_type);
 extern bool brand_weapon_aux(object_type *o_ptr);
-extern bool brand_armour_aux(object_type *o_ptr);
+extern bool brand_armor_aux(object_type *o_ptr);
 extern bool brand_weapon_slaying(int brand_flag, int res_flag);
 extern void call_the_(void);
 extern void fetch(int dir, int wgt, bool require_los);
@@ -1689,7 +1686,7 @@ extern bool alchemy(void);
 extern void break_curse(object_type *o_ptr);
 extern bool enchant(object_type *o_ptr, int n, int eflag);
 extern bool enchant_spell(int num_hit, int num_dam, int num_ac);
-extern bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr);
+extern bool item_tester_hook_nameless_weapon_armor(object_type *o_ptr);
 extern bool artifact_scroll(void);
 extern bool ident_spell(object_p p);
 extern bool identify_fully(object_p p);
@@ -2285,15 +2282,15 @@ extern bool object_is_device(object_type *o_ptr);
 extern bool object_is_bow(object_type *o_ptr);
 extern bool object_is_weapon_ammo(object_type *o_ptr);
 extern bool object_is_ammo(object_type *o_ptr);
-extern bool object_is_armour(object_type *o_ptr);
+extern bool object_is_armor(object_type *o_ptr);
 extern bool object_is_shield(object_type *o_ptr);
-extern bool object_is_body_armour(object_type *o_ptr);
+extern bool object_is_body_armor(object_type *o_ptr);
 extern bool object_is_ring(object_type *o_ptr);
 extern bool object_is_amulet(object_type *o_ptr);
 extern bool object_is_lite(object_type *o_ptr);
 extern bool object_is_boots(object_type *o_ptr);
 extern bool enchantment_hack;
-extern bool object_is_weapon_armour_ammo(object_type *o_ptr);
+extern bool object_is_weapon_armor_ammo(object_type *o_ptr);
 extern bool object_is_melee_weapon(object_type *o_ptr);
 extern bool object_is_jewelry(object_type *o_ptr);
 extern bool object_is_wearable(object_type *o_ptr);
@@ -2301,7 +2298,7 @@ extern bool object_is_equipment(object_type *o_ptr);
 extern bool object_is_unenchantable(object_type *o_ptr);
 extern bool object_allow_enchant_weapon(object_type *o_ptr);
 extern bool object_allow_enchant_melee_weapon(object_type *o_ptr);
-extern bool object_allow_enchant_armour(object_type *o_ptr);
+extern bool object_allow_enchant_armor(object_type *o_ptr);
 extern bool object_is_smith(object_type *o_ptr);
 extern bool object_is_artifact(object_type *o_ptr);
 extern bool object_is_art_or_ego(object_type *o_ptr);
@@ -2451,6 +2448,7 @@ extern race_t *dunadan_get_race(void);
 extern race_t *dwarf_get_race(void);
 extern race_t *einheri_get_race(void);
 extern race_t *ent_get_race(void);
+extern race_t *ghoul_get_race(void);
 extern race_t *gnome_get_race(void);
 extern race_t *golem_get_race(void);
 extern race_t *half_giant_get_race(void);
@@ -2467,6 +2465,7 @@ extern void    igor_body_bonuses(void);
 extern bool    igor_dissect_corpse(object_type *w_ptr);
 extern slot_t  igor_find_art(int which);
 extern race_t *imp_get_race(void);
+extern race_t *icky_thing_get_race(void);
 extern race_t *klackon_get_race(void);
 extern race_t *kobold_get_race(void);
 extern race_t *kutar_get_race(void);
@@ -2647,6 +2646,9 @@ extern int      alchemist_infusion_energy_use(void);
 extern void     alchemist_super_potion_effect(int sval);
 extern void     alchemist_set_hero(bool *notice, int uus_arvo, bool normal_hero);
 
+/* chaos_mage.c */
+extern class_t *chaos_mage_get_class(void);
+
 /* disciple.c */
 extern class_t *disciple_get_class(int psubclass);
 extern class_t *karrot_get_class(void);
@@ -2675,6 +2677,7 @@ extern void     troika_punish_quest_fail(void);
 extern bool     troika_allow_equip_item(object_type *o_ptr);
 extern bool     troika_allow_use_device(object_type *o_ptr);
 extern void     troika_bonus_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE]);
+extern void     nonlethal_ty_substitute(bool do_dec);
 
 /* duelist.c */
 extern cptr duelist_current_challenge(void);
@@ -2685,6 +2688,9 @@ extern int duelist_skill_sav(int m_idx);
 extern void strafing_spell(int cmd, variant *res);
 extern bool nemesis_hack;    /* Actually, it's in melee1.c */
 extern cptr duelist_equip_error(void);
+
+/* hexblade.c */
+extern class_t *hexblade_get_class(void);
 
 /* magic_eater.c */
 extern class_t *magic_eater_get_class(void);
@@ -2755,8 +2761,6 @@ extern class_t *cavalry_get_class(void);
 extern void     rodeo_spell(int cmd, variant *res);
 
 extern class_t *chaos_warrior_get_class(void);
-extern void     chaos_warrior_reward(void);
-extern void     nonlethal_ty_substitute(bool do_dec);
 
 extern class_t *devicemaster_get_class(int psubclass);
 extern bool     devicemaster_desperation;
@@ -2847,6 +2851,7 @@ extern void     rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS]);
 extern class_t *rune_knight_get_class(void);
 extern int      rune_knight_absorption(int m_idx, int type, int dam);
 
+/* samurai.c */																	 
 extern void     samurai_concentration_spell(int cmd, variant *res);
 extern void     cast_concentration(void);
 extern bool     samurai_can_concentrate(void);
@@ -3018,3 +3023,12 @@ extern void wild_reset_counters(void);
 extern void wild_dispel_player(void);
 extern bool wild_has_power(int power);
 extern void wild_reset_counter(int power);
+
+/* spells_c.c*/
+extern void change_realm_power(int cmd, variant* res);
+
+/* chaos_patron.c */
+extern void chaos_choose_effect(int);
+extern bool worships_chaos();
+extern cptr chaos_patron_name(int);
+extern void chaos_patron_reward(int category);

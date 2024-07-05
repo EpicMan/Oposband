@@ -281,7 +281,7 @@ static bool _mummy_pick_curse(object_type *o_ptr)
     {
         _curse_type *_curse = &_mummy_curses[i];
         if ((_curse->flag == OFC_LOW_MELEE) && (!object_is_melee_weapon(o_ptr))) continue;
-        if ((_curse->flag == OFC_LOW_AC) && (!object_is_armour(o_ptr))) continue;
+        if ((_curse->flag == OFC_LOW_AC) && (!object_is_armor(o_ptr))) continue;
         if (_curse->lev > p_ptr->lev) continue;
         if (o_ptr->curse_flags & _curse->flag) continue;
         choices[ct++] = i;

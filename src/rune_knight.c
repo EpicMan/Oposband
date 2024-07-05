@@ -108,7 +108,7 @@ void rune_calc_bonuses(object_type *o_ptr)
         p_ptr->auto_id = TRUE;
     if (o_ptr->rune == RUNE_SHADOW)
     {
-        if (object_is_body_armour(o_ptr) || o_ptr->tval == TV_CLOAK)
+        if (object_is_body_armor(o_ptr) || o_ptr->tval == TV_CLOAK)
             p_ptr->skills.stl += 5 * p_ptr->lev / 50;
     }
     if (o_ptr->rune == RUNE_HASTE)
@@ -134,7 +134,7 @@ void rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS])
     }
     if (o_ptr->rune == RUNE_LIFE)
     {
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
             stats[A_CON] += 1;
     }
     if (o_ptr->rune == RUNE_MIND)
@@ -146,7 +146,7 @@ void rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS])
     {
         stats[A_STR] += 2;
         stats[A_CON] += 2;
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
             stats[A_DEX] += 2;
     }
 }
@@ -267,7 +267,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
             _add_flag(o_ptr, OF_BRAND_FIRE);
         if (object_is_shield(o_ptr))
             _add_flag(o_ptr, OF_RES_FIRE);
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
         {
             _add_flag(o_ptr, OF_RES_FIRE);
             _add_flag(o_ptr, OF_AURA_FIRE);
@@ -301,7 +301,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
     case RUNE_EARTH:
         if (object_is_melee_weapon(o_ptr))
             _add_flag(o_ptr, OF_VORPAL);
-        else if (object_is_body_armour(o_ptr))
+        else if (object_is_body_armor(o_ptr))
         {
             _add_flag(o_ptr, OF_RES_SHARDS);
             _add_flag(o_ptr, OF_AURA_SHARDS);
@@ -324,7 +324,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
 
     case RUNE_STABILITY:
         _add_flag(o_ptr, OF_RES_NEXUS);
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
         {
             _add_flag(o_ptr, OF_RES_CHAOS);
             _add_flag(o_ptr, OF_RES_DISEN);
@@ -341,7 +341,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
         else
         {
             _add_flag(o_ptr, OF_RES_NETHER);
-            if (object_is_body_armour(o_ptr))
+            if (object_is_body_armor(o_ptr))
                 _add_flag(o_ptr, OF_RES_POIS);
         }
         break;
@@ -353,7 +353,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
         break;
 
     case RUNE_MIGHT:
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
         {
             _add_flag(o_ptr, OF_SUST_STR);
             _add_flag(o_ptr, OF_SUST_DEX);
@@ -373,7 +373,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
 
     case RUNE_IMMORTALITY:
         _add_flag(o_ptr, OF_RES_TIME);
-        if (object_is_body_armour(o_ptr))
+        if (object_is_body_armor(o_ptr))
         {
             _add_flag(o_ptr, OF_SUST_STR);
             _add_flag(o_ptr, OF_SUST_INT);
@@ -436,7 +436,7 @@ static void _rune_default_spell(int cmd, variant *res)
 
 static bool _obj_absorption_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr)
+    if ( object_is_body_armor(o_ptr)
       || object_is_melee_weapon(o_ptr)
       || object_is_shield(o_ptr) )
     {
@@ -477,7 +477,7 @@ static void _obj_absorption_spell(int cmd, variant *res)
 
 static bool _obj_protection_pred(object_type *o_ptr)
 {
-    if (object_is_armour(o_ptr))
+    if (object_is_armor(o_ptr))
         return TRUE;
     return FALSE;
 }
@@ -514,7 +514,7 @@ static void _obj_protection_spell(int cmd, variant *res)
 
 static bool _obj_regeneration_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr)
+    if ( object_is_body_armor(o_ptr)
       || o_ptr->tval == TV_CLOAK )
     {
         return TRUE;
@@ -554,7 +554,7 @@ static void _obj_regeneration_spell(int cmd, variant *res)
 
 static bool _obj_fire_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr)
+    if ( object_is_body_armor(o_ptr)
       || object_is_melee_weapon(o_ptr)
       || object_is_shield(o_ptr) 
       || o_ptr->tval == TV_CLOAK
@@ -633,7 +633,7 @@ static void _obj_air_spell(int cmd, variant *res)
 
 static bool _obj_water_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr)
+    if ( object_is_body_armor(o_ptr)
       || object_is_melee_weapon(o_ptr)
       || object_is_shield(o_ptr) 
       || o_ptr->tval == TV_CLOAK
@@ -711,7 +711,7 @@ static void _obj_light_spell(int cmd, variant *res)
 static bool _obj_shadow_pred(object_type *o_ptr)
 {
     if ( object_is_shield(o_ptr)
-      || object_is_body_armour(o_ptr)
+      || object_is_body_armor(o_ptr)
       || object_is_helmet(o_ptr)
       || o_ptr->tval == TV_CLOAK )
     {
@@ -751,7 +751,7 @@ static bool _obj_earth_pred(object_type *o_ptr)
 {
     if ( (object_is_melee_weapon(o_ptr) && p_ptr->lev >= 35)
       || object_is_shield(o_ptr)
-      || object_is_body_armour(o_ptr)
+      || object_is_body_armor(o_ptr)
       || o_ptr->tval == TV_CLOAK )
     {
         return TRUE;
@@ -959,7 +959,7 @@ static void _obj_sacrifice_spell(int cmd, variant *res)
 static bool _obj_life_pred(object_type *o_ptr)
 {
     if ( object_is_shield(o_ptr)
-      || object_is_body_armour(o_ptr)
+      || object_is_body_armor(o_ptr)
       || o_ptr->tval == TV_LITE )
     {
         return TRUE;
@@ -996,7 +996,7 @@ static void _obj_life_spell(int cmd, variant *res)
 
 static bool _obj_stability_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr)
+    if ( object_is_body_armor(o_ptr)
       || object_is_helmet(o_ptr)
       || o_ptr->tval == TV_CLOAK
       || o_ptr->tval == TV_BOOTS )
@@ -1065,7 +1065,7 @@ static bool _obj_death_pred(object_type *o_ptr)
 {
     if ( object_is_melee_weapon(o_ptr)
       || object_is_shield(o_ptr)
-      || object_is_body_armour(o_ptr)
+      || object_is_body_armor(o_ptr)
       || object_is_helmet(o_ptr) )
     {
         return TRUE;
@@ -1139,7 +1139,7 @@ static void _obj_mind_spell(int cmd, variant *res)
 
 static bool _obj_might_pred(object_type *o_ptr)
 {
-    if ( object_is_body_armour(o_ptr) 
+    if ( object_is_body_armor(o_ptr) 
       || object_is_helmet(o_ptr) ) 
     {
         return TRUE;
@@ -1243,7 +1243,7 @@ static void _obj_good_fortune_spell(int cmd, variant *res)
 static bool _obj_immortality_pred(object_type *o_ptr)
 {
     if ( object_is_shield(o_ptr) 
-      || object_is_body_armour(o_ptr)
+      || object_is_body_armor(o_ptr)
       || object_is_helmet(o_ptr) 
       || o_ptr->tval == TV_CLOAK )
     {

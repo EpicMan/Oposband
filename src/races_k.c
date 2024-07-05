@@ -156,7 +156,7 @@ race_t *kutar_get_race(void)
                     "but renders them resistant to being confused. Due to their unearthly "
                     "calmness and serenity, Kutars are extremely stealthy. They learn the "
                     "special ability to expand their body horizontally; this increases "
-                    "their armour class, but renders them vulnerable to curses.";
+                    "their armor class, but renders them vulnerable to curses.";
 
         me.stats[A_STR] =  0;
         me.stats[A_INT] = -1;

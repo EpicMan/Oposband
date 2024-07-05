@@ -246,7 +246,7 @@ bool auto_map_area;
 bool limit_shop_prompts;
 bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 bool use_pack_slots;
-
+bool unified_use;	/* Use the 'a' Activate command for all items */
 
 /*** Map Screen Options ***/
 
@@ -317,11 +317,6 @@ bool stack_force_notes;    /* Merge inscriptions when stacking */
 bool stack_force_costs;    /* Merge discounts when stacking */
 bool expand_list;    /* Expand the power of the list commands */
 bool delay_autopick;  /* Always use delayed autopick */
-
-#ifdef WORLD_SCORE
-bool send_score;    /* Send score dump to the world score server */
-#endif
-
 bool allow_debug_opts;    /* Allow use of debug/cheat options */
 
 
@@ -381,7 +376,7 @@ bool no_selling;
 bool enable_virtues;
 bool easy_thalos;
 bool never_forget;
-bool no_chris;
+bool no_nexus_warp;
 bool no_scrambling;
 bool comp_mode;
 bool reduce_uniques;
@@ -396,6 +391,8 @@ bool wacky_rooms;
 bool melee_challenge;
 bool no_melee_challenge;
 bool no_wanted_points;
+bool xp_penalty_to_score;    /* Monsters learn from their mistakes (*) */
+
 
 /*** Easy Object Auto-Destroyer ***/
 
@@ -404,7 +401,7 @@ bool destroy_debug;
 bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 bool destroy_identify;    /* Apply auto-destroy as identify an item */
 bool leave_worth;    /* Auto-destroyer leaves known worthy items */
-bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
+bool leave_equip;    /* Auto-destroyer leaves weapons and armor */
 bool leave_chest;    /* Auto-destroyer leaves closed chests */
 bool leave_wanted;    /* Auto-destroyer leaves wanted corpses */
 bool leave_corpse;    /* Auto-destroyer leaves corpses and skeletons */
@@ -1021,8 +1018,8 @@ bool (*get_obj_num_hook)(int k_idx);
 int obj_drop_theme;
 
 
-/* Hack, monk armour */
-bool monk_armour_aux;
+/* Hack, monk armor */
+bool monk_armor_aux;
 bool monk_notify_aux;
 
 #ifdef ALLOW_EASY_OPEN /* TNB */

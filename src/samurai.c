@@ -326,7 +326,7 @@ cptr do_hissatsu_spell(int spell, int mode)
         if (browse) return NULL;
         if (cast)
         {
-            if (!ident_spell(object_is_weapon_armour_ammo)) return NULL;
+            if (!ident_spell(object_is_weapon_armor_ammo)) return NULL;
         }
         break;
 

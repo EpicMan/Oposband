@@ -130,7 +130,7 @@ void py_birth_obj(object_type *o_ptr)
         return;
 
     /* Androids can hit CL9 or more with starting Chain Mail! */
-    if (p_ptr->prace == RACE_ANDROID && object_is_body_armour(o_ptr))
+    if (p_ptr->prace == RACE_ANDROID && object_is_body_armor(o_ptr))
         return;
 
     /* Weed out duplicate gear (e.g. Artemis Archer) but note
@@ -1357,12 +1357,12 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
                     CLASS_WEAPONSMITH, -1} },
     { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
-    { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
+    { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_CHAOS_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
                     CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
     { "Devices", { CLASS_ALCHEMIST, CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
     { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
-    { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
+    { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_HEXBLADE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
                     CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, -1} },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_ELEMENTALIST, CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
@@ -3467,7 +3467,7 @@ static void _birth_finalize(void)
     }
 
     /* Can't have people sneaking out of R'lyeh by way of nexus attack... */
-    if (thrall_mode) no_chris = TRUE;
+    if (thrall_mode) no_nexus_warp = TRUE;
 
     equip_init();
     pack_init();
