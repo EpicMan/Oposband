@@ -241,6 +241,7 @@ F:ONLY_ITEM | DROP_90 | DROP_GOOD | DROP_GREAT
 F:OPEN_DOOR | BASH_DOOR | HAS_LITE_1 |
 F:NO_CONF | NO_SLEEP
 P:Copy:Hobbit:Warrior
+P:Body:NoShoes
 D:Before you appears a broad thick-set hobbit with a round red face.
 D:"What's wrong with old Maggot?" asked Pippin. "He's a good friend to
 D:all the Brandybucks. Of course he's a terror to trespassers, and keeps
@@ -1144,7 +1145,7 @@ F:RAND_25 | DROP_60 | DROP_CORPSE
 F:BASH_DOOR | CAN_SWIM
 F:EVIL
 P:Copy:Yeek:Warrior
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:150
 D:A large black serpent's body with a female torso.
 
@@ -1189,6 +1190,7 @@ F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR |
 F:EVIL
 F:DROP_SKELETON | DROP_CORPSE
 P:Copy:Hobbit:Tourist
+P:Body:NoShoes
 O:DROP_HOBBIT
 D:A short little guy, in bedraggled clothes. He appears to be looking
 D:for a good tavern as he mutters something about missing second breakfast.
@@ -1470,7 +1472,7 @@ F:RAND_25 | TAKE_ITEM | DROP_60 | DROP_CORPSE
 F:BASH_DOOR | CAN_SWIM | WILD_SHORE |
 F:EVIL | RES_ACID
 P:Copy:Yeek:Warrior
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:150
 D:A large green serpent with a female's torso. Her green skin glistens with
 D:acid.
@@ -1982,7 +1984,7 @@ F:RAND_25 | DROP_60 |
 F:TAKE_ITEM | BASH_DOOR | DROP_CORPSE
 F:EVIL
 P:Copy:Yeek:Warrior
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:150
 D:A large pink snake with a woman's torso.
 
@@ -4020,7 +4022,7 @@ F:EVIL
 S:1_IN_4
 S:PARALYZE | CONFUSE | BO_COLD | HEAL | DARKNESS
 P:Copy:Yeek:Mage
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:200
 O:DROP_MAGE
 D:A giant snake-like figure with a woman's torso. Not as strong
@@ -4082,7 +4084,7 @@ F:RAND_25 | DROP_60 | DROP_1D2 | DROP_CORPSE
 F:OPEN_DOOR | BASH_DOOR | CAN_SWIM |
 F:EVIL
 P:Copy:Human:Warrior
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:200
 D:A giant snake-like figure with a woman's torso.
 
@@ -6834,7 +6836,7 @@ F:INVISIBLE | OPEN_DOOR | BASH_DOOR |
 F:EVIL | NO_CONF | NO_SLEEP |
 F:DROP_CORPSE | POS_SEE_INVIS
 P:Copy:Demigod:Priest
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:200
 S:1_IN_4 |
 S:HEAL | BLIND | MIND_BLAST | DARKNESS
@@ -8633,6 +8635,7 @@ F:FORCE_MAXHP | OPEN_DOOR | FRIENDS | DROP_90 |
 F:SMART | EVIL | RES_POIS | RES_COLD | MALE |
 F:DROP_SKELETON | DROP_CORPSE
 P:Copy:Hobbit:Rogue
+P:Body:NoShoes
 S:FREQ_15 | SHOOT(6d6)
 O:DROP_ARCHER
 D:A rebel halfling who has rejected the halfling tradition of archery.
@@ -10538,7 +10541,7 @@ S:1_IN_2 |
 S:PARALYZE | SCARE | CAUSE_3 | BO_FIRE | BO_PLASMA | BA_ACID |
 S:S_HYDRA
 P:Copy:Kobold:Chaos-Warrior
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:200
 D:Brand's one-time mistress. Her face could sink a thousand
 D:ships, but Brand is not too selective.
@@ -16132,7 +16135,7 @@ S:FREQ_10 | BR_LITE | BA_COLD | BR_COLD | BO_ICE | BO_COLD | BR_TIME
 D:Obsidian eyes stare at you as you bend before the shower of heavenly
 D:powers and spells...
 
-N:896:Bazooker
+N:896:Halfling Bazooker
 G:h:B
 I:110:8d40:40:60:60:170
 W:35:2:80:1452:0:0
@@ -16143,6 +16146,7 @@ B:HIT:HURT(2d4)
 F:MALE | FORCE_SLEEP | FORCE_MAXHP | DROP_1D2 | SMART
 F:DROP_CORPSE | DROP_SKELETON | CAN_SWIM
 P:Copy:Hobbit:Blood-Knight
+P:Body:NoShoes
 S:FREQ_10 | ROCKET(150)
 D:You watch in horror as he aims his massive weapon at you.
 
@@ -16401,6 +16405,7 @@ F:FORCE_MAXHP | DROP_CORPSE | DROP_SKELETON |
 F:ONLY_ITEM | DROP_2D2 | DROP_GOOD |
 F:OPEN_DOOR | BASH_DOOR |
 P:Copy:Hobbit:Rogue
+P:Body:NoShoes
 D:He is a sturdy hobbit who is renowned for his unusual strength and
 D:vigour. He can prove a troublesome opponent.
 
@@ -16497,7 +16502,7 @@ F:ONLY_ITEM | DROP_90 | DROP_2D2 |
 F:EVIL | NO_CONF | NO_SLEEP | SMART
 F:POS_SEE_INVIS
 P:Copy:Demigod:Priest
-P:Body:Naga
+P:Body:NoShoes
 P:Blows:200
 S:1_IN_7 |
 S:DARKNESS | CAUSE_4 | BO_ICE
@@ -20896,7 +20901,7 @@ F:MOVE_BODY | RES_FIRE | RES_POIS | RES_ACID | DROP_2D2 | DROP_GOOD |
 F:DROP_CORPSE | DROP_SKELETON | POS_GAIN_AC | CAN_SWIM | COLD_BLOOD |
 F:RIDING
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 S:1_IN_5
 S:BR_POIS
 
@@ -20913,7 +20918,7 @@ F:MOVE_BODY | RES_FIRE | RES_POIS | RES_ACID | DROP_2D2 | DROP_GOOD |
 F:DROP_CORPSE | DROP_SKELETON | POS_GAIN_AC | CAN_SWIM | COLD_BLOOD |
 F:RIDING |
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 S:1_IN_3
 S:BR_POIS | S_HYDRA | BA_ACID | BA_FIRE | BO_MANA |
 S:SCARE | CONFUSE | PARALYZE | SLOW | BLIND
@@ -21886,7 +21891,7 @@ F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS
 S:FREQ_15 | SLOW | CONFUSE | SCARE | BR_SHARDS | DETECT_OBJECTS 
 S:BR_FIRE |
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 D:A huge crystalline snake with razor-sharp fangs. Deep red hues reflect
 D:from it as it moves in the light.
 
@@ -21905,7 +21910,7 @@ F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS
 S:FREQ_15 | SLOW | CONFUSE | SCARE | BR_SHARDS | DETECT_OBJECTS 
 S:BR_POISON |
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 D:A huge crystalline snake with razor-sharp fangs. Deep green hues
 D:reflect from it as it moves in the light.
 
@@ -21924,7 +21929,7 @@ F:DROP_CORPSE | POS_GAIN_AC | POS_SEE_INVIS
 S:FREQ_15 | SLOW | CONFUSE | SCARE | BR_SHARDS | DETECT_OBJECTS
 S:BR_DISENCHANT | BR_DARK 
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 D:A huge crystalline snake with razor-sharp fangs. Deep purple hues
 D:reflect from it as it moves in the light.
 
@@ -22592,7 +22597,7 @@ S:FREQ_25
 S:CONFUSE | BR_FIRE | BR_PLASMA | BR_LITE | BR_DARK | BR_POISON | BR_NEXUS
 S:BR_NUKE | DETECT_OBJECTS
 P:Copy:Ogre:Warrior-Mage
-P:Body:Naga
+P:Body:NoShoes
 D:Worshipped by the Apotecs as god of the sun and pointless deaths, the
 D:Melter of Snows is a gigantic serpentine monster apparently intent on
 D:melting you next.
@@ -24161,7 +24166,7 @@ F:ANIMAL | RES_FIRE | RES_COLD | RES_ELEC | RES_POIS | RES_SOUN | RES_LITE |
 F:NO_CONF | NO_SLEEP | RIDING | REFLECTING
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Barbarian:Beastmaster
-P:Body:Naga
+P:Body:NoShoes
 S:FREQ_30 | BR_ACID | BR_ELEC | BR_NEXUS | BR_LITE | BR_CONFUSION |
 S:BA_WATER | BLIND | DETECT_MONSTERS | DETECT_OBJECTS
 D:This enormous serpent can drown you in water seemingly at will, and the
@@ -24763,7 +24768,7 @@ F:MOVE_BODY | IM_POIS | NO_CONF | NO_SLEEP | HINDU2 |
 F:OPEN_DOOR | BASH_DOOR | DROP_3D2 | DROP_1D2 | DROP_GOOD | DROP_GREAT |
 F:DROP_CORPSE | DROP_SKELETON | POS_GAIN_AC | COLD_BLOOD | RIDING
 P:Copy:Ogre:Warrior
-P:Body:Naga
+P:Body:NoShoes
 S:1_IN_2
 S:BR_POISON | S_NAGA
 D:A grand nagaraja. The gods and demons used him to churn the ocean and

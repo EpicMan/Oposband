@@ -1,5 +1,9 @@
 #include "angband.h"
 
+/* Body type constants */
+#define BODY_ICKY_THING		5
+#define BODY_NO_SHOES		35
+
 /****************************************************************
  * Amberite
  ****************************************************************/
@@ -38,7 +42,7 @@ race_t *amberite_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis =  4;
         me.skills.dev =  3;
@@ -265,7 +269,7 @@ race_t *android_get_race(void)
         me.stats[A_WIS] = -5;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis =  0;
         me.skills.dev = -3;
@@ -411,7 +415,7 @@ race_t *balrog_get_race(void)
         me.stats[A_WIS] =-10;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -5;
 
         me.skills.dis = -3;
         me.skills.dev =  8;
@@ -492,7 +496,7 @@ race_t *barbarian_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] =  0;
 
         me.skills.dis = -2;
         me.skills.dev = -7;
@@ -570,7 +574,7 @@ race_t *beastman_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] = -1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -5;
         me.skills.dev = -1;
@@ -818,7 +822,7 @@ race_t *centaur_get_race(void)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis =  0;
         me.skills.dev = -3;
@@ -883,7 +887,7 @@ race_t *cyclops_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -3;
         me.stats[A_CON] =  4;
-        me.stats[A_CHR] = -1;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = -4;
         me.skills.dev = -3;
@@ -949,7 +953,7 @@ race_t *dark_elf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] = -2;
-        me.stats[A_CHR] =  3;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis = 5;
         me.skills.dev = 7;
@@ -1436,7 +1440,7 @@ race_t *draconian_get_race(int psubrace)
         me.stats[A_WIS] =  1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = -2;
         me.skills.dev = 1;
@@ -1646,7 +1650,7 @@ race_t *dunadan_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] =  2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis =  4;
         me.skills.dev =  3;
@@ -1710,7 +1714,7 @@ race_t *dwarf_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] = -1;
 
         me.skills.dis = 2;
         me.skills.dev = 5;
@@ -1907,6 +1911,87 @@ race_t *ent_get_race(void)
 }
 
 /****************************************************************
+ * Ghoul
+ ****************************************************************/
+/*static power_info _ent_get_powers[] =
+{
+    { A_WIS, {10, 20, 70, summon_tree_spell}},
+    { -1, {-1, -1, -1, NULL} }
+};*/
+
+static power_info _ghoul_get_powers[] =
+{
+    { A_DEX, {30, 2, 40, detect_life_spell}},
+    { -1, {-1, -1, -1, NULL} }
+};
+
+static void _ghoul_calc_bonuses(void)
+{
+    res_add(RES_NETHER);
+    p_ptr->hold_life++;
+    p_ptr->see_inv++;
+    res_add(RES_POIS);
+    p_ptr->slow_digest = TRUE;
+    if (p_ptr->lev >= 10) res_add(RES_COLD);
+}
+static void _ghoul_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_RES_NETHER);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SLOW_DIGEST);
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, OF_RES_COLD);
+}
+race_t* ghoul_get_race(void)
+{
+    static race_t me = { 0 };
+    static bool init = FALSE;
+
+    if (!init)
+    {
+        me.name = "Ghoul";
+        me.desc = "This race of undead preys upon the dead and dying. Ghouls can learn"
+        "to sense living creatures around them and, having killed them, can"
+        "feast upon their corpses gaining nourishment. As an undead being,"
+        "Ghouls naturally resist the effects of cold, poison and life-draining"
+        "attacks.  As they grow stronger the effects of darkness and nether"
+        "upon them decreases.  In addition, the Ghoul's touch may paralyze"
+        "some oponents. Ghoul's make adequate fighters and poor spell casters.";
+
+        me.stats[A_STR] =  0;
+        me.stats[A_INT] = -1;
+        me.stats[A_WIS] = -1;
+        me.stats[A_DEX] = -1;
+        me.stats[A_CON] =  1;
+        me.stats[A_CHR] = -5;
+
+        me.skills.dis = -3;
+        me.skills.dev = -3;
+        me.skills.sav =  6;
+        me.skills.stl =  1;
+        me.skills.srh =  0;
+        me.skills.fos = 10;
+        me.skills.thn =  5;
+        me.skills.thb =  0;
+
+        me.life = 95;
+        me.base_hp = 18;
+        me.exp = 125;
+        me.infra = 2;
+        me.shop_adjust = 125;
+
+        me.calc_bonuses = _ghoul_calc_bonuses;
+        me.get_powers = _ghoul_get_powers;
+        me.get_flags = _ghoul_get_flags;
+        init = TRUE;
+    }
+
+    return &me;
+}
+
+/****************************************************************
  * Gnome
  ****************************************************************/
 static power_info _gnome_get_powers[] =
@@ -2030,7 +2115,7 @@ race_t *golem_get_race(void)
         me.stats[A_WIS] = -5;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  4;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -5;
         me.skills.dev = -5;
@@ -2094,7 +2179,7 @@ race_t *half_giant_get_race(void)
         me.stats[A_WIS] = -2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] = -2;
 
         me.skills.dis = -6;
         me.skills.dev = -5;
@@ -2164,12 +2249,12 @@ race_t *half_orc_get_race(void)
                         "and so tend to pay more for goods in town. The human part of their "
 			"heritage allows them to select a talent at level 30.";
 
-		me.stats[A_STR] = 2;
+		me.stats[A_STR] =  2;
 		me.stats[A_INT] = -1;
-		me.stats[A_WIS] = 0;
-		me.stats[A_DEX] = 0;
-		me.stats[A_CON] = 1;
-		me.stats[A_CHR] = -1;
+		me.stats[A_WIS] =  0;
+		me.stats[A_DEX] =  0;
+		me.stats[A_CON] =  1;
+		me.stats[A_CHR] = -2;
 
 		me.skills.dis = -3;
 		me.skills.dev = -3;
@@ -2186,7 +2271,7 @@ race_t *half_orc_get_race(void)
 		me.infra = 3;
 		me.shop_adjust = 120;
 
-                me.flags = RACE_DEMI_TALENT;
+        me.flags = RACE_DEMI_TALENT;
 		me.calc_bonuses = _half_orc_calc_bonuses;
 		me.get_flags = _half_orc_get_flags;
 
@@ -2232,7 +2317,7 @@ race_t *half_titan_get_race(void)
         me.stats[A_WIS] =  2;
         me.stats[A_DEX] = -2;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] =  3;
+        me.stats[A_CHR] =  1;
 
         me.skills.dis = -5;
         me.skills.dev =  3;
@@ -2295,7 +2380,7 @@ race_t *half_troll_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] = -3;
         me.stats[A_CON] =  3;
-        me.stats[A_CHR] = -2;
+        me.stats[A_CHR] = -3;
 
         me.skills.dis = -5;
         me.skills.dev = -6;
@@ -2354,7 +2439,7 @@ race_t *high_elf_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  3;
         me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
+        me.stats[A_CHR] =  3;
 
         me.skills.dis =  4;
         me.skills.dev =  9;
@@ -2425,6 +2510,10 @@ race_t *hobbit_get_race(void)
         me.shop_adjust = 100;
 
         me.get_powers = _hobbit_get_powers;
+        
+		/* Hobbits don't wear shoes! */
+		me.equip_template = &b_info[BODY_NO_SHOES];
+
         init = TRUE;
     }
 
@@ -2509,6 +2598,171 @@ race_t *human_get_race(void)
     }
 
     return &me;
+}
+
+/****************************************************************
+ * Icky Thing
+ ****************************************************************/
+/* Charm an immobile monster and "ride" it. */
+static void _symbiosis_spell(int cmd, variant* res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Symbiosis");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charm an immobile monster and let it ride on you.");
+		break;
+	case SPELL_FLAGS:
+		var_set_int(res, PWR_CONFUSED);
+		break;
+	case SPELL_CAST:
+	{
+		char m_name[80];
+		monster_type* m_ptr;
+		monster_race* r_ptr;
+		int rlev;
+		bool tame_success = FALSE;
+
+		var_set_bool(res, FALSE);
+		if (p_ptr->riding)
+		{
+			msg_print("You already have a symbiant.");
+			return;
+		}
+		if (!do_riding(TRUE)) return;
+
+		var_set_bool(res, TRUE);
+
+		m_ptr = &m_list[p_ptr->riding];
+		r_ptr = &r_info[m_ptr->r_idx];
+		monster_desc(m_name, m_ptr, 0);
+		/*cmsg_format(TERM_L_GREEN, "You try to attach %s to yourself.", m_name);*/
+		
+		rlev = r_ptr->level;
+		if (r_ptr->flags1 & RF1_UNIQUE) rlev = rlev * 3 / 2;
+		if (rlev > 60) rlev = 60 + (rlev - 60) / 2;
+
+		if (!(r_ptr->flags1 & (RF1_NEVER_MOVE)))
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis with a moving creature!");
+			tame_success = FALSE;
+		}
+		else if (p_ptr->inside_arena || p_ptr->inside_battle)
+		{
+			cmsg_format(TERM_RED, "You cannot enter symbiosis in the arena!");
+			tame_success = FALSE;
+		}
+		else if ((r_ptr->flags7 & RF7_GUARDIAN) || (r_ptr->flagsx & RFX_QUESTOR))
+		{
+			cmsg_format(TERM_RED, "It is impossible to enter symbiosis with %s!", m_name);
+			tame_success = FALSE;
+		}
+		else if (!((skills_riding_current() / 120 + p_ptr->lev) >= rlev
+			&& rlev < p_ptr->lev * 3 / 2 + (p_ptr->lev / 5)))
+		{
+			cmsg_format(TERM_RED, "You are not powerful enough for %s to grow on.", m_name);
+			tame_success = FALSE;
+		}
+		else
+		{
+			tame_success = TRUE;
+		}
+
+		if (tame_success)
+		{
+			cmsg_format(TERM_L_GREEN, "You enter symbiosis with %s.", m_name);
+			set_pet(m_ptr);
+		}
+		else
+		{
+			rakuba(1, TRUE);
+			p_ptr->riding = 0;
+		}
+	}
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+static power_info _icky_thing_get_powers[] =
+{
+	{ A_CON, {2, 0, 0, _symbiosis_spell}},
+	{ -1, {-1, -1, -1, NULL} }
+};
+static void _icky_thing_calc_bonuses(void)
+{
+	res_add(RES_POIS);
+	if (p_ptr->lev >= 10) res_add(RES_ACID);
+}
+static void _icky_thing_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+	add_flag(flgs, OF_RES_POIS);
+	if (p_ptr->lev >= 10)
+		add_flag(flgs, OF_RES_ACID);
+}
+static void _icky_thing_birth(void)
+{
+	py_birth_obj_aux(TV_FOOD, SV_FOOD_SLIME_MOLD, 2 + rand_range(3, 7));
+	py_birth_light();
+}
+
+race_t* icky_thing_get_race(void)
+{
+	static race_t me = { 0 };
+	static bool init = FALSE;
+
+	if (!init)
+	{
+		me.name = "Icky thing";
+		me.desc = "Icky things are smallish, slimy, icky, blobby creatures. They"
+			"are despised and ignored by other creatures, this is a blessing in"
+			"disguise as being ignored means they are stealthy. "
+			"Icky things are fairly weak overall but their slimy coatings protect"
+			"them from poisons and eventually acid.  Icky things a good friends"
+			"of molds and other dungeon growths and even allow them to grow on"
+			"themselves in a symbiotic relationship (in game turns, they can 'ride'"
+			"immobile creatures, but in reverse as the icky thing walks around"
+			"instead of the mount).";
+
+		me.stats[A_STR] = -1;
+		me.stats[A_INT] = -1;
+		me.stats[A_WIS] = -1;
+		me.stats[A_DEX] = -1;
+		me.stats[A_CON] = -1;
+		me.stats[A_CHR] = -3;
+
+		me.skills.dis = -1;
+		me.skills.dev = -1;
+		me.skills.sav = 2;
+		me.skills.stl = 2;
+		me.skills.srh = 6;
+		me.skills.fos = 11;
+		me.skills.thn = 5;
+		me.skills.thb = -1;
+
+		me.life = 90;
+		me.base_hp = 10;
+		me.exp = 75;
+		me.infra = 3;
+		me.shop_adjust = 130;
+
+		me.calc_bonuses = _icky_thing_calc_bonuses;
+		me.get_flags = _icky_thing_get_flags;
+		me.get_powers = _icky_thing_get_powers;
+
+		/* Icky things have special slots */
+		/*me.equip_template = &b_info[BODY_ICKY_THING]; */
+
+        me.boss_r_idx = MON_ICKY_QUEEN;
+
+		init = TRUE;
+	}
+
+	return &me;
 }
 
 /****************************************************************

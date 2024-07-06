@@ -68,6 +68,7 @@ static void _birth_finalize(void);
 static int _inkey(void);
 static void _sync_term(doc_ptr doc);
 static int _count(int ids[]);
+static void _random_char(void);
 
 /************************************************************************
  * Public Entrypoints
@@ -466,6 +467,7 @@ static int _welcome_ui(void)
             p_ptr->realm2 = previous_char.realm2;
             p_ptr->dragon_realm = previous_char.dragon_realm;
             p_ptr->au = previous_char.au;            
+            p_ptr->chaos_patron = previous_char.chaos_patron;
             for (i = 0; i < MAX_STATS; i++)
             {
                 p_ptr->stat_cur[i] = previous_char.stat_max[i];
@@ -535,11 +537,11 @@ static void _set_mode(int mode)
     {
         if (first || game_mode == GAME_MODE_MONSTER)
         {
-            p_ptr->prace = RACE_HOBBIT;
+            p_ptr->prace = RACE_HUMAN;
             p_ptr->psubrace = 0;
-            p_ptr->pclass = CLASS_ROGUE;
+            p_ptr->pclass = CLASS_WARRIOR;
             p_ptr->psubclass = 0;
-            p_ptr->realm1 = REALM_BURGLARY;
+            p_ptr->realm1 = REALM_NONE;
             p_ptr->realm2 = REALM_NONE;
             p_ptr->dragon_realm = DRAGON_REALM_NONE;
             p_ptr->personality = PERS_ORDINARY;
@@ -783,11 +785,20 @@ static int _race_class_ui(void)
             else if (p_ptr->realm1)
                 doc_display_help("magic.txt", realm_names[p_ptr->realm1]);
             break;
+        case 'S':
+            if (randint1(10) % 2)
+                p_ptr->psex = SEX_FEMALE;
+            else
+                p_ptr->psex = SEX_MALE;
+            break;
         case 's':
             if (p_ptr->psex == SEX_MALE)
                 p_ptr->psex = SEX_FEMALE;
             else
                 p_ptr->psex = SEX_MALE;
+            break;
+        case 'x': /* Randomize character */
+            _random_char();
             break;
         }
     }
@@ -1023,16 +1034,16 @@ b_race_group_t b_race_groups[B_MAX_RACE_GROUPS] = {
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
     { "Angel/Demon",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orc/Troll/Giant",
+    { "Monstrous Humanoid",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_ORC, RACE_HALF_TITAN,
          RACE_HALF_TROLL, RACE_KOBOLD, RACE_OGRE, RACE_SNOTLING, -1} },
     { "Shapeshifter",
         {RACE_BEORNING, RACE_DOPPELGANGER, RACE_WEREWOLF, -1} },
     { "Undead",
-        {RACE_EINHERI, RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
+        {RACE_EINHERI, RACE_GHOUL, RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
     { "Other",
         {RACE_ANDROID, RACE_BEASTMAN, RACE_BOIT, RACE_CENTAUR, RACE_DRACONIAN, RACE_ENT,
-         RACE_GOLEM, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
+         RACE_GOLEM, RACE_ICKY_THING, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
 };
 
 b_race_group_t b_mon_race_groups[B_MAX_MON_RACE_GROUPS] = {
@@ -1346,7 +1357,7 @@ static vec_ptr _get_classes_aux(int ids[])
 }
 
 #define _MAX_CLASSES_PER_GROUP 20
-#define _MAX_CLASS_GROUPS      11
+#define _MAX_CLASS_GROUPS      10
 typedef struct _class_group_s {
     cptr name;
     int ids[_MAX_CLASSES_PER_GROUP];
@@ -1360,14 +1371,13 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_CHAOS_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
                     CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
     { "Devices", { CLASS_ALCHEMIST, CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
-    { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_DISCIPLE, CLASS_HEXBLADE, CLASS_NINJA_LAWYER, CLASS_PALADIN,
                     CLASS_RANGER, CLASS_RED_MAGE, CLASS_WARRIOR_MAGE, -1} },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_ELEMENTALIST, CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
-    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_LAWYER, CLASS_POLITICIAN,
+    { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_LAWYER, CLASS_POLITICIAN, CLASS_PRIEST, 
                 CLASS_RAGE_MAGE, CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
 };
 
@@ -1541,6 +1551,8 @@ static int _subclass_ui(void)
             rc = _patron_ui();
         else if (p_ptr->pclass == CLASS_ELEMENTALIST)
             rc = _elementalist_ui();
+		else if (p_ptr->pclass == CLASS_CHAOS_MAGE || p_ptr->pclass == CLASS_CHAOS_WARRIOR)
+			rc = _chaos_patron_ui(); /* not really a subclass */
         else
         {
             p_ptr->psubclass = 0;
@@ -1860,6 +1872,56 @@ static int _patron_ui(void)
             }
         }
     }
+}
+
+static int _chaos_patron_ui(void)
+{
+	assert(p_ptr->pclass == CLASS_CHAOS_WARRIOR || p_ptr->pclass == CLASS_CHAOS_MAGE);
+	for (;;)
+	{
+		int cmd, i;
+
+		doc_clear(_doc);
+		_race_class_top(_doc);
+
+		doc_insert(_doc, "<color:G>Choose Patron</color>\n");
+		for (i = 0; i < MAX_CHAOS_PATRON; i++)
+		{
+			cptr patron_name = chaos_patron_name(i);
+			doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+				I2A(i),
+				p_ptr->chaos_patron == i ? 'B' : 'w',
+				patron_name
+			);
+		}
+		doc_insert(_doc, "  <color:y>*</color>) Random\n");
+		doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+		_sync_term(_doc);
+		cmd = _inkey();
+		if (cmd == ESCAPE) return UI_CANCEL;
+		else if (cmd == '\t') _inc_rcp_state();
+		else if (cmd == '=') _birth_options();
+		else if (cmd == '?') doc_display_help("Chaos_Patrons.txt", NULL);
+		else if (isupper(cmd))
+		{
+			i = A2I(tolower(cmd));
+			if (0 <= i && i < MAX_CHAOS_PATRON)
+			{
+				doc_display_help("Chaos_Patrons.txt", chaos_patrons[i]);
+			}
+		}
+		else
+		{
+			if (cmd == '*') i = randint0(MAX_CHAOS_PATRON);
+			else i = A2I(cmd);
+			if (0 <= i && i < MAX_CHAOS_PATRON)
+			{
+				p_ptr->chaos_patron = i;
+				return UI_OK;
+			}
+		}
+	}
 }
 
 cptr _game_speed_text[GAME_SPEED_MAX] = {
@@ -2407,8 +2469,8 @@ static int _char_to_stat(char which);
 
 static int _stats_ui(void)
 {
-    race_t         *race_ptr = get_race();
-    class_t        *class_ptr = get_class();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     /* Initialize stats with reasonable defaults.
@@ -2722,7 +2784,9 @@ static void _stats_init(void)
         case CLASS_BLOOD_MAGE:
         case CLASS_BLUE_MAGE:
         case CLASS_NECROMANCER:
-        {
+		case CLASS_CHAOS_MAGE:
+        case CLASS_SORCERER: 
+		{
             int stats[6] = { 16, 17, 9, 9, 16, 9 };
             _stats_init_aux(stats);
             break;
@@ -2735,12 +2799,6 @@ static void _stats_init(void)
             break;
         }
 
-        case CLASS_SORCERER:
-        {
-            int stats[6] = { 16, 9, 9, 9, 16, 17 };
-            _stats_init_aux(stats);
-            break;
-        }
         case CLASS_PRIEST:
         case CLASS_RANGER:
         case CLASS_PALADIN:
@@ -2784,6 +2842,7 @@ static void _stats_init(void)
         case CLASS_BARD:
         case CLASS_POLITICIAN:
         case CLASS_WARLOCK:
+		case CLASS_HEXBLADE:
         {
             int stats[6] = { 16, 8, 8, 16, 11, 17 };
             _stats_init_aux(stats);
@@ -3046,36 +3105,46 @@ static void _race_class_info(doc_ptr doc)
         _stats_add(stats, pers_ptr->stats);
         if (p_ptr->dragon_realm)
             _stats_add(stats, realm_ptr->stats);
+        if (xp_penalty_to_score)
+            doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Score</color>\n");
+        else
+            doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
+        _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
 
-        doc_insert(doc, "<style:heading><color:w>  STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
-        if (game_mode != GAME_MODE_BEGINNER)
-        {
-            doc_printf(doc, "  ");
-            _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, pers_ptr->exp);
-        }
-        doc_printf(doc, "  ");
+        int xp = pers_ptr->exp;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
+        doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, xp);
+        
+        xp = race_ptr->exp;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
         _stats_line(doc, race_ptr->stats, spell_stat, 'G');
-        doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, race_ptr->exp);
+        doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, xp);
         if (game_mode != GAME_MODE_MONSTER)
         {
             doc_printf(doc, "  ");
+            xp = class_ptr->exp;
+            if (xp_penalty_to_score) xp = 100 * 100 / xp;
             _stats_line(doc, class_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%  %+3d  %3d%%\n", class_ptr->life, class_ptr->base_hp, class_ptr->exp);
+            doc_printf(doc, "%3d%%  %+3d  %3d%%\n", class_ptr->life, class_ptr->base_hp, xp);
         }
         if (p_ptr->dragon_realm)
         {
-            doc_printf(doc, "  ");
+            xp = realm_ptr->exp;
+            if (xp_penalty_to_score) xp = 100 * 100 / xp;
+            
             _stats_line(doc, realm_ptr->stats, spell_stat, 'G');
-            doc_printf(doc, "%3d%%       %3d%%\n", realm_ptr->life, realm_ptr->exp);
+            doc_printf(doc, "%3d%%       %3d%%\n", realm_ptr->life, xp);
+
         }
 
         doc_printf(doc, "<color:R>==</color>");
         _stats_line(doc, stats, spell_stat, 'R');
+		xp = race_ptr->exp * class_ptr->exp * pers_ptr->exp * realm_ptr->exp / 1000000;
+        if (xp_penalty_to_score) xp = 100 * 100 / xp;
         doc_printf(doc, "<color:R>%3d%%  %+3d  %3d%%</color>\n",
             race_ptr->life * class_ptr->life * pers_ptr->life * realm_ptr->life / 1000000,
             race_ptr->base_hp + class_ptr->base_hp,
-            race_ptr->exp * class_ptr->exp * pers_ptr->exp * realm_ptr->exp / 1000000
+			xp
         );
         doc_insert(doc, "</style>");
     }
@@ -3401,6 +3470,7 @@ static void _birth_finalize(void)
     previous_char.realm2 = p_ptr->realm2;
     previous_char.dragon_realm = p_ptr->dragon_realm;
     previous_char.au = p_ptr->au;
+	previous_char.chaos_patron = p_ptr->chaos_patron;
 
     for (i = 0; i < MAX_STATS; i++)
         previous_char.stat_max[i] = p_ptr->stat_max[i];
@@ -3498,7 +3568,7 @@ static void _birth_finalize(void)
     /* Everybody gets a chaos patron. The chaos warrior is obvious,
      * but anybody else can acquire MUT_CHAOS_GIFT during the game */
     if ((p_ptr->chaos_patron == RANDOM_PATRON) || ((p_ptr->pclass != CLASS_CHAOS_WARRIOR) &&
-        (p_ptr->pclass != CLASS_DISCIPLE) && (!personality_includes_(PERS_CHAOTIC))) || ((p_ptr->pclass == CLASS_DISCIPLE) && (p_ptr->chaos_patron < MIN_PURPLE_PATRON)) ||
+        (p_ptr->pclass != CLASS_DISCIPLE) && (p_ptr->pclass != CLASS_CHAOS_MAGE) && (!personality_includes_(PERS_CHAOTIC))) || ((p_ptr->pclass == CLASS_DISCIPLE) && (p_ptr->chaos_patron < MIN_PURPLE_PATRON)) ||
         ((p_ptr->pclass != CLASS_DISCIPLE) && (p_ptr->chaos_patron > MAX_CHAOS_PATRON)))
         p_ptr->chaos_patron = _random_patron();
 
@@ -3531,3 +3601,180 @@ static void _birth_finalize(void)
     p_ptr->csp = p_ptr->msp;
     process_player_name(FALSE);
 }
+
+static void _random_char(void)
+{
+    /* Random sex */
+    int rn = randint1(10);
+    if (rn % 2)
+        p_ptr->psex = SEX_FEMALE;
+    else
+        p_ptr->psex = SEX_MALE;
+
+    /* Random personality */
+    vec_ptr personalities = _pers_choices(FALSE);
+
+    p_ptr->personality = randint0(vec_length(personalities));
+
+    /* Random chaos patron */
+    p_ptr->chaos_patron = randint0(MAX_CHAOS_PATRON);
+
+    /* Monster mode 30% of the time*/
+    if (rn <= 3)
+    {
+        _set_mode(GAME_MODE_MONSTER);
+        int i = randint0(B_MAX_MON_RACE_GROUPS);
+        /*
+        b_race_group_ptr g_ptr = &b_mon_race_groups[i];
+                if (_count(g_ptr->ids) == 1)
+                {
+                    int old_id = p_ptr->prace, old_sub = p_ptr->psubrace;
+                    p_ptr->prace = g_ptr->ids[0];
+        */
+        b_race_group_ptr g_ptr = &b_mon_race_groups[i];
+
+        i = randint0(_count(g_ptr->ids));
+        p_ptr->prace = g_ptr->ids[i];
+
+        if (p_ptr->prace == RACE_MON_DRAGON)
+        {
+            p_ptr->psubrace = randint0(DRAGON_MAX);
+            if (p_ptr->psubrace == DRAGON_STEEL) p_ptr->dragon_realm = DRAGON_REALM_NONE;
+            else
+            {
+                while (TRUE)
+                {
+                    i = randint0(DRAGON_REALM_MAX);
+                    p_ptr->dragon_realm = i;
+
+                    if (i == DRAGON_REALM_CRUSADE && p_ptr->psubrace != DRAGON_LAW && p_ptr->psubrace != DRAGON_GOLD)
+                        continue;
+                    else if (i == DRAGON_REALM_DEATH && p_ptr->psubrace != DRAGON_NETHER && p_ptr->psubrace != DRAGON_CHAOS)
+                        continue;
+                    else break;
+                }
+            }
+        }
+        else if (p_ptr->prace == RACE_MON_DEMON)
+        {
+            p_ptr->psubrace = randint0(DEMON_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_ELEMENTAL)
+        {
+            p_ptr->psubrace = randint0(ELEMENTAL_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_GIANT)
+        {
+            p_ptr->psubrace = randint0(GIANT_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_GOLEM)
+        {
+            p_ptr->psubrace = randint0(GOLEM_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_SPIDER)
+        {
+            p_ptr->psubrace = randint0(SPIDER_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_TROLL)
+        {
+            p_ptr->psubrace = randint0(TROLL_MAX);
+        }
+        else if (p_ptr->prace == RACE_MON_ORC)
+        {
+            p_ptr->psubrace = randint0(ORC_MAX);
+        }
+        else
+        {
+            p_ptr->psubrace = 0;
+        }
+    }
+    else /* normal race/class combo */
+    {
+        int i;
+        _set_mode(GAME_MODE_NORMAL);
+
+
+        /* Random class */
+        i = randint0(_MAX_CLASS_GROUPS);
+        _class_group_ptr cg_ptr = &_class_groups[i];
+        vec_ptr classes = _get_classes_aux(cg_ptr->ids);
+        i = randint0(vec_length(classes));
+        class_t* class_ptr = vec_get(classes, i);
+        p_ptr->pclass = class_ptr->id;
+        
+        /* Random subclass, if needed */
+        if (p_ptr->pclass == CLASS_WARLOCK) { p_ptr->psubclass = randint0(WARLOCK_MAX); }
+        else if (p_ptr->pclass == CLASS_WEAPONMASTER) { p_ptr->psubclass = randint0(WEAPONMASTER_MAX); }
+        else if (p_ptr->pclass == CLASS_DEVICEMASTER) { p_ptr->psubclass = randint0(DEVICEMASTER_MAX); }
+        else if (p_ptr->pclass == CLASS_GRAY_MAGE) { p_ptr->psubclass = randint0(GRAY_MAGE_MAX); }
+        else if (p_ptr->pclass == CLASS_DISCIPLE) { p_ptr->psubclass = _random_patron(); }
+        else if (p_ptr->pclass == CLASS_ELEMENTALIST) { p_ptr->psubclass = randint0(MAX_ELEMENT); }
+        else { p_ptr->psubclass = 0; }
+
+        /* Random magic realms, if needed */
+        p_ptr->realm1 = 0;
+        p_ptr->realm2 = 0;
+
+        u32b bits = realm_choices1[p_ptr->pclass];
+        int  choices[MAX_REALM];
+        int  ct = 0;
+
+        if (bits)
+        {
+            for (i = 0; i < 32; i++)
+            {
+                if (bits & (1L << i))
+                    choices[ct++] = i + 1;
+            }
+
+            i = randint0(ct);
+            p_ptr->realm1 = choices[i];
+        }
+
+        if (p_ptr->realm1)
+        {
+            bits = realm_choices2[p_ptr->pclass];
+            ct = 0;
+
+            if (bits)
+            {
+                if (p_ptr->pclass == CLASS_PRIEST)
+                {
+                    if (is_good_realm(p_ptr->realm1))
+                        bits &= ~(CH_DEATH | CH_DAEMON);
+                    else
+                        bits &= ~(CH_LIFE | CH_CRUSADE);
+                }
+
+                for (i = 0; i < 32; i++)
+                {
+                    int id = i + 1;
+                    if (bits & (1L << i) && p_ptr->realm1 != id)
+                        choices[ct++] = id;
+                }
+
+                i = randint0(ct);
+                p_ptr->realm2 = choices[i];
+            }
+        }
+
+        /* Random race */
+        i = randint0(B_MAX_RACE_GROUPS);
+        b_race_group_ptr g_ptr = &b_race_groups[i];
+        vec_ptr         races = _get_races_aux(g_ptr->ids);
+
+        race_t* race_ptr = vec_get(races, randint0(vec_length(races)));
+        p_ptr->prace = race_ptr->id;
+
+        /* Random subrace, if needed */
+        if (p_ptr->prace == RACE_DEMIGOD)
+        {
+            p_ptr->psubrace = randint0(DEMIGOD_MAX + 1);
+        }
+        else if (p_ptr->prace == RACE_DRACONIAN)
+        {
+            p_ptr->psubrace = randint0(DRACONIAN_MAX + 1);
+        }
+    }
+}
+

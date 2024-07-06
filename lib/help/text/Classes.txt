@@ -556,7 +556,7 @@ Magic
     Wisdom        -2        Save        Heroic       
     Dexterity     +2        Stealth     Poor         
     Constitution  +0        Searching   Poor         
-    Charisma      +0        Perception  Poor         
+    Charisma      -2        Perception  Poor         
     Life Rating   65%       Melee       Very Bad     
     Base HP        0        Archery     Very Bad     
     Experience   160%
@@ -849,7 +849,7 @@ Hybrid
   The Ninja-Lawyer moves silently in the night, combining the stealth, 
   agility and offensive power of the ninja with the subtle practical 
   tools of the lawyer. Ninja-Lawyers, like specialist ninjas, prefer 
-  light armour and stabbing weapons and acquire the powerful 'Quick 
+  light armor and stabbing weapons and acquire the powerful 'Quick 
   Walk' class power. A ninja-lawyer relies on both wisdom and 
   dexterity, requiring the former for legal tricks and the latter for 
   ninjutsu.
@@ -1375,7 +1375,7 @@ Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
 Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
-Sorcerer       -5   +6   -2   +2   +0   +0   65%   +0  160%
+Sorcerer       -5   +6   -2   +2   +0   -2   65%   +0  160%
 Yellow-Mage    -4   +3   +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0   +2   -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%

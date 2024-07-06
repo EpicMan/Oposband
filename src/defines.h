@@ -19,7 +19,7 @@
 #define VER_MAJOR 0
 #define VER_MINOR 5
 #define VER_PATCH 0
-#define VER_EXTRA 0
+#define VER_EXTRA 1
 #define VERSION_IS_DEVELOPMENT (TRUE)
 
 #define GAME_MODE_BEGINNER  0
@@ -667,8 +667,10 @@
 #define RACE_TOMTE              70
 #define RACE_MON_PUMPKIN        71
 #define RACE_IGOR               72
-#define RACE_MON_MUMMY          73
-#define MAX_RACES               74
+#define RACE_ICKY_THING			73
+#define RACE_GHOUL  			74
+#define RACE_MON_MUMMY          75
+#define MAX_RACES               76
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1
@@ -4695,6 +4697,7 @@ extern int PlayerUID;
 #define MON_FIRE_TROLL          899
 #define MON_SMALL_KRAKEN        903
 #define MON_POLEAXE_OF_ANIMATED_ATTACK 908
+#define MON_ICKY_QUEEN          909
 #define MON_MYSTIC              915
 #define MON_MASTER_MYS          916
 #define MON_MASTER_MYSTIC       916
