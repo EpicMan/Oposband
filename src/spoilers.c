@@ -1201,7 +1201,7 @@ static void _class_help(FILE *fp, int idx)
 }
 
 #define _MAX_CLASSES_PER_GROUP 20
-#define _MAX_CLASS_GROUPS      11
+#define _MAX_CLASS_GROUPS      10
 typedef struct _class_group_s {
     cptr name;
     int ids[_MAX_CLASSES_PER_GROUP];

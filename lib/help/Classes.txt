@@ -273,6 +273,26 @@ Life Rating   98%       Melee       <color:r>Bad          </color>
 Base HP        4        Archery     <color:r>Bad          </color>
 Experience   130%
 </style></indent>
+<topic:Chaos-Mage><color:o>Chaos-Mage</color>
+Chaos Mages are the arcane students of the terrible Demon Lords of Chaos. Every Chaos Mage has a Patron Demon and, when gaining a level, may receive a reward from his Patron. He might be healed or polymorphed, his stats could be increased, or he might be rewarded with an awesome weapon. On the other hand, the Patrons might surround him with monsters, drain his stats or wreck his equipment or they might simply ignore him. The Demon Lords of Chaos are chaotic and unpredictable indeed. The exact type of reward depends on both the Patron Demon (different Demons give different rewards) and chance.
+ 
+Chaos Mages can select a realm from Chaos and Daemon, and one other realm excluding Life and Crusade. A  Chaos Mage's prime statistic is Intelligence as this determines his spell casting ability.
+ 
+Chaos Mages are a little hardier than ordinary mages but less perceptive. They have a class power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
+
+See <link:ChaosPatrons.txt> for more details on rune knights.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -3</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:v> +3</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:y>Good         </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
+Life Rating   95%       Melee       <color:r>Bad          </color>
+Base HP        0        Archery     <color:r>Bad          </color>
+Experience   135%
+</style></indent>
 <topic:Gray-Mage><color:o>Gray-Mage</color>
 The Gray-Mage casts spells from memory rather than books; a spellbook is only required for the initial learning process. However, only ten spells may be memorized at any given time; and while a Gray-Mage may replace old spells with new ones, the total number of spells they can study is limited.
 
@@ -320,6 +340,24 @@ Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </col
 Life Rating   95%       Melee       <color:r>Bad          </color>
 Base HP        0        Archery     <color:r>Bad          </color>
 Experience   130%
+</style></indent>
+<topic:Priest><color:o>Priest</color>
+A Priest is a character devoted to serving a higher power. They explore the dungeon in the service of their God. They are fairly familiar with magical devices, which they believe act as foci for divine intervention in the natural order of things.
+ 
+There are two types of priests: Good and Evil. If the priest chooses Life or Crusade as their first realm, they will follow the path of good; as such, they may not choose an evil realm for their second realm. Good priests abhor bloodshed, and therefore are not comfortable with edged weapons, although they eventually learn to bless such weapons and then use them without disrupting their prayers. Should a priest choose Death or Daemon as their first realm, however, they will serve an evil god; evil priests actually enjoy shedding blood, and suffer no such weapon restrictions. Of course, evil priests abhor good things, and are unable to choose Life or Crusade for their second realm.
+ 
+Good priests have a strong affinity for Life prayers, and learn them very well, even better than a High-Mage. Conversely, evil priests favor prayers of Death, and receive strong bonuses when choosing this foul realm. Otherwise, priests learn magic less efficiently than a Mage would; but their greater stamina and combat skills compensate for this. Priests, unlike Mages, cannot choose to study specific spells; rather, they are granted new prayers by the whim of their deity, presumably in accordance with some greater divine plan. The primary stat for a priest is Wisdom.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
+Intelligence <color:w> -3</color>        Device      <color:y>Good         </color>
+Wisdom       <color:v> +3</color>        Save        <color:y>Very Good    </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
+Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Life Rating  100%       Melee       <color:o>Fair         </color>
+Base HP        4        Archery     <color:R>Poor         </color>
+Experience   120%
 </style></indent>
 <topic:Necromancer><color:o>Necromancer</color>
 A Necromancer attempts to gain both power and knowledge through communion with the dead. They rely on the special realm of Necromancy to summon aid from the dead, whether directly in terms of undead servitude, or indirectly through otherworldly knowledge. Necromancy also offers many foul offensive spells; but all of these require direct physical contact, and so need an empty, gloveless hand to work. Yet this handicap is a cheap price to pay for the ability to kill a foe with one deadly touch!
@@ -419,26 +457,6 @@ Base HP        6        Archery     <color:R>Poor         </color>
 Experience   130%
 </style></indent>
 </indent>
-<style:heading>Prayer</style>
-  <indent><topic:Priest><color:o>Priest</color>
-A Priest is a character devoted to serving a higher power. They explore the dungeon in the service of their God. They are fairly familiar with magical devices, which they believe act as foci for divine intervention in the natural order of things.
- 
-There are two types of priests: Good and Evil. If the priest chooses Life or Crusade as their first realm, they will follow the path of good; as such, they may not choose an evil realm for their second realm. Good priests abhor bloodshed, and therefore are not comfortable with edged weapons, although they eventually learn to bless such weapons and then use them without disrupting their prayers. Should a priest choose Death or Daemon as their first realm, however, they will serve an evil god; evil priests actually enjoy shedding blood, and suffer no such weapon restrictions. Of course, evil priests abhor good things, and are unable to choose Life or Crusade for their second realm.
- 
-Good priests have a strong affinity for Life prayers, and learn them very well, even better than a High-Mage. Conversely, evil priests favor prayers of Death, and receive strong bonuses when choosing this foul realm. Otherwise, priests learn magic less efficiently than a Mage would; but their greater stamina and combat skills compensate for this. Priests, unlike Mages, cannot choose to study specific spells; rather, they are granted new prayers by the whim of their deity, presumably in accordance with some greater divine plan. The primary stat for a priest is Wisdom.
-
-  <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
-Intelligence <color:w> -3</color>        Device      <color:y>Good         </color>
-Wisdom       <color:v> +3</color>        Save        <color:y>Very Good    </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
-Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
-Life Rating  100%       Melee       <color:o>Fair         </color>
-Base HP        4        Archery     <color:R>Poor         </color>
-Experience   120%
-</style></indent>
-</indent>
 <style:heading>Stealth</style>
   <indent><topic:Ninja><color:o>Ninja</color>
 A Ninja is a fearful assassin lurking in darkness. He or she can navigate effectively with no light source, catch enemies by surprise, and kill with a single blow. Ninjas can use Ninjutsu, and are good at locating hidden traps and doors, disarming traps and picking locks. Since heavy armors, heavy weapons, or shields will restrict their motion greatly, they prefer light clothes, and become faster and more stealthy as they gain levels. A Ninja knows no fear and, at high level, becomes almost immune to poison and able to see invisible things. Dexterity determines a Ninja's ability to use Ninjutsu.
@@ -492,6 +510,8 @@ Experience   130%
 Chaos-Warriors are the feared servants of the terrible Demon Lords of Chaos. Every Chaos-Warrior has a patron demon, who may give him a reward on level-up; the Chaos-Warrior may be healed or polymorphed, have his stats increased, or be rewarded with an awesome weapon. On the other hand, though, he might be severely punished or simply ignored by the patron; the Demon Lords of Chaos are unpredictable indeed, although rewards are thankfully more common than punishments. The exact reward will not depend on anything the player does, and is up entirely to random chance and the patron; each patron gives out different rewards and punishments.
  
 Chaos-Warriors select one spell realm, either Chaos or Daemon; they have no interest in other forms of magic. They can learn every spell in their chosen realm. At level 40 they gain the powerful ability to emit confusing lights, with the potential to stun, scare and confuse every creature in sight.
+
+See <link:ChaosPatrons.txt> for more details on rune knights.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +2</color>        Disarming   <color:R>Poor         </color>
@@ -744,6 +764,20 @@ Life Rating  100%       Melee       <color:R>Poor         </color>
 Base HP        4        Archery     <color:r>Bad          </color>
 Experience   140%
 </style></indent>
+<topic:Elementalist><color:o>Elementalist</color>
+An Elementalist is a spell caster that specializes in tapping elemental forces.  They have a limited, but powerful, repertoire of spells. Wisdom determines an Elementalist's spell casting ability.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> -3</color>        Disarming   <color:o>Fair         </color>
+Intelligence <color:w> +1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:v> +3</color>        Save        <color:y>Good         </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
+Charisma     <color:w> +0</color>        Perception  <color:R>Poor         </color>
+Life Rating   95%       Melee       <color:r>Bad          </color>
+Base HP        0        Archery     <color:r>Bad          </color>
+Experience   100%
+</style></indent>
 <topic:Lawyer><color:o>Lawyer</color>
 Known for his unsurpassed expertise in the mysterious realm of Law, the Lawyer has a comprehensive skillset that allows him to set and detect traps, to slow or mystify his enemies, to quietly escape or avoid dangerous fights, to acquire knowledge about the world around him, and to make friends and influence people. As he relies on his familiarity with Law and with tricks and approaches that have worked in the past, the lawyer uses Wisdom as his spellcasting stat.
 
@@ -860,16 +894,17 @@ Monk           +1   -1 <color:v>  +1 </color>  +3   +2   +1  102%  +12  130%
 Mystic         +2   -1   -2   +3   +1 <color:v>  +2 </color> 100%   +4  130%
 Blood-Mage     -4 <color:v>  +3 </color>  -2   +1   +2   -2  108%  +10  135%
 Blue-Mage      -4 <color:v>  +4 </color>  -1   +1   -2   -2   98%   +4  130%
+Chaos-Mage     -3 <color:v>  +3 </color>  -1   +0   -1   -2   95%   +0  135%
 Gray-Mage      -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4 <color:v>  +4 </color>  +0   +0   -2   -2   94%   +0  130%
 Mage           -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
+Priest         -1   -3 <color:v>  +3 </color>  -1   +0   +2  100%   +4  120%
 Necromancer    -2 <color:v>  +3 </color>  -4   +1   -1   -2   95%   +2  125%
 Sorcerer       -5 <color:v>  +6 </color>  -2   +2   +0   -2   65%   +0  160%
 Yellow-Mage    -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0 <color:v>  +2 </color>  -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1 <color:v>  +2 </color>  +1   +2   -2   -2  101%   +6  130%
 Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
-Priest         -1   -3 <color:v>  +3 </color>  -1   +0   +2  100%   +4  120%
 Ninja          +0   -1   -1 <color:v>  +3 </color>  +2   +2  100%   +4  120%
 Rogue          +1 <color:v>  +1 </color>  -1   +3   +0   +1  100%  +12  125%
 Scout          +1   -1 <color:v>  +2 </color>  +3   +0   +0  104%   +8  130%
@@ -889,6 +924,7 @@ Time-Lord      -1   +0 <color:v>  +3 </color>  -1   -1   +0   96%   +0  125%
 Warlock        -1   +2   -3   +0   +2 <color:v>  +2 </color> 107%  +15  135%
 Archaeologist  -1   +1 <color:v>  +2 </color>  +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  140%
+Elementalist   -3   +1 <color:v>  +3 </color>  +0   -1   +0   95%   +0  100%
 Lawyer         -3   +2 <color:v>  +0 </color>  +0   -1   +1  102%  +12  115%
 Politician     -2   +1   +0   -2   +0 <color:v>  +2 </color> 100%   +9  130%
 Rage-Mage    <color:v>  +3 </color>  -2   -2   -2   +2   +1  106%   +6  150%
@@ -916,16 +952,17 @@ Monk          <color:G>Excellent    </color> <color:y>Good         </color> <col
 Mystic        <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
 Blood-Mage    <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 Blue-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
+Chaos-Mage    <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 Gray-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 High-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 Mage          <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
+Priest        <color:R>Poor         </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:R>Poor         </color>
 Necromancer   <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>
 Sorcerer      <color:o>Fair         </color> <color:v>Amber[2]     </color> <color:b>Heroic       </color> <color:R>Poor         </color>
 Yellow-Mage   <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 Alchemist     <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Devicemaster  <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Magic-Eater   <color:R>Poor         </color> <color:b>Heroic       </color> <color:o>Fair         </color> <color:R>Poor         </color>
-Priest        <color:R>Poor         </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:R>Poor         </color>
 Ninja         <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:g>Superb       </color>
 Rogue         <color:G>Excellent    </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:y>Very Good    </color>
 Scout         <color:y>Very Good    </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
@@ -945,6 +982,7 @@ Time-Lord     <color:R>Poor         </color> <color:y>Very Good    </color> <col
 Warlock       <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Very Good    </color> <color:y>Good         </color>
 Archaeologist <color:G>Excellent    </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:y>Good         </color>
 Bard          <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:D>Very Bad     </color>
+Elementalist  <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
 Lawyer        <color:G>Excellent    </color> <color:y>Very Good    </color> <color:y>Good         </color> <color:o>Fair         </color>
 Politician    <color:G>Excellent    </color> <color:R>Poor         </color> <color:y>Good         </color> <color:G>Excellent    </color>
 Rage-Mage     <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
@@ -972,16 +1010,17 @@ Monk          <color:o>Fair         </color> <color:o>Fair         </color> <col
 Mystic        <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:G>Excellent    </color>
 Blood-Mage    <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Blue-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
+Chaos-Mage    <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Gray-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 High-Mage     <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Mage          <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
+Priest        <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Necromancer   <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Sorcerer      <color:R>Poor         </color> <color:R>Poor         </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
 Yellow-Mage   <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Alchemist     <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color> <color:G>Excellent    </color>
 Devicemaster  <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Magic-Eater   <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:R>Poor         </color>
-Priest        <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Ninja         <color:y>Very Good    </color> <color:o>Fair         </color> <color:g>Superb       </color> <color:R>Poor         </color>
 Rogue         <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
 Scout         <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:b>Heroic       </color>
@@ -1001,6 +1040,7 @@ Time-Lord     <color:R>Poor         </color> <color:r>Bad          </color> <col
 Warlock       <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Archaeologist <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color>
 Bard          <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color>
+Elementalist  <color:R>Poor         </color> <color:R>Poor         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Lawyer        <color:y>Good         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color>
 Politician    <color:y>Good         </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Rage-Mage     <color:R>Poor         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:o>Fair         </color>

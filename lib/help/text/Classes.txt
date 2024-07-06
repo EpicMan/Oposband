@@ -440,6 +440,38 @@ Magic
     Base HP        4        Archery     Bad          
     Experience   130%
     
+  Chaos-Mage
+  Chaos Mages are the arcane students of the terrible Demon Lords of 
+  Chaos. Every Chaos Mage has a Patron Demon and, when gaining a level, 
+  may receive a reward from his Patron. He might be healed or 
+  polymorphed, his stats could be increased, or he might be rewarded 
+  with an awesome weapon. On the other hand, the Patrons might surround 
+  him with monsters, drain his stats or wreck his equipment or they 
+  might simply ignore him. The Demon Lords of Chaos are chaotic and 
+  unpredictable indeed. The exact type of reward depends on both the 
+  Patron Demon (different Demons give different rewards) and chance.
+   
+  Chaos Mages can select a realm from Chaos and Daemon, and one other 
+  realm excluding Life and Crusade. A  Chaos Mage's prime statistic is 
+  Intelligence as this determines his spell casting ability.
+   
+  Chaos Mages are a little hardier than ordinary mages but less 
+  perceptive. They have a class power - 'Eat Magic' - which absorbs 
+  mana from wands, staves or rods.
+  
+  See [f] for more details on rune knights.
+  
+    Stats                   Skills
+    Strength      -3        Disarming   Poor         
+    Intelligence  +3        Device      Superb       
+    Wisdom        -1        Save        Good         
+    Dexterity     +0        Stealth     Fair         
+    Constitution  -1        Searching   Poor         
+    Charisma      -2        Perception  Poor         
+    Life Rating   95%       Melee       Bad          
+    Base HP        0        Archery     Bad          
+    Experience   135%
+    
   Gray-Mage
   The Gray-Mage casts spells from memory rather than books; a spellbook 
   is only required for the initial learning process. However, only ten 
@@ -502,7 +534,7 @@ Magic
   Mages have few restrictions in choosing and learning spells; they can 
   freely choose any two realms when a character is created, although 
   their natural inclinations make Life magic fairly hard to learn. See 
-  [f] for more information on magic, realms and book spellcasting.
+  [g] for more information on magic, realms and book spellcasting.
   
     Stats                   Skills
     Strength      -4        Disarming   Fair         
@@ -514,6 +546,45 @@ Magic
     Life Rating   95%       Melee       Bad          
     Base HP        0        Archery     Bad          
     Experience   130%
+    
+  Priest
+  A Priest is a character devoted to serving a higher power. They 
+  explore the dungeon in the service of their God. They are fairly 
+  familiar with magical devices, which they believe act as foci for 
+  divine intervention in the natural order of things.
+   
+  There are two types of priests: Good and Evil. If the priest chooses 
+  Life or Crusade as their first realm, they will follow the path of 
+  good; as such, they may not choose an evil realm for their second 
+  realm. Good priests abhor bloodshed, and therefore are not 
+  comfortable with edged weapons, although they eventually learn to 
+  bless such weapons and then use them without disrupting their 
+  prayers. Should a priest choose Death or Daemon as their first realm, 
+  however, they will serve an evil god; evil priests actually enjoy 
+  shedding blood, and suffer no such weapon restrictions. Of course, 
+  evil priests abhor good things, and are unable to choose Life or 
+  Crusade for their second realm.
+   
+  Good priests have a strong affinity for Life prayers, and learn them 
+  very well, even better than a High-Mage. Conversely, evil priests 
+  favor prayers of Death, and receive strong bonuses when choosing this 
+  foul realm. Otherwise, priests learn magic less efficiently than a 
+  Mage would; but their greater stamina and combat skills compensate 
+  for this. Priests, unlike Mages, cannot choose to study specific 
+  spells; rather, they are granted new prayers by the whim of their 
+  deity, presumably in accordance with some greater divine plan. The 
+  primary stat for a priest is Wisdom.
+  
+    Stats                   Skills
+    Strength      -1        Disarming   Poor         
+    Intelligence  -3        Device      Good         
+    Wisdom        +3        Save        Very Good    
+    Dexterity     -1        Stealth     Poor         
+    Constitution  +0        Searching   Poor         
+    Charisma      +2        Perception  Bad          
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Archery     Poor         
+    Experience   120%
     
   Necromancer
   A Necromancer attempts to gain both power and knowledge through 
@@ -669,47 +740,6 @@ Devices
     Experience   130%
     
   
-Prayer
-  Priest
-  A Priest is a character devoted to serving a higher power. They 
-  explore the dungeon in the service of their God. They are fairly 
-  familiar with magical devices, which they believe act as foci for 
-  divine intervention in the natural order of things.
-   
-  There are two types of priests: Good and Evil. If the priest chooses 
-  Life or Crusade as their first realm, they will follow the path of 
-  good; as such, they may not choose an evil realm for their second 
-  realm. Good priests abhor bloodshed, and therefore are not 
-  comfortable with edged weapons, although they eventually learn to 
-  bless such weapons and then use them without disrupting their 
-  prayers. Should a priest choose Death or Daemon as their first realm, 
-  however, they will serve an evil god; evil priests actually enjoy 
-  shedding blood, and suffer no such weapon restrictions. Of course, 
-  evil priests abhor good things, and are unable to choose Life or 
-  Crusade for their second realm.
-   
-  Good priests have a strong affinity for Life prayers, and learn them 
-  very well, even better than a High-Mage. Conversely, evil priests 
-  favor prayers of Death, and receive strong bonuses when choosing this 
-  foul realm. Otherwise, priests learn magic less efficiently than a 
-  Mage would; but their greater stamina and combat skills compensate 
-  for this. Priests, unlike Mages, cannot choose to study specific 
-  spells; rather, they are granted new prayers by the whim of their 
-  deity, presumably in accordance with some greater divine plan. The 
-  primary stat for a priest is Wisdom.
-  
-    Stats                   Skills
-    Strength      -1        Disarming   Poor         
-    Intelligence  -3        Device      Good         
-    Wisdom        +3        Save        Very Good    
-    Dexterity     -1        Stealth     Poor         
-    Constitution  +0        Searching   Poor         
-    Charisma      +2        Perception  Bad          
-    Life Rating  100%       Melee       Fair         
-    Base HP        4        Archery     Poor         
-    Experience   120%
-    
-  
 Stealth
   Ninja
   A Ninja is a fearful assassin lurking in darkness. He or she can 
@@ -811,6 +841,8 @@ Hybrid
   emit confusing lights, with the potential to stun, scare and confuse 
   every creature in sight.
   
+  See [h] for more details on rune knights.
+  
     Stats                   Skills
     Strength      +2        Disarming   Poor         
     Intelligence  +1        Device      Good         
@@ -832,7 +864,7 @@ Hybrid
   things of their Disciples, and each helps them achieve their ends in 
   very different ways.
   
-  See [g] for more details on disciples.
+  See [i] for more details on disciples.
   
     Stats                   Skills
     Strength      -1        Disarming   Fair         
@@ -1145,7 +1177,7 @@ Mind
   Charisma, since they seek dominion and alliance with their chosen 
   kin, and these monsters tend to have a strong will of their own.
   
-  See [h] for more details on warlock pacts.
+  See [j] for more details on warlock pacts.
   
     Stats                   Skills
     Strength      -1        Disarming   Poor         
@@ -1199,6 +1231,22 @@ Other
     Life Rating  100%       Melee       Poor         
     Base HP        4        Archery     Bad          
     Experience   140%
+    
+  Elementalist
+  An Elementalist is a spell caster that specializes in tapping 
+  elemental forces.  They have a limited, but powerful, repertoire of 
+  spells. Wisdom determines an Elementalist's spell casting ability.
+  
+    Stats                   Skills
+    Strength      -3        Disarming   Fair         
+    Intelligence  +1        Device      Superb       
+    Wisdom        +3        Save        Good         
+    Dexterity     +0        Stealth     Fair         
+    Constitution  -1        Searching   Poor         
+    Charisma      +0        Perception  Poor         
+    Life Rating   95%       Melee       Bad          
+    Base HP        0        Archery     Bad          
+    Experience   100%
     
   Lawyer
   Known for his unsurpassed expertise in the mysterious realm of Law, 
@@ -1291,7 +1339,7 @@ Other
   players, despite being quite strong; you only have a limited amount 
   of points to spend, and your choices are irreversible.
   
-  See [i] for more details on skillmasters.
+  See [k] for more details on skillmasters.
   
     Stats                   Skills
     Strength      +0        Disarming   Very Bad     
@@ -1371,16 +1419,17 @@ Monk           +1   -1   +1   +3   +2   +1  102%  +12  130%
 Mystic         +2   -1   -2   +3   +1   +2  100%   +4  130%
 Blood-Mage     -4   +3   -2   +1   +2   -2  108%  +10  135%
 Blue-Mage      -4   +4   -1   +1   -2   -2   98%   +4  130%
+Chaos-Mage     -3   +3   -1   +0   -1   -2   95%   +0  135%
 Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
 Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
+Priest         -1   -3   +3   -1   +0   +2  100%   +4  120%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
 Sorcerer       -5   +6   -2   +2   +0   -2   65%   +0  160%
 Yellow-Mage    -4   +3   +0   +1   -2   -2   95%   +0  130%
 Alchemist      +0   +2   -1   +2   +0   -2  101%  +12  135%
 Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%
 Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
-Priest         -1   -3   +3   -1   +0   +2  100%   +4  120%
 Ninja          +0   -1   -1   +3   +2   +2  100%   +4  120%
 Rogue          +1   +1   -1   +3   +0   +1  100%  +12  125%
 Scout          +1   -1   +2   +3   +0   +0  104%   +8  130%
@@ -1400,6 +1449,7 @@ Time-Lord      -1   +0   +3   -1   -1   +0   96%   +0  125%
 Warlock        -1   +2   -3   +0   +2   +2  107%  +15  135%
 Archaeologist  -1   +1   +2   +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2   +4  100%   +4  140%
+Elementalist   -3   +1   +3   +0   -1   +0   95%   +0  100%
 Lawyer         -3   +2   +0   +0   -1   +1  102%  +12  115%
 Politician     -2   +1   +0   -2   +0   +2  100%   +9  130%
 Rage-Mage      +3   -2   -2   -2   +2   +1  106%   +6  150%
@@ -1427,16 +1477,17 @@ Monk          Excellent     Good          Fair          Very Good
 Mystic        Excellent     Good          Fair          Very Good    
 Blood-Mage    Fair          Superb        Good          Fair         
 Blue-Mage     Fair          Superb        Good          Fair         
+Chaos-Mage    Poor          Superb        Good          Fair         
 Gray-Mage     Fair          Superb        Good          Fair         
 High-Mage     Fair          Superb        Good          Fair         
 Mage          Fair          Superb        Good          Fair         
+Priest        Poor          Good          Very Good     Poor         
 Necromancer   Fair          Superb        Good          Good         
 Sorcerer      Fair          Amber[2]      Heroic        Poor         
 Yellow-Mage   Fair          Superb        Good          Fair         
 Alchemist     Very Good     Fair          Fair          Fair         
 Devicemaster  Poor          Superb        Fair          Poor         
 Magic-Eater   Poor          Heroic        Fair          Poor         
-Priest        Poor          Good          Very Good     Poor         
 Ninja         Excellent     Fair          Fair          Superb       
 Rogue         Excellent     Excellent     Fair          Very Good    
 Scout         Very Good     Very Good     Fair          Excellent    
@@ -1456,6 +1507,7 @@ Time-Lord     Poor          Very Good     Fair          Poor
 Warlock       Poor          Superb        Very Good     Good         
 Archaeologist Excellent     Excellent     Fair          Good         
 Bard          Poor          Excellent     Fair          Very Bad     
+Elementalist  Fair          Superb        Good          Fair         
 Lawyer        Excellent     Very Good     Good          Fair         
 Politician    Excellent     Poor          Good          Excellent    
 Rage-Mage     Poor          Bad           Superb        Very Bad     
@@ -1483,16 +1535,17 @@ Monk          Fair          Fair          Very Good     Excellent
 Mystic        Fair          Fair          Very Good     Excellent    
 Blood-Mage    Poor          Poor          Bad           Bad          
 Blue-Mage     Poor          Poor          Bad           Bad          
+Chaos-Mage    Poor          Poor          Bad           Bad          
 Gray-Mage     Poor          Poor          Bad           Bad          
 High-Mage     Poor          Poor          Bad           Bad          
 Mage          Poor          Poor          Bad           Bad          
+Priest        Poor          Bad           Fair          Poor         
 Necromancer   Poor          Poor          Bad           Bad          
 Sorcerer      Poor          Poor          Very Bad      Very Bad     
 Yellow-Mage   Poor          Poor          Bad           Bad          
 Alchemist     Very Good     Fair          Good          Excellent    
 Devicemaster  Poor          Poor          Fair          Poor         
 Magic-Eater   Poor          Poor          Fair          Poor         
-Priest        Poor          Bad           Fair          Poor         
 Ninja         Very Good     Fair          Superb        Poor         
 Rogue         Fair          Fair          Excellent     Very Good    
 Scout         Very Good     Fair          Very Good     Heroic       
@@ -1512,6 +1565,7 @@ Time-Lord     Poor          Bad           Fair          Poor
 Warlock       Poor          Poor          Fair          Poor         
 Archaeologist Very Good     Fair          Good          Poor         
 Bard          Poor          Poor          Poor          Bad          
+Elementalist  Poor          Poor          Bad           Bad          
 Lawyer        Good          Fair          Good          Fair         
 Politician    Good          Fair          Bad           Bad          
 Rage-Mage     Poor          Bad           Good          Fair         

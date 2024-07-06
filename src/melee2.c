@@ -1966,7 +1966,6 @@ bool mon_attack_mon(int m_idx, int t_idx)
                 case RBE_LOSE_CHR:
                 case RBE_LOSE_ALL:
                 case RBE_DRAIN_EXP:
-				case RBE_HALLUCINATE:
                     pt = 0;
                     break;
 
@@ -4691,8 +4690,6 @@ void monster_gain_exp(int m_idx, int s_idx)
         exp = new_exp / div;
         gain_exp(exp * pmult);
         p_ptr->pet_lv_kills++;
-        if (penalty)
-            new_exp -= exp;
         if (pmult > 1) new_exp *= 2;
         if (new_exp < 0) new_exp = 0;
     }
