@@ -13,7 +13,7 @@ The symbols on your map can be broken down into three broad categories: terrain 
   ----------------------        -------------------------------</color>
   <$:FF_TREE>   Tree/wooded area          <$:FF_PERMANENT>   Building wall
   <$:FF_GRASS>   Patch of grass            <$:FF_GENERAL_STORE>   Entrance to General Store
-  <$:FF_FLOWER>   Flower                    <$:FF_ARMOURY>   Entrance to Armoury
+  <$:FF_FLOWER>   Flower                    <$:FF_ARMORY>   Entrance to Armory
   <$:FF_BRAKE>   Brake                     <$:FF_WEAPON_SMITHS>   Entrance to Weapon Shop
   <$:FF_SWAMP>   Swamp                     <$:FF_TEMPLE>   Entrance to Temple Shop
   <$:FF_SHALLOW_WATER>   Shallow water             <$:FF_ALCHEMY_SHOP>   Entrance to Alchemy Shop
@@ -104,7 +104,7 @@ The final factor affecting pricing is the shopkeeper's greediness, which is not 
   <indent><color:B>The General Store</color> (<$:FF_GENERAL_STORE>)
 The General Store sells foods, drinks, some clothing, torches, lamps, oil, shovels, picks, capture balls, and iron spikes. All of these items and some others can be sold back to the General store for money.</indent>
 
-  <indent><color:B>The Armory</color> (<$:FF_ARMOURY>)
+  <indent><color:B>The Armory</color> (<$:FF_ARMORY>)
 The Armory is where the town's armor is fashioned. All sorts of protective gear may be bought and sold here.</indent>
 
   <indent><color:B>The Weaponsmith's Shop</color> (<$:FF_WEAPON_SMITHS>)

@@ -11,9 +11,9 @@ When you enter a shop, you will see a screen describing the shop's owner and the
     <color:U>Vengella the Cruel (Half-Troll)</color>                            <color:G>Armory</color> (<color:r>15000</color>)  
                                                                                 
     Item Description                                              Weight  Price
- a) <color:U>(</color> <color:s>Soft Leather Armour of Protection [4,+16]</color>                  8.0 lbs <color:D> 10400</color>
- b) <color:y>(</color> <color:s>Cord Armour [6,+4]</color>                                         8.0 lbs   1010
- c) <color:y>(</color> <color:s>Cord Armour [6,+0]</color>                                         8.0 lbs    272
+ a) <color:U>(</color> <color:s>Soft Leather Armor of Protection [4,+16]</color>                  8.0 lbs <color:D> 10400</color>
+ b) <color:y>(</color> <color:s>Cord Armor [6,+4]</color>                                         8.0 lbs   1010
+ c) <color:y>(</color> <color:s>Cord Armor [6,+0]</color>                                         8.0 lbs    272
  d) <color:U>(</color> <color:s>Leather Scale Mail (-1) [11,+0]</color>                           14.0 lbs   1540
  e) <color:U>(</color> <color:s>a Leather Jacket (-1) [12,+0]</color>                             13.0 lbs   1870
  f) <color:u>]</color> <color:U>a Hard Leather Cap [2,+3]</color>                                  1.5 lbs    546

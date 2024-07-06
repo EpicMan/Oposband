@@ -150,7 +150,7 @@ In my case, I bought a sling and some iron shots; unfortunately, no quivers were
  f)   Left Ring :                                                   INT : <color:G>    18</color>
  g)   Neck      :                                                   WIS : <color:G>     7</color>
  h) <color:u>~</color> Light     : <color:y>a Wooden Torch (with 2439 turns of ligh</color>    3.0 lb DEX : <color:G> 18/40</color>
- i) <color:U>(</color> Body      : <color:s>Soft Leather Armour [4,+0]</color>                 8.0 lb CON : <color:G>    18</color>
+ i) <color:U>(</color> Body      : <color:s>Soft Leather Armor [4,+0]</color>                 8.0 lb CON : <color:G>    18</color>
  j)   Cloak     :                                                   CHR : <color:G>    12</color>
  k)   Head      :                                                   AC     <color:G>    6</color>
  l)   Hands     :                                                   HP <color:G>  43</color>/<color:G>  43</color>
@@ -478,7 +478,7 @@ In addition to AC, though, the player has a very important set of resistances. O
                                                                                 
  a) a Dagger (1d5) (+0,+0)                                                      
  c) <color:u>a Sling (x2) (+0,+0)</color>                                                        
- i) <color:s>Soft Leather Armour [4,+0]</color>                                                  
+ i) <color:s>Soft Leather Armor [4,+0]</color>                                                  
                                                                                 
               <color:W>|</color> <color:u>}</color>     <color:U>(</color>    <color:d>             </color>              <color:W>|</color> <color:u>}</color>     <color:U>(</color>                 
  <color:G>Resistances</color>  abcdefghijklm@<color:d>            </color> <color:G>Abilities  </color>  abcdefghijklm@            

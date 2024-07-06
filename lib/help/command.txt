@@ -184,7 +184,7 @@ Item labels usually run from 'a' for the first applicable item to 'z' for the 26
  w) <color:U>_</color> <color:U>a Staff: </color><color:y>Cure Wounds</color><color:U> (</color><color:y>8/18 charges</color><color:U>) {1%, @uu!sdk}</color>      5.0 lb <color:B>Study (4)</color>   
  x) <color:U>_</color> <color:U>a Staff of Holding: </color><color:R>Confusing Lights</color><color:U> (7/7 charges) </color>    5.0 lb             
  y) <color:s>[</color> <color:s>Metal Scale Mail {special}</color>                            25.0 lb             
- z) <color:U>(</color> <color:s>Soft Leather Armour {excellent}</color>                        8.0 lb             
+ z) <color:U>(</color> <color:s>Soft Leather Armor {excellent}</color>                        8.0 lb             
                                                           <color:R> 129.7 lb</color>             
 <color:y>Drop which item?</color>                                                                
 <color:o>Angband: L100</color>                           <color:o>Telepa</color> <color:G>DTrap</color>
