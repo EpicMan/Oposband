@@ -121,4 +121,15 @@ R:OBJ(robe):EGO(protection)
 ?:[AND [EQU $SPEED 2] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
 R:OBJ(WAND_BOLT_ELEC)
 
+?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Water-Spirit] ]
+R:OBJ(trident)
+
+?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Earth-Spirit] ]
+R:OBJ(^club$)
+
+#Air spirits use swords
+
+?:[AND [EQU $RACE Elemental] [EQU $SUBRACE Fire-Spirit] ]
+R:OBJ(^whip$)
+
 # vim: filetype=q :

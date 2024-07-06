@@ -260,7 +260,7 @@ Inventory | Equipment
  f)   Left Ring :                                                   INT :     18
  g)   Neck      :                                                   WIS :      7
  h) ~ Light     : a Wooden Torch (with 2439 turns of ligh    3.0 lb DEX :  18/40
- i) ( Body      : Soft Leather Armour [4,+0]                 8.0 lb CON :     18
+ i) ( Body      : Soft Leather Armor [4,+0]                 8.0 lb CON :     18
  j)   Cloak     :                                                   CHR :     12
  k)   Head      :                                                   AC         6
  l)   Hands     :                                                   HP   43/  43
@@ -736,7 +736,7 @@ screen:
                                                                                 
  a) a Dagger (1d5) (+0,+0)                                                      
  c) a Sling (x2) (+0,+0)                                                        
- i) Soft Leather Armour [4,+0]                                                  
+ i) Soft Leather Armor [4,+0]                                                  
                                                                                 
               | }     (                               | }     (                 
  Resistances  abcdefghijklm@             Abilities    abcdefghijklm@            

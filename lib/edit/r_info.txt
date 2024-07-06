@@ -25504,6 +25504,19 @@ D:An ancient, mighty leader of the dokkaebis, its sheer size indicates a
 D:status its lesser kin can but hope to mimic. It sees you and your
 D:adventures as a form of entertainment.
 
+N:1395:Spooky tree
+G:#:g
+I:100:80d20:20:50:20:350
+W:11:2:60:100:0:0
+B:CRUSH:HURT(1d20)
+S:1_IN_12
+S:SCARE
+F:COLD_BLOOD | REGENERATE | NEVER_MOVE
+F:NO_FEAR | NO_CONF | HURT_FIRE | RES_WATE
+F:NO_STUN | NO_SLEEP | WEIRD_MIND
+F:FRIENDS(2d4) | 
+D:An ancient tree that seems to be watching you.
+
 # N: serial number : monster name
 # G: symbol : color
 # I: speed : hit points : vision : armor class : alertness : weight (lbs)

@@ -242,7 +242,7 @@ Inventory | Equipment | Quiver
  w) _ a Staff: Cure Wounds (8/18 charges) {1%, @uu!sdk}      5.0 lb Study (4)   
  x) _ a Staff of Holding: Confusing Lights (7/7 charges)     5.0 lb             
  y) [ Metal Scale Mail {special}                            25.0 lb             
- z) ( Soft Leather Armour {excellent}                        8.0 lb             
+ z) ( Soft Leather Armor {excellent}                        8.0 lb             
                                                            129.7 lb             
 Drop which item?                                                                
 Angband: L100                           Telepa DTrap

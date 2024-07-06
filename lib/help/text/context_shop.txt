@@ -18,9 +18,9 @@ owner and the items available for purchase:
      Vengella the Cruel (Half-Troll)                            Armory (15000)  
                                                                                 
      Item Description                                              Weight  Price
-  a) ( Soft Leather Armour of Protection [4,+16]                  8.0 lbs  10400
-  b) ( Cord Armour [6,+4]                                         8.0 lbs   1010
-  c) ( Cord Armour [6,+0]                                         8.0 lbs    272
+  a) ( Soft Leather Armor of Protection [4,+16]                  8.0 lbs  10400
+  b) ( Cord Armor [6,+4]                                         8.0 lbs   1010
+  c) ( Cord Armor [6,+0]                                         8.0 lbs    272
   d) ( Leather Scale Mail (-1) [11,+0]                           14.0 lbs   1540
   e) ( a Leather Jacket (-1) [12,+0]                             13.0 lbs   1870
   f) ] a Hard Leather Cap [2,+3]                                  1.5 lbs    546
