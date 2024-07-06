@@ -1977,15 +1977,12 @@ static int _get_spells_imp(spell_info* spells, int max, _spell_group *spell_grou
         spell_info *base = &spell_group->spells[i];
         if (base->level < 0) break;
         if (ct >= max) break;
-        if ((base->level <= p_ptr->lev) || (show_future_spells))
-        {
-            spell_info* current = &spells[ct];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-            current->fail = base->fail;
-            ct++;
-        }
+        spell_info* current = &spells[ct];
+        current->fn = base->fn;
+        current->level = base->level;
+        current->cost = base->cost;
+        current->fail = base->fail;
+        ct++;
     }
     return ct;
 }

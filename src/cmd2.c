@@ -3911,7 +3911,7 @@ void travel_begin(int mode, int x, int y)
     if (x == px && y == py)
     {
         /* Shut up already ... perhaps we are being called from wilderness_move_player, rather
-        than from the top level. It turns out that the Museum in Outpost is located on a scroll
+        than from the top level. It turns out that the Museum in Rampart is located on a scroll
         boundary, and the scroll fires on the last move of the travel flow, but is processed
         before travel_step checks that we are finished. */
         msg_print("You are already there!!");

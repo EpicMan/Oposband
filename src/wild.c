@@ -1561,7 +1561,7 @@ void wilderness_gen(void)
                 f_ptr = &f_info[c_ptr->feat];
                 if (have_flag(f_ptr->flags, FF_BLDG))
                 {
-                    if ((f_ptr->subtype == 4) || ((p_ptr->town_num == TOWN_OUTPOST) && (f_ptr->subtype == 0))
+                    if ((f_ptr->subtype == 4) || ((p_ptr->town_num == TOWN_RAMPART) && (f_ptr->subtype == 0))
                     || ((p_ptr->town_num == TOWN_ZUL) && (f_ptr->subtype == 8)))
                     {
                         if (c_ptr->m_idx) delete_monster_idx(c_ptr->m_idx);

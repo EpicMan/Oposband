@@ -1983,19 +1983,17 @@ static power_info *_get_powers(void)
     {
         spell_info *base = &_powers[i];
         if (ct >= max) break;
-        if ((base->level <= p_ptr->lev) || (show_future_powers))
-        {
-            power_info* current = &spells[ct];
-            current->spell.fn = base->fn;
-            current->spell.level = base->level;
-            current->spell.cost = base->cost;
-            current->spell.fail = base->fail;
-            current->stat = A_CHR;
-            if (current->spell.fn == NULL)
-                current->spell.fn = pact->special_blast;
 
-            ct++;
-        }
+        power_info* current = &spells[ct];
+        current->spell.fn = base->fn;
+        current->spell.level = base->level;
+        current->spell.cost = base->cost;
+        current->spell.fail = base->fail;
+        current->stat = A_CHR;
+        if (current->spell.fn == NULL)
+            current->spell.fn = pact->special_blast;
+
+        ct++;
     }
     spells[ct].spell.fn = NULL;
     return spells;
@@ -2015,14 +2013,11 @@ static spell_info *_get_spells(void)
         spell_info *base = &pact->spells[i];
         if (base->level <= 0) break;
         if (ct >= max) break;
-        if ((base->level <= p_ptr->lev) || (show_future_spells))
-        {
-            spell_info* current = &spells[ct++];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-            current->fail = base->fail;
-        }
+        spell_info* current = &spells[ct++];
+        current->fn = base->fn;
+        current->level = base->level;
+        current->cost = base->cost;
+        current->fail = base->fail;
     }
 
     spells[ct].fn = NULL;

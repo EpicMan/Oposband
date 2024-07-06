@@ -7,7 +7,7 @@ D:the path for the supplies.
 ?:1
 
 ?:[AND [EQU $QUEST14 Taken InProgress] [EQU $SPEED 2] ]
-D:The scouts of Outpost have reported a large number of Wargs
+D:The scouts of Rampart have reported a large number of Wargs
 D:in the dungeon. Their presence at 250 feet hinders resupply to
 D:our troops in the dungeon. Otick, the innkeeper, will offer you
 D:a small reward if you clear the path for our supplies.

@@ -2593,12 +2593,6 @@ option_type option_info[] =
     { &list_stairs,                 FALSE,  OPT_PAGE_LIST, 1, 10,
     "list_stairs",                  "Display stairs in object list" },
 
-    { &show_future_powers,          TRUE,  OPT_PAGE_LIST, 1, 0,
-    "show_future_powers",           "Include known future race/class powers in lists" },
-
-    { &show_future_spells,          FALSE,  OPT_PAGE_LIST, 2, 20,
-    "show_future_spells",           "Include known future class spells in lists" },
-
     { &auto_sticky_labels,          TRUE,  OPT_PAGE_LIST, 2, 17,
     "auto_sticky_labels",           "Automatically make all power labels sticky" },
 

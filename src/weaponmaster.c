@@ -2701,14 +2701,11 @@ static spell_info *_get_spells(void)
         spell_info *base = &_specialities[p_ptr->psubclass].spells[i];
         if (base->level <= 0) break;
         if (ct >= max) break;
-        if ((base->level <= p_ptr->lev) || (show_future_spells))
-        {
-            spell_info* current = &spells[ct++];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-            current->fail = base->fail;
-        }
+        spell_info* current = &spells[ct++];
+        current->fn = base->fn;
+        current->level = base->level;
+        current->cost = base->cost;
+        current->fail = base->fail;
     }
     spells[ct].fn = NULL;
     return spells;

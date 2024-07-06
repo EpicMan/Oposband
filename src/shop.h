@@ -51,7 +51,7 @@ typedef struct town_s town_t, *town_ptr;
 /* Note: If you add towns, also update NO_TOWN and SECRET_TOWN in defines.h */
 enum
 {
-    TOWN_OUTPOST = 1,
+    TOWN_RAMPART = 1,
     TOWN_TELMORA,
     TOWN_MORIVANT,
     TOWN_ANGWIL,
@@ -59,14 +59,14 @@ enum
 	TOWN_THALOS,
     TOWN_ZUL,
     TOWN_RANDOM,
-    TOWN_MIN = TOWN_OUTPOST,
+    TOWN_MIN = TOWN_RAMPART,
     TOWN_MAX = TOWN_RANDOM,
     TOWN_MAX_STD = TOWN_ZUL,
     /* XXX This may get redone at some point. See the q_info.txt changes
      * for my thoughts ... */
 };
 
-#define TOWN_BIRTH TOWN_OUTPOST
+#define TOWN_BIRTH TOWN_RAMPART
 
 extern void     towns_init(void);
 

@@ -1,4 +1,4 @@
-# Outpost
+# Rampart (formerly Outpost)
 T:TOWN:NORMAL:NO_ROTATE
 %:t_pref.txt
 ############### Additional default terrain settings ###############

@@ -1374,20 +1374,17 @@ int get_powers_aux(power_info* spells, int max, power_info* table, bool calc_fai
         if (ct >= max) break;
         if (!base->spell.fn) break;
 
-        if ((base->spell.level <= p_ptr->lev) || (show_future_powers))
-        {
-            power_info* current = &spells[ct];
-            int idx = (base->stat == A_NONE) ? 37 : p_ptr->stat_ind[base->stat];
-            current->spell.fn = base->spell.fn;
-            current->spell.level = base->spell.level;
-            current->spell.cost = base->spell.cost;
-            current->stat = base->stat;
-            current->spell.fail = ((!calc_fail) ? base->spell.fail : calculate_fail_rate(
-                base->spell.level,
-                base->spell.fail,
-                idx));
-            ct++;
-        }
+        power_info* current = &spells[ct];
+        int idx = (base->stat == A_NONE) ? 37 : p_ptr->stat_ind[base->stat];
+        current->spell.fn = base->spell.fn;
+        current->spell.level = base->spell.level;
+        current->spell.cost = base->spell.cost;
+        current->stat = base->stat;
+        current->spell.fail = ((!calc_fail) ? base->spell.fail : calculate_fail_rate(
+            base->spell.level,
+            base->spell.fail,
+            idx));
+        ct++;
     }
     return ct;
 }
@@ -1414,18 +1411,15 @@ int get_spells_aux(power_info* spells, int max, spell_info* table, bool calc_fai
         if (ct >= max) break;
         if (!base->fn) break;
 
-        if ((base->level <= p_ptr->lev) || (show_future_spells) || (p_ptr->pclass == CLASS_RAGE_MAGE))
-        {
-            power_info* current = &spells[ct];
-            current->spell.fn = base->fn;
-            current->spell.level = base->level;
-            current->spell.cost = base->cost;
+        power_info* current = &spells[ct];
+        current->spell.fn = base->fn;
+        current->spell.level = base->level;
+        current->spell.cost = base->cost;
 
-            if (!calc_fail) current->spell.fail = base->fail;
-            else current->spell.fail = calculate_fail_rate(base->level, base->fail, idx);
-            current->stat = A_NONE;
-            ct++;
-        }
+        if (!calc_fail) current->spell.fail = base->fail;
+        else current->spell.fail = calculate_fail_rate(base->level, base->fail, idx);
+        current->stat = A_NONE;
+        ct++;
     }
     return ct;
 }
