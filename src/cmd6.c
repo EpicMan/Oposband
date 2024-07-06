@@ -73,7 +73,8 @@ bool mortal_food_check(void)
         (!prace_is_(RACE_MON_BEHOLDER)) &&
         (!prace_is_(RACE_EINHERI))) ||
         (prace_is_(RACE_ENT)) ||
-        (prace_is_(RACE_MON_ARMOR))) return FALSE;
+        (prace_is_(RACE_MON_ARMOR)) ||
+        (prace_is_(RACE_GHOUL))) return FALSE;
     return TRUE;
 }
 
@@ -408,7 +409,7 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
         /* Don't consume the object */
         return;
     }
-    else if ( (get_race()->flags & RACE_IS_DEMON)
+    else if ( (p_ptr->prace == RACE_GHOUL || get_race()->flags & RACE_IS_DEMON)
            && obj->tval == TV_CORPSE
            && obj->sval == SV_CORPSE
            && my_strchr("pht", r_info[obj->pval].d_char) )
@@ -418,7 +419,10 @@ static void do_cmd_eat_food_aux(obj_ptr obj)
 
         object_desc(o_name, obj, (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_SINGULAR));
 
-        msg_format("<color:%c>The %^s</color> is burnt to ashes. You absorb its vitality!", tval_to_attr_char(obj->tval), o_name);
+        if (p_ptr->prace == RACE_GHOUL)
+            msg_format("You greedily <color:%c>the %^s</color>. Delicious!", tval_to_attr_char(obj->tval), o_name);
+        else
+            msg_format("<color:%c>The %^s</color> is burnt to ashes. You absorb its vitality!", tval_to_attr_char(obj->tval), o_name);
         set_food(PY_FOOD_MAX - 1);
     }
     else if (prace_is_(RACE_SKELETON))
@@ -478,7 +482,7 @@ static bool _can_eat(object_type *o_ptr)
         if (object_is_device(o_ptr))
             return TRUE;
     }
-    else if (get_race()->flags & RACE_IS_DEMON)
+    else if (p_ptr->prace == RACE_GHOUL || (get_race()->flags & RACE_IS_DEMON))
     {
         if (o_ptr->tval == TV_CORPSE &&
             o_ptr->sval == SV_CORPSE &&

@@ -1982,9 +1982,11 @@ race_t* ghoul_get_race(void)
         me.infra = 2;
         me.shop_adjust = 125;
 
+        me.birth = _balrog_birth; /*Corpses to eat*/
         me.calc_bonuses = _ghoul_calc_bonuses;
         me.get_powers = _ghoul_get_powers;
         me.get_flags = _ghoul_get_flags;
+        me.flags = RACE_IS_UNDEAD | RACE_NIGHT_START;
         init = TRUE;
     }
 

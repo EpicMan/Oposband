@@ -2144,7 +2144,7 @@ static bool inn_comm(int cmd)
     switch (cmd)
     {
         case BACT_FOOD: /* Buy food & drink */
-            if ((prace_is_(RACE_BALROG)) || (prace_is_(RACE_MON_DEMON)))
+            if ((prace_is_(RACE_BALROG)) || (prace_is_(RACE_MON_DEMON) || prace_is_(RACE_GHOUL)))
                 msg_print("The barkeep offers you some very fresh meat, which you gratefully wolf down.");
             else if (!mortal_food_check())
             {
