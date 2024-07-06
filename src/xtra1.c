@@ -1442,8 +1442,7 @@ static void prt_gold(void)
     big_num_display(p_ptr->au, tmp);
     sprintf(out_val, "%8.8s", tmp);
 
-
-    put_str("AU ", r.y + ROW_GOLD, r.x + COL_GOLD);
+    put_str("GOLD", r.y + ROW_GOLD, r.x + COL_GOLD);
     c_put_str(TERM_L_GREEN, out_val, r.y + ROW_GOLD, r.x + COL_GOLD + 4);
 }
 
@@ -1741,7 +1740,7 @@ static void prt_state(void)
             }
             case ACTION_LEARN:
             {
-                strcpy(text, "Lear");
+                strcpy(text, "Lern");
                 if (new_mane) attr = TERM_L_RED;
                 break;
             }
@@ -3413,6 +3412,7 @@ static int _calc_xtra_hp_aux(int amt)
     case CLASS_ARCHER:
     case CLASS_WEAPONSMITH:
     case CLASS_RAGE_MAGE:
+	case CLASS_HEXBLADE:
         w1 = 2; w2 = 1; w3 = 0;
         break;
 
@@ -3457,6 +3457,7 @@ static int _calc_xtra_hp_aux(int amt)
     case CLASS_YELLOW_MAGE:
     case CLASS_GRAY_MAGE:
 	case CLASS_ELEMENTALIST:
+	case CLASS_CHAOS_MAGE:
         w1 = 0; w2 = 0; w3 = 1;
         break;
 
@@ -5026,6 +5027,34 @@ void calc_bonuses(void)
     /* Stats need to be set for proper blows calculation. */
     if (race_ptr->calc_innate_attacks && !p_ptr->innate_attack_lock)
         race_ptr->calc_innate_attacks();
+
+    /* Gain a punch attack if body has weapon/shield slots but no wielded weapons */
+    if (p_ptr->weapon_ct == 0 && equip_can_wield_kind(TV_SWORD, SV_DAGGER) && p_ptr->monk_lvl < 1)
+    {
+        innate_attack_t a = { 0 };
+        a.dd = 1;
+        a.ds = 2;
+        a.weight = 12; /* Dagger weight */
+        a.to_h = -1;
+        a.to_d = 0;
+        a.blows = 100;
+        a.msg = "You punch";
+        a.name = "Fist";
+
+        /* Hack - ghouls have better unarmed attacks */
+        if (p_ptr->prace == RACE_GHOUL)
+        {
+            a.blows = 200;
+            a.to_h = 1;
+            a.to_d = 1;
+            a.ds = 5;
+            a.msg = "You claw";
+            a.name = "Claw";
+            a.effect[1] = GF_STASIS;
+        }
+
+        p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
+    }
 
     /* Adjust Innate Attacks for Proficiency */
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
